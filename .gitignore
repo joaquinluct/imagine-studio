@@ -1,0 +1,72 @@
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.VC.db
+*.vcxproj.user
+*.vcxproj.filters
+*.opensdf
+*.sdf
+*.ipch/
+ipch/
+*.ilk
+*.pdb
+*.idb
+*.obj
+*.exe
+*.dll
+*.lib
+*.log
+*.tlog/
+*.lastbuildstate
+
+# Build folders
+x64/
+Debug/
+Release/
+bin/
+obj/
+out/
+_build/
+build/
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+install_manifest.txt
+Makefile
+*.dir
+
+# NuGet
+packages/
+
+# Rider/IDEA
+.idea/
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Others
+*.userprefs
+*.sublime-workspace
+
+# Logs
+*.log
+
+# Generated documentation
+docs/**/*.html
+
+# Ignore local settings
+*.local
+
+# Keep this file tracked
