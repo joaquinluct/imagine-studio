@@ -31,6 +31,8 @@ public:
     void Shutdown();
 
     // Enqueue an asynchronous load. Returns a handle for cancellation.
+    LoadHandle LoadAsync(const std::string& path, std::function<void(const std::string&, bool)> callback, Renderer::Fence* signalFence = nullptr, Priority priority = Priority::Normal);
+    // Backwards-compatible overload: accepts old-style callback `void(const std::string&)`
     LoadHandle LoadAsync(const std::string& path, std::function<void(const std::string&)> callback, Renderer::Fence* signalFence = nullptr, Priority priority = Priority::Normal);
 
     // Cancel a pending load. Returns true if cancelled before dispatch.
@@ -43,12 +45,13 @@ public:
     bool PopLoaded(std::string& outPath);
 
 private:
-    struct Task { LoadHandle handle = 0; Priority priority = Priority::Normal; std::string path; std::function<void(const std::string&)> callback; Renderer::Fence* fence = nullptr; };
+    struct Task { LoadHandle handle = 0; Priority priority = Priority::Normal; std::string path; std::function<void(const std::string&, bool)> callback; Renderer::Fence* fence = nullptr; };
 
     struct TaskCmp { bool operator()(Task const& a, Task const& b) const { return static_cast<int>(a.priority) < static_cast<int>(b.priority); } };
 
     VFS* vfs_ = nullptr;
     std::vector<std::vector<char>> pools_; // simple buffer pool
+    std::mutex poolsMutex_;
 
     // Dispatcher
     std::thread dispatcherThread_;

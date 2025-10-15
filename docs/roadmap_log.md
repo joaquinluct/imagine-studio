@@ -63,5 +63,14 @@ Registro de la acción reciente:
 - Se fijó la versión del proyecto en `1.0.0` en `CMakeLists.txt` y se añadió opción CMake `IMAGINE_START_MAXIMIZED`.
 - Compilación tras el cambio: CMake build Debug OK, msbuild Debug OK (0 errores, 0 warnings).
 
-Hecho: 3. Sistema de plataforma/abstracción (Windowing + input)
+- Ajuste reciente (assets): `AssetManager` - corregida la invocación del callback legado.
+  - Descripción: se añadió sobrecarga compatible y se ajustó el wrapper para que la
+    versión antigua `void(const std::string&)` sólo se invoque cuando la carga
+    del asset fue realmente exitosa. En caso de fallo de `VFS::ReadFile` se
+    registra un error y no se llama al callback antiguo, evitando falsas señales
+    de carga exitosa a clientes legacy.
+  - Archivos afectados: `src/assets/AssetManager.cpp`, `src/assets/AssetManager.h` (firma compatible).
+  - Compilación: CMake build Debug OK, msbuild Debug OK (0 errores, 0 warnings).
+
+Hecho: 6.08 Asset streaming: corregir AssetManager callback legado
 Siguiente: 4. Backend de render inicial - DirectX12 minimal

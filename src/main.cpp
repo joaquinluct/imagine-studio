@@ -6,17 +6,23 @@
 #include "platform/Input.h"
 #include "platform/Window.h"
 #include "renderer/DX12Renderer.h"
+#include "tools/Profiler.h"
 #include "ui/SimpleUI.h"
-#include "../src/tools/Profiler.h"
-#include <chrono>
 
+#include <chrono>
+#include <fstream>
+#include <sstream>
 #include <windows.h>
 static int RunApp(HINSTANCE hInstance)
 {
     Platform::Window window(hInstance, L"Imagine Studio - Window", 800, 600);
 
-    // Ensure the window is shown (start maximized) and brought to foreground so the UI panel is visible
+    // Ensure the window is shown and brought to foreground so the UI panel is visible
+#if IMAGINE_START_MAXIMIZED
     ShowWindow(window.GetHWND(), SW_SHOWMAXIMIZED);
+#else
+    ShowWindow(window.GetHWND(), SW_SHOWDEFAULT);
+#endif
     UpdateWindow(window.GetHWND());
     SetForegroundWindow(window.GetHWND());
 
@@ -106,6 +112,47 @@ static int RunApp(HINSTANCE hInstance)
 #pragma warning(disable:28251)
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int)
 {
-    return RunApp(hInstance);
+    try
+    {
+        return RunApp(hInstance);
+    }
+    catch (const std::exception& ex)
+    {
+        // Ensure logs directory exists relative to repository/workdir using Win32
+        const char* dir = "build\\logs";
+        CreateDirectoryA("build", NULL);
+        CreateDirectoryA(dir, NULL);
+        const char* out = "build\\logs\\crash.txt";
+        std::ofstream ofs(out, std::ios::out | std::ios::app);
+        if (ofs)
+        {
+            std::ostringstream ss;
+            ss << "Unhandled std::exception: " << ex.what() << "\n";
+            ofs << ss.str();
+            ofs.close();
+        }
+        return -1;
+    }
+    catch (...)
+    {
+        const char* dir = "build\\logs";
+        CreateDirectoryA("build", NULL);
+        CreateDirectoryA(dir, NULL);
+        const char* out = "build\\logs\\crash.txt";
+        std::ofstream ofs(out, std::ios::out | std::ios::app);
+        if (ofs)
+        {
+            ofs << "Unhandled unknown exception\n";
+            ofs.close();
+        }
+        return -1;
+    }
 }
 #pragma warning(pop)
+
+// Also provide a console main entry so builds that expect a console subsystem link correctly.
+int main()
+{
+    HINSTANCE hInstance = GetModuleHandle(NULL);
+    return RunApp(hInstance);
+}

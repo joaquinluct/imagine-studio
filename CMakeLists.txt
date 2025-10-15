@@ -86,6 +86,16 @@ target_include_directories(ImagineStudio PRIVATE ${CMAKE_SOURCE_DIR}/src)
 # Propagate project version to the target
 set_target_properties(ImagineStudio PROPERTIES VERSION ${PROJECT_VERSION})
 
+# Set VS debugger working directory to repository root for consistent F5 runs
+set_target_properties(ImagineStudio PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+
+# Propagate IMAGINE_START_MAXIMIZED option as a compile definition
+if(IMAGINE_START_MAXIMIZED)
+    target_compile_definitions(ImagineStudio PRIVATE IMAGINE_START_MAXIMIZED=1)
+else()
+    target_compile_definitions(ImagineStudio PRIVATE IMAGINE_START_MAXIMIZED=0)
+endif()
+
 # Define Unicode macros to match Visual Studio project settings
 target_compile_definitions(ImagineStudio PRIVATE UNICODE _UNICODE)
 

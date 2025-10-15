@@ -3,6 +3,9 @@
 Formato recomendado para los mensajes de commit:
 
 ```
+
+- chore(app): switch to GUI-only entry (WinMain) and remove console main to hide console window during normal execution
+
 <tipo>(<ámbito>): <mensaje corto>
 
 <mensaje largo opcional>
@@ -35,5 +38,13 @@ Historial de commits relevantes:
 - feat(platform): add InputManager (keyboard/mouse polling) and integrate in main loop
 - feat(ui): add SimpleUI stub and integrate in main loop
 - feat(renderer): add CommandBuffer ring-buffer stub for GPU commands
-- chore(app): switch to GUI-only entry (WinMain), start maximized, set CMake project version to 1.0.0
+
+- fix(assets): respect legacy callback semantics in AssetManager
+
+Adjust `AssetManager` to provide a backwards-compatible overload that accepts
+the old `void(const std::string&)` callback. The wrapper now forwards calls
+only on successful loads and logs failures instead of invoking the legacy
+callback, preventing clients from receiving false-positive load notifications.
+
+Files changed: `src/assets/AssetManager.cpp`, `src/assets/AssetManager.h`
 

@@ -68,27 +68,29 @@ void AssetManager::Initialize()
                 bool ok = false;
                 if (vfs_) ok = vfs_->ReadFile(task.path, buf);
 
-                // Simulate streaming in chunks and check cancelFlag for preemption
+                // Fail-fast: if VFS failed (including empty files), log error and bail out
                 if (!ok) {
-                    for (int i = 0; i < 20; ++i) {
-                        if (cancelFlag->load()) {
-                            CORE_LOG_INFO(std::string("Load cancelled during streaming: ") + task.path);
-                            // metrics
-                            metrics_cancelled_.fetch_add(1);
-                            metrics_cancelled_by_prio_[static_cast<int>(task.priority)].fetch_add(1);
-                            // cleanup running flags
-                            std::lock_guard<std::mutex> rl(runningMutex_);
-                            runningCancelFlags_.erase(task.handle);
-                            runningPriority_.erase(task.handle);
-                            return;
-                        }
-                        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-                    }
-                    buf.assign(128,0);
+                    CORE_LOG_ERROR(std::string("Failed to read asset: ") + task.path);
+                    // metrics cancelled/failed
+                    metrics_cancelled_.fetch_add(1);
+                    metrics_cancelled_by_prio_[static_cast<int>(task.priority)].fetch_add(1);
+                    // invoke callback with failure if provided
+                    if (task.callback) task.callback(task.path, false);
+                    // cleanup running flags
+                    std::lock_guard<std::mutex> rl(runningMutex_);
+                    runningCancelFlags_.erase(task.handle);
+                    runningPriority_.erase(task.handle);
+                    return;
                 }
 
-                pools_.push_back(std::move(buf));
-                if (task.callback) task.callback(task.path);
+                // Only store non-empty buffers in the pool and protect with mutex
+                if (!buf.empty()) {
+                    std::lock_guard<std::mutex> pl(poolsMutex_);
+                    pools_.push_back(std::move(buf));
+                } else {
+                    CORE_LOG_INFO(std::string("Loaded asset empty, skipping pool store: ") + task.path);
+                }
+                if (task.callback) task.callback(task.path, true);
                 CORE_LOG_INFO(std::string("Loaded asset (dispatched): ") + task.path);
                 if (task.fence) task.fence->Signal();
                 {
@@ -135,12 +137,29 @@ void AssetManager::Shutdown()
 
 AssetManager::LoadHandle AssetManager::LoadAsync(const std::string& path, std::function<void(const std::string&)> callback, Renderer::Fence* signalFence, AssetManager::Priority priority)
 {
+    // Wrap old callback into new signature
+    std::function<void(const std::string&, bool)> wrapped;
+    if (callback) {
+        // Backwards compatibility: only invoke old-style callback on success.
+        // Clients using the old signature expect to be notified only when the
+        // asset was actually loaded. Failures are logged instead and not
+        // forwarded to the legacy callback.
+        wrapped = [callback](const std::string& p, bool ok) {
+            if (ok) callback(p);
+            else CORE_LOG_ERROR(std::string("Asset load failed (old-style callback suppressed): ") + p);
+        };
+    }
+
+    return LoadAsync(path, wrapped, signalFence, priority);
+}
+
+AssetManager::LoadHandle AssetManager::LoadAsync(const std::string& path, std::function<void(const std::string&, bool)> callback, Renderer::Fence* signalFence, AssetManager::Priority priority)
+{
     if (!s_threadPool)
     {
         CORE_LOG_ERROR("ThreadPool not initialized for AssetManager");
         return 0;
     }
-
     // enqueue into dispatcher with normal priority
     Task t;
     t.handle = nextHandle_.fetch_add(1);
