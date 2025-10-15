@@ -141,27 +141,6 @@ AssetManager::LoadHandle AssetManager::LoadAsync(const std::string& path, std::f
         return 0;
     }
 
-bool AssetManager::SaveMetrics(const std::string& path) const
-{
-    std::ofstream ofs(path);
-    if (!ofs) return false;
-    ofs << "{\n";
-    ofs << "  \"requested\": " << metrics_requested_.load() << ",\n";
-    ofs << "  \"started\": " << metrics_started_.load() << ",\n";
-    ofs << "  \"completed\": " << metrics_completed_.load() << ",\n";
-    ofs << "  \"cancelled\": " << metrics_cancelled_.load() << ",\n";
-    ofs << "  \"by_priority\": {\n";
-    for (int i = 0; i < 3; ++i)
-    {
-        ofs << "    \"" << i << "\": { \"requested\": " << metrics_requested_by_prio_[i].load() << ", \"completed\": " << metrics_completed_by_prio_[i].load() << ", \"cancelled\": " << metrics_cancelled_by_prio_[i].load() << ", \"total_ms\": " << metrics_total_time_ms_by_prio_[i].load() << " }";
-        if (i < 2) ofs << ",\n";
-        else ofs << "\n";
-    }
-    ofs << "  }\n";
-    ofs << "}\n";
-    return true;
-}
-
     // enqueue into dispatcher with normal priority
     Task t;
     t.handle = nextHandle_.fetch_add(1);
@@ -239,6 +218,27 @@ void AssetManager::DumpMetrics() const
         ss << "  prio[" << i << "] requested=" << metrics_requested_by_prio_[i].load() << " completed=" << metrics_completed_by_prio_[i].load() << " cancelled=" << metrics_cancelled_by_prio_[i].load() << " total_ms=" << metrics_total_time_ms_by_prio_[i].load() << "\n";
     }
     CORE_LOG_INFO(ss.str());
+}
+
+bool AssetManager::SaveMetrics(const std::string& path) const
+{
+    std::ofstream ofs(path);
+    if (!ofs) return false;
+    ofs << "{\n";
+    ofs << "  \"requested\": " << metrics_requested_.load() << ",\n";
+    ofs << "  \"started\": " << metrics_started_.load() << ",\n";
+    ofs << "  \"completed\": " << metrics_completed_.load() << ",\n";
+    ofs << "  \"cancelled\": " << metrics_cancelled_.load() << ",\n";
+    ofs << "  \"by_priority\": {\n";
+    for (int i = 0; i < 3; ++i)
+    {
+        ofs << "    \"" << i << "\": { \"requested\": " << metrics_requested_by_prio_[i].load() << ", \"completed\": " << metrics_completed_by_prio_[i].load() << ", \"cancelled\": " << metrics_cancelled_by_prio_[i].load() << ", \"total_ms\": " << metrics_total_time_ms_by_prio_[i].load() << " }";
+        if (i < 2) ofs << ",\n";
+        else ofs << "\n";
+    }
+    ofs << "  }\n";
+    ofs << "}\n";
+    return true;
 }
 
 } // namespace Assets
