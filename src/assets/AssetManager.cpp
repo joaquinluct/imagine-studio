@@ -1,6 +1,8 @@
 #include "AssetManager.h"
 #include <thread>
 #include <chrono>
+#include <memory>
+#include <unordered_map>
 #include "../jobs/ThreadPool.h"
 #include "../core/Log.h"
 #include "../renderer/Fence.h"
@@ -37,17 +39,49 @@ void AssetManager::Initialize()
                 if (cancelled_.count(task.handle)) continue;
             }
 
-            // Dispatch to thread pool
-            s_threadPool->Enqueue([this, task]() {
+            // Dispatch to thread pool with cooperative cancellation support
+            auto cancelFlag = std::make_shared<std::atomic<bool>>(false);
+            {
+                std::lock_guard<std::mutex> rl(runningMutex_);
+                runningCancelFlags_[task.handle] = cancelFlag;
+                runningPriority_[task.handle] = task.priority;
+            }
+
+            s_threadPool->Enqueue([this, task, cancelFlag]() {
                 CORE_LOG_INFO(std::string("Loading asset (dispatched): ") + task.path);
                 std::vector<char> buf;
                 bool ok = false;
                 if (vfs_) ok = vfs_->ReadFile(task.path, buf);
-                if (!ok) { std::this_thread::sleep_for(std::chrono::milliseconds(200)); buf.assign(128,0); }
+
+                // Simulate streaming in chunks and check cancelFlag for preemption
+                if (!ok) {
+                    for (int i = 0; i < 20; ++i) {
+                        if (cancelFlag->load()) {
+                            CORE_LOG_INFO(std::string("Load cancelled during streaming: ") + task.path);
+                            // cleanup running flags
+                            std::lock_guard<std::mutex> rl(runningMutex_);
+                            runningCancelFlags_.erase(task.handle);
+                            runningPriority_.erase(task.handle);
+                            return;
+                        }
+                        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                    }
+                    buf.assign(128,0);
+                }
+
                 pools_.push_back(std::move(buf));
                 if (task.callback) task.callback(task.path);
                 CORE_LOG_INFO(std::string("Loaded asset (dispatched): ") + task.path);
                 if (task.fence) task.fence->Signal();
+                {
+                    std::lock_guard<std::mutex> l(loadedMutex_);
+                    loadedQueue_.push(task.path);
+                }
+
+                // cleanup running flags
+                std::lock_guard<std::mutex> rl(runningMutex_);
+                runningCancelFlags_.erase(task.handle);
+                runningPriority_.erase(task.handle);
             });
         }
     });
@@ -84,6 +118,20 @@ AssetManager::LoadHandle AssetManager::LoadAsync(const std::string& path, std::f
     t.priority = priority;
     t.path = path; t.callback = callback; t.fence = signalFence;
     {
+        // If this is a high priority task, request cancellation of lower-priority running tasks
+        if (t.priority == Priority::High)
+        {
+            std::lock_guard<std::mutex> rl(runningMutex_);
+            for (auto &kv : runningPriority_)
+            {
+                if (static_cast<int>(kv.second) < static_cast<int>(t.priority))
+                {
+                    auto it = runningCancelFlags_.find(kv.first);
+                    if (it != runningCancelFlags_.end()) it->second->store(true);
+                }
+            }
+        }
+
         std::lock_guard<std::mutex> lock(queueMutex_);
         taskQueue_.push(t);
     }
@@ -101,6 +149,14 @@ bool AssetManager::CancelLoad(LoadHandle handle)
     std::lock_guard<std::mutex> lock(cancelMutex_);
     if (cancelled_.count(handle)) return false;
     cancelled_.insert(handle);
+    return true;
+}
+
+bool AssetManager::PopLoaded(std::string& outPath)
+{
+    std::lock_guard<std::mutex> l(loadedMutex_);
+    if (loadedQueue_.empty()) return false;
+    outPath = loadedQueue_.front(); loadedQueue_.pop();
     return true;
 }
 

@@ -36,6 +36,9 @@ public:
     // Mount a path to the VFS
     bool Mount(const std::string& path);
 
+    // Pop next loaded asset path (if any). Returns false if none.
+    bool PopLoaded(std::string& outPath);
+
 private:
     struct Task { LoadHandle handle; Priority priority; std::string path; std::function<void(const std::string&)> callback; Renderer::Fence* fence; };
 
@@ -54,6 +57,13 @@ private:
     std::atomic<LoadHandle> nextHandle_{1};
     std::mutex cancelMutex_;
     std::unordered_set<LoadHandle> cancelled_;
+    // running task cancellation flags and priority tracking
+    std::mutex runningMutex_;
+    std::unordered_map<LoadHandle, std::shared_ptr<std::atomic<bool>>> runningCancelFlags_;
+    std::unordered_map<LoadHandle, Priority> runningPriority_;
+    // loaded items queue
+    std::mutex loadedMutex_;
+    std::queue<std::string> loadedQueue_;
 };
 
 } // namespace Assets
