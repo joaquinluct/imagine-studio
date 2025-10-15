@@ -80,6 +80,8 @@ private:
 public:
     // Dump current metrics to the log
     void DumpMetrics() const;
+    // Persist metrics to a file (JSON-ish)
+    bool SaveMetrics(const std::string& path) const;
 };
 
 } // namespace Assets

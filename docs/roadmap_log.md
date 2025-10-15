@@ -37,3 +37,7 @@ Próximo paso propuesto:
 
 Iteración completada:
 - Preparados stubs DX12: `DX12Device`, `RenderTarget` y ampliado `DX12Renderer` con `ComposeUI()` para soportar composición UI (stub). Compilación: OK.
+
+Iteraciones recientes completadas (assets):
+- 6.05 Instrumentación y métricas: contadores y muestreo añadidos en `AssetManager` con `DumpMetrics()` (commit `3f24c69`).
+- 6.07 Persistencia de métricas: `SaveMetrics()` guarda métricas en `metrics_asset_manager.json` en shutdown.

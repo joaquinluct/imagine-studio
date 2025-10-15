@@ -9,6 +9,7 @@
 #include "VFS.h"
 #include <array>
 #include <sstream>
+#include <fstream>
 
 using namespace Assets;
 
@@ -127,6 +128,8 @@ void AssetManager::Shutdown()
     if (dispatcherThread_.joinable()) dispatcherThread_.join();
     // dump metrics at shutdown
     DumpMetrics();
+    // persist metrics file
+    SaveMetrics("metrics_asset_manager.json");
     CORE_LOG_INFO("AssetManager shutdown");
 }
 
@@ -137,6 +140,27 @@ AssetManager::LoadHandle AssetManager::LoadAsync(const std::string& path, std::f
         CORE_LOG_ERROR("ThreadPool not initialized for AssetManager");
         return 0;
     }
+
+bool AssetManager::SaveMetrics(const std::string& path) const
+{
+    std::ofstream ofs(path);
+    if (!ofs) return false;
+    ofs << "{\n";
+    ofs << "  \"requested\": " << metrics_requested_.load() << ",\n";
+    ofs << "  \"started\": " << metrics_started_.load() << ",\n";
+    ofs << "  \"completed\": " << metrics_completed_.load() << ",\n";
+    ofs << "  \"cancelled\": " << metrics_cancelled_.load() << ",\n";
+    ofs << "  \"by_priority\": {\n";
+    for (int i = 0; i < 3; ++i)
+    {
+        ofs << "    \"" << i << "\": { \"requested\": " << metrics_requested_by_prio_[i].load() << ", \"completed\": " << metrics_completed_by_prio_[i].load() << ", \"cancelled\": " << metrics_cancelled_by_prio_[i].load() << ", \"total_ms\": " << metrics_total_time_ms_by_prio_[i].load() << " }";
+        if (i < 2) ofs << ",\n";
+        else ofs << "\n";
+    }
+    ofs << "  }\n";
+    ofs << "}\n";
+    return true;
+}
 
     // enqueue into dispatcher with normal priority
     Task t;
