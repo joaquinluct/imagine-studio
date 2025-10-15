@@ -50,3 +50,5 @@ Iteraciones recientes completadas (assets):
 - 9.00 Material system: prototipo `Material` y `MaterialSystem` añadido con test `material_test` (archivos `src/renderer/Material.*`, `src/tests/material_test.cpp`).
 
 - 10.00 Profiler & overlays: añadido `Profiler` mínimo y overlay en `SimpleUI` para mostrar FPS (archivos `src/tools/Profiler.*`, integración en `src/ui/SimpleUI.*` y `src/main.cpp`).
+
+- 11.00 Adapter factory: añadida factoría `AdapterFactory` con stub adapter para tests y wiring para DX12 adapter (archivos `src/renderer/AdapterFactory.*`, `src/tests/adapter_test.cpp`).

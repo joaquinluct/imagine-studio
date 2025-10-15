@@ -157,6 +157,10 @@ Enlace principal: ver también `docs/roadmap.md`.
 - Descripción: Diseñar la capa de abstracción del renderer para permitir backends alternativos.
 - Estado: pendiente
 
+11.00 Abstracción de backend y adaptadores
+- Descripción: Añadir una factoría de adaptadores (`AdapterFactory`) y adaptadores iniciales (stub para tests y DX12 adapter). Permitir seleccionar backend en tiempo de creación.
+- Estado: completado (prototipo) - archivos: `src/renderer/AdapterFactory.*`, `src/tests/adapter_test.cpp`.
+
 12 Polishing, examples y tests
 ------------------------------------------------
 
