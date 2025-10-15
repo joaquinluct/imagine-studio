@@ -17,8 +17,15 @@ void Fence::Signal()
 
 void Fence::Wait()
 {
-    unsigned long long target = value_.load();
-    while (value_.load() < target)
+    // Wait until value increases
+    unsigned long long v = value_.load();
+    while (value_.load() <= v)
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+}
+
+void Fence::WaitForValue(unsigned long long v)
+{
+    while (value_.load() < v)
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
 }
 

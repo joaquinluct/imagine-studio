@@ -3,6 +3,7 @@
 #include <chrono>
 #include "../jobs/ThreadPool.h"
 #include "../core/Log.h"
+#include "../renderer/Fence.h"
 
 namespace Assets {
 
@@ -29,7 +30,7 @@ void AssetManager::Shutdown()
     CORE_LOG_INFO("AssetManager shutdown");
 }
 
-void AssetManager::LoadAsync(const std::string& path, std::function<void(const std::string&)> callback)
+void AssetManager::LoadAsync(const std::string& path, std::function<void(const std::string&)> callback, class Renderer::Fence* signalFence)
 {
     if (!s_threadPool)
     {
@@ -37,12 +38,13 @@ void AssetManager::LoadAsync(const std::string& path, std::function<void(const s
         return;
     }
 
-    s_threadPool->Enqueue([path, callback]() {
+    s_threadPool->Enqueue([path, callback, signalFence]() {
         CORE_LOG_INFO(std::string("Loading asset: ") + path);
         std::this_thread::sleep_for(std::chrono::milliseconds(200)); // simulate load
         if (callback)
             callback(path);
         CORE_LOG_INFO(std::string("Loaded asset: ") + path);
+        if (signalFence) signalFence->Signal();
     });
 }
 
