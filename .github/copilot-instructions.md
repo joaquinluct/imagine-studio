@@ -44,13 +44,11 @@ Si en algún momento la herramienta no puede compilar la solución o no encuentra 
 Registrar en la bitácora (`docs/roadmap_log.md`) cualquier incidencia relevante y su resolución para futuras referencias.
 
 Iteración controlada (proceso obligatorio por iteración)
-1) Consultar `docs/roadmap_log.md` y proponer el siguiente punto (el asistente siempre presentará exactamente un punto a ejecutar, acompañado de una breve explicación —una frase— sobre en qué consiste el paso).
-2) El propietario responde `Si` para autorizar la ejecución de la iteración. Si la respuesta es `No` o hay dudas, la iteración se detiene.
-3) El asistente implementa el punto aprobado.
-4) Compilar la solución/proyecto. Corregir errores/warnings hasta obtener compilación limpia.
-5) Con compilación limpia, el asistente crea el commit siguiendo `docs/commits.md`.
-6) Actualizar `docs/commits.md` (listado de commits si procede), `README.md` y `.github/copilot-instructions.md` si es necesario.
-7) Actualizar `docs/roadmap_log.md`: marcar el punto como completado y añadir el nuevo punto por realizar.
-8) El asistente informa brevemente lo realizado y el siguiente punto propuesto, y vuelve al paso 1 solicitando autorización (`Si/No`).
+1) El asistente consultará `docs/roadmap_log.md` y propondrá el siguiente punto a ejecutar, acompañado de una breve explicación (una frase) sobre en qué consiste.
 
-Nota: Si surgen problemas durante la iteración (dependencias, decisiones arquitectónicas, bloqueos), el asistente pausará la ejecución y preguntará explícitamente antes de seguir.
+Ejecución automática (sin necesidad de confirmación previa):
+2) Tras proponer el punto, el asistente implementará el cambio, compilará la solución y corregirá los errores/warnings hasta lograr una compilación limpia.
+3) Si la compilación queda limpia, el asistente realizará directamente el commit local siguiendo `docs/commits.md` y actualizará los ficheros necesarios (`docs/roadmap_log.md`, `docs/commits.md`, `README.md` y `.github/copilot-instructions.md`) sin pedir permiso adicional.
+4) El asistente informará de lo realizado y del siguiente punto propuesto y continuará el ciclo.
+
+Excepciones: Si aparece un bloqueo técnico, decisión arquitectónica crítica o dependencia que impida avanzar, el asistente pausará y solicitará instrucciones al propietario.

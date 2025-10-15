@@ -11,6 +11,7 @@ file(GLOB_RECURSE SRC_FILES
     "${CMAKE_SOURCE_DIR}/src/*.cc"
     "${CMAKE_SOURCE_DIR}/src/*/*.cpp"
     "${CMAKE_SOURCE_DIR}/src/*/*/*.cpp"
+    "${CMAKE_SOURCE_DIR}/src/*/*/*/*.cpp"
 )
 
 add_executable(ImagineStudio ${SRC_FILES})

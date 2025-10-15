@@ -2,6 +2,8 @@
 #include <windows.h>
 #include "platform/Window.h"
 #include "platform/Input.h"
+#include "renderer/DX12Renderer.h"
+#include "ui/SimpleUI.h"
 #include "core/Log.h"
 
 static int RunApp(HINSTANCE hInstance)
@@ -10,6 +12,12 @@ static int RunApp(HINSTANCE hInstance)
 
     // Simple message loop
     Platform::InputManager input;
+    Renderer::DX12Renderer renderer;
+    UI::SimpleUI ui;
+
+    renderer.Initialize();
+    ui.Initialize();
+
     while (window.ProcessMessages())
     {
         input.Update(window.GetHWND());
@@ -18,8 +26,13 @@ static int RunApp(HINSTANCE hInstance)
         if (input.IsKeyDown(VK_ESCAPE))
             break;
 
+        renderer.RenderFrame();
+        ui.Draw();
         // TODO: update and render calls will go here
     }
+
+    ui.Shutdown();
+    renderer.Shutdown();
 
     CORE_LOG_INFO("Application exiting");
 
