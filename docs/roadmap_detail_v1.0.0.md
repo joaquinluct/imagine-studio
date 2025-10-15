@@ -109,6 +109,9 @@ Enlace principal: ver también `docs/roadmap.md`.
 
 7.01 Task graph (próximo)
 - Descripción: Diseñar y soportar dependencias entre tareas (future work).
+7.01 Task graph
+- Descripción: Implementar TaskGraph para expresar dependencias entre tareas y ejecutarlas sobre ThreadPool.
+- Estado: completado (prototipo) - `src/jobs/TaskGraph.*` (commit `755a2a4`).
 
 8 Simple UI layer + text rendering
 ------------------------------------------------

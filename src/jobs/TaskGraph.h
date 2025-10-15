@@ -34,7 +34,7 @@ private:
         std::atomic<int> deps{0};
     };
 
-    std::vector<Node> nodes_;
+    std::vector<std::unique_ptr<Node>> nodes_;
     std::mutex mutex_;
     std::atomic<int> remaining_{0};
     std::condition_variable cv_;

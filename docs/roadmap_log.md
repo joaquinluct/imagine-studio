@@ -41,3 +41,5 @@ Iteración completada:
 Iteraciones recientes completadas (assets):
 - 6.05 Instrumentación y métricas: contadores y muestreo añadidos en `AssetManager` con `DumpMetrics()` (commit `3f24c69`).
 - 6.07 Persistencia de métricas: `SaveMetrics()` guarda métricas en `metrics_asset_manager.json` en shutdown.
+
+- 7.01 TaskGraph: prototipo de TaskGraph añadido para ejecución de tareas con dependencias sobre `ThreadPool` (commit `755a2a4`).

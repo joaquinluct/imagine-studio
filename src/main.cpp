@@ -6,6 +6,8 @@
 #include "ui/SimpleUI.h"
 #include "assets/AssetManager.h"
 #include "core/Log.h"
+#include "jobs/TaskGraph.h"
+#include "jobs/ThreadPool.h"
 
 static int RunApp(HINSTANCE hInstance)
 {
@@ -30,6 +32,21 @@ static int RunApp(HINSTANCE hInstance)
     CORE_LOG_INFO("Waiting for async asset to load...");
     assetFence.WaitForValue(1);
     CORE_LOG_INFO("Async asset load signaled");
+
+    // 7.01 TaskGraph basic test: create simple dependency A,B -> C
+    {
+        CORE_LOG_INFO("TaskGraph test: start");
+        Jobs::ThreadPool tgPool(3);
+        Jobs::TaskGraph tg;
+        int tA = tg.AddTask([](){ CORE_LOG_INFO("TaskGraph: Task A executed"); });
+        int tB = tg.AddTask([](){ CORE_LOG_INFO("TaskGraph: Task B executed"); });
+        int tC = tg.AddTask([](){ CORE_LOG_INFO("TaskGraph: Task C executed (after A,B)"); });
+        tg.AddDependency(tA, tC);
+        tg.AddDependency(tB, tC);
+        tg.Execute(&tgPool);
+        CORE_LOG_INFO("TaskGraph test: completed");
+        // tgPool will be shutdown in destructor
+    }
 
     // Streaming test: enqueue multiple loads with different priorities and cancel one
     CORE_LOG_INFO("Starting streaming priority/cancelation test");
