@@ -135,6 +135,10 @@ Enlace principal: ver también `docs/roadmap.md`.
 - Descripción: Definir estructuras de materiales, binding de resources y pipeline states.
 - Estado: pendiente
 
+9.00 Diseño de sistema de materiales
+- Descripción: Implementación inicial de `Material` y `MaterialSystem` para gestión básica de materiales, propiedades y creación/consulta.
+- Estado: completado (prototipo) - archivos: `src/renderer/Material.h`, `src/renderer/Material.cpp`, `src/tests/material_test.cpp`.
+
 10 Tools: profiler, debug overlays, capture
 ------------------------------------------------
 

@@ -46,3 +46,5 @@ Iteraciones recientes completadas (assets):
 -
 - Estilo: aplicada política de orden de `#include` en los fuentes del proyecto (reordenado alfabéticamente y separando includes de proyecto/sistema). Compromiso: `style(include): reorder includes across src per project policy` (commit `336c993`).
 - 7.02 Bench: micro-bench `threadpool_bench` added to test ThreadPool throughput across multiple thread counts.
+
+- 9.00 Material system: prototipo `Material` y `MaterialSystem` añadido con test `material_test` (archivos `src/renderer/Material.*`, `src/tests/material_test.cpp`).
