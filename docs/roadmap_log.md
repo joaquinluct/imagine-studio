@@ -43,5 +43,6 @@ Iteraciones recientes completadas (assets):
 - 6.07 Persistencia de métricas: `SaveMetrics()` guarda métricas en `metrics_asset_manager.json` en shutdown.
 
 - 7.01 TaskGraph: prototipo de TaskGraph añadido para ejecución de tareas con dependencias sobre `ThreadPool` (commit `755a2a4`).
-
+-
+- Estilo: aplicada política de orden de `#include` en los fuentes del proyecto (reordenado alfabéticamente y separando includes de proyecto/sistema). Compromiso: `style(include): reorder includes across src per project policy` (commit `336c993`).
 - 7.02 Bench: micro-bench `threadpool_bench` added to test ThreadPool throughput across multiple thread counts.

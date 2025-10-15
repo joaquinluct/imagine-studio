@@ -1,18 +1,18 @@
 #pragma once
 
-#include <string>
-#include <functional>
-#include <vector>
-#include <thread>
-#include <mutex>
-#include <condition_variable>
-#include <atomic>
-#include <queue>
-#include <unordered_set>
-#include <unordered_map>
-#include <memory>
 #include <array>
+#include <atomic>
 #include <cstdint>
+#include <condition_variable>
+#include <functional>
+#include <memory>
+#include <mutex>
+#include <queue>
+#include <string>
+#include <thread>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
 
 // Forward declaration for synchronization fence
 namespace Renderer { class Fence; }
