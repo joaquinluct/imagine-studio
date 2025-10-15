@@ -21,7 +21,25 @@ static int RunApp(HINSTANCE hInstance)
 
     Assets::AssetManager assets;
     assets.Initialize();
-    assets.LoadAsync("example_asset.dat", [](const std::string& p){ CORE_LOG_INFO(std::string("Callback: asset loaded: ") + p); });
+
+    // Demonstration: async load an asset and signal a fence when complete
+    Renderer::Fence assetFence;
+    assets.LoadAsync("example_asset.dat", [](const std::string& p){ CORE_LOG_INFO(std::string("Callback: asset loaded: ") + p); }, &assetFence);
+
+    // Wait for the asset to be loaded (synchronization test)
+    CORE_LOG_INFO("Waiting for async asset to load...");
+    assetFence.WaitForValue(1);
+    CORE_LOG_INFO("Async asset load signaled");
+
+    // Streaming test: enqueue multiple loads with different priorities and cancel one
+    CORE_LOG_INFO("Starting streaming priority/cancelation test");
+    auto hHigh = assets.LoadAsync("asset_high.dat", [](const std::string& p){ CORE_LOG_INFO(std::string("Callback: asset_high: ") + p); }, nullptr, Assets::AssetManager::Priority::High);
+    auto hLow = assets.LoadAsync("asset_low.dat", [](const std::string& p){ CORE_LOG_INFO(std::string("Callback: asset_low: ") + p); }, nullptr, Assets::AssetManager::Priority::Low);
+    auto hNormal = assets.LoadAsync("asset_normal.dat", [](const std::string& p){ CORE_LOG_INFO(std::string("Callback: asset_normal: ") + p); }, nullptr, Assets::AssetManager::Priority::Normal);
+
+    // Cancel the low priority load to test cancellation
+    bool cancelled = assets.CancelLoad(hLow);
+    CORE_LOG_INFO(std::string("Requested cancel for asset_low: ") + (cancelled ? "true" : "false"));
 
     while (window.ProcessMessages())
     {
@@ -30,6 +48,13 @@ static int RunApp(HINSTANCE hInstance)
         // Example: if Escape pressed, exit
         if (input.IsKeyDown(VK_ESCAPE))
             break;
+
+        // Poll for loaded assets and notify renderer
+        std::string loadedPath;
+        while (assets.PopLoaded(loadedPath))
+        {
+            renderer.OnAssetLoaded(loadedPath);
+        }
 
         renderer.RenderFrame();
         ui.Draw();
