@@ -28,3 +28,7 @@ target_compile_definitions(ImagineStudio PRIVATE UNICODE _UNICODE)
 set_target_properties(ImagineStudio PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )
+
+if (MSVC)
+    target_link_libraries(ImagineStudio PRIVATE Msimg32)
+endif()

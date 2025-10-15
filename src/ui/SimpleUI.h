@@ -9,9 +9,12 @@ public:
     SimpleUI() = default;
     ~SimpleUI() override = default;
 
-    void Initialize() override;
+    void Initialize(HWND hwnd) override;
     void Shutdown() override;
     void Draw() override;
+
+private:
+    HWND hwnd_ = nullptr;
 };
 
 } // namespace UI

@@ -1,11 +1,14 @@
 #pragma once
 
+#include <windows.h>
+
 namespace UI {
 
 class IUI {
 public:
     virtual ~IUI() {}
-    virtual void Initialize() = 0;
+    // Initialize with the application window handle
+    virtual void Initialize(HWND hwnd) = 0;
     virtual void Shutdown() = 0;
     virtual void Draw() = 0;
 };

@@ -17,7 +17,7 @@ static int RunApp(HINSTANCE hInstance)
     UI::SimpleUI ui;
 
     renderer.Initialize();
-    ui.Initialize();
+    ui.Initialize(window.GetHWND());
 
     Assets::AssetManager assets;
     assets.Initialize();
