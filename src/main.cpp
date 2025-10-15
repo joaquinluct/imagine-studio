@@ -1,13 +1,14 @@
 // Application entry using Platform::Window
-#include <windows.h>
-#include "platform/Window.h"
-#include "platform/Input.h"
-#include "renderer/DX12Renderer.h"
-#include "ui/SimpleUI.h"
 #include "assets/AssetManager.h"
 #include "core/Log.h"
 #include "jobs/TaskGraph.h"
 #include "jobs/ThreadPool.h"
+#include "platform/Input.h"
+#include "platform/Window.h"
+#include "renderer/DX12Renderer.h"
+#include "ui/SimpleUI.h"
+
+#include <windows.h>
 
 static int RunApp(HINSTANCE hInstance)
 {

@@ -1,0 +1,15 @@
+﻿Files changed: 14
+C:\Users\joaqu\source\repos\Imagine Studio\src\main.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\assets\AssetManager.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\assets\VFS.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\jobs\TaskGraph.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\renderer\CommandBuffer.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\renderer\DX12Device.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\renderer\DX12Renderer.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\renderer\Fence.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\renderer\RenderTarget.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\tests\taskgraph_test.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\tests\threadpool_bench.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\ui\DirectWriteTextRenderer.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\ui\SimpleUI.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\ui\Win32TextRenderer.cpp

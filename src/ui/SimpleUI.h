@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IUI.h"
+#include "TextRenderer.h"
 
 namespace UI {
 
@@ -15,6 +16,7 @@ public:
 
 private:
     HWND hwnd_ = nullptr;
+    UI::TextRenderer* textRenderer_ = nullptr;
 };
 
 } // namespace UI

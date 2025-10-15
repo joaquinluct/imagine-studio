@@ -1,20 +1,31 @@
+#include "DirectWriteTextRenderer.h"
 #include "SimpleUI.h"
+#include "Win32TextRenderer.h"
+
 #include <iostream>
+#include <memory>
 #include <windows.h>
 #include <wingdi.h>
-#include <memory>
+
+// Ensure Msimg32 is linked when building the Visual Studio project (AlphaBlend)
+#pragma comment(lib, "Msimg32.lib")
 
 namespace UI {
 
 void SimpleUI::Initialize(HWND hwnd)
 {
     hwnd_ = hwnd;
+    // Prefer DirectWrite renderer if available
+    UI::TextRenderer* dw = new UI::DirectWriteTextRenderer();
+    dw->Initialize(hwnd_);
+    textRenderer_ = dw; // fallback handled inside DirectWrite implementation
     std::cout << "SimpleUI: Initialize\n";
 }
 
 void SimpleUI::Shutdown()
 {
     std::cout << "SimpleUI: Shutdown\n";
+    if (textRenderer_) { textRenderer_->Shutdown(); delete textRenderer_; textRenderer_ = nullptr; }
     hwnd_ = nullptr;
 }
 
@@ -40,13 +51,14 @@ void SimpleUI::Draw()
 
     // Fill with semi-transparent gray (we'll use AlphaBlend)
     HBRUSH brush = CreateSolidBrush(RGB(100, 100, 100));
-    FillRect(memDC, &RECT{0,0,panelW,panelH}, brush);
+    RECT fillRect = { 0, 0, panelW, panelH };
+    FillRect(memDC, &fillRect, brush);
     DeleteObject(brush);
 
     // Draw text
     SetBkMode(memDC, TRANSPARENT);
     SetTextColor(memDC, RGB(255,255,255));
-    TextOut(memDC, 10, 10, L"Hola Mundo", 9);
+    if (textRenderer_) textRenderer_->DrawText(memDC, L"Hola Mundo", 10, 10);
 
     // Blend onto main DC
     BLENDFUNCTION bf = {};

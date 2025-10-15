@@ -1,4 +1,5 @@
 #include "Fence.h"
+
 #include <thread>
 
 namespace Renderer {

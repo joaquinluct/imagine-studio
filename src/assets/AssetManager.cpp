@@ -1,15 +1,16 @@
-#include "AssetManager.h"
-#include <thread>
-#include <chrono>
-#include <memory>
-#include <unordered_map>
-#include "../jobs/ThreadPool.h"
 #include "../core/Log.h"
+#include "../jobs/ThreadPool.h"
 #include "../renderer/Fence.h"
+#include "AssetManager.h"
 #include "VFS.h"
+
 #include <array>
-#include <sstream>
+#include <chrono>
 #include <fstream>
+#include <memory>
+#include <sstream>
+#include <thread>
+#include <unordered_map>
 
 using namespace Assets;
 

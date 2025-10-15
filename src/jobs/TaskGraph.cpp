@@ -1,7 +1,8 @@
 #include "TaskGraph.h"
 #include "ThreadPool.h"
-#include <queue>
+
 #include <iostream>
+#include <queue>
 
 namespace Jobs {
 

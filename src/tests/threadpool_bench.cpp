@@ -1,17 +1,18 @@
-#include <iostream>
-#include <vector>
-#include <chrono>
 #include <atomic>
-#include <thread>
-#include <mutex>
+#include <chrono>
 #include <condition_variable>
-#include <fstream>
 #include <cstdlib>
+#include <fstream>
+#include <iostream>
+#include <mutex>
+#include <thread>
+#include <vector>
 #ifdef _WIN32
 #include <windows.h>
 #endif
 #include "../jobs/ThreadPool.h"
 
+#ifdef BUILD_TEST_EXE
 int main()
 {
     const size_t TASKS = 100000; // number of tasks per run
@@ -70,5 +71,4 @@ int main()
         ofs << "]\n";
     }
 
-    return 0;
-}
+#endif // BUILD_TEST_EXE

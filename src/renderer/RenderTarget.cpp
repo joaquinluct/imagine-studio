@@ -1,4 +1,5 @@
 #include "RenderTarget.h"
+
 #include <iostream>
 
 namespace Renderer {

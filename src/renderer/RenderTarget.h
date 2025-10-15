@@ -7,8 +7,9 @@ public:
     RenderTarget() {}
     ~RenderTarget() {}
 
-    bool Create(int width, int height) { (void)width; (void)height; return true; }
-    void Destroy() {}
+    bool Create(int width, int height);
+    void Destroy();
+    void Present();
 };
 
 } // namespace Renderer

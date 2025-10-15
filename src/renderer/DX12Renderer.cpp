@@ -1,10 +1,11 @@
-#include "DX12Renderer.h"
-#include <iostream>
-#include "DX12Device.h"
-#include "RenderTarget.h"
 #include "CommandAllocator.h"
-#include "Fence.h"
 #include "CommandBuffer.h"
+#include "DX12Device.h"
+#include "DX12Renderer.h"
+#include "Fence.h"
+#include "RenderTarget.h"
+
+#include <iostream>
 
 namespace Renderer {
 
@@ -46,6 +47,11 @@ bool DX12Renderer::ComposeUI()
     // Stub: prepare composition target for UI
     std::cout << "DX12Renderer: ComposeUI (stub)\n";
     return true;
+}
+
+void DX12Renderer::OnAssetLoaded(const std::string& path)
+{
+    std::cout << "DX12Renderer: Asset loaded: " << path << "\n";
 }
 
 void DX12Renderer::Shutdown()
