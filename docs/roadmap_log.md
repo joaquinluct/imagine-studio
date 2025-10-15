@@ -48,3 +48,5 @@ Iteraciones recientes completadas (assets):
 - 7.02 Bench: micro-bench `threadpool_bench` added to test ThreadPool throughput across multiple thread counts.
 
 - 9.00 Material system: prototipo `Material` y `MaterialSystem` añadido con test `material_test` (archivos `src/renderer/Material.*`, `src/tests/material_test.cpp`).
+
+- 10.00 Profiler & overlays: añadido `Profiler` mínimo y overlay en `SimpleUI` para mostrar FPS (archivos `src/tools/Profiler.*`, integración en `src/ui/SimpleUI.*` y `src/main.cpp`).

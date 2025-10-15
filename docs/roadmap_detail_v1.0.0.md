@@ -146,6 +146,10 @@ Enlace principal: ver también `docs/roadmap.md`.
 - Descripción: Integrar herramientas para medir tiempos de CPU/GPU y mostrar overlays en pantalla.
 - Estado: pendiente
 
+10.00 Profiler y overlays
+- Descripción: Integración de un profiler mínimo (registro de frame-time y cálculo de FPS) y overlay en UI para mostrar métricas en pantalla.
+- Estado: completado (prototipo) - archivos: `src/tools/Profiler.{h,cpp}`, overlay integrado en `src/ui/SimpleUI.*` y uso en `src/main.cpp`.
+
 11 Adapter layers para DX11/Vulkan/OpenGL
 ------------------------------------------------
 

@@ -7,6 +7,8 @@
 #include "platform/Window.h"
 #include "renderer/DX12Renderer.h"
 #include "ui/SimpleUI.h"
+#include "../src/tools/Profiler.h"
+#include <chrono>
 
 #include <windows.h>
 static int RunApp(HINSTANCE hInstance)
@@ -60,6 +62,7 @@ static int RunApp(HINSTANCE hInstance)
 
     while (window.ProcessMessages())
     {
+        auto frameStart = std::chrono::high_resolution_clock::now();
         input.Update(window.GetHWND());
 
         // Example: if Escape pressed, exit
@@ -75,6 +78,10 @@ static int RunApp(HINSTANCE hInstance)
 
         renderer.RenderFrame();
         ui.Draw();
+        ui.DrawOverlay();
+        auto frameEnd = std::chrono::high_resolution_clock::now();
+        double ms = std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(frameEnd - frameStart).count();
+        Tools::Profiler::Instance().RecordFrame(ms);
         // TODO: update and render calls will go here
     }
 

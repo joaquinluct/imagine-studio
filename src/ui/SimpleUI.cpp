@@ -1,7 +1,9 @@
 #include "DirectWriteTextRenderer.h"
 #include "SimpleUI.h"
 #include "Win32TextRenderer.h"
+#include "../tools/Profiler.h"
 
+#include <cwchar>
 #include <iostream>
 #include <memory>
 #include <windows.h>
@@ -81,6 +83,21 @@ void SimpleUI::Draw()
     DeleteObject(hbm);
     DeleteDC(memDC);
 
+    EndPaint(hwnd_, &ps);
+}
+
+void SimpleUI::DrawOverlay()
+{
+    if (!hwnd_) return;
+    PAINTSTRUCT ps;
+    HDC hdc = BeginPaint(hwnd_, &ps);
+    // draw FPS at top-right
+    double fps = Tools::Profiler::Instance().GetFPS();
+    wchar_t buf[128];
+    swprintf_s(buf, L"FPS: %.1f", fps);
+    SetBkMode(hdc, TRANSPARENT);
+    SetTextColor(hdc, RGB(0,255,0));
+    if (textRenderer_) textRenderer_->DrawText(hdc, buf, 600, 10);
     EndPaint(hwnd_, &ps);
 }
 

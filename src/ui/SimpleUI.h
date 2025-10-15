@@ -12,6 +12,7 @@ public:
     void Initialize(HWND hwnd) override;
     void Shutdown() override;
     void Draw() override;
+    void DrawOverlay() override;
 
 private:
     HWND hwnd_ = nullptr;
