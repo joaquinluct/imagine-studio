@@ -28,7 +28,9 @@ Historial de iteraciones adicionales (reciente):
 - Añadido `ui/SimpleUI` (stub) e integrado en el loop principal.
 - Añadido `renderer/CommandBuffer` (ring-buffer stub) para preparación de comandos GPU.
 
+- Implementado UI panel y render de texto con GDI/AlphaBlend y `Win32TextRenderer` ("Hola Mundo" en panel transparente).
+
 Estado de compilación: build Debug x64 correcta (0 errores, 0 warnings) tras las iteraciones anteriores.
 
 Próximo paso propuesto:
-- Implementar el sistema de jobs/thread pool en `src/jobs` (crear `ThreadPool.cpp` y completar `ThreadPool.h`) para soportar tareas asíncronas y pruebas de integración con el renderer.
+- Preparar la integración del backend DX12 para composición UI y render targets (crear stubs y estructura para presentar la UI vía renderer).
