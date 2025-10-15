@@ -1,6 +1,7 @@
 // Application entry using Platform::Window
 #include <windows.h>
 #include "platform/Window.h"
+#include "platform/Input.h"
 #include "core/Log.h"
 
 static int RunApp(HINSTANCE hInstance)
@@ -8,10 +9,16 @@ static int RunApp(HINSTANCE hInstance)
     Platform::Window window(hInstance, L"Imagine Studio - Window", 800, 600);
 
     // Simple message loop
+    Platform::InputManager input;
     while (window.ProcessMessages())
     {
+        input.Update(window.GetHWND());
+
+        // Example: if Escape pressed, exit
+        if (input.IsKeyDown(VK_ESCAPE))
+            break;
+
         // TODO: update and render calls will go here
-        // For now, just idle until WM_QUIT
     }
 
     CORE_LOG_INFO("Application exiting");
