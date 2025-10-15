@@ -12,6 +12,13 @@ public:
     void Initialize() override;
     void Shutdown() override;
     void RenderFrame() override;
+    // Prepare render target for UI composition
+    bool ComposeUI();
+
+private:
+    // stubs for device and render target ownership
+    class DX12Device* device_ = nullptr;
+    class RenderTarget* rt_ = nullptr;
 };
 
 } // namespace Renderer
