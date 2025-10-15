@@ -1,10 +1,10 @@
 #pragma once
 
 #include "TextRenderer.h"
-#include <windows.h>
-#include <dwrite.h>
-#include <wrl.h>
 
+#include <dwrite.h>
+#include <windows.h>
+#include <wrl.h>
 namespace UI {
 
 class DirectWriteTextRenderer : public TextRenderer {
@@ -15,6 +15,9 @@ public:
     void Initialize(HWND hwnd) override;
     void Shutdown() override;
     void DrawText(HDC hdc, const std::wstring& text, int x, int y) override;
+
+    // Whether DirectWrite initialized successfully
+    bool IsAvailable() const;
 
 private:
     Microsoft::WRL::ComPtr<IDWriteFactory> factory_;

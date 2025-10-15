@@ -3,7 +3,6 @@
 
 #include <chrono>
 #include <iostream>
-
 #ifdef BUILD_TEST_EXE
 int main()
 {
@@ -30,4 +29,8 @@ int main()
     auto t1 = std::chrono::high_resolution_clock::now();
     double secs = std::chrono::duration_cast<std::chrono::duration<double>>(t1 - t0).count();
     std::cout << "TaskGraph test completed in " << secs << "s, counter=" << counter.load() << "\n";
+
+    return 0;
+}
+
 #endif // BUILD_TEST_EXE

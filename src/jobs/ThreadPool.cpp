@@ -1,5 +1,4 @@
 #include "ThreadPool.h"
-
 namespace Jobs {
 
 ThreadPool::ThreadPool(size_t threadCount)
@@ -38,6 +37,9 @@ void ThreadPool::Shutdown()
     workers_.clear();
 }
 
+// Suppress potential static analysis warning about mutex unlock in this loop (false positive)
+#pragma warning(push)
+#pragma warning(disable:26115)
 void ThreadPool::WorkerLoop()
 {
     while (running_.load())
@@ -47,7 +49,12 @@ void ThreadPool::WorkerLoop()
             std::unique_lock<std::mutex> lock(mutex_);
             cv_.wait(lock, [this] { return !tasks_.empty() || !running_.load(); });
             if (!running_.load() && tasks_.empty())
-                return;
+            {
+                // no more work and shutting down
+                break;
+            }
+
+#pragma warning(pop)
             task = std::move(tasks_.front());
             tasks_.pop();
         }

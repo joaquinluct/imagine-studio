@@ -11,7 +11,6 @@
 #include <sstream>
 #include <thread>
 #include <unordered_map>
-
 using namespace Assets;
 
 namespace Assets {

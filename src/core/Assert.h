@@ -2,7 +2,6 @@
 
 #include <cstdlib>
 #include <iostream>
-
 #ifndef NDEBUG
 #define CORE_ASSERT(cond, msg)                                   \
     do {                                                         \

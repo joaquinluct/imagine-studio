@@ -1,8 +1,7 @@
 #pragma once
 
-#include <windows.h>
 #include <string>
-
+#include <windows.h>
 namespace UI {
 
 class TextRenderer {

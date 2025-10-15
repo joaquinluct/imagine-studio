@@ -1,7 +1,6 @@
 #include "DX12Device.h"
 
 #include <iostream>
-
 namespace Renderer {
 
 DX12Device::DX12Device() {}

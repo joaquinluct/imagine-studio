@@ -71,4 +71,7 @@ int main()
         ofs << "]\n";
     }
 
+    return 0;
+}
+
 #endif // BUILD_TEST_EXE

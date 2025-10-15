@@ -6,7 +6,6 @@
 #include "RenderTarget.h"
 
 #include <iostream>
-
 namespace Renderer {
 
 DX12Renderer::DX12Renderer() : device_(nullptr), rt_(nullptr) {}

@@ -2,7 +2,6 @@
 
 #include "IUI.h"
 #include "TextRenderer.h"
-
 namespace UI {
 
 class SimpleUI : public IUI {

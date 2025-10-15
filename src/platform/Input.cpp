@@ -1,5 +1,4 @@
 #include "Input.h"
-
 namespace Platform {
 
 void InputManager::Update(HWND hwnd)

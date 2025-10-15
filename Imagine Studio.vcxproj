@@ -130,6 +130,7 @@
     <None Include="docs\roadmap_detail_v1.0.0.md" />
     <None Include="docs\roadmap_log.md" />
     <None Include="README.md" />
+    <None Include="tools\reorder_includes.py" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\assets\AssetManager.cpp" />

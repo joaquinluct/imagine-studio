@@ -1,5 +1,4 @@
 #include "Window.h"
-
 namespace Platform {
 
 Window::Window(HINSTANCE hInstance, const wchar_t* title, int width, int height)

@@ -1,7 +1,6 @@
 #include "CommandBuffer.h"
 
 #include <cstring>
-
 namespace Renderer {
 
 CommandBuffer::CommandBuffer() {}

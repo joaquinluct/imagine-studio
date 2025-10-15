@@ -1,7 +1,6 @@
 #include "Win32TextRenderer.h"
 
 #include <windows.h>
-
 namespace UI {
 
 void Win32TextRenderer::Initialize(HWND hwnd)

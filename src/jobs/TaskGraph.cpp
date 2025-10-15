@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <queue>
-
 namespace Jobs {
 
 TaskGraph::TaskGraph() {}

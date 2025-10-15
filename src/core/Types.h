@@ -2,7 +2,6 @@
 #pragma once
 
 #include <cstdint>
-
 namespace Core {
 
 using u8  = std::uint8_t;

@@ -1,6 +1,5 @@
 #pragma once
 #include <windows.h>
-
 namespace Platform {
 
 class Window {

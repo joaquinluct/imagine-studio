@@ -2,7 +2,6 @@
 
 #include <fstream>
 #include <iostream>
-
 namespace Assets {
 
 bool VFS::Mount(const std::string& path)

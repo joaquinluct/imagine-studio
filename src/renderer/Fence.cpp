@@ -1,7 +1,6 @@
 #include "Fence.h"
 
 #include <thread>
-
 namespace Renderer {
 
 Fence::Fence()

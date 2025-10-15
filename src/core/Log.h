@@ -1,9 +1,8 @@
 #pragma once
 
-#include <string>
 #include <iostream>
 #include <mutex>
-
+#include <string>
 namespace Core {
 
 enum class LogLevel { Info, Warn, Error };

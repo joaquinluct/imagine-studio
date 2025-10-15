@@ -6,7 +6,6 @@
 #include <memory>
 #include <windows.h>
 #include <wingdi.h>
-
 // Ensure Msimg32 is linked when building the Visual Studio project (AlphaBlend)
 #pragma comment(lib, "Msimg32.lib")
 
@@ -16,9 +15,19 @@ void SimpleUI::Initialize(HWND hwnd)
 {
     hwnd_ = hwnd;
     // Prefer DirectWrite renderer if available
-    UI::TextRenderer* dw = new UI::DirectWriteTextRenderer();
+    auto* dw = new UI::DirectWriteTextRenderer();
     dw->Initialize(hwnd_);
-    textRenderer_ = dw; // fallback handled inside DirectWrite implementation
+    if (dw->IsAvailable())
+    {
+        textRenderer_ = dw;
+    }
+    else
+    {
+        delete dw;
+        UI::TextRenderer* w32 = new UI::Win32TextRenderer();
+        w32->Initialize(hwnd_);
+        textRenderer_ = w32;
+    }
     std::cout << "SimpleUI: Initialize\n";
 }
 

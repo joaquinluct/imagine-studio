@@ -1,8 +1,7 @@
 #pragma once
 
-#include <windows.h>
 #include <cstdint>
-
+#include <windows.h>
 namespace Platform {
 
 class InputManager {

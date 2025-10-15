@@ -1,7 +1,6 @@
 #include "RenderTarget.h"
 
 #include <iostream>
-
 namespace Renderer {
 
 // Simple stub implementations

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <atomic>
-
 namespace Renderer {
 
 class Fence {

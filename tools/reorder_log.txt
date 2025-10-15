@@ -1,15 +1,34 @@
-﻿Files changed: 14
+﻿Files changed: 33
 C:\Users\joaqu\source\repos\Imagine Studio\src\main.cpp
 C:\Users\joaqu\source\repos\Imagine Studio\src\assets\AssetManager.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\assets\AssetManager.h
 C:\Users\joaqu\source\repos\Imagine Studio\src\assets\VFS.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\assets\VFS.h
+C:\Users\joaqu\source\repos\Imagine Studio\src\core\Assert.h
+C:\Users\joaqu\source\repos\Imagine Studio\src\core\Log.h
+C:\Users\joaqu\source\repos\Imagine Studio\src\core\Types.h
 C:\Users\joaqu\source\repos\Imagine Studio\src\jobs\TaskGraph.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\jobs\TaskGraph.h
+C:\Users\joaqu\source\repos\Imagine Studio\src\jobs\ThreadPool.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\jobs\ThreadPool.h
+C:\Users\joaqu\source\repos\Imagine Studio\src\platform\Input.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\platform\Input.h
+C:\Users\joaqu\source\repos\Imagine Studio\src\platform\Window.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\platform\Window.h
 C:\Users\joaqu\source\repos\Imagine Studio\src\renderer\CommandBuffer.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\renderer\CommandBuffer.h
 C:\Users\joaqu\source\repos\Imagine Studio\src\renderer\DX12Device.cpp
 C:\Users\joaqu\source\repos\Imagine Studio\src\renderer\DX12Renderer.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\renderer\DX12Renderer.h
 C:\Users\joaqu\source\repos\Imagine Studio\src\renderer\Fence.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\renderer\Fence.h
 C:\Users\joaqu\source\repos\Imagine Studio\src\renderer\RenderTarget.cpp
 C:\Users\joaqu\source\repos\Imagine Studio\src\tests\taskgraph_test.cpp
-C:\Users\joaqu\source\repos\Imagine Studio\src\tests\threadpool_bench.cpp
 C:\Users\joaqu\source\repos\Imagine Studio\src\ui\DirectWriteTextRenderer.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\ui\DirectWriteTextRenderer.h
+C:\Users\joaqu\source\repos\Imagine Studio\src\ui\IUI.h
 C:\Users\joaqu\source\repos\Imagine Studio\src\ui\SimpleUI.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\ui\SimpleUI.h
+C:\Users\joaqu\source\repos\Imagine Studio\src\ui\TextRenderer.h
 C:\Users\joaqu\source\repos\Imagine Studio\src\ui\Win32TextRenderer.cpp
+C:\Users\joaqu\source\repos\Imagine Studio\src\ui\Win32TextRenderer.h

@@ -1,13 +1,17 @@
 #include "DirectWriteTextRenderer.h"
 
 #include <iostream>
-
 #pragma comment(lib, "dwrite.lib")
 
 namespace UI {
 
 DirectWriteTextRenderer::DirectWriteTextRenderer() {}
 DirectWriteTextRenderer::~DirectWriteTextRenderer() { Shutdown(); }
+
+bool DirectWriteTextRenderer::IsAvailable() const
+{
+    return factory_.Get() != nullptr && textFormat_.Get() != nullptr;
+}
 
 void DirectWriteTextRenderer::Initialize(HWND hwnd)
 {
@@ -24,6 +28,8 @@ void DirectWriteTextRenderer::Initialize(HWND hwnd)
         std::cerr << "DirectWrite: failed to create text format\n";
         return;
     }
+
+    // success -> available
 }
 
 void DirectWriteTextRenderer::Shutdown()

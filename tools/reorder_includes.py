@@ -14,18 +14,23 @@ def process_file(path):
         text = f.read()
 
     lines = text.splitlines()
-    # find top include block: start at first line, allow comments and blank lines, then include lines until first non-include
-    i = 0
+    # find first include line anywhere
     n = len(lines)
-    # skip initial shebang or BOM? just proceed
-    # allow initial comments or blank lines
-    while i < n and (lines[i].strip().startswith('//') or lines[i].strip().startswith('/*') or lines[i].strip()=='' or lines[i].strip().startswith('/*') or lines[i].lstrip().startswith('/*')):
-        i += 1
-    # collect includes from i
-    inc_start = i
+    inc_start = -1
+    for idx in range(n):
+        if include_re.match(lines[idx]):
+            inc_start = idx
+            break
+    if inc_start == -1:
+        return False
+
+    # collect contiguous block of include or blank lines starting at inc_start
+    i = inc_start
     includes = []
-    while i < n and include_re.match(lines[i]):
-        includes.append(lines[i].strip())
+    while i < n and (include_re.match(lines[i]) or lines[i].strip() == ''):
+        m = include_re.match(lines[i])
+        if m:
+            includes.append(m.group(1).strip())
         i += 1
     inc_end = i
     if not includes:

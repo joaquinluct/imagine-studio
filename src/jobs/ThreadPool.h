@@ -1,13 +1,12 @@
 #pragma once
 
+#include <atomic>
+#include <condition_variable>
+#include <functional>
+#include <mutex>
+#include <queue>
 #include <thread>
 #include <vector>
-#include <functional>
-#include <queue>
-#include <mutex>
-#include <condition_variable>
-#include <atomic>
-
 namespace Jobs {
 
 class ThreadPool {

@@ -9,7 +9,6 @@
 #include "ui/SimpleUI.h"
 
 #include <windows.h>
-
 static int RunApp(HINSTANCE hInstance)
 {
     Platform::Window window(hInstance, L"Imagine Studio - Window", 800, 600);
@@ -97,7 +96,11 @@ int main()
 }
 
 // Windows GUI entry
+// Suppress SAL annotation mismatch for WinMain wrapper calling RunApp
+#pragma warning(push)
+#pragma warning(disable:28251)
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int)
 {
     return RunApp(hInstance);
 }
+#pragma warning(pop)

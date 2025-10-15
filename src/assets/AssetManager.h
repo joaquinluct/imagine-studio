@@ -2,8 +2,8 @@
 
 #include <array>
 #include <atomic>
-#include <cstdint>
 #include <condition_variable>
+#include <cstdint>
 #include <functional>
 #include <memory>
 #include <mutex>
@@ -13,7 +13,6 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-
 // Forward declaration for synchronization fence
 namespace Renderer { class Fence; }
 namespace Assets { class VFS; }
@@ -44,7 +43,7 @@ public:
     bool PopLoaded(std::string& outPath);
 
 private:
-    struct Task { LoadHandle handle; Priority priority; std::string path; std::function<void(const std::string&)> callback; Renderer::Fence* fence; };
+    struct Task { LoadHandle handle = 0; Priority priority = Priority::Normal; std::string path; std::function<void(const std::string&)> callback; Renderer::Fence* fence = nullptr; };
 
     struct TaskCmp { bool operator()(Task const& a, Task const& b) const { return static_cast<int>(a.priority) < static_cast<int>(b.priority); } };
 

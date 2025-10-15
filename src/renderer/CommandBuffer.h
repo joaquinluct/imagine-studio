@@ -1,9 +1,8 @@
 #pragma once
 
 #include <cstddef>
-#include <vector>
 #include <mutex>
-
+#include <vector>
 namespace Renderer {
 
 class CommandBuffer {
