@@ -32,6 +32,8 @@ list(APPEND SRC_FILES ${UI_SRC})
 
 # Explicitly ensure renderer stubs added by recent iterations are included
 list(APPEND SRC_FILES "${CMAKE_SOURCE_DIR}/src/renderer/Fence.cpp")
+# Ensure TaskGraph is included
+list(APPEND SRC_FILES "${CMAKE_SOURCE_DIR}/src/jobs/TaskGraph.cpp")
 
 add_executable(ImagineStudio ${SRC_FILES})
 
@@ -49,4 +51,17 @@ if (MSVC)
     target_link_libraries(ImagineStudio PRIVATE Msimg32)
 else()
     # On other platforms link adjustments can be added here if needed
+endif()
+
+# Benchmarks
+file(GLOB_RECURSE BENCH_SRC "${CMAKE_SOURCE_DIR}/src/tests/*.cpp")
+if (BENCH_SRC)
+    add_executable(threadpool_bench ${BENCH_SRC})
+    target_include_directories(threadpool_bench PRIVATE ${CMAKE_SOURCE_DIR}/src)
+    # Ensure ThreadPool and related job sources are linked into the bench
+    file(GLOB_RECURSE JOBS_SRC "${CMAKE_SOURCE_DIR}/src/jobs/*.cpp")
+    target_sources(threadpool_bench PRIVATE ${JOBS_SRC})
+    if (MSVC)
+        target_link_libraries(threadpool_bench PRIVATE Msimg32)
+    endif()
 endif()

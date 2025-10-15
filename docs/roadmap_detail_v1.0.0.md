@@ -113,6 +113,10 @@ Enlace principal: ver también `docs/roadmap.md`.
 - Descripción: Implementar TaskGraph para expresar dependencias entre tareas y ejecutarlas sobre ThreadPool.
 - Estado: completado (prototipo) - `src/jobs/TaskGraph.*` (commit `755a2a4`).
 
+7.02 ThreadPool/TaskGraph benchmarks
+- Descripción: Micro-bench para medir throughput de `ThreadPool` y ejecución de grafos en `TaskGraph`. Test parametrizable sobre número de hilos.
+- Estado: completado (bench executable `threadpool_bench` en `build/Debug`) 
+
 8 Simple UI layer + text rendering
 ------------------------------------------------
 
