@@ -52,3 +52,5 @@ Iteraciones recientes completadas (assets):
 - 10.00 Profiler & overlays: añadido `Profiler` mínimo y overlay en `SimpleUI` para mostrar FPS (archivos `src/tools/Profiler.*`, integración en `src/ui/SimpleUI.*` y `src/main.cpp`).
 
 - 11.00 Adapter factory: añadida factoría `AdapterFactory` con stub adapter para tests y wiring para DX12 adapter (archivos `src/renderer/AdapterFactory.*`, `src/tests/adapter_test.cpp`).
+
+- 12.00 Polishing & examples: iniciado trabajo en estructura de ejemplos y tests automáticos; próximos pasos: añadir `examples/` y tests de integración.

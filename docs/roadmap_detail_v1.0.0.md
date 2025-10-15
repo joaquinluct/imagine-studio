@@ -168,6 +168,10 @@ Enlace principal: ver también `docs/roadmap.md`.
 - Descripción: Crear escenas de ejemplo y tests automáticos para garantizar estabilidad.
 - Estado: pendiente
 
+12.00 Ejemplos, samples y tests
+- Descripción: Crear escenas de ejemplo, muestras de uso y tests automáticos para garantizar estabilidad y servir como referencia para desarrolladores.
+- Estado: en progreso (creación de estructura de `examples/` y tests básicos en `src/tests/` como siguientes pasos).
+
 Cómo usar este fichero
 - Mantener las entradas 1 por línea con estado y commit cuando se complete.
 - Añadir sub-historias nuevas bajo la fase correspondiente (por ejemplo 6.06, 6.07...).
