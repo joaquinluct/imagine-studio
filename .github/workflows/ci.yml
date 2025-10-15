@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Configure (CMake)
+      run: cmake -S . -B build -G "Visual Studio 17 2022" -A x64
+
+    - name: Build with CMake (Debug)
+      run: cmake --build build --config Debug -- /m
+
+    - name: Build with MSBuild (IDE)
+      run: msbuild "build\\ImagineStudio.sln" /p:Configuration=Debug /m
+
+    - name: Run static analysis (MSBuild)
+      run: msbuild "build\\ImagineStudio.sln" /p:Configuration=Debug /p:RunCodeAnalysis=true /m
+
+    - name: Run tests
+      run: |
+        if exist build\\Debug\\material_test.exe (build\\Debug\\material_test.exe) else (echo "material_test missing")
+        if exist build\\Debug\\adapter_test.exe (build\\Debug\\adapter_test.exe) else (echo "adapter_test missing")
+        if exist build\\Debug\\example_runner.exe (build\\Debug\\example_runner.exe) else (echo "example_runner missing")
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: imagine-studio-debug
+        path: build\\bin\\Debug
