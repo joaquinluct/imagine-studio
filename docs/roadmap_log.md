@@ -34,3 +34,6 @@ Estado de compilación: build Debug x64 correcta (0 errores, 0 warnings) tras las
 
 Próximo paso propuesto:
 - Preparar la integración del backend DX12 para composición UI y render targets (crear stubs y estructura para presentar la UI vía renderer).
+
+Iteración completada:
+- Preparados stubs DX12: `DX12Device`, `RenderTarget` y ampliado `DX12Renderer` con `ComposeUI()` para soportar composición UI (stub). Compilación: OK.
