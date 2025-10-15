@@ -1,5 +1,7 @@
 # Roadmap profesional - Framework Renderer AAA
 
+Detalle ampliado: ver `docs/roadmap_detail.md` para historias y sub-tareas (por ejemplo 6.00..6.04).
+
 Objetivo final:
 Crear un framework renderer modular (estilo Unity) orientado a proyectos 3D AAA, con soporte inicial para DirectX12 y abstracción para añadir DX11/Vulkan/OpenGL posteriormente. Debe incluir sistemas AAA clave: multihilo, streaming de assets, ring-buffers para comandos de GPU, pipeline de render, UI layer, y herramientas para depuración y profiling.
 
