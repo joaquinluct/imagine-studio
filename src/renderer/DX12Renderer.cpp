@@ -21,8 +21,9 @@ void DX12Renderer::Initialize()
 
 void DX12Renderer::RenderFrame()
 {
-    // Stub: call ComposeUI for composition (no-op real implementation)
+    // Stub: call ComposeUI for composition and present the render target
     ComposeUI();
+    if (rt_) rt_->Present();
 }
 
 bool DX12Renderer::ComposeUI()
