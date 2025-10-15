@@ -6,7 +6,10 @@
 #include <mutex>
 #include <condition_variable>
 #include <fstream>
-#include <filesystem>
+#include <cstdlib>
+#ifdef _WIN32
+#include <windows.h>
+#endif
 #include "../jobs/ThreadPool.h"
 
 int main()
@@ -48,7 +51,12 @@ int main()
     }
 
     // ensure output directory exists and write JSON results
-    std::filesystem::create_directories("build/bench");
+#ifdef _WIN32
+    CreateDirectoryA("build", NULL);
+    CreateDirectoryA("build\\bench", NULL);
+#else
+    system("mkdir -p build/bench");
+#endif
     std::ofstream ofs("build/bench/threadpool_bench_results.json");
     if (ofs)
     {

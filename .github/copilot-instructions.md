@@ -14,8 +14,9 @@ Flujo de trabajo por sesión:
    - Antes de crear el commit se debe compilar la solución/proyecto.
      - Requisito adicional: realizar ambas compilaciones y verificar que ambas quedan limpias (0 errores, 0 warnings) antes de proceder al commit:
        1) Compilación desde línea de comandos / CMake (por ejemplo: `cmake --build build --config Debug`).
-       2) Compilación desde el entorno/IDE (por ejemplo: abrir la solución generada en `build/` en Visual Studio y usar Build ? Build Solution).
-     - Si alguna de las dos compilaciones produce errores o warnings, corregirlos hasta que ambas estén limpias.
+       2) Compilación desde el entorno/IDE (el asistente ejecutará silenciosamente `msbuild "build/ImagineStudio.sln" /p:Configuration=Debug /m` para reproducir el Build ? Build Solution). Este paso se ejecutará automáticamente por el asistente y sus resultados se registrarán.
+     - Si alguna de las dos compilaciones produce errores o warnings, el asistente corregirá los errores cuando sea posible y volverá a ejecutar ambas compilaciones hasta obtener builds limpias.
+     - Nota: el paso 2 (build de IDE vía msbuild) es obligatorio y se ejecutará sin pedir confirmación. El asistente registrará la salida y añadirá la información relevante en `docs/roadmap_log.md`.
    - Una vez ambas compilaciones estén limpias, crear el commit y actualizar los archivos Markdown pertinentes (`docs/roadmap_log.md`, `docs/commits.md`, `README.md` cuando proceda).
 6) Repetir desde 1.
 
