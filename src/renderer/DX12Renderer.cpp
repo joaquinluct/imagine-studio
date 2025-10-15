@@ -2,6 +2,9 @@
 #include <iostream>
 #include "DX12Device.h"
 #include "RenderTarget.h"
+#include "CommandAllocator.h"
+#include "Fence.h"
+#include "CommandBuffer.h"
 
 namespace Renderer {
 
@@ -15,6 +18,8 @@ void DX12Renderer::Initialize()
     device_->Initialize();
     rt_ = new RenderTarget();
     rt_->Create(800, 600);
+    allocator_ = new CommandAllocator();
+    fence_ = new Fence();
 }
 
 // Shutdown implementation moved below (cleanup of device and render target)
@@ -22,6 +27,16 @@ void DX12Renderer::Initialize()
 void DX12Renderer::RenderFrame()
 {
     // Stub: call ComposeUI for composition and present the render target
+    // Simulate recording commands
+    Renderer::CommandBuffer cmd;
+    cmd.Initialize(1024);
+    // ... allocate and record
+    unsigned long long submitIndex = cmd.Submit();
+
+    // signal fence and wait (stub)
+    if (fence_) fence_->Signal();
+    if (fence_) fence_->Wait();
+
     ComposeUI();
     if (rt_) rt_->Present();
 }

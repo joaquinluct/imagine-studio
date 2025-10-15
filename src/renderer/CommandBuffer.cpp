@@ -14,6 +14,19 @@ void CommandBuffer::Initialize(size_t capacityBytes)
     tail_ = 0;
 }
 
+unsigned long long CommandBuffer::Submit()
+{
+    std::lock_guard<std::mutex> lock(mutex_);
+    submissionIndex_++;
+    // in a real implementation we'd flush to GPU
+    return submissionIndex_;
+}
+
+void CommandBuffer::ResetForFrame()
+{
+    Reset();
+}
+
 void CommandBuffer::Shutdown()
 {
     buffer_.clear();

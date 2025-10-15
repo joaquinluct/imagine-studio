@@ -23,12 +23,18 @@ public:
 
     size_t Capacity() const { return capacity_; }
 
+    // Submit recorded data and return an index
+    unsigned long long Submit();
+    void ResetForFrame();
+
 private:
     std::vector<uint8_t> buffer_;
     size_t capacity_ = 0;
     size_t head_ = 0; // write head
     size_t tail_ = 0; // read tail (not used for GPU sync in stub)
     std::mutex mutex_;
+    // simple submission counter
+    unsigned long long submissionIndex_ = 0;
 };
 
 } // namespace Renderer

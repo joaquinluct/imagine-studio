@@ -17,6 +17,17 @@ file(GLOB_RECURSE SRC_FILES
 file(GLOB_RECURSE ASSET_SRC "${CMAKE_SOURCE_DIR}/src/assets/*.cpp")
 list(APPEND SRC_FILES ${ASSET_SRC})
 
+# Ensure renderer sources are included (explicit glob)
+file(GLOB_RECURSE RENDER_SRC "${CMAKE_SOURCE_DIR}/src/renderer/*.cpp")
+list(APPEND SRC_FILES ${RENDER_SRC})
+
+# Ensure UI sources are included
+file(GLOB_RECURSE UI_SRC "${CMAKE_SOURCE_DIR}/src/ui/*.cpp")
+list(APPEND SRC_FILES ${UI_SRC})
+
+# Explicitly ensure renderer stubs added by recent iterations are included
+list(APPEND SRC_FILES "${CMAKE_SOURCE_DIR}/src/renderer/Fence.cpp")
+
 add_executable(ImagineStudio ${SRC_FILES})
 
 target_include_directories(ImagineStudio PRIVATE ${CMAKE_SOURCE_DIR}/src)
