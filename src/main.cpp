@@ -15,6 +15,11 @@ static int RunApp(HINSTANCE hInstance)
 {
     Platform::Window window(hInstance, L"Imagine Studio - Window", 800, 600);
 
+    // Ensure the window is shown (start maximized) and brought to foreground so the UI panel is visible
+    ShowWindow(window.GetHWND(), SW_SHOWMAXIMIZED);
+    UpdateWindow(window.GetHWND());
+    SetForegroundWindow(window.GetHWND());
+
     // Simple message loop
     Platform::InputManager input;
     Renderer::DX12Renderer renderer;
@@ -95,14 +100,7 @@ static int RunApp(HINSTANCE hInstance)
     return 0;
 }
 
-// Console entry
-int main()
-{
-    HINSTANCE hInstance = GetModuleHandle(NULL);
-    return RunApp(hInstance);
-}
-
-// Windows GUI entry
+// Windows GUI entry (GUI-only executable)
 // Suppress SAL annotation mismatch for WinMain wrapper calling RunApp
 #pragma warning(push)
 #pragma warning(disable:28251)

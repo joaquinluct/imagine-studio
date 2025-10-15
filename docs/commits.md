@@ -35,4 +35,5 @@ Historial de commits relevantes:
 - feat(platform): add InputManager (keyboard/mouse polling) and integrate in main loop
 - feat(ui): add SimpleUI stub and integrate in main loop
 - feat(renderer): add CommandBuffer ring-buffer stub for GPU commands
+- chore(app): switch to GUI-only entry (WinMain), start maximized, set CMake project version to 1.0.0
 

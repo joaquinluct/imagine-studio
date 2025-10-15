@@ -1,3 +1,4 @@
+#ifdef BUILD_EXAMPLE_EXE
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -16,3 +17,5 @@ int main(int argc, char** argv)
 {
     return main_example(argc, argv);
 }
+
+#endif // BUILD_EXAMPLE_EXE

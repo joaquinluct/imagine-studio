@@ -124,29 +124,38 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include=".github\copilot-instructions.md" />
+    <None Include=".github\workflows\ci.yml" />
     <None Include=".gitignore" />
     <None Include="docs\commits.md" />
     <None Include="docs\roadmap.md" />
     <None Include="docs\roadmap_detail_v1.0.0.md" />
     <None Include="docs\roadmap_log.md" />
+    <None Include="examples\scene1\README.md" />
+    <None Include="examples\scene1\scene.json" />
     <None Include="README.md" />
     <None Include="tools\reorder_includes.py" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\assets\AssetManager.cpp" />
     <ClCompile Include="src\assets\VFS.cpp" />
+    <ClCompile Include="src\examples\ExampleRunner.cpp" />
     <ClCompile Include="src\jobs\TaskGraph.cpp" />
     <ClCompile Include="src\jobs\ThreadPool.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\platform\Input.cpp" />
     <ClCompile Include="src\platform\Window.cpp" />
+    <ClCompile Include="src\renderer\AdapterFactory.cpp" />
     <ClCompile Include="src\renderer\CommandBuffer.cpp" />
     <ClCompile Include="src\renderer\DX12Device.cpp" />
     <ClCompile Include="src\renderer\DX12Renderer.cpp" />
     <ClCompile Include="src\renderer\Fence.cpp" />
+    <ClCompile Include="src\renderer\Material.cpp" />
     <ClCompile Include="src\renderer\RenderTarget.cpp" />
+    <ClCompile Include="src\tests\adapter_test.cpp" />
+    <ClCompile Include="src\tests\material_test.cpp" />
     <ClCompile Include="src\tests\taskgraph_test.cpp" />
     <ClCompile Include="src\tests\threadpool_bench.cpp" />
+    <ClCompile Include="src\tools\Profiler.cpp" />
     <ClCompile Include="src\ui\DirectWriteTextRenderer.cpp" />
     <ClCompile Include="src\ui\SimpleUI.cpp" />
     <ClCompile Include="src\ui\Win32TextRenderer.cpp" />
@@ -161,13 +170,16 @@
     <ClInclude Include="src\jobs\ThreadPool.h" />
     <ClInclude Include="src\platform\Input.h" />
     <ClInclude Include="src\platform\Window.h" />
+    <ClInclude Include="src\renderer\AdapterFactory.h" />
     <ClInclude Include="src\renderer\CommandAllocator.h" />
     <ClInclude Include="src\renderer\CommandBuffer.h" />
     <ClInclude Include="src\renderer\DX12Device.h" />
     <ClInclude Include="src\renderer\DX12Renderer.h" />
     <ClInclude Include="src\renderer\Fence.h" />
     <ClInclude Include="src\renderer\IRenderer.h" />
+    <ClInclude Include="src\renderer\Material.h" />
     <ClInclude Include="src\renderer\RenderTarget.h" />
+    <ClInclude Include="src\tools\Profiler.h" />
     <ClInclude Include="src\ui\DirectWriteTextRenderer.h" />
     <ClInclude Include="src\ui\IUI.h" />
     <ClInclude Include="src\ui\SimpleUI.h" />

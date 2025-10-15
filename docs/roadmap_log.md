@@ -56,3 +56,12 @@ Iteraciones recientes completadas (assets):
 - 12.00 Polishing & examples: iniciado trabajo en estructura de ejemplos y tests automáticos; próximos pasos: añadir `examples/` y tests de integración.
 
 - 12.00 Examples & tests: añadido `examples/scene1` and `src/examples/ExampleRunner.cpp`. Example runner reads the sample scene and prints it.
+
+Registro de la acción reciente:
+- Se cambió la entrada de la aplicación a GUI-only: la aplicación arranca mediante `WinMain` y el ejecutable usa el subsistema Windows, ocultando la consola en ejecución normal.
+- Se forzó el inicio de la ventana principal en modo maximizado (`SW_SHOWMAXIMIZED`).
+- Se fijó la versión del proyecto en `1.0.0` en `CMakeLists.txt` y se añadió opción CMake `IMAGINE_START_MAXIMIZED`.
+- Compilación tras el cambio: CMake build Debug OK, msbuild Debug OK (0 errores, 0 warnings).
+
+Hecho: 3. Sistema de plataforma/abstracción (Windowing + input)
+Siguiente: 4. Backend de render inicial - DirectX12 minimal

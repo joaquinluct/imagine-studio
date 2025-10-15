@@ -10,6 +10,7 @@ public:
     virtual void Initialize(HWND hwnd) = 0;
     virtual void Shutdown() = 0;
     virtual void Draw() = 0;
+    virtual void DrawOverlay() {}
 };
 
 } // namespace UI

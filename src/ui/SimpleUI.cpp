@@ -44,8 +44,8 @@ void SimpleUI::Draw()
 {
     if (!hwnd_) return;
 
-    PAINTSTRUCT ps;
-    HDC hdc = BeginPaint(hwnd_, &ps);
+    // Drawing from the main loop: use GetDC/ReleaseDC rather than BeginPaint/EndPaint
+    HDC hdc = GetDC(hwnd_);
 
     // Create a compatible DC and bitmap for alpha blending
     HDC memDC = CreateCompatibleDC(hdc);
@@ -83,14 +83,13 @@ void SimpleUI::Draw()
     DeleteObject(hbm);
     DeleteDC(memDC);
 
-    EndPaint(hwnd_, &ps);
+    ReleaseDC(hwnd_, hdc);
 }
 
 void SimpleUI::DrawOverlay()
 {
     if (!hwnd_) return;
-    PAINTSTRUCT ps;
-    HDC hdc = BeginPaint(hwnd_, &ps);
+    HDC hdc = GetDC(hwnd_);
     // draw FPS at top-right
     double fps = Tools::Profiler::Instance().GetFPS();
     wchar_t buf[128];
@@ -98,7 +97,7 @@ void SimpleUI::DrawOverlay()
     SetBkMode(hdc, TRANSPARENT);
     SetTextColor(hdc, RGB(0,255,0));
     if (textRenderer_) textRenderer_->DrawText(hdc, buf, 600, 10);
-    EndPaint(hwnd_, &ps);
+    ReleaseDC(hwnd_, hdc);
 }
 
 } // namespace UI
