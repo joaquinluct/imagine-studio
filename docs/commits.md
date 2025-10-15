@@ -26,3 +26,8 @@ feat(renderer): inicializa estructura base del renderer
 
 Añade clases básicas y estructura de carpetas para el renderer.
 ```
+
+Historial de commits relevantes:
+
+- feat(core): implementar módulo core (logging, asserts, types) - incluye `core/Log.h`, `core/Assert.h`, `core/Types.h`. (Iteración inicial: estructura y compilación limpia)
+

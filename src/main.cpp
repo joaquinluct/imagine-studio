@@ -1,6 +1,7 @@
 // Application entry using Platform::Window
 #include <windows.h>
 #include "platform/Window.h"
+#include "core/Log.h"
 
 static int RunApp(HINSTANCE hInstance)
 {
@@ -12,6 +13,8 @@ static int RunApp(HINSTANCE hInstance)
         // TODO: update and render calls will go here
         // For now, just idle until WM_QUIT
     }
+
+    CORE_LOG_INFO("Application exiting");
 
     return 0;
 }

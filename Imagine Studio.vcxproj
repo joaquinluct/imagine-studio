@@ -124,6 +124,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include=".github\copilot-instructions.md" />
+    <None Include=".gitignore" />
     <None Include="docs\commits.md" />
     <None Include="docs\roadmap.md" />
     <None Include="docs\roadmap_log.md" />
@@ -134,7 +135,13 @@
     <ClCompile Include="src\platform\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\assets\AssetManager.h" />
+    <ClInclude Include="src\core\Log.h" />
+    <ClInclude Include="src\core\Types.h" />
+    <ClInclude Include="src\jobs\ThreadPool.h" />
     <ClInclude Include="src\platform\Window.h" />
+    <ClInclude Include="src\renderer\IRenderer.h" />
+    <ClInclude Include="src\ui\IUI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

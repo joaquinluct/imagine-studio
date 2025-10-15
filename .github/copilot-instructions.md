@@ -42,3 +42,15 @@ Si en algún momento la herramienta no puede compilar la solución o no encuentra 
 6) Alternativa: si no hay `.sln` o se desea portabilidad, crear un `CMakeLists.txt` básico y usar `cmake` + `cmake --build`.
 
 Registrar en la bitácora (`docs/roadmap_log.md`) cualquier incidencia relevante y su resolución para futuras referencias.
+
+Iteración controlada (proceso obligatorio por iteración)
+1) Consultar `docs/roadmap_log.md` y proponer el siguiente punto (el asistente siempre presentará exactamente un punto a ejecutar, acompañado de una breve explicación —una frase— sobre en qué consiste el paso).
+2) El propietario responde `Si` para autorizar la ejecución de la iteración. Si la respuesta es `No` o hay dudas, la iteración se detiene.
+3) El asistente implementa el punto aprobado.
+4) Compilar la solución/proyecto. Corregir errores/warnings hasta obtener compilación limpia.
+5) Con compilación limpia, el asistente crea el commit siguiendo `docs/commits.md`.
+6) Actualizar `docs/commits.md` (listado de commits si procede), `README.md` y `.github/copilot-instructions.md` si es necesario.
+7) Actualizar `docs/roadmap_log.md`: marcar el punto como completado y añadir el nuevo punto por realizar.
+8) El asistente informa brevemente lo realizado y el siguiente punto propuesto, y vuelve al paso 1 solicitando autorización (`Si/No`).
+
+Nota: Si surgen problemas durante la iteración (dependencias, decisiones arquitectónicas, bloqueos), el asistente pausará la ejecución y preguntará explícitamente antes de seguir.
