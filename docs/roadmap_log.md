@@ -20,3 +20,15 @@ Iteración actual completa:
 - Se usó logging en `main.cpp`.
 - Compilación: build Debug x64 correcta (0 errores, 0 warnings).
 - Commit: pendiente de realizar por el asistente (si confirma el propietario).  
+
+Historial de iteraciones adicionales (reciente):
+- Añadido soporte CMake y archivos de build (CMakeLists.txt). Compilación con CMake: OK.
+- Implementado `platform/Input` (keyboard/mouse polling) e integrado en el loop principal.
+- Añido stub `renderer/DX12Renderer` y se integró en el ciclo de inicialización/render/shutdown.
+- Añadido `ui/SimpleUI` (stub) e integrado en el loop principal.
+- Añadido `renderer/CommandBuffer` (ring-buffer stub) para preparación de comandos GPU.
+
+Estado de compilación: build Debug x64 correcta (0 errores, 0 warnings) tras las iteraciones anteriores.
+
+Próximo paso propuesto:
+- Implementar el sistema de jobs/thread pool en `src/jobs` (crear `ThreadPool.cpp` y completar `ThreadPool.h`) para soportar tareas asíncronas y pruebas de integración con el renderer.

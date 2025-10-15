@@ -52,3 +52,6 @@ Ejecución automática (sin necesidad de confirmación previa):
 4) El asistente informará de lo realizado y del siguiente punto propuesto y continuará el ciclo.
 
 Excepciones: Si aparece un bloqueo técnico, decisión arquitectónica crítica o dependencia que impida avanzar, el asistente pausará y solicitará instrucciones al propietario.
+
+Regla estricta sobre commits y documentación:
+- Requisito: Siempre que el asistente realice un commit local como resultado de una iteración (es decir, la compilación queda limpia), actualizará automáticamente `docs/roadmap_log.md` y `docs/commits.md` para reflejar el cambio sin pedir confirmación adicional. El push al repositorio remoto no se realizará automáticamente salvo instrucción explícita del propietario.

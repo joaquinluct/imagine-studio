@@ -31,3 +31,8 @@ Historial de commits relevantes:
 
 - feat(core): implementar módulo core (logging, asserts, types) - incluye `core/Log.h`, `core/Assert.h`, `core/Types.h`. (Iteración inicial: estructura y compilación limpia)
 
+- chore(build): add CMake support and core module; ensure clean build
+- feat(platform): add InputManager (keyboard/mouse polling) and integrate in main loop
+- feat(ui): add SimpleUI stub and integrate in main loop
+- feat(renderer): add CommandBuffer ring-buffer stub for GPU commands
+
