@@ -21,6 +21,9 @@ list(APPEND SRC_FILES ${ASSET_SRC})
 file(GLOB_RECURSE RENDER_SRC "${CMAKE_SOURCE_DIR}/src/renderer/*.cpp")
 list(APPEND SRC_FILES ${RENDER_SRC})
 
+# Ensure assets VFS is included
+list(APPEND SRC_FILES "${CMAKE_SOURCE_DIR}/src/assets/VFS.cpp")
+
 # Ensure UI sources are included
 file(GLOB_RECURSE UI_SRC "${CMAKE_SOURCE_DIR}/src/ui/*.cpp")
 list(APPEND SRC_FILES ${UI_SRC})
