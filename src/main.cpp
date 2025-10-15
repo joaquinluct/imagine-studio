@@ -62,6 +62,7 @@ static int RunApp(HINSTANCE hInstance)
     }
 
     assets.Shutdown();
+    assets.DumpMetrics();
     ui.Shutdown();
     renderer.Shutdown();
 

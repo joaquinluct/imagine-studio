@@ -7,6 +7,8 @@
 #include "../core/Log.h"
 #include "../renderer/Fence.h"
 #include "VFS.h"
+#include <array>
+#include <sstream>
 
 using namespace Assets;
 
@@ -22,6 +24,13 @@ void AssetManager::Initialize()
     if (!s_threadPool)
         s_threadPool = new Jobs::ThreadPool(2);
     vfs_ = new VFS();
+    for (int i = 0; i < 3; ++i)
+    {
+        metrics_requested_by_prio_[i].store(0);
+        metrics_completed_by_prio_[i].store(0);
+        metrics_cancelled_by_prio_[i].store(0);
+        metrics_total_time_ms_by_prio_[i].store(0);
+    }
     dispatcherRunning_.store(true);
     dispatcherThread_ = std::thread([this](){
         while (dispatcherRunning_.load()) {
@@ -39,6 +48,10 @@ void AssetManager::Initialize()
                 if (cancelled_.count(task.handle)) continue;
             }
 
+            // mark start
+            metrics_started_.fetch_add(1);
+            metrics_requested_by_prio_[static_cast<int>(task.priority)].fetch_add(1);
+
             // Dispatch to thread pool with cooperative cancellation support
             auto cancelFlag = std::make_shared<std::atomic<bool>>(false);
             {
@@ -49,6 +62,7 @@ void AssetManager::Initialize()
 
             s_threadPool->Enqueue([this, task, cancelFlag]() {
                 CORE_LOG_INFO(std::string("Loading asset (dispatched): ") + task.path);
+                auto tstart = std::chrono::steady_clock::now();
                 std::vector<char> buf;
                 bool ok = false;
                 if (vfs_) ok = vfs_->ReadFile(task.path, buf);
@@ -58,6 +72,9 @@ void AssetManager::Initialize()
                     for (int i = 0; i < 20; ++i) {
                         if (cancelFlag->load()) {
                             CORE_LOG_INFO(std::string("Load cancelled during streaming: ") + task.path);
+                            // metrics
+                            metrics_cancelled_.fetch_add(1);
+                            metrics_cancelled_by_prio_[static_cast<int>(task.priority)].fetch_add(1);
                             // cleanup running flags
                             std::lock_guard<std::mutex> rl(runningMutex_);
                             runningCancelFlags_.erase(task.handle);
@@ -77,6 +94,13 @@ void AssetManager::Initialize()
                     std::lock_guard<std::mutex> l(loadedMutex_);
                     loadedQueue_.push(task.path);
                 }
+
+                // metrics completed
+                metrics_completed_.fetch_add(1);
+                metrics_completed_by_prio_[static_cast<int>(task.priority)].fetch_add(1);
+                auto tend = std::chrono::steady_clock::now();
+                auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(tend - tstart).count();
+                metrics_total_time_ms_by_prio_[static_cast<int>(task.priority)].fetch_add(static_cast<uint64_t>(ms));
 
                 // cleanup running flags
                 std::lock_guard<std::mutex> rl(runningMutex_);
@@ -101,6 +125,8 @@ void AssetManager::Shutdown()
     dispatcherRunning_.store(false);
     queueCv_.notify_all();
     if (dispatcherThread_.joinable()) dispatcherThread_.join();
+    // dump metrics at shutdown
+    DumpMetrics();
     CORE_LOG_INFO("AssetManager shutdown");
 }
 
@@ -118,6 +144,10 @@ AssetManager::LoadHandle AssetManager::LoadAsync(const std::string& path, std::f
     t.priority = priority;
     t.path = path; t.callback = callback; t.fence = signalFence;
     {
+        // update metrics
+        metrics_requested_.fetch_add(1);
+        metrics_requested_by_prio_[static_cast<int>(t.priority)].fetch_add(1);
+
         // If this is a high priority task, request cancellation of lower-priority running tasks
         if (t.priority == Priority::High)
         {
@@ -158,6 +188,18 @@ bool AssetManager::PopLoaded(std::string& outPath)
     if (loadedQueue_.empty()) return false;
     outPath = loadedQueue_.front(); loadedQueue_.pop();
     return true;
+}
+
+void AssetManager::DumpMetrics() const
+{
+    std::ostringstream ss;
+    ss << "AssetManager Metrics:\n";
+    ss << "  requested=" << metrics_requested_.load() << " started=" << metrics_started_.load() << " completed=" << metrics_completed_.load() << " cancelled=" << metrics_cancelled_.load() << "\n";
+    for (int i = 0; i < 3; ++i)
+    {
+        ss << "  prio[" << i << "] requested=" << metrics_requested_by_prio_[i].load() << " completed=" << metrics_completed_by_prio_[i].load() << " cancelled=" << metrics_cancelled_by_prio_[i].load() << " total_ms=" << metrics_total_time_ms_by_prio_[i].load() << "\n";
+    }
+    CORE_LOG_INFO(ss.str());
 }
 
 } // namespace Assets

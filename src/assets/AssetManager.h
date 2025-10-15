@@ -9,6 +9,8 @@
 #include <atomic>
 #include <queue>
 #include <unordered_set>
+#include <array>
+#include <cstdint>
 
 // Forward declaration for synchronization fence
 namespace Renderer { class Fence; }
@@ -64,6 +66,20 @@ private:
     // loaded items queue
     std::mutex loadedMutex_;
     std::queue<std::string> loadedQueue_;
+    // instrumentation / metrics
+    std::atomic<uint64_t> metrics_requested_{0};
+    std::atomic<uint64_t> metrics_started_{0};
+    std::atomic<uint64_t> metrics_completed_{0};
+    std::atomic<uint64_t> metrics_cancelled_{0};
+    // per-priority counters (Low=0, Normal=1, High=2)
+    std::array<std::atomic<uint64_t>, 3> metrics_requested_by_prio_;
+    std::array<std::atomic<uint64_t>, 3> metrics_completed_by_prio_;
+    std::array<std::atomic<uint64_t>, 3> metrics_cancelled_by_prio_;
+    std::array<std::atomic<uint64_t>, 3> metrics_total_time_ms_by_prio_;
+
+public:
+    // Dump current metrics to the log
+    void DumpMetrics() const;
 };
 
 } // namespace Assets
