@@ -72,5 +72,12 @@ Registro de la acción reciente:
   - Archivos afectados: `src/assets/AssetManager.cpp`, `src/assets/AssetManager.h` (firma compatible).
   - Compilación: CMake build Debug OK, msbuild Debug OK (0 errores, 0 warnings).
 
+- Ajuste VFS: implementación de búsqueda en rutas montadas y montaje por defecto 'assets'.
+  - Descripción: `VFS` ahora mantiene una lista de mounts y busca `path` en cada mount
+    (por ejemplo `assets/example_asset.dat`). Se añadió un archivo de prueba
+    `assets/example_asset.dat` para verificar la carga asíncrona.
+  - Archivos afectados: `src/assets/VFS.cpp`, `src/assets/VFS.h`, `assets/example_asset.dat`.
+  - Compilación: CMake build Debug OK, msbuild Debug OK (0 errores, 0 warnings).
+
 Hecho: 6.08 Asset streaming: corregir AssetManager callback legado
 Siguiente: 4. Backend de render inicial - DirectX12 minimal

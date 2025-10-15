@@ -126,6 +126,7 @@
     <None Include=".github\copilot-instructions.md" />
     <None Include=".github\workflows\ci.yml" />
     <None Include=".gitignore" />
+    <None Include="assets\example_asset.dat" />
     <None Include="docs\commits.md" />
     <None Include="docs\roadmap.md" />
     <None Include="docs\roadmap_detail_v1.0.0.md" />

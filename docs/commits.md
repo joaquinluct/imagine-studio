@@ -48,3 +48,11 @@ callback, preventing clients from receiving false-positive load notifications.
 
 Files changed: `src/assets/AssetManager.cpp`, `src/assets/AssetManager.h`
 
+- feat(assets): VFS search mounts and add default assets mount
+
+Implement a simple mount list in `VFS` and search mounted directories when
+reading files. Add a default mount of `assets` and include a test asset
+`assets/example_asset.dat` so the async loader can find example files.
+
+Files changed: `src/assets/VFS.cpp`, `src/assets/VFS.h`, `assets/example_asset.dat`
+
