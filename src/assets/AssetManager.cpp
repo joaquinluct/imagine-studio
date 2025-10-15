@@ -148,16 +148,31 @@ AssetManager::LoadHandle AssetManager::LoadAsync(const std::string& path, std::f
         metrics_requested_.fetch_add(1);
         metrics_requested_by_prio_[static_cast<int>(t.priority)].fetch_add(1);
 
-        // If this is a high priority task, request cancellation of lower-priority running tasks
+        // If this is a high priority task, consider cancellation of lower-priority running tasks
         if (t.priority == Priority::High)
         {
-            std::lock_guard<std::mutex> rl(runningMutex_);
-            for (auto &kv : runningPriority_)
+            // decide based on low-priority cancel rate history
+            uint64_t lowCompleted = metrics_completed_by_prio_[static_cast<int>(Priority::Low)].load();
+            uint64_t lowCancelled = metrics_cancelled_by_prio_[static_cast<int>(Priority::Low)].load();
+            uint64_t lowTotal = lowCompleted + lowCancelled;
+            bool allowPreempt = true;
+            if (lowTotal > 0)
             {
-                if (static_cast<int>(kv.second) < static_cast<int>(t.priority))
+                double cancelRate = double(lowCancelled) / double(lowTotal);
+                // avoid preemption if cancel rate is already high
+                allowPreempt = (cancelRate < 0.5);
+            }
+
+            if (allowPreempt)
+            {
+                std::lock_guard<std::mutex> rl(runningMutex_);
+                for (auto &kv : runningPriority_)
                 {
-                    auto it = runningCancelFlags_.find(kv.first);
-                    if (it != runningCancelFlags_.end()) it->second->store(true);
+                    if (static_cast<int>(kv.second) < static_cast<int>(t.priority))
+                    {
+                        auto it = runningCancelFlags_.find(kv.first);
+                        if (it != runningCancelFlags_.end()) it->second->store(true);
+                    }
                 }
             }
         }
