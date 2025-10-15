@@ -55,3 +55,12 @@ Excepciones: Si aparece un bloqueo técnico, decisión arquitectónica crítica o de
 
 Regla estricta sobre commits y documentación:
 - Requisito: Siempre que el asistente realice un commit local como resultado de una iteración (es decir, la compilación queda limpia), actualizará automáticamente `docs/roadmap_log.md` y `docs/commits.md` para reflejar el cambio sin pedir confirmación adicional. El push al repositorio remoto no se realizará automáticamente salvo instrucción explícita del propietario.
+
+Formato de la explicación final de cada iteración:
+- Requisito: Al final de cada iteración (cuando se informa lo realizado y el siguiente punto), la explicación debe contener obligatoriamente dos títulos numerados siguiendo el esquema del Roadmap:
+  - "Hecho: <número> <título>" (por ejemplo, "Hecho: 9.18 Shading/material...") que describe en breve lo completado.
+  - "Siguiente: <número> <título>" que describe el siguiente punto propuesto.
+  Estos títulos deben estar presentes en la explicación final que acompaña al commit/documentación. El asistente rellenará los números guiándose por `docs/roadmap.md` y `docs/roadmap_log.md`.
+
+Nota sobre estándar C++:
+- Este repositorio ahora requiere C++23 como estándar de compilación en `CMakeLists.txt`. Asegúrate de que tu entorno local/CI tenga toolchains compatibles (MSVC/Clang/GCC) antes de compilar.

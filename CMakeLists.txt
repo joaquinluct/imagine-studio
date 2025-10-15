@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.15)
 project(ImagineStudio LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# Prefer no compiler extensions so behavior is standard-conforming
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Collect sources
 file(GLOB_RECURSE SRC_FILES
@@ -45,4 +47,6 @@ set_target_properties(ImagineStudio PROPERTIES
 
 if (MSVC)
     target_link_libraries(ImagineStudio PRIVATE Msimg32)
+else()
+    # On other platforms link adjustments can be added here if needed
 endif()
