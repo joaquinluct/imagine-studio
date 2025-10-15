@@ -170,7 +170,7 @@ Enlace principal: ver también `docs/roadmap.md`.
 
 12.00 Ejemplos, samples y tests
 - Descripción: Crear escenas de ejemplo, muestras de uso y tests automáticos para garantizar estabilidad y servir como referencia para desarrolladores.
-- Estado: en progreso (creación de estructura de `examples/` y tests básicos en `src/tests/` como siguientes pasos).
+- Estado: completado (ejemplo mínimo y runner añadidos: `examples/scene1/*`, `src/examples/ExampleRunner.cpp`).
 
 Cómo usar este fichero
 - Mantener las entradas 1 por línea con estado y commit cuando se complete.

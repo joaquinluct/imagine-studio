@@ -1,0 +1,6 @@
+{
+  "scene": {
+    "camera": { "position": [0,0,-5], "lookAt": [0,0,0] },
+    "objects": [ { "name": "cube", "mesh": "cube.mesh", "material": "default" } ]
+  }
+}

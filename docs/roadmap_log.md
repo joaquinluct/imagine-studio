@@ -54,3 +54,5 @@ Iteraciones recientes completadas (assets):
 - 11.00 Adapter factory: añadida factoría `AdapterFactory` con stub adapter para tests y wiring para DX12 adapter (archivos `src/renderer/AdapterFactory.*`, `src/tests/adapter_test.cpp`).
 
 - 12.00 Polishing & examples: iniciado trabajo en estructura de ejemplos y tests automáticos; próximos pasos: añadir `examples/` y tests de integración.
+
+- 12.00 Examples & tests: añadido `examples/scene1` and `src/examples/ExampleRunner.cpp`. Example runner reads the sample scene and prints it.
