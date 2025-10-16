@@ -1,6 +1,6 @@
 # Roadmap profesional - Framework Renderer AAA
 
-Detalle ampliado: ver `docs/roadmap_detail.md` para historias y sub-tareas (por ejemplo 6.00..6.04).
+Detalle ampliado: ver `docs/roadmap_histories.md` y `docs/roadmap_tasks.md` para historias y sub-tareas (estas son los archivos activos del sprint).
 
 Objetivo final:
 Crear un framework renderer modular (estilo Unity) orientado a proyectos 3D AAA, con soporte inicial para DirectX12 y abstracción para añadir DX11/Vulkan/OpenGL posteriormente. Debe incluir sistemas AAA clave: multihilo, streaming de assets, ring-buffers para comandos de GPU, pipeline de render, UI layer, y herramientas para depuración y profiling.
@@ -8,12 +8,12 @@ Crear un framework renderer modular (estilo Unity) orientado a proyectos 3D AAA,
 Fases (alto nivel):
 
 1. Estructura y documentación inicial (esta fase)
-2. Sistema de build y proyecto, codificación con estándares C++14 (headers/impl, namespaces, CMake/msbuild)
+2. Sistema de build y proyecto, codificación con estándares C++14 (headers/impl, namespaces, CMake/msbuild) (completado v1.0.0)
 3. Sistema de plataforma/abstracción (Windowing + input)
-4. Backend de render inicial - DirectX12 minimal
-5. Command buffers y sincronización (ring-buffers, fences, command allocators)
-6. Resource management y asset streaming (vfs, async load, pools)
-7. Multithreading y job system (thread pool, task graph)
+4. Backend de render inicial - DirectX12 minimal (en progreso: integrar Present/command lists)
+5. Command buffers y sincronización (ring-buffers, fences, command allocators) (stubs completos; integrar ejecución real)
+6. Resource management y asset streaming (vfs, async load, pools) (funcionalidad básica implementada; pulir integración con renderer)
+7. Multithreading y job system (thread pool, task graph) (thread pool y prototipos completos; optimizar rendimiento)
 8. Simple UI layer + text rendering (panel + "Hola Mundo")
 9. Shading/material system y pipeline state management
 10. Tools: profiler, debug overlays, capture
