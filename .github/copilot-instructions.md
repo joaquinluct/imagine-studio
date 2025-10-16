@@ -1,135 +1,142 @@
-Este repositorio usa las siguientes instrucciones de trabajo para sesiones con el asistente (GitHub Copilot).
+ÔªøEste repositorio usa las siguientes instrucciones de trabajo para sesiones con el asistente (GitHub Copilot).
 
 ## ?? LEER PRIMERO
 
-**OBLIGATORIO**: Antes de comenzar cualquier sesiÛn, leer:  
-?? **[`docs/MAIN.md`](../docs/MAIN.md)** - Dec·logo fundamental del proyecto (pilares, arquitectura, est·ndares AAA)
+**OBLIGATORIO**: Antes de comenzar cualquier sesi√≥n, leer:  
+?? **[`docs/MAIN.md`](../docs/MAIN.md)** - Dec√°logo fundamental del proyecto (pilares, arquitectura, est√°ndares AAA)
 
 Este documento define los 4 pilares fundamentales y principios del proyecto Imagine Studio.  
-**Todas las decisiones arquitectÛnicas y de implementaciÛn DEBEN alinearse con estos pilares.**
+**Todas las decisiones arquitect√≥nicas y de implementaci√≥n DEBEN alinearse con estos pilares.**
 
 ---
 
 Archivos principales de trabajo:
-- `docs/MAIN.md` - **[LEER PRIMERO]** Dec·logo y pilares fundamentales del proyecto.
+- `docs/MAIN.md` - **[LEER PRIMERO]** Dec√°logo y pilares fundamentales del proyecto.
 - `docs/sprint.md` - Sprint actual con hitos y objetivos.
-- `docs/daily.md` - ⁄ltima tarea completada y tarea actual en progreso.
+- `docs/daily.md` - √öltima tarea completada y tarea actual en progreso.
 - `docs/commits.md` - Convenciones de commits y mensajes.
 
-Flujo de trabajo por sesiÛn:
+Flujo de trabajo por sesi√≥n:
 1) Leer estas instrucciones.
-2) Consultar `docs/daily.md` para ver la ˙ltima tarea completada y la tarea actual.
-3) Comparar con el cÛdigo fuente.
+2) Consultar `docs/daily.md` para ver la √∫ltima tarea completada y la tarea actual.
+3) Comparar con el c√≥digo fuente.
 4) Proponer el siguiente paso (por parte del asistente).
 5) Si se confirma, el asistente implementa el paso.
-   - Antes de crear el commit se debe compilar la soluciÛn/proyecto.
+   - Antes de crear el commit se debe compilar la soluci√≥n/proyecto.
      - **Requisito obligatorio: DOS compilaciones limpias (0 errores, 0 warnings)**:
        
-       **CompilaciÛn 1 - CMake Build (Debug)**:
+       **Compilaci√≥n 1 - CMake Build (Debug)**:
        ```powershell
        cmake --build build --config Debug
        ```
        
-       **CompilaciÛn 2 - Visual Studio Build Solution (Ctrl+May˙s+B equivalente)**:
+       **Compilaci√≥n 2 - Visual Studio Build Solution (Ctrl+May√∫s+B equivalente)**:
        ```powershell
-       msbuild "build/ImagineStudio.sln" /t:Build /p:Configuration=Debug /m
+       msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
        ```
        
-       **IMPORTANTE**: La compilaciÛn 2 debe ejecutarse **EXACTAMENTE** con el comando `msbuild` mostrado arriba.
-       Este comando replica **exactamente** lo que hace Visual Studio 2022 cuando pulsas **Ctrl+May˙s+B** ("Build Solution").
+       **IMPORTANTE**: La compilaci√≥n 2 debe ejecutarse **EXACTAMENTE** con el comando `msbuild` mostrado arriba.
+       Este comando replica **exactamente** lo que hace Visual Studio 2022 cuando pulsas **Ctrl+May√∫s+B** ("Build Solution") en la soluci√≥n principal `Imagine Studio.sln` de la ra√≠z.
+       
+       **NOTA**: Existen DOS sistemas de build en este proyecto:
+       - **Sistema Principal (desarrollo)**: `Imagine Studio.sln` + `Imagine Studio.vcxproj` en la ra√≠z ‚Üí Usado para desarrollo diario con F5/Ctrl+May√∫s+B
+       - **Sistema CMake (CI/automatizaci√≥n)**: `build/ImagineStudio.sln` generado por CMake ‚Üí Usado para builds automatizados
+       
+       Ambos sistemas deben compilar sin errores. La Compilaci√≥n 1 usa CMake, la Compilaci√≥n 2 usa el proyecto principal de Visual Studio.
        
        **NO usar** variaciones como:
-       - ? `cmake --build` (eso es compilaciÛn 1, no compilaciÛn 2)
-       - ? `devenv /build`
-       - ? Otros mÈtodos alternativos
+       - ‚ùå `cmake --build` (eso es compilaci√≥n 1, no compilaci√≥n 2)
+       - ‚ùå `msbuild "build/ImagineStudio.sln"` (esa es la soluci√≥n de CMake, no la principal)
+       - ‚ùå `devenv /build`
+       - ‚ùå Otros m√©todos alternativos
        
-       **SÕ usar**:
-       - ? `msbuild "build/ImagineStudio.sln" /t:Build /p:Configuration=Debug /m`
+       **S√ç usar**:
+       - ‚úÖ `msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m`
        
-     - Si alguna de las dos compilaciones produce errores o warnings, el asistente corregir· los errores cuando sea posible y volver· a ejecutar ambas compilaciones hasta obtener builds limpias.
-     - El asistente ejecutar· autom·ticamente ambas compilaciones (CMake + MSBuild) antes de crear commits durante sus iteraciones.
-   - Una vez ambas compilaciones estÈn limpias, crear el commit y actualizar los archivos Markdown pertinentes (`docs/daily.md`, `docs/commits.md`, `README.md` cuando proceda).
+     - Si alguna de las dos compilaciones produce errores o warnings, el asistente corregir√° los errores cuando sea posible y volver√° a ejecutar ambas compilaciones hasta obtener builds limpias.
+     - El asistente ejecutar√° autom√°ticamente ambas compilaciones (CMake + MSBuild) antes de crear commits durante sus iteraciones.
+   - Una vez ambas compilaciones est√©n limpias, crear el commit y actualizar los archivos Markdown pertinentes (`docs/daily.md`, `docs/commits.md`, `README.md` cuando proceda).
 6) Repetir desde 1.
 
-Nota: Los archivos anteriores son la fuente de la verdad para la organizaciÛn del proyecto y la comunicaciÛn con el asistente.
+Nota: Los archivos anteriores son la fuente de la verdad para la organizaci√≥n del proyecto y la comunicaci√≥n con el asistente.
 
 Preferencias del propietario del repositorio:
-- Prefiero hacer bien las cosas desde el principio: evitar partes intermedias, temporales, incompletas o no funcionales. Cada mÛdulo debe diseÒarse para cumplir los est·ndares AAA desde su concepciÛn.
-- En cada iteraciÛn, antes del commit, siempre se debe compilar y corregir errores/warnings para asegurar commits limpios y funcionales.
- - Estilo de includes: las directivas `#include` deben ordenarse siempre con las cabeceras del proyecto (entre comillas `"..."`) primero y despuÈs las cabeceras del sistema (`<...>`), y dentro de cada grupo deben aparecer en orden alfabÈtico. Esta regla ser· verificada por el asistente y aplicada o reportada como warning al preparar commits.
+- Prefiero hacer bien las cosas desde el principio: evitar partes intermedias, temporales, incompletas o no funcionales. Cada m√≥dulo debe dise√±arse para cumplir los est√°ndares AAA desde su concepci√≥n.
+- En cada iteraci√≥n, antes del commit, siempre se debe compilar y corregir errores/warnings para asegurar commits limpios y funcionales.
+ - Estilo de includes: las directivas `#include` deben ordenarse siempre con las cabeceras del proyecto (entre comillas `"..."`) primero y despu√©s las cabeceras del sistema (`<...>`), y dentro de cada grupo deben aparecer en orden alfab√©tico. Esta regla ser√° verificada por el asistente y aplicada o reportada como warning al preparar commits.
 
-SecciÛn de resoluciÛn de problemas (ResoluciÛn de problemas)
-Si en alg˙n momento la herramienta no puede compilar la soluciÛn o no encuentra la `.sln`, o aparece un error de enlace tipo "unresolved external main", seguir estos pasos:
+Secci√≥n de resoluci√≥n de problemas (Resoluci√≥n de problemas)
+Si en alg√∫n momento la herramienta no puede compilar la soluci√≥n o no encuentra la `.sln`, o aparece un error de enlace tipo "unresolved external main", seguir estos pasos:
 
-1) Comprobar la existencia y ruta exacta de la soluciÛn desde PowerShell:
-   - Ejecutar `Get-ChildItem -Force` o `ls` en el directorio raÌz del repositorio para localizar `*.sln` y obtener la ruta exacta.
-2) Compilar explÌcitamente usando PowerShell y `msbuild` con la ruta entre comillas (importante si el nombre contiene espacios):
+1) Comprobar la existencia y ruta exacta de la soluci√≥n desde PowerShell:
+   - Ejecutar `Get-ChildItem -Force` o `ls` en el directorio ra√≠z del repositorio para localizar `*.sln` y obtener la ruta exacta.
+2) Compilar expl√≠citamente usando PowerShell y `msbuild` con la ruta entre comillas (importante si el nombre contiene espacios):
    - `msbuild "C:\ruta\a\Imagine Studio.sln" /p:Configuration=Debug /m`
-3) Si la herramienta reporta que no puede encontrar archivos fuente nuevos, confirmar que los ficheros est·n incluidos en el `.vcxproj` o en el `CMakeLists.txt` de la soluciÛn. AÒadirlos si es necesario.
+3) Si la herramienta reporta que no puede encontrar archivos fuente nuevos, confirmar que los ficheros est√°n incluidos en el `.vcxproj` o en el `CMakeLists.txt` de la soluci√≥n. A√±adirlos si es necesario.
 4) Si aparece `LNK2019: unresolved external main` o similar:
-   - Causa frecuente: discrepancia entre la entrada esperada por el subsistema (CONSOLE vs WINDOWS) y las funciones `main`/`WinMain` definidas en el cÛdigo.
-   - SoluciÛn: proporcionar entradas portables (por ejemplo, una funciÛn `RunApp(HINSTANCE)` y definir tanto `int main()` como `WinMain` que llamen a `RunApp`), o ajustar la configuraciÛn del proyecto al subsistema correcto y tener la firma adecuada.
-5) Si la compilaciÛn muestra errores/warnings: corregirlos hasta obtener una build limpia antes de proceder al commit (esta regla ya est· en el flujo de trabajo).
-6) Alternativa: si no hay `.sln` o se desea portabilidad, crear un `CMakeLists.txt` b·sico y usar `cmake` + `cmake --build`.
+   - Causa frecuente: discrepancia entre la entrada esperada por el subsistema (CONSOLE vs WINDOWS) y las funciones `main`/`WinMain` definidas en el c√≥digo.
+   - Soluci√≥n: proporcionar entradas portables (por ejemplo, una funci√≥n `RunApp(HINSTANCE)` y definir tanto `int main()` como `WinMain` que llamen a `RunApp`), o ajustar la configuraci√≥n del proyecto al subsistema correcto y tener la firma adecuada.
+5) Si la compilaci√≥n muestra errores/warnings: corregirlos hasta obtener una build limpia antes de proceder al commit (esta regla ya est√° en el flujo de trabajo).
+6) Alternativa: si no hay `.sln` o se desea portabilidad, crear un `CMakeLists.txt` b√°sico y usar `cmake` + `cmake --build`.
 
-Registrar en la bit·cora (`docs/daily.md`) cualquier incidencia relevante y su resoluciÛn para futuras referencias.
+Registrar en la bit√°cora (`docs/daily.md`) cualquier incidencia relevante y su resoluci√≥n para futuras referencias.
 
-IteraciÛn controlada (proceso obligatorio por iteraciÛn)
-1) El asistente consultar· `docs/daily.md` y propondr· el siguiente punto a ejecutar, acompaÒado de una breve explicaciÛn (una frase) sobre en quÈ consiste.
+Iteraci√≥n controlada (proceso obligatorio por iteraci√≥n)
+1) El asistente consultar√° `docs/daily.md` y propondr√° el siguiente punto a ejecutar, acompa√±ado de una breve explicaci√≥n (una frase) sobre en qu√© consiste.
 
-EjecuciÛn autom·tica (sin necesidad de confirmaciÛn previa):
-2) Tras proponer el punto, el asistente implementar· el cambio, compilar· la soluciÛn y corregir· los errores/warnings hasta lograr una compilaciÛn limpia.
-3) Si la compilaciÛn queda limpia, el asistente realizar· directamente el commit local siguiendo `docs/commits.md` y actualizar· los ficheros necesarios (`docs/daily.md`, `docs/commits.md`, `README.md` y `.github/copilot-instructions.md`) sin pedir permiso adicional.
-4) El asistente informar· de lo realizado y del siguiente punto propuesto y continuar· el ciclo.
+Ejecuci√≥n autom√°tica (sin necesidad de confirmaci√≥n previa):
+2) Tras proponer el punto, el asistente implementar√° el cambio, compilar√° la soluci√≥n y corregir√° los errores/warnings hasta lograr una compilaci√≥n limpia.
+3) Si la compilaci√≥n queda limpia, el asistente realizar√° directamente el commit local siguiendo `docs/commits.md` y actualizar√° los ficheros necesarios (`docs/daily.md`, `docs/commits.md`, `README.md` y `.github/copilot-instructions.md`) sin pedir permiso adicional.
+4) El asistente informar√° de lo realizado y del siguiente punto propuesto y continuar√° el ciclo.
 
-Excepciones: Si aparece un bloqueo tÈcnico, decisiÛn arquitectÛnica crÌtica o dependencia que impida avanzar, el asistente pausar· y solicitar· instrucciones al propietario.
+Excepciones: Si aparece un bloqueo t√©cnico, decisi√≥n arquitect√≥nica cr√≠tica o dependencia que impida avanzar, el asistente pausar√° y solicitar√° instrucciones al propietario.
 
-Regla estricta sobre commits y documentaciÛn:
-- Requisito: Siempre que el asistente realice un commit local como resultado de una iteraciÛn (es decir, la compilaciÛn queda limpia), actualizar· autom·ticamente `docs/daily.md` y `docs/commits.md` para reflejar el cambio sin pedir confirmaciÛn adicional. El push al repositorio remoto no se realizar· autom·ticamente salvo instrucciÛn explÌcita del propietario.
+Regla estricta sobre commits y documentaci√≥n:
+- Requisito: Siempre que el asistente realice un commit local como resultado de una iteraci√≥n (es decir, la compilaci√≥n queda limpia), actualizar√° autom√°ticamente `docs/daily.md` y `docs/commits.md` para reflejar el cambio sin pedir confirmaci√≥n adicional. El push al repositorio remoto no se realizar√° autom√°ticamente salvo instrucci√≥n expl√≠cita del propietario.
 
 Versionado de los ficheros del Sprint (snapshots de sprint):
 - Los ficheros activos del sprint actual son:
   - `docs/sprint.md` (sprint de alto nivel con hitos y objetivos)
   - `docs/sprint_histories.md` (historias de usuario para el sprint)
-  - `docs/sprint_tasks.md` (tareas detalladas por historia; unidad mÌnima de trabajo e iteraciÛn)
-- Al final de un sprint (release), el asistente archivar· los ficheros de trabajo renombr·ndolos con la versiÛn, por ejemplo:
+  - `docs/sprint_tasks.md` (tareas detalladas por historia; unidad m√≠nima de trabajo e iteraci√≥n)
+- Al final de un sprint (release), el asistente archivar√° los ficheros de trabajo renombr√°ndolos con la versi√≥n, por ejemplo:
   - `docs/sprint_v<version>.md`
   - `docs/sprint_histories_v<version>.md`
   - `docs/sprint_tasks_v<version>.md`
-- A continuaciÛn el asistente crear· ficheros nuevos y vacÌos con los nombres activos para el siguiente sprint.
-- Esta polÌtica de versionado garantiza trazabilidad de los sprints completados y mantiene los ficheros activos pequeÒos y enfocados.
+- A continuaci√≥n el asistente crear√° ficheros nuevos y vac√≠os con los nombres activos para el siguiente sprint.
+- Esta pol√≠tica de versionado garantiza trazabilidad de los sprints completados y mantiene los ficheros activos peque√±os y enfocados.
 
 Fichero Backlog (`docs/backlog.md`)
 -----------------------------------
-- PropÛsito: `docs/backlog.md` es el repositorio a largo plazo para los Ìtems que NO forman parte del sprint activo. ⁄salo como "ba˙l" persistente para ideas, historias diferidas, tareas de baja prioridad y deuda tÈcnica que deben conservarse para priorizar en el futuro.
+- Prop√≥sito: `docs/backlog.md` es el repositorio a largo plazo para los √≠tems que NO forman parte del sprint activo. √ösalo como "ba√∫l" persistente para ideas, historias diferidas, tareas de baja prioridad y deuda t√©cnica que deben conservarse para priorizar en el futuro.
 - Flujo y uso:
-  - Cuando se identifique una historia o tarea pero no se seleccione para el sprint actual, aÒade una entrada breve en `docs/backlog.md` con una descripciÛn corta, etiqueta de prioridad (Baja/Media/Alta) y, opcionalmente, referencia al ID de historia/tarea en `docs/sprint_histories.md` o `docs/sprint_tasks.md`.
-  - El backlog es la fuente para la planificaciÛn del sprint: durante la planificaciÛn los Ìtems pueden moverse de `docs/backlog.md` a `docs/sprint_histories.md` (como historia) y descomponerse en tareas en `docs/sprint_tasks.md` para el sprint activo.
-  - Las entradas en `docs/backlog.md` deben ser concisas y enlazables (incluir una ruta o ancla al cÛdigo relacionado si procede).
-  - El asistente no implementar· Ìtems directamente desde el backlog a menos que se muevan a los ficheros activos del sprint.
+  - Cuando se identifique una historia o tarea pero no se seleccione para el sprint actual, a√±ade una entrada breve en `docs/backlog.md` con una descripci√≥n corta, etiqueta de prioridad (Baja/Media/Alta) y, opcionalmente, referencia al ID de historia/tarea en `docs/sprint_histories.md` o `docs/sprint_tasks.md`.
+  - El backlog es la fuente para la planificaci√≥n del sprint: durante la planificaci√≥n los √≠tems pueden moverse de `docs/backlog.md` a `docs/sprint_histories.md` (como historia) y descomponerse en tareas en `docs/sprint_tasks.md` para el sprint activo.
+  - Las entradas en `docs/backlog.md` deben ser concisas y enlazables (incluir una ruta o ancla al c√≥digo relacionado si procede).
+  - El asistente no implementar√° √≠tems directamente desde el backlog a menos que se muevan a los ficheros activos del sprint.
 
 
-Formato de la explicaciÛn final de cada iteraciÛn:
-- Requisito: Al final de cada iteraciÛn (cuando se informa lo realizado y el siguiente punto), la explicaciÛn debe contener obligatoriamente dos tÌtulos numerados siguiendo el esquema del Sprint:
-  - "Hecho: <n˙mero> <tÌtulo>" (por ejemplo, "Hecho: 9.18 Shading/material...") que describe en breve lo completado.
-  - "Siguiente: <n˙mero> <tÌtulo>" que describe el siguiente punto propuesto.
-  Estos tÌtulos deben estar presentes en la explicaciÛn final que acompaÒa al commit/documentaciÛn. El asistente rellenar· los n˙meros gui·ndose por `docs/sprint.md` y `docs/daily.md`.
+Formato de la explicaci√≥n final de cada iteraci√≥n:
+- Requisito: Al final de cada iteraci√≥n (cuando se informa lo realizado y el siguiente punto), la explicaci√≥n debe contener obligatoriamente dos t√≠tulos numerados siguiendo el esquema del Sprint:
+  - "Hecho: <n√∫mero> <t√≠tulo>" (por ejemplo, "Hecho: 9.18 Shading/material...") que describe en breve lo completado.
+  - "Siguiente: <n√∫mero> <t√≠tulo>" que describe el siguiente punto propuesto.
+  Estos t√≠tulos deben estar presentes en la explicaci√≥n final que acompa√±a al commit/documentaci√≥n. El asistente rellenar√° los n√∫meros gui√°ndose por `docs/sprint.md` y `docs/daily.md`.
 
 Fichero Daily (`docs/daily.md`)
 --------------------------------
-- PropÛsito: `docs/daily.md` es el fichero simplificado de seguimiento diario.
+- Prop√≥sito: `docs/daily.md` es el fichero simplificado de seguimiento diario.
 - Contenido: El fichero solo contiene DOS cosas:
-  1. **⁄ltima tarea realizada**: N˙mero y descripciÛn de la tarea completada (formato: "Hecho: <n> <descripciÛn>")
-  2. **Tarea actual**: N˙mero y descripciÛn de la siguiente tarea a realizar (formato: "Siguiente: <n> <descripciÛn>")
+  1. **√öltima tarea realizada**: N√∫mero y descripci√≥n de la tarea completada (formato: "Hecho: <n> <descripci√≥n>")
+  2. **Tarea actual**: N√∫mero y descripci√≥n de la siguiente tarea a realizar (formato: "Siguiente: <n> <descripci√≥n>")
 - Formato ejemplo:
   ```
   # Daily Log
 
-  Hecho: 3.01 Plataforma - robustez en creaciÛn de ventana y prueba WM_PAINT
+  Hecho: 3.01 Plataforma - robustez en creaci√≥n de ventana y prueba WM_PAINT
   Siguiente: 4.00 Backend de render inicial - DirectX12 minimal
   ```
-- El asistente actualiza este fichero autom·ticamente tras cada commit exitoso.
+- El asistente actualiza este fichero autom√°ticamente tras cada commit exitoso.
 - Al finalizar un sprint (release), el contenido de `daily.md` se archiva en los ficheros versionados del sprint y se crea un nuevo `daily.md` para el siguiente sprint.
 
-Nota sobre est·ndar C++:
-- Este repositorio usa C++14 como est·ndar de compilaciÛn en `CMakeLists.txt`. Aseg˙rate de que tu entorno local/CI tenga toolchains compatibles (MSVC/Clang/GCC) antes de compilar.
+Nota sobre est√°ndar C++:
+- Este repositorio usa C++14 como est√°ndar de compilaci√≥n en `CMakeLists.txt`. Aseg√∫rate de que tu entorno local/CI tenga toolchains compatibles (MSVC/Clang/GCC) antes de compilar.
