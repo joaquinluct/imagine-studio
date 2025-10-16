@@ -1,23 +1,23 @@
-# Roadmap Histories - active sprint
+# Roadmap - Historias de usuario (sprint activo)
 
-This file lists the user stories (histories) that form the backlog for the active sprint. Each story will be broken down into tasks in `docs/roadmap_tasks.md` and executed as individual iterations (implement, double-build, commit, update docs).
+Este fichero contiene las historias de usuario que forman el backlog del sprint activo. Cada historia se descompondrá en tareas en `docs/roadmap_tasks.md` y se ejecutará como iteraciones individuales (implementar, doble compilación, commit, actualizar docs).
 
-Pending user stories for the sprint (initial backlog):
+Historias pendientes para el sprint (backlog inicial):
 
-1) 4.02 DX12 backend: implement command list recording and execute on the device
-- Description: record a simple `ID3D12GraphicsCommandList` that clears the render target and integrates `ExecuteCommandLists` on the `ID3D12CommandQueue`. Properly manage `ID3D12CommandAllocator` and command list reset/close semantics.
+1) 4.02 Backend DX12: grabado de command lists y ejecución en el dispositivo
+- Descripción: grabar un `ID3D12GraphicsCommandList` simple que limpie el render target y ejecutar la lista con `ExecuteCommandLists` en la `ID3D12CommandQueue`. Gestionar correctamente `ID3D12CommandAllocator` y el reset/cierre de las listas.
 
-2) 5.02 GPU sync: replace CPU-only Fence stub with `ID3D12Fence` integration across submit/present paths
-- Description: ensure correct fence values, reuse fences per frame, and avoid busy-wait by using events or fence polling.
+2) 5.02 Sincronización GPU: sustituir el stub CPU-only Fence por `ID3D12Fence` en rutas de submit/present
+- Descripción: asegurar valores de fence correctos, reciclar fences por frame y evitar busy-wait en CPU usando eventos o polling de fence.
 
-3) 8.02 UI composition via renderer
-- Description: implement composition path where UI draws into a texture or render target and renderer composes it onto the back buffer before present.
+3) 8.02 Composición UI vía renderer
+- Descripción: implementar la ruta de composición donde la UI renderiza a una textura o render target y el renderer la compone sobre el back buffer antes del `Present`.
 
-4) 6.03 Streaming -> GPU upload: implement upload queues and resource creation for textures/buffers
-- Description: build an upload pool and staging buffer path for streamed assets to be uploaded to GPU memory safely across threads.
+4) 6.03 Streaming -> subida a GPU: implementar colas de upload y creación de recursos (texturas/buffers)
+- Descripción: construir un pool de upload y una ruta de staging para que los assets transmitidos se suban a memoria GPU de forma segura desde hilos de streaming.
 
-5) 7.02 TaskGraph stabilization and performance
-- Description: harden TaskGraph, add tests, and tune ThreadPool for throughput.
+5) 7.02 Estabilización y rendimiento de TaskGraph
+- Descripción: endurecer `TaskGraph`, añadir tests y ajustar `ThreadPool` para mayor throughput.
 
-... more stories will be added as the sprint backlog is refined.
+Se añadirán más historias conforme se refine el backlog del sprint.
 

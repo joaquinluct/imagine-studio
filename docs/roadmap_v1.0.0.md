@@ -1,22 +1,22 @@
-# Roadmap v1.0.0 - Snapshot of completed work
+# Roadmap v1.0.0 - Instantánea del trabajo completado
 
-This document records the roadmap state and completed items for release v1.0.0.
+Este documento registra el estado del roadmap y los ítems completados en la release v1.0.0.
 
-Summary of completed high-level phases and notable work included in v1.0.0:
+Resumen de fases y trabajo notable completado en v1.0.0:
 
-- Project skeleton, documentation and workflow (`docs/roadmap.md`, `docs/commits.md`, `.github/copilot-instructions.md`).
-- Build system and IDE integration: `CMakeLists.txt`, solution generation and Visual Studio integration.
-- Platform: Win32 `platform/Window` wrapper and `platform/Input` polling implemented and hardened.
-- Renderer: DX12 renderer stubs added (`DX12Renderer`, `DX12Device`, `RenderTarget`, `Fence`), plus progressive improvements (swapchain stub, Present path, CPU fence sync).
-- Command buffers and synchronization stubs: `CommandBuffer`, `CommandAllocator`, `Fence` and ring-buffer prototypes.
-- Asset system: VFS, prioritized async loads, cancellation, cooperative preemption, instrumentation and persistence of metrics (`AssetManager`, `VFS`, metrics JSON).
-- Multithreading & jobs: `ThreadPool`, `TaskGraph` prototype and benchmarks (`threadpool_bench`).
-- UI: `SimpleUI` overlay, GDI text rendering and DirectWrite prototype for higher-quality text.
-- Tools: minimal `Profiler` integrated with UI overlay (frame-times / FPS).
-- AdapterFactory and test stubs for backend selection.
-- Examples and tests: example runner and minimal scene, material system prototype and tests.
+- Estructura del proyecto, documentación y flujo de trabajo (`docs/roadmap.md`, `docs/commits.md`, `.github/copilot-instructions.md`).
+- Sistema de build e integración con el IDE: `CMakeLists.txt`, generación de la solución e integración con Visual Studio.
+- Plataforma: wrapper Win32 `platform/Window` y `platform/Input` implementados y endurecidos.
+- Renderer: stubs de DX12 añadidos (`DX12Renderer`, `DX12Device`, `RenderTarget`, `Fence`), además de mejoras progresivas (swapchain, camino de Present, sincronización de fence en CPU).
+- Buffers de comandos y sincronización (stubs): `CommandBuffer`, `CommandAllocator`, `Fence` y prototipos de ring-buffer.
+- Sistema de assets: VFS, cargas asíncronas priorizadas, cancelación, preempción cooperativa, instrumentación y persistencia de métricas (`AssetManager`, `VFS`, JSON de métricas).
+- Multihilo y jobs: `ThreadPool`, prototipo de `TaskGraph` y benchmarks (`threadpool_bench`).
+- UI: overlay `SimpleUI`, render de texto con GDI y prototipo con DirectWrite para mayor calidad.
+- Herramientas: `Profiler` mínimo integrado con overlay UI (tiempos por frame / FPS).
+- `AdapterFactory` y stubs de tests para selección de backend.
+- Ejemplos y tests: example runner y escena mínima, prototipo de sistema de materiales y tests.
 
-All code included in this snapshot compiled cleanly at the time of the release (CMake Debug and Visual Studio Build Solution verified).
+Todo el código incluido en esta instantánea compiló correctamente en el momento del release (verificado con CMake Debug y Build Solution de Visual Studio).
 
-For full history of commits and details, see `docs/commits.md` and `docs/roadmap_log.md`.
+Para el historial completo de commits y detalles, ver `docs/commits.md` y `docs/roadmap_log.md`.
 
