@@ -1,18 +1,18 @@
 Este repositorio usa las siguientes instrucciones de trabajo para sesiones con el asistente (GitHub Copilot).
 
-## Objetivos y Pilares del Proyecto Imagine Studio
+## ?? LEER PRIMERO
 
-**Imagine Studio** es un framework de creación de juegos tipo Unity/Roblox Studio con los siguientes pilares fundamentales:
+**OBLIGATORIO**: Antes de comenzar cualquier sesión, leer:  
+?? **[`docs/MAIN.md`](../docs/MAIN.md)** - Decálogo fundamental del proyecto (pilares, arquitectura, estándares AAA)
 
-1. **Modo Edición/Studio**: Interfaz rica con recursos completos para crear mundos 2D y 3D
-2. **Multiplataforma**: Publicación de juegos en Windows, Mac, Consolas y otras plataformas
-3. **Extensibilidad**: Programación en modo edición/studio para personalizar el motor
-4. **Performance y Calidad AAA**: Código de nivel profesional con performance y calidad visual como objetivo PRIMORDIAL
+Este documento define los 4 pilares fundamentales y principios del proyecto Imagine Studio.  
+**Todas las decisiones arquitectónicas y de implementación DEBEN alinearse con estos pilares.**
 
-**PUNTO CRÍTICO**: Todas las decisiones arquitectónicas y de implementación DEBEN alinearse con estos 4 pilares.
+---
 
-Archivos principales:
-- `docs/roadmap.md` - Roadmap profesional con hitos y objetivos.
+Archivos principales de trabajo:
+- `docs/MAIN.md` - **[LEER PRIMERO]** Decálogo y pilares fundamentales del proyecto.
+- `docs/sprint.md` - Sprint actual con hitos y objetivos.
 - `docs/daily.md` - Última tarea completada y tarea actual en progreso.
 - `docs/commits.md` - Convenciones de commits y mensajes.
 
@@ -75,15 +75,15 @@ Excepciones: Si aparece un bloqueo técnico, decisión arquitectónica crítica o de
 Regla estricta sobre commits y documentación:
 - Requisito: Siempre que el asistente realice un commit local como resultado de una iteración (es decir, la compilación queda limpia), actualizará automáticamente `docs/daily.md` y `docs/commits.md` para reflejar el cambio sin pedir confirmación adicional. El push al repositorio remoto no se realizará automáticamente salvo instrucción explícita del propietario.
 
-Versionado de los ficheros del Roadmap (snapshots de sprint):
-- Los ficheros activos del roadmap para el sprint actual son:
-  - `docs/roadmap.md` (roadmap de alto nivel)
-  - `docs/roadmap_histories.md` (historias de usuario para el sprint)
-  - `docs/roadmap_tasks.md` (tareas detalladas por historia; unidad mínima de trabajo e iteración)
+Versionado de los ficheros del Sprint (snapshots de sprint):
+- Los ficheros activos del sprint actual son:
+  - `docs/sprint.md` (sprint de alto nivel con hitos y objetivos)
+  - `docs/sprint_histories.md` (historias de usuario para el sprint)
+  - `docs/sprint_tasks.md` (tareas detalladas por historia; unidad mínima de trabajo e iteración)
 - Al final de un sprint (release), el asistente archivará los ficheros de trabajo renombrándolos con la versión, por ejemplo:
-  - `docs/roadmap_v<version>.md`
-  - `docs/roadmap_histories_v<version>.md`
-  - `docs/roadmap_tasks_v<version>.md`
+  - `docs/sprint_v<version>.md`
+  - `docs/sprint_histories_v<version>.md`
+  - `docs/sprint_tasks_v<version>.md`
 - A continuación el asistente creará ficheros nuevos y vacíos con los nombres activos para el siguiente sprint.
 - Esta política de versionado garantiza trazabilidad de los sprints completados y mantiene los ficheros activos pequeños y enfocados.
 
@@ -91,21 +91,21 @@ Fichero Backlog (`docs/backlog.md`)
 -----------------------------------
 - Propósito: `docs/backlog.md` es el repositorio a largo plazo para los ítems que NO forman parte del sprint activo. Úsalo como "baúl" persistente para ideas, historias diferidas, tareas de baja prioridad y deuda técnica que deben conservarse para priorizar en el futuro.
 - Flujo y uso:
-  - Cuando se identifique una historia o tarea pero no se seleccione para el sprint actual, añade una entrada breve en `docs/backlog.md` con una descripción corta, etiqueta de prioridad (Baja/Media/Alta) y, opcionalmente, referencia al ID de historia/tarea en `docs/roadmap_histories.md` o `docs/roadmap_tasks.md`.
-  - El backlog es la fuente para la planificación del sprint: durante la planificación los ítems pueden moverse de `docs/backlog.md` a `docs/roadmap_histories.md` (como historia) y descomponerse en tareas en `docs/roadmap_tasks.md` para el sprint activo.
+  - Cuando se identifique una historia o tarea pero no se seleccione para el sprint actual, añade una entrada breve en `docs/backlog.md` con una descripción corta, etiqueta de prioridad (Baja/Media/Alta) y, opcionalmente, referencia al ID de historia/tarea en `docs/sprint_histories.md` o `docs/sprint_tasks.md`.
+  - El backlog es la fuente para la planificación del sprint: durante la planificación los ítems pueden moverse de `docs/backlog.md` a `docs/sprint_histories.md` (como historia) y descomponerse en tareas en `docs/sprint_tasks.md` para el sprint activo.
   - Las entradas en `docs/backlog.md` deben ser concisas y enlazables (incluir una ruta o ancla al código relacionado si procede).
   - El asistente no implementará ítems directamente desde el backlog a menos que se muevan a los ficheros activos del sprint.
 
 
 Formato de la explicación final de cada iteración:
-- Requisito: Al final de cada iteración (cuando se informa lo realizado y el siguiente punto), la explicación debe contener obligatoriamente dos títulos numerados siguiendo el esquema del Roadmap:
+- Requisito: Al final de cada iteración (cuando se informa lo realizado y el siguiente punto), la explicación debe contener obligatoriamente dos títulos numerados siguiendo el esquema del Sprint:
   - "Hecho: <número> <título>" (por ejemplo, "Hecho: 9.18 Shading/material...") que describe en breve lo completado.
   - "Siguiente: <número> <título>" que describe el siguiente punto propuesto.
-  Estos títulos deben estar presentes en la explicación final que acompaña al commit/documentación. El asistente rellenará los números guiándose por `docs/roadmap.md` y `docs/daily.md`.
+  Estos títulos deben estar presentes en la explicación final que acompaña al commit/documentación. El asistente rellenará los números guiándose por `docs/sprint.md` y `docs/daily.md`.
 
 Fichero Daily (`docs/daily.md`)
 --------------------------------
-- Propósito: `docs/daily.md` es el fichero simplificado de seguimiento diario que reemplaza a `roadmap_log.md`.
+- Propósito: `docs/daily.md` es el fichero simplificado de seguimiento diario.
 - Contenido: El fichero solo contiene DOS cosas:
   1. **Última tarea realizada**: Número y descripción de la tarea completada (formato: "Hecho: <n> <descripción>")
   2. **Tarea actual**: Número y descripción de la siguiente tarea a realizar (formato: "Siguiente: <n> <descripción>")
@@ -117,7 +117,7 @@ Fichero Daily (`docs/daily.md`)
   Siguiente: 4.00 Backend de render inicial - DirectX12 minimal
   ```
 - El asistente actualiza este fichero automáticamente tras cada commit exitoso.
-- Al finalizar un sprint (release), el contenido de `daily.md` se archiva en los ficheros versionados del roadmap y se crea un nuevo `daily.md` para el siguiente sprint.
+- Al finalizar un sprint (release), el contenido de `daily.md` se archiva en los ficheros versionados del sprint y se crea un nuevo `daily.md` para el siguiente sprint.
 
 Nota sobre estándar C++:
 - Este repositorio usa C++14 como estándar de compilación en `CMakeLists.txt`. Asegúrate de que tu entorno local/CI tenga toolchains compatibles (MSVC/Clang/GCC) antes de compilar.
