@@ -157,3 +157,17 @@ Compilation: CMake Debug OK + MSBuild Debug OK (0 errors, 0 warnings)
 **Hecho: T1.1 Crear DX12 Device y DXGI Factory**  
 **Siguiente: T1.2 Crear Command Queue**
 
+- docs: clarify msbuild compilation step in copilot-instructions.md
+
+Improved explanation of compilation step 2 to prevent confusion in new AI sessions.
+
+Key changes:
+- Added explicit **WARNING section** showing what **NOT to use** (`cmake --build` for step 2) and what **TO use** (`msbuild` command)
+- Emphasized that `msbuild` command replicates **exactly** Visual Studio 2022 **Ctrl+Shift+B** behavior
+- Removed ambiguous language that could lead to using `cmake` for step 2
+- Formatted with clear ?/? indicators for correct/incorrect commands
+
+This ensures new AI sessions will always use the correct `msbuild` command for step 2 compilation, preventing the recurring issue where new sessions would incorrectly use `cmake --build` for both steps.
+
+Files changed: `.github/copilot-instructions.md`
+
