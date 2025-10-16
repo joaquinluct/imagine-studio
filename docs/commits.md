@@ -95,3 +95,15 @@ Updated backlog.md with reference to MAIN.md.
 
 Files changed: `.github/copilot-instructions.md`, `docs/MAIN.md` (created), `docs/backlog.md`, `docs/sprint*.md` (renamed and cleared)
 
+- chore: add .gitattributes to normalize line endings (CRLF for Windows)
+
+Created .gitattributes with explicit CRLF line endings for all text files.
+Configured text=auto for automatic detection.
+Set CRLF for C++, markdown, CMake, Visual Studio files.
+Set LF for shell scripts (.sh).
+Marked binary files (images, executables, libs) as binary.
+Normalized existing files with git add --renormalize.
+This prevents Visual Studio line ending dialogs from appearing during file edits.
+
+Files changed: `.gitattributes` (created), `assets/*.dat` (normalized)
+
