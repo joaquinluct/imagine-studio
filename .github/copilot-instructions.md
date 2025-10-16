@@ -20,6 +20,7 @@ Flujo de trabajo por sesión:
        Estos dos pasos son los requeridos antes de crear un commit.
      - Si alguna de las dos compilaciones produce errores o warnings, el asistente corregirá los errores cuando sea posible y volverá a ejecutar ambas compilaciones hasta obtener builds limpias.
      - Nota: el paso 2 (Build Solution via msbuild) es obligatorio y se ejecutará sin pedir confirmación. El asistente registrará la salida y añadirá la información relevante en `docs/roadmap_log.md`.
+     - A partir de ahora, el asistente ejecutará automáticamente ambas compilaciones (CMake Debug y Visual Studio Build Solution via msbuild) antes de crear commits durante sus iteraciones.
    - Una vez ambas compilaciones estén limpias, crear el commit y actualizar los archivos Markdown pertinentes (`docs/roadmap_log.md`, `docs/commits.md`, `README.md` cuando proceda).
 6) Repetir desde 1.
 
