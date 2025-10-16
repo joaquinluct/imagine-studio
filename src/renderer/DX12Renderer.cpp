@@ -1,11 +1,18 @@
 #include "CommandAllocator.h"
 #include "CommandBuffer.h"
+#include "core/Log.h"
 #include "DX12Device.h"
 #include "DX12Renderer.h"
 #include "Fence.h"
 #include "RenderTarget.h"
 
+#if defined(_WIN32) && defined(_MSC_VER)
+#include <d3d12.h>
+#include <dxgi1_4.h>
+#endif
+
 #include <iostream>
+
 namespace Renderer {
 
 DX12Renderer::DX12Renderer() : device_(nullptr), rt_(nullptr) {}
@@ -32,23 +39,115 @@ void DX12Renderer::Initialize()
 
 void DX12Renderer::Initialize(HWND hwnd)
 {
-    std::cout << "DX12Renderer: Initialize(HWND)\n";
+    CORE_LOG_INFO("DX12Renderer: Initialize(HWND)");
+    
     device_ = new DX12Device();
     device_->Initialize();
-    rt_ = new RenderTarget();
-    if (device_->HasNativeDevice())
+    
+    if (!device_->HasNativeDevice())
     {
-        rt_->CreateForWindow(device_->NativeDevice(), reinterpret_cast<void*>(hwnd), 800, 600);
-    }
-    else
-    {
+        CORE_LOG_WARN("DX12Renderer: No native device, using stub render target");
+        rt_ = new RenderTarget();
         rt_->Create(800, 600);
+        allocator_ = new CommandAllocator();
+        fence_ = new Fence();
+        return;
     }
+    
+#if defined(_WIN32) && defined(_MSC_VER)
+    // Get device, factory and command queue from DX12Device
+    ID3D12Device* d3dDevice = static_cast<ID3D12Device*>(device_->NativeDevice());
+    IDXGIFactory4* factory = static_cast<IDXGIFactory4*>(device_->NativeFactory());
+    ID3D12CommandQueue* commandQueue = static_cast<ID3D12CommandQueue*>(device_->NativeCommandQueue());
+    
+    if (!d3dDevice || !factory || !commandQueue)
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to get Device, Factory or CommandQueue");
+        return;
+    }
+    
+    // Create descriptor heap for render target views (RTVs)
+    D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
+    rtvHeapDesc.NumDescriptors = BACK_BUFFER_COUNT;
+    rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+    rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+    
+    HRESULT hr = d3dDevice->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&m_rtvHeap));
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to create RTV descriptor heap");
+        return;
+    }
+    
+    m_rtvDescriptorSize = d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+    CORE_LOG_INFO("DX12Renderer: RTV descriptor heap created");
+    
+    // Create swap chain
+    DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
+    swapChainDesc.Width = 800;  // TODO: Get from window
+    swapChainDesc.Height = 600; // TODO: Get from window
+    swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    swapChainDesc.BufferCount = BACK_BUFFER_COUNT;
+    swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    swapChainDesc.SampleDesc.Count = 1;
+    swapChainDesc.SampleDesc.Quality = 0;
+    
+    IDXGISwapChain1* swapChain1 = nullptr;
+    hr = factory->CreateSwapChainForHwnd(
+        commandQueue,
+        hwnd,
+        &swapChainDesc,
+        nullptr,
+        nullptr,
+        &swapChain1
+    );
+    
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to create SwapChain");
+        return;
+    }
+    
+    // Query for IDXGISwapChain3 interface
+    hr = swapChain1->QueryInterface(IID_PPV_ARGS(&m_swapChain));
+    swapChain1->Release();
+    
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to get IDXGISwapChain3 interface");
+        return;
+    }
+    
+    CORE_LOG_INFO("DX12Renderer: SwapChain created successfully");
+    
+    // Get current back buffer index
+    m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
+    
+    // Create render target views (RTVs) for each back buffer
+    D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
+    
+    for (UINT i = 0; i < BACK_BUFFER_COUNT; ++i)
+    {
+        hr = m_swapChain->GetBuffer(i, IID_PPV_ARGS(&m_renderTargets[i]));
+        if (FAILED(hr))
+        {
+            CORE_LOG_ERROR("DX12Renderer: Failed to get back buffer " + std::to_string(i));
+            return;
+        }
+        
+        d3dDevice->CreateRenderTargetView(m_renderTargets[i], nullptr, rtvHandle);
+        rtvHandle.ptr += m_rtvDescriptorSize;
+    }
+    
+    CORE_LOG_INFO("DX12Renderer: Created " + std::to_string(BACK_BUFFER_COUNT) + " render target views");
+#endif
+    
     allocator_ = new CommandAllocator();
     fence_ = new Fence();
 }
 
-// Shutdown implementation moved below (cleanup of device and render target)
+// Rest of the implementation...
 
 void DX12Renderer::RenderFrame()
 {
@@ -85,6 +184,34 @@ void DX12Renderer::OnAssetLoaded(const std::string& path)
 
 void DX12Renderer::Shutdown()
 {
+#if defined(_WIN32) && defined(_MSC_VER)
+    // Release render targets
+    for (UINT i = 0; i < BACK_BUFFER_COUNT; ++i)
+    {
+        if (m_renderTargets[i])
+        {
+            m_renderTargets[i]->Release();
+            m_renderTargets[i] = nullptr;
+        }
+    }
+    
+    // Release RTV descriptor heap
+    if (m_rtvHeap)
+    {
+        m_rtvHeap->Release();
+        m_rtvHeap = nullptr;
+        CORE_LOG_INFO("DX12Renderer: RTV descriptor heap released");
+    }
+    
+    // Release swap chain
+    if (m_swapChain)
+    {
+        m_swapChain->Release();
+        m_swapChain = nullptr;
+        CORE_LOG_INFO("DX12Renderer: SwapChain released");
+    }
+#endif
+    
     if (rt_) { rt_->Destroy(); delete rt_; rt_ = nullptr; }
     if (device_) { device_->Shutdown(); delete device_; device_ = nullptr; }
 }
