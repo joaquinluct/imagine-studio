@@ -81,3 +81,15 @@ Registro de la acción reciente:
 
 Hecho: 6.08 Asset streaming: corregir AssetManager callback legado
 Siguiente: 4. Backend de render inicial - DirectX12 minimal
+
+Acci?n reciente (commit `adc80a0`):
+- Se aplicaron correcciones en el subsistema de plataforma y un ajuste de seguridad en el renderer:
+  - `src/platform/Window.cpp`: Mejor manejo de errores en `CreateWindowExW()` con intento de fallback (clase `STATIC`) para diagnosticar problemas de registro de clase; logging de errores detallado y `MessageBoxW` como ayuda al debug si la creación falla. Además se añadió un manejador `WM_PAINT` sencillo que pinta un fondo con texto "Hola Mundo" para verificar la renderización del UI en pruebas iniciales.
+  - `src/renderer/DX12Renderer.cpp`: se evitó esperar la se?al del `Fence` en el mismo hilo en el stub (posible deadlock en la implementaci?n actual). Ahora el stub solamente señaliza y no llama a `Wait()` en el mismo hilo.
+  - Nuevos recursos añadidos: `assets/asset_high.dat`, `assets/asset_normal.dat` y `metrics_asset_manager.json` (creados por pruebas/fixtures de AssetManager).
+  - Prop?sito: mejorar la robustez de la inicializaci?n de la ventana en equipos con diferencias en el registro de clases Win32 y proporcionar una prueba visual simple; evitar bloqueos en el flujo de render en stubs mientras se implementa sincronizaci?n real GPU/CPU.
+  - Archivos afectados: `src/platform/Window.cpp`, `src/renderer/DX12Renderer.cpp`, `assets/asset_high.dat`, `assets/asset_normal.dat`, `metrics_asset_manager.json`.
+  - Compilaci?n tras cambio: CMake build Debug OK, msbuild Debug OK (0 errores, 0 warnings).
+
+Hecho: 3.01 Plataforma - robustez en creaci?n de ventana y prueba WM_PAINT
+Siguiente: 4. Backend de render inicial - DirectX12 minimal

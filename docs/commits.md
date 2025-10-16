@@ -56,3 +56,9 @@ reading files. Add a default mount of `assets` and include a test asset
 
 Files changed: `src/assets/VFS.cpp`, `src/assets/VFS.h`, `assets/example_asset.dat`
 
+- fix(platform): Window creation fallback, WM_PAINT test and fence wait safety in DX12Renderer
+
+Describe: Improve robustness of `CreateWindowExW` in `Window.cpp` by adding fallback creation using a built-in class and detailed error logging. Add `WM_PAINT` simple rendering test string. Avoid waiting on a stubbed `Fence` in `DX12Renderer::RenderFrame()` to prevent deadlocks in the current stub GPU flow. Add test asset files `assets/asset_high.dat`, `assets/asset_normal.dat` and `metrics_asset_manager.json` created by AssetManager tests.
+
+Files changed: `src/platform/Window.cpp`, `src/renderer/DX12Renderer.cpp`, `assets/asset_high.dat`, `assets/asset_normal.dat`, `metrics_asset_manager.json`
+
