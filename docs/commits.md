@@ -172,6 +172,40 @@ This provides instant visual feedback on sprint advancement at each iteration co
 
 Files changed: `.github/copilot-instructions.md`
 
+- feat(renderer): implement SwapChain and RTV creation (T1.3)
+
+Implemented Task T1.3 - Create `IDXGISwapChain3` with back buffers and RTVs following AAA standards.
+
+Key changes:
+- Created **RTV descriptor heap** (`D3D12_DESCRIPTOR_HEAP_TYPE_RTV`) with 2 descriptors
+- Created **SwapChain** with `CreateSwapChainForHwnd`:
+  * Format: `DXGI_FORMAT_R8G8B8A8_UNORM`
+  * Swap effect: `DXGI_SWAP_EFFECT_FLIP_DISCARD`
+  * Buffer count: 2 (double buffering)
+- Queried `IDXGISwapChain3` interface from `IDXGISwapChain1`
+- Obtained back buffers with `GetBuffer()` for each buffer (index 0 and 1)
+- Created **RTV** for each back buffer using `CreateRenderTargetView()`
+- Stored frame index with `GetCurrentBackBufferIndex()`
+- Added proper cleanup in `Shutdown()`:
+  * Release render targets (in order)
+  * Release RTV descriptor heap
+  * Release SwapChain
+
+Implementation follows DX12 best practices:
+- Proper resource management with COM AddRef/Release
+- Error handling with HRESULT checks and logging
+- Correct release order during shutdown
+- Resources obtained from DX12Device (Factory, Device, CommandQueue)
+
+Files changed:
+- `src/renderer/DX12Renderer.h`: Added SwapChain, render targets array, RTV heap, descriptor size, frame index members
+- `src/renderer/DX12Renderer.cpp`: Implemented SwapChain creation in `Initialize(HWND)`, updated `Shutdown()` with proper cleanup
+
+Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
+
+**Hecho: T1.3 Crear SwapChain con Back Buffers**  
+**Siguiente: T1.4 Crear Descriptor Heaps (RTV, CBV/SRV/UAV)**
+
 - docs: plan sprint v1.1.0 - DX12 Minimal Renderer
 
 Created complete sprint planning for v1.1.0 with AAA-level DX12 renderer implementation.
