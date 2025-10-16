@@ -107,6 +107,22 @@ This prevents Visual Studio line ending dialogs from appearing during file edits
 
 Files changed: `.gitattributes` (created), `assets/*.dat` (normalized)
 
+- docs: update copilot-instructions.md to use main VS solution for build verification
+
+Updated Compilation 2 to use the main Visual Studio solution (`Imagine Studio.sln` in root) instead of the CMake-generated solution (`build/ImagineStudio.sln`).
+
+Key changes:
+- Changed `msbuild` command from `"build/ImagineStudio.sln"` to `"Imagine Studio.sln"` with `/p:Platform=x64`
+- Added **NOTA section** explaining the **two build systems**:
+  * **Main VS project** (`Imagine Studio.sln` in root) ? For daily development with F5/Ctrl+Shift+B
+  * **CMake project** (`build/ImagineStudio.sln`) ? For CI/automation
+- Added clear ? WARNING showing what **NOT to use** (`msbuild "build/ImagineStudio.sln"`)
+- Added clear ? indicator showing what **TO use** (`msbuild "Imagine Studio.sln"` with Platform=x64)
+
+This ensures compilation verification matches what developers see when pressing Ctrl+Shift+B in Visual Studio, preventing the issue where AI verification showed 0 errors but manual compilation in VS showed errors (missing include directories).
+
+Files changed: `.github/copilot-instructions.md`
+
 - docs: plan sprint v1.1.0 - DX12 Minimal Renderer
 
 Created complete sprint planning for v1.1.0 with AAA-level DX12 renderer implementation.
