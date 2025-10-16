@@ -134,3 +134,26 @@ Updated `docs/daily.md`:
 
 Files changed: `docs/sprint.md`, `docs/sprint_histories.md`, `docs/sprint_tasks.md`, `docs/daily.md`
 
+- feat(renderer): implement DX12 Device and DXGI Factory creation (T1.1)
+
+Implemented Task T1.1 - Create DX12 Device and DXGI Factory following AAA standards.
+
+Key changes:
+- Use `CreateDXGIFactory2` with `DXGI_CREATE_FACTORY_DEBUG` flag in debug builds
+- Enable D3D12 debug layer in debug builds for validation (`D3D12GetDebugInterface`)
+- Enumerate GPU adapters with `EnumAdapters1` and skip software adapters
+- Create `ID3D12Device` with `D3D_FEATURE_LEVEL_11_0`
+- Log selected GPU name (converted from wide string) and device creation status
+- Store Factory, Adapter, Device as member variables for later use
+- Add `NativeFactory()` and `NativeCommandQueue()` accessors (prep for T1.2)
+- Proper resource cleanup in `Shutdown()` with correct release order
+
+Files changed:
+- `src/renderer/DX12Device.h`: Added forward declarations for DX12 types, member variables (`m_factory`, `m_adapter`, `m_device`, `m_commandQueue`), new accessors
+- `src/renderer/DX12Device.cpp`: Full DX12 initialization with `CORE_LOG_*` logging, GPU enumeration, debug layer setup
+
+Compilation: CMake Debug OK + MSBuild Debug OK (0 errors, 0 warnings)
+
+**Hecho: T1.1 Crear DX12 Device y DXGI Factory**  
+**Siguiente: T1.2 Crear Command Queue**
+
