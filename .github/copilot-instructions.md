@@ -117,10 +117,26 @@ Fichero Backlog (`docs/backlog.md`)
 
 
 Formato de la explicación final de cada iteración:
-- Requisito: Al final de cada iteración (cuando se informa lo realizado y el siguiente punto), la explicación debe contener obligatoriamente dos títulos numerados siguiendo el esquema del Sprint:
-  - "Hecho: <número> <título>" (por ejemplo, "Hecho: 9.18 Shading/material...") que describe en breve lo completado.
-  - "Siguiente: <número> <título>" que describe el siguiente punto propuesto.
-  Estos títulos deben estar presentes en la explicación final que acompaña al commit/documentación. El asistente rellenará los números guiándose por `docs/sprint.md` y `docs/daily.md`.
+- Requisito: Al final de cada iteración (cuando se informa lo realizado y el siguiente punto), la explicación debe contener obligatoriamente:
+  
+  1. **Dos títulos numerados** siguiendo el esquema del Sprint:
+     - "Hecho: <número> <título>" (por ejemplo, "Hecho: 9.18 Shading/material...") que describe en breve lo completado.
+     - "Siguiente: <número> <título>" que describe el siguiente punto propuesto.
+  
+  2. **Barra de progreso visual del sprint** mostrando el avance de tareas completadas:
+     - Formato: Barra horizontal con fondo negro (█), progreso verde (🟩), bordes blancos (┃), y porcentaje centrado
+     - Ejemplo con 2 de 15 tareas (13.3%):
+       ```
+       ┌────────────────────────────────────────────────────────────────────┐
+       │🟩🟩⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛ 13.3%│
+       └────────────────────────────────────────────────────────────────────┘
+       ```
+     - La barra debe ocupar todo el ancho disponible del prompt (aprox. 70-80 caracteres)
+     - El porcentaje se calcula como: (tareas completadas / total tareas sprint) × 100
+     - Usar emojis/caracteres Unicode: 🟩 (verde completado), ⬛ (negro pendiente)
+     - Incluir el porcentaje en formato "XX.X%" al final de la barra
+  
+  Estos elementos deben estar presentes en la explicación final que acompaña al commit/documentación. El asistente rellenará los números y calculará el progreso guiándose por `docs/sprint.md`, `docs/sprint_tasks.md` y `docs/daily.md`.
 
 Fichero Daily (`docs/daily.md`)
 --------------------------------
