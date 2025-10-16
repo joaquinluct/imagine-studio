@@ -13,18 +13,92 @@
 #include <fstream>
 #include <sstream>
 #include <windows.h>
+// For DPI helper functions
+#include <VersionHelpers.h>
 static int RunApp(HINSTANCE hInstance)
 {
+    // Make the process DPI aware so window coordinates and monitor bounds
+    // are reported in the correct (physical) pixels. This helps ensure a
+    // borderless fullscreen window covers the monitor correctly when the
+    // system uses display scaling.
+    // Prefer SetProcessDpiAwarenessContext if available on newer Windows,
+    // but fall back to SetProcessDPIAware for compatibility.
+    // Note: calling this after window creation has no effect, so do it here.
+    if (IsWindows10OrGreater())
+    {
+        // Try per-monitor v2 if available (Windows 10+)
+        typedef BOOL(WINAPI* SPDAC)(DPI_AWARENESS_CONTEXT);
+        HMODULE hUser = GetModuleHandleW(L"user32.dll");
+        if (hUser)
+        {
+            SPDAC spdac = reinterpret_cast<SPDAC>(GetProcAddress(hUser, "SetProcessDpiAwarenessContext"));
+            if (spdac)
+            {
+                // DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 == -4
+                spdac(reinterpret_cast<DPI_AWARENESS_CONTEXT>(-4));
+            }
+            else
+            {
+                // Fallback
+                SetProcessDPIAware();
+            }
+        }
+    }
+    else
+    {
+        SetProcessDPIAware();
+    }
+
+    // Create the main application window (shown by default)
     Platform::Window window(hInstance, L"Imagine Studio - Window", 800, 600);
 
-    // Ensure the window is shown and brought to foreground so the UI panel is visible
-#if IMAGINE_START_MAXIMIZED
-    ShowWindow(window.GetHWND(), SW_SHOWMAXIMIZED);
-#else
-    ShowWindow(window.GetHWND(), SW_SHOWDEFAULT);
-#endif
-    UpdateWindow(window.GetHWND());
-    SetForegroundWindow(window.GetHWND());
+    // Ensure the window is shown. Then switch to a borderless window and
+    // maximize it so it covers the whole monitor.
+    HWND hwnd = window.GetHWND();
+    ShowWindow(hwnd, SW_SHOW);
+    UpdateWindow(hwnd);
+
+    if (hwnd)
+    {
+        // Remove window decorations and set popup style
+        LONG_PTR style = GetWindowLongPtr(hwnd, GWL_STYLE);
+        style &= ~(WS_CAPTION | WS_THICKFRAME | WS_MINIMIZE | WS_MAXIMIZE | WS_SYSMENU);
+        style |= WS_POPUP;
+        SetWindowLongPtr(hwnd, GWL_STYLE, style);
+
+        // Get monitor bounds and position the window explicitly to cover it.
+        HMONITOR hm = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+        MONITORINFO mi = {};
+        mi.cbSize = sizeof(mi);
+        if (GetMonitorInfoW(hm, &mi))
+        {
+            int wx = mi.rcMonitor.left;
+            int wy = mi.rcMonitor.top;
+            int ww = mi.rcMonitor.right - mi.rcMonitor.left;
+            int wh = mi.rcMonitor.bottom - mi.rcMonitor.top;
+            // Apply the style change and resize to exact monitor area
+            SetWindowPos(hwnd, HWND_TOP, wx, wy, ww, wh, SWP_NOOWNERZORDER | SWP_FRAMECHANGED | SWP_SHOWWINDOW);
+            SetForegroundWindow(hwnd);
+        }
+        else
+        {
+            // Fallback: ensure window is maximized
+            ShowWindow(hwnd, SW_MAXIMIZE);
+            SetForegroundWindow(hwnd);
+        }
+    }
+
+    // (Removed diagnostic repositioning — the window was intentionally set
+    // to borderless fullscreen above and repositioning here reverted it.)
+
+    // Log HWND for diagnosis
+    {
+        std::ostringstream ss; ss << "Main window HWND=" << reinterpret_cast<void*>(window.GetHWND()); CORE_LOG_INFO(ss.str());
+    }
+
+    // Debug: window visibility logged above. No MessageBox so the main loop
+    // remains responsive and the window is interactive during debugging.
+    CORE_LOG_INFO(std::string("Render window should be visible (HWND=)") + std::to_string(reinterpret_cast<uintptr_t>(window.GetHWND())));
 
     // Simple message loop
     Platform::InputManager input;
@@ -37,14 +111,9 @@ static int RunApp(HINSTANCE hInstance)
     Assets::AssetManager assets;
     assets.Initialize();
 
-    // Demonstration: async load an asset and signal a fence when complete
-    Renderer::Fence assetFence;
-    assets.LoadAsync("example_asset.dat", [](const std::string& p){ CORE_LOG_INFO(std::string("Callback: asset loaded: ") + p); }, &assetFence);
-
-    // Wait for the asset to be loaded (synchronization test)
-    CORE_LOG_INFO("Waiting for async asset to load...");
-    assetFence.WaitForValue(1);
-    CORE_LOG_INFO("Async asset load signaled");
+    // Demonstration: async load an asset. Do not block the main thread.
+    // The main loop will process loaded assets via assets.PopLoaded(...).
+    assets.LoadAsync("example_asset.dat", [](const std::string& p){ CORE_LOG_INFO(std::string("Callback: asset loaded: ") + p); }, nullptr);
 
     // 7.01 TaskGraph basic test: create simple dependency A,B -> C
     {

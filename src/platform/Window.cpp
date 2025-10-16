@@ -1,4 +1,7 @@
 #include "Window.h"
+#include "../core/Log.h"
+#include <sstream>
+#include <string>
 namespace Platform {
 
 Window::Window(HINSTANCE hInstance, const wchar_t* title, int width, int height)
@@ -6,27 +9,91 @@ Window::Window(HINSTANCE hInstance, const wchar_t* title, int width, int height)
 {
     const wchar_t CLASS_NAME[] = L"ImagineStudioWindowClass";
 
-    WNDCLASS wc = {};
+    // Use the module HINSTANCE for registration/creation to avoid mismatches
+    HINSTANCE regInstance = hInstance_ ? hInstance_ : GetModuleHandle(NULL);
+
+    WNDCLASSEXW wc = {};
+    wc.cbSize = sizeof(WNDCLASSEXW);
     wc.lpfnWndProc   = WndProcStatic;
-    wc.hInstance     = hInstance_;
+    wc.hInstance     = regInstance;
     wc.lpszClassName = CLASS_NAME;
+    wc.hCursor = LoadCursorW(NULL, IDC_ARROW);
+    wc.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1);
 
-    RegisterClass(&wc);
+    // Register class and report errors if any (Unicode)
+    ATOM a = RegisterClassExW(&wc);
+    if (a == 0)
+    {
+        DWORD err = GetLastError();
+        std::ostringstream ss; ss << "Window::Window - RegisterClassExW failed, GetLastError=" << err; CORE_LOG_ERROR(ss.str());
+    }
+    else
+    {
+        std::ostringstream ss; ss << "Window::Window - RegisterClassExW succeeded, atom=" << a << " regInstance=" << reinterpret_cast<void*>(regInstance); CORE_LOG_INFO(ss.str());
+        // Verify class info
+        WNDCLASSEXW existing = {};
+        existing.cbSize = sizeof(existing);
+        if (GetClassInfoExW(regInstance, CLASS_NAME, &existing) || GetClassInfoExW(NULL, CLASS_NAME, &existing))
+        {
+            CORE_LOG_INFO("Window::Window - GetClassInfoExW succeeded for registered class");
+        }
+        else
+        {
+            std::ostringstream ss2; ss2 << "Window::Window - GetClassInfoExW failed, GetLastError=" << GetLastError(); CORE_LOG_ERROR(ss2.str());
+        }
+    }
 
-    hwnd_ = CreateWindowEx(
+    LPCWSTR classParam = CLASS_NAME;
+    if (a != 0) classParam = MAKEINTATOM(a);
+
+    hwnd_ = CreateWindowExW(
         0,
-        CLASS_NAME,
+        classParam,
         title,
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, CW_USEDEFAULT, width, height,
         NULL,
         NULL,
-        hInstance_,
+        regInstance,
         this
     );
-
-    if (hwnd_)
+    if (!hwnd_)
     {
+        DWORD err = GetLastError();
+        std::ostringstream ss; ss << "Window::Window - CreateWindowEx failed, GetLastError=" << err; CORE_LOG_ERROR(ss.str());
+
+        // Fallback test: try creating a simple window using a built-in class
+        // (STATIC) to determine whether custom class registration is the issue.
+        hwnd_ = CreateWindowExW(0, L"STATIC", title, WS_OVERLAPPEDWINDOW,
+                                CW_USEDEFAULT, CW_USEDEFAULT, width, height,
+                                NULL, NULL, regInstance, this);
+        if (hwnd_)
+        {
+            std::ostringstream ss2; ss2 << "Window::Window - fallback using WC_OVERLAPPEDWINDOW succeeded, HWND=" << reinterpret_cast<void*>(hwnd_); CORE_LOG_INFO(ss2.str());
+            ShowWindow(hwnd_, SW_SHOW);
+        }
+        else
+        {
+            DWORD err2 = GetLastError();
+            std::ostringstream ss3; ss3 << "Window::Window - fallback CreateWindowEx failed, GetLastError=" << err2; CORE_LOG_ERROR(ss3.str());
+            // Show an explicit message to aid debugging with readable text
+            LPWSTR msgBuf = nullptr;
+            FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                           NULL, err2, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), reinterpret_cast<LPWSTR>(&msgBuf), 0, NULL);
+            if (msgBuf)
+            {
+                MessageBoxW(NULL, msgBuf, L"Imagine Studio - CreateWindowEx Error", MB_OK | MB_ICONERROR);
+                LocalFree(msgBuf);
+            }
+            else
+            {
+                MessageBoxW(NULL, L"CreateWindowEx failed (unknown error)", L"Imagine Studio - CreateWindowEx Error", MB_OK | MB_ICONERROR);
+            }
+        }
+    }
+    else
+    {
+        std::ostringstream ss; ss << "Window::Window - created HWND=" << reinterpret_cast<void*>(hwnd_); CORE_LOG_INFO(ss.str());
         ShowWindow(hwnd_, SW_SHOW);
     }
 }
@@ -57,6 +124,23 @@ LRESULT Window::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+    case WM_PAINT:
+    {
+        PAINTSTRUCT ps;
+        HDC hdc = BeginPaint(hwnd_, &ps);
+        RECT rc;
+        GetClientRect(hwnd_, &rc);
+        // Fill background using system color
+        HBRUSH brush = CreateSolidBrush(GetSysColor(COLOR_WINDOW));
+        FillRect(hdc, &rc, brush);
+        DeleteObject(brush);
+        // Draw a simple test string to verify UI is rendering
+        SetBkMode(hdc, TRANSPARENT);
+        SetTextColor(hdc, RGB(0,0,0));
+        DrawTextW(hdc, L"Hola Mundo", -1, &rc, DT_SINGLELINE | DT_TOP | DT_LEFT);
+        EndPaint(hwnd_, &ps);
+        return 0;
+    }
     case WM_DESTROY:
         PostQuitMessage(0);
         return 0;

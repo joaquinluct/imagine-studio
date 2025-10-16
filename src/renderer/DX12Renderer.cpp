@@ -33,9 +33,13 @@ void DX12Renderer::RenderFrame()
     // ... allocate and record
     unsigned long long submitIndex = cmd.Submit();
 
-    // signal fence and wait (stub)
+    // signal fence (stub). Do NOT wait here on the same thread — the
+    // stubbed Fence implementation would deadlock because Signal and Wait
+    // are on the same thread. In real GPU code the GPU would signal the
+    // fence and the CPU could wait asynchronously or poll for completion.
     if (fence_) fence_->Signal();
-    if (fence_) fence_->Wait();
+    else
+        (void)0;
 
     ComposeUI();
     if (rt_) rt_->Present();

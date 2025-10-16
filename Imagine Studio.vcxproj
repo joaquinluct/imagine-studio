@@ -100,11 +100,11 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -126,6 +126,8 @@
     <None Include=".github\copilot-instructions.md" />
     <None Include=".github\workflows\ci.yml" />
     <None Include=".gitignore" />
+    <None Include="assets\asset_high.dat" />
+    <None Include="assets\asset_normal.dat" />
     <None Include="assets\example_asset.dat" />
     <None Include="docs\commits.md" />
     <None Include="docs\roadmap.md" />
