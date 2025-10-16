@@ -62,3 +62,18 @@ Describe: Improve robustness of `CreateWindowExW` in `Window.cpp` by adding fall
 
 Files changed: `src/platform/Window.cpp`, `src/renderer/DX12Renderer.cpp`, `assets/asset_high.dat`, `assets/asset_normal.dat`, `metrics_asset_manager.json`
 
+- docs: refactor instructions and tracking - add project pillars and daily.md
+
+Added 4 fundamental pillars of Imagine Studio to copilot-instructions.md:
+  1. Modo Edición/Studio (rich interface for 2D/3D world creation)
+  2. Multiplataforma (publish to Windows, Mac, Consoles, etc)
+  3. Extensibilidad (programming in editor to customize engine)
+  4. Performance y Calidad AAA (AAA-level code, performance and visual quality PRIMORDIAL)
+
+Replaced roadmap_log.md with simplified daily.md (only tracks last completed task and current task).
+Updated all references in copilot-instructions.md from roadmap_log.md to daily.md.
+Fixed C++ standard reference: uses C++14 (not C++23).
+Added Daily.md section explaining the simplified tracking format.
+
+Files changed: `.github/copilot-instructions.md`, `docs/daily.md` (created), `docs/roadmap_log.md` (deleted)
+
