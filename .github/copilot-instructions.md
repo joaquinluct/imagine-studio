@@ -36,7 +36,7 @@ Preferencias del propietario del repositorio:
 - En cada iteración, antes del commit, siempre se debe compilar y corregir errores/warnings para asegurar commits limpios y funcionales.
  - Estilo de includes: las directivas `#include` deben ordenarse siempre con las cabeceras del proyecto (entre comillas `"..."`) primero y después las cabeceras del sistema (`<...>`), y dentro de cada grupo deben aparecer en orden alfabético. Esta regla será verificada por el asistente y aplicada o reportada como warning al preparar commits.
 
-Sección de resolución de problemas (Troubleshooting)
+Sección de resolución de problemas (Resolución de problemas)
 Si en algún momento la herramienta no puede compilar la solución o no encuentra la `.sln`, o aparece un error de enlace tipo "unresolved external main", seguir estos pasos:
 
 1) Comprobar la existencia y ruta exacta de la solución desde PowerShell:
@@ -65,26 +65,26 @@ Excepciones: Si aparece un bloqueo técnico, decisión arquitectónica crítica o de
 Regla estricta sobre commits y documentación:
 - Requisito: Siempre que el asistente realice un commit local como resultado de una iteración (es decir, la compilación queda limpia), actualizará automáticamente `docs/roadmap_log.md` y `docs/commits.md` para reflejar el cambio sin pedir confirmación adicional. El push al repositorio remoto no se realizará automáticamente salvo instrucción explícita del propietario.
 
-Versioning of Roadmap files (sprint snapshots):
-- The active roadmap documents for the current sprint are:
-  - `docs/roadmap.md` (high-level roadmap)
-  - `docs/roadmap_histories.md` (user stories / histories for the sprint)
-  - `docs/roadmap_tasks.md` (detailed tasks for each history; the unit of work and iteration)
-- At the end of a sprint (release), the assistant will archive the current working files by renaming them to include the version, e.g.:
+Versionado de los ficheros del Roadmap (snapshots de sprint):
+- Los ficheros activos del roadmap para el sprint actual son:
+  - `docs/roadmap.md` (roadmap de alto nivel)
+  - `docs/roadmap_histories.md` (historias de usuario para el sprint)
+  - `docs/roadmap_tasks.md` (tareas detalladas por historia; unidad mínima de trabajo e iteración)
+- Al final de un sprint (release), el asistente archivará los ficheros de trabajo renombrándolos con la versión, por ejemplo:
   - `docs/roadmap_v<version>.md`
   - `docs/roadmap_histories_v<version>.md`
   - `docs/roadmap_tasks_v<version>.md`
-- The assistant will then create fresh empty files for the next sprint with the active names.
-- This versioning policy ensures traceability of completed sprints and keeps the active files small and focused.
+- A continuación el asistente creará ficheros nuevos y vacíos con los nombres activos para el siguiente sprint.
+- Esta política de versionado garantiza trazabilidad de los sprints completados y mantiene los ficheros activos pequeños y enfocados.
 
-Backlog file (`docs/backlog.md`)
---------------------------------
-- Purpose: `docs/backlog.md` is the long-term repository for items that are NOT part of the active sprint. Use it as a persistent "baúl" for ideas, deferred stories, low-priority tasks and technical debt that should be kept for future prioritization.
-- Workflow and usage:
-  - When a story or task is identified but not selected for the current sprint, add a short entry to `docs/backlog.md` with a brief description, priority tag (Low/Med/High) and optional reference to related history/task IDs in `docs/roadmap_histories.md` or `docs/roadmap_tasks.md`.
-  - The backlog is the source for sprint planning: during sprint planning items may be moved from `docs/backlog.md` into `docs/roadmap_histories.md` (as a history) and broken into tasks in `docs/roadmap_tasks.md` for the active sprint.
-  - Entries in `docs/backlog.md` should be concise and linkable (include a short path or anchor to the related code/files if applicable).
-  - The assistant will not implement items directly from the backlog unless they are moved into the active sprint files.
+Fichero Backlog (`docs/backlog.md`)
+-----------------------------------
+- Propósito: `docs/backlog.md` es el repositorio a largo plazo para los ítems que NO forman parte del sprint activo. Úsalo como "baúl" persistente para ideas, historias diferidas, tareas de baja prioridad y deuda técnica que deben conservarse para priorizar en el futuro.
+- Flujo y uso:
+  - Cuando se identifique una historia o tarea pero no se seleccione para el sprint actual, añade una entrada breve en `docs/backlog.md` con una descripción corta, etiqueta de prioridad (Baja/Media/Alta) y, opcionalmente, referencia al ID de historia/tarea en `docs/roadmap_histories.md` o `docs/roadmap_tasks.md`.
+  - El backlog es la fuente para la planificación del sprint: durante la planificación los ítems pueden moverse de `docs/backlog.md` a `docs/roadmap_histories.md` (como historia) y descomponerse en tareas en `docs/roadmap_tasks.md` para el sprint activo.
+  - Las entradas en `docs/backlog.md` deben ser concisas y enlazables (incluir una ruta o ancla al código relacionado si procede).
+  - El asistente no implementará ítems directamente desde el backlog a menos que se muevan a los ficheros activos del sprint.
 
 
 Formato de la explicación final de cada iteración:
