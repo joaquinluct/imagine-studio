@@ -85,6 +85,23 @@ bool DX12Device::Initialize()
             CORE_LOG_INFO("DX12Device: Selected GPU - " + std::string(gpuNameNarrow));
             CORE_LOG_INFO("DX12Device: D3D12 Device created successfully");
             
+            // Create Command Queue
+            D3D12_COMMAND_QUEUE_DESC queueDesc = {};
+            queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+            queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+            hr = m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_commandQueue));
+            if (FAILED(hr))
+            {
+                CORE_LOG_ERROR("DX12Device: Failed to create Command Queue");
+                m_device->Release();
+                m_device = nullptr;
+                m_adapter->Release();
+                m_adapter = nullptr;
+                continue; // Try next adapter
+            }
+            
+            CORE_LOG_INFO("DX12Device: Command Queue created successfully");
+            
             hasNativeDevice_ = true;
             return true;
         }
