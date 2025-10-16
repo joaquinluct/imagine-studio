@@ -23,21 +23,33 @@ Flujo de trabajo por sesión:
 4) Proponer el siguiente paso (por parte del asistente).
 5) Si se confirma, el asistente implementa el paso.
    - Antes de crear el commit se debe compilar la solución/proyecto.
-     - Requisito adicional: realizar dos compilaciones y verificar que ambas quedan limpias (0 errores, 0 warnings) antes de proceder al commit:
-       1) Compilación 1 (CMake): ejecutar la compilación desde la línea de comandos usando CMake para la configuración Debug. Ejemplo:
-          `cmake --build build --config Debug`
-       2) Compilación 2 (Visual Studio — "Build Solution"): reproducir la misma acción que hace Visual Studio cuando pulsas "Compilar solución" (Ctrl+Mayús+B). El asistente ejecutará msbuild apuntando a la solución con el target `Build` y la configuración Debug. Ejemplo:
-          `msbuild "build/ImagineStudio.sln" /t:Build /p:Configuration=Debug /m`
-       Estos dos pasos son los requeridos antes de crear un commit.
+     - **Requisito obligatorio: DOS compilaciones limpias (0 errores, 0 warnings)**:
+       
+       **Compilación 1 - CMake Build (Debug)**:
+       ```powershell
+       cmake --build build --config Debug
+       ```
+       
+       **Compilación 2 - Visual Studio Build Solution (Ctrl+Mayús+B equivalente)**:
+       ```powershell
+       msbuild "build/ImagineStudio.sln" /t:Build /p:Configuration=Debug /m
+       ```
+       
+       **IMPORTANTE**: La compilación 2 debe ejecutarse **EXACTAMENTE** con el comando `msbuild` mostrado arriba.
+       Este comando replica **exactamente** lo que hace Visual Studio 2022 cuando pulsas **Ctrl+Mayús+B** ("Build Solution").
+       
+       **NO usar** variaciones como:
+       - ? `cmake --build` (eso es compilación 1, no compilación 2)
+       - ? `devenv /build`
+       - ? Otros métodos alternativos
+       
+       **SÍ usar**:
+       - ? `msbuild "build/ImagineStudio.sln" /t:Build /p:Configuration=Debug /m`
+       
      - Si alguna de las dos compilaciones produce errores o warnings, el asistente corregirá los errores cuando sea posible y volverá a ejecutar ambas compilaciones hasta obtener builds limpias.
-     - Nota: el paso 2 (Build Solution via msbuild) es obligatorio y se ejecutará sin pedir confirmación. El asistente registrará la salida y añadirá la información relevante en `docs/roadmap_log.md`.
-     - A partir de ahora, el asistente ejecutará automáticamente ambas compilaciones (CMake Debug y Visual Studio Build Solution via msbuild) antes de crear commits durante sus iteraciones.
-   - Una vez ambas compilaciones estén limpias, crear el commit y actualizar los archivos Markdown pertinentes (`docs/roadmap_log.md`, `docs/commits.md`, `README.md` cuando proceda).
-6) ReAl comenzar una sesión, abrir y revisar:
-- `docs/roadmap.md`
-- `docs/daily.md`
-/roadmap_log.md`
-- `docs/commits.md`
+     - El asistente ejecutará automáticamente ambas compilaciones (CMake + MSBuild) antes de crear commits durante sus iteraciones.
+   - Una vez ambas compilaciones estén limpias, crear el commit y actualizar los archivos Markdown pertinentes (`docs/daily.md`, `docs/commits.md`, `README.md` cuando proceda).
+6) Repetir desde 1.
 
 Nota: Los archivos anteriores son la fuente de la verdad para la organización del proyecto y la comunicación con el asistente.
 
