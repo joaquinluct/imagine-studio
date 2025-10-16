@@ -12,11 +12,14 @@ Flujo de trabajo por sesión:
 4) Proponer el siguiente paso (por parte del asistente).
 5) Si se confirma, el asistente implementa el paso.
    - Antes de crear el commit se debe compilar la solución/proyecto.
-     - Requisito adicional: realizar ambas compilaciones y verificar que ambas quedan limpias (0 errores, 0 warnings) antes de proceder al commit:
-       1) Compilación desde línea de comandos / CMake (por ejemplo: `cmake --build build --config Debug`).
-       2) Compilación desde el entorno/IDE (el asistente ejecutará silenciosamente `msbuild "build/ImagineStudio.sln" /p:Configuration=Debug /m` para reproducir el Build ? Build Solution). Este paso se ejecutará automáticamente por el asistente y sus resultados se registrarán.
+     - Requisito adicional: realizar dos compilaciones y verificar que ambas quedan limpias (0 errores, 0 warnings) antes de proceder al commit:
+       1) Compilación 1 (CMake): ejecutar la compilación desde la línea de comandos usando CMake para la configuración Debug. Ejemplo:
+          `cmake --build build --config Debug`
+       2) Compilación 2 (Visual Studio — "Build Solution"): reproducir la misma acción que hace Visual Studio cuando pulsas "Compilar solución" (Ctrl+Mayús+B). El asistente ejecutará msbuild apuntando a la solución con el target `Build` y la configuración Debug. Ejemplo:
+          `msbuild "build/ImagineStudio.sln" /t:Build /p:Configuration=Debug /m`
+       Estos dos pasos son los requeridos antes de crear un commit.
      - Si alguna de las dos compilaciones produce errores o warnings, el asistente corregirá los errores cuando sea posible y volverá a ejecutar ambas compilaciones hasta obtener builds limpias.
-     - Nota: el paso 2 (build de IDE vía msbuild) es obligatorio y se ejecutará sin pedir confirmación. El asistente registrará la salida y añadirá la información relevante en `docs/roadmap_log.md`.
+     - Nota: el paso 2 (Build Solution via msbuild) es obligatorio y se ejecutará sin pedir confirmación. El asistente registrará la salida y añadirá la información relevante en `docs/roadmap_log.md`.
    - Una vez ambas compilaciones estén limpias, crear el commit y actualizar los archivos Markdown pertinentes (`docs/roadmap_log.md`, `docs/commits.md`, `README.md` cuando proceda).
 6) Repetir desde 1.
 
