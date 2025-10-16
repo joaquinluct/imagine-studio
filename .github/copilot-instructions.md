@@ -65,6 +65,18 @@ Excepciones: Si aparece un bloqueo técnico, decisión arquitectónica crítica o de
 Regla estricta sobre commits y documentación:
 - Requisito: Siempre que el asistente realice un commit local como resultado de una iteración (es decir, la compilación queda limpia), actualizará automáticamente `docs/roadmap_log.md` y `docs/commits.md` para reflejar el cambio sin pedir confirmación adicional. El push al repositorio remoto no se realizará automáticamente salvo instrucción explícita del propietario.
 
+Versioning of Roadmap files (sprint snapshots):
+- The active roadmap documents for the current sprint are:
+  - `docs/roadmap.md` (high-level roadmap)
+  - `docs/roadmap_histories.md` (user stories / histories for the sprint)
+  - `docs/roadmap_tasks.md` (detailed tasks for each history; the unit of work and iteration)
+- At the end of a sprint (release), the assistant will archive the current working files by renaming them to include the version, e.g.:
+  - `docs/roadmap_v<version>.md`
+  - `docs/roadmap_histories_v<version>.md`
+  - `docs/roadmap_tasks_v<version>.md`
+- The assistant will then create fresh empty files for the next sprint with the active names.
+- This versioning policy ensures traceability of completed sprints and keeps the active files small and focused.
+
 Formato de la explicación final de cada iteración:
 - Requisito: Al final de cada iteración (cuando se informa lo realizado y el siguiente punto), la explicación debe contener obligatoriamente dos títulos numerados siguiendo el esquema del Roadmap:
   - "Hecho: <número> <título>" (por ejemplo, "Hecho: 9.18 Shading/material...") que describe en breve lo completado.
