@@ -129,10 +129,15 @@
     <None Include="assets\asset_high.dat" />
     <None Include="assets\asset_normal.dat" />
     <None Include="assets\example_asset.dat" />
+    <None Include="docs\backlog.md" />
     <None Include="docs\commits.md" />
     <None Include="docs\roadmap.md" />
-    <None Include="docs\roadmap_detail_v1.0.0.md" />
+    <None Include="docs\roadmap_histories.md" />
+    <None Include="docs\roadmap_histories_v1.0.0.md" />
     <None Include="docs\roadmap_log.md" />
+    <None Include="docs\roadmap_tasks.md" />
+    <None Include="docs\roadmap_tasks_v1.0.0.md" />
+    <None Include="docs\roadmap_v1.0.0.md" />
     <None Include="examples\scene1\README.md" />
     <None Include="examples\scene1\scene.json" />
     <None Include="README.md" />

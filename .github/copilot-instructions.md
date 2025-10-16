@@ -1,13 +1,24 @@
 Este repositorio usa las siguientes instrucciones de trabajo para sesiones con el asistente (GitHub Copilot).
 
+## Objetivos y Pilares del Proyecto Imagine Studio
+
+**Imagine Studio** es un framework de creación de juegos tipo Unity/Roblox Studio con los siguientes pilares fundamentales:
+
+1. **Modo Edición/Studio**: Interfaz rica con recursos completos para crear mundos 2D y 3D
+2. **Multiplataforma**: Publicación de juegos en Windows, Mac, Consolas y otras plataformas
+3. **Extensibilidad**: Programación en modo edición/studio para personalizar el motor
+4. **Performance y Calidad AAA**: Código de nivel profesional con performance y calidad visual como objetivo PRIMORDIAL
+
+**PUNTO CRÍTICO**: Todas las decisiones arquitectónicas y de implementación DEBEN alinearse con estos 4 pilares.
+
 Archivos principales:
 - `docs/roadmap.md` - Roadmap profesional con hitos y objetivos.
-- `docs/roadmap_log.md` - Bitácora del avance del roadmap (último punto realizado, punto actual).
+- `docs/daily.md` - Última tarea completada y tarea actual en progreso.
 - `docs/commits.md` - Convenciones de commits y mensajes.
 
 Flujo de trabajo por sesión:
 1) Leer estas instrucciones.
-2) Consultar `docs/roadmap_log.md` para ver el punto actual.
+2) Consultar `docs/daily.md` para ver la última tarea completada y la tarea actual.
 3) Comparar con el código fuente.
 4) Proponer el siguiente paso (por parte del asistente).
 5) Si se confirma, el asistente implementa el paso.
@@ -22,11 +33,10 @@ Flujo de trabajo por sesión:
      - Nota: el paso 2 (Build Solution via msbuild) es obligatorio y se ejecutará sin pedir confirmación. El asistente registrará la salida y añadirá la información relevante en `docs/roadmap_log.md`.
      - A partir de ahora, el asistente ejecutará automáticamente ambas compilaciones (CMake Debug y Visual Studio Build Solution via msbuild) antes de crear commits durante sus iteraciones.
    - Una vez ambas compilaciones estén limpias, crear el commit y actualizar los archivos Markdown pertinentes (`docs/roadmap_log.md`, `docs/commits.md`, `README.md` cuando proceda).
-6) Repetir desde 1.
-
-Al comenzar una sesión, abrir y revisar:
+6) ReAl comenzar una sesión, abrir y revisar:
 - `docs/roadmap.md`
-- `docs/roadmap_log.md`
+- `docs/daily.md`
+/roadmap_log.md`
 - `docs/commits.md`
 
 Nota: Los archivos anteriores son la fuente de la verdad para la organización del proyecto y la comunicación con el asistente.
@@ -50,20 +60,20 @@ Si en algún momento la herramienta no puede compilar la solución o no encuentra 
 5) Si la compilación muestra errores/warnings: corregirlos hasta obtener una build limpia antes de proceder al commit (esta regla ya está en el flujo de trabajo).
 6) Alternativa: si no hay `.sln` o se desea portabilidad, crear un `CMakeLists.txt` básico y usar `cmake` + `cmake --build`.
 
-Registrar en la bitácora (`docs/roadmap_log.md`) cualquier incidencia relevante y su resolución para futuras referencias.
+Registrar en la bitácora (`docs/daily.md`) cualquier incidencia relevante y su resolución para futuras referencias.
 
 Iteración controlada (proceso obligatorio por iteración)
-1) El asistente consultará `docs/roadmap_log.md` y propondrá el siguiente punto a ejecutar, acompañado de una breve explicación (una frase) sobre en qué consiste.
+1) El asistente consultará `docs/daily.md` y propondrá el siguiente punto a ejecutar, acompañado de una breve explicación (una frase) sobre en qué consiste.
 
 Ejecución automática (sin necesidad de confirmación previa):
 2) Tras proponer el punto, el asistente implementará el cambio, compilará la solución y corregirá los errores/warnings hasta lograr una compilación limpia.
-3) Si la compilación queda limpia, el asistente realizará directamente el commit local siguiendo `docs/commits.md` y actualizará los ficheros necesarios (`docs/roadmap_log.md`, `docs/commits.md`, `README.md` y `.github/copilot-instructions.md`) sin pedir permiso adicional.
+3) Si la compilación queda limpia, el asistente realizará directamente el commit local siguiendo `docs/commits.md` y actualizará los ficheros necesarios (`docs/daily.md`, `docs/commits.md`, `README.md` y `.github/copilot-instructions.md`) sin pedir permiso adicional.
 4) El asistente informará de lo realizado y del siguiente punto propuesto y continuará el ciclo.
 
 Excepciones: Si aparece un bloqueo técnico, decisión arquitectónica crítica o dependencia que impida avanzar, el asistente pausará y solicitará instrucciones al propietario.
 
 Regla estricta sobre commits y documentación:
-- Requisito: Siempre que el asistente realice un commit local como resultado de una iteración (es decir, la compilación queda limpia), actualizará automáticamente `docs/roadmap_log.md` y `docs/commits.md` para reflejar el cambio sin pedir confirmación adicional. El push al repositorio remoto no se realizará automáticamente salvo instrucción explícita del propietario.
+- Requisito: Siempre que el asistente realice un commit local como resultado de una iteración (es decir, la compilación queda limpia), actualizará automáticamente `docs/daily.md` y `docs/commits.md` para reflejar el cambio sin pedir confirmación adicional. El push al repositorio remoto no se realizará automáticamente salvo instrucción explícita del propietario.
 
 Versionado de los ficheros del Roadmap (snapshots de sprint):
 - Los ficheros activos del roadmap para el sprint actual son:
@@ -91,7 +101,23 @@ Formato de la explicación final de cada iteración:
 - Requisito: Al final de cada iteración (cuando se informa lo realizado y el siguiente punto), la explicación debe contener obligatoriamente dos títulos numerados siguiendo el esquema del Roadmap:
   - "Hecho: <número> <título>" (por ejemplo, "Hecho: 9.18 Shading/material...") que describe en breve lo completado.
   - "Siguiente: <número> <título>" que describe el siguiente punto propuesto.
-  Estos títulos deben estar presentes en la explicación final que acompaña al commit/documentación. El asistente rellenará los números guiándose por `docs/roadmap.md` y `docs/roadmap_log.md`.
+  Estos títulos deben estar presentes en la explicación final que acompaña al commit/documentación. El asistente rellenará los números guiándose por `docs/roadmap.md` y `docs/daily.md`.
+
+Fichero Daily (`docs/daily.md`)
+--------------------------------
+- Propósito: `docs/daily.md` es el fichero simplificado de seguimiento diario que reemplaza a `roadmap_log.md`.
+- Contenido: El fichero solo contiene DOS cosas:
+  1. **Última tarea realizada**: Número y descripción de la tarea completada (formato: "Hecho: <n> <descripción>")
+  2. **Tarea actual**: Número y descripción de la siguiente tarea a realizar (formato: "Siguiente: <n> <descripción>")
+- Formato ejemplo:
+  ```
+  # Daily Log
+
+  Hecho: 3.01 Plataforma - robustez en creación de ventana y prueba WM_PAINT
+  Siguiente: 4.00 Backend de render inicial - DirectX12 minimal
+  ```
+- El asistente actualiza este fichero automáticamente tras cada commit exitoso.
+- Al finalizar un sprint (release), el contenido de `daily.md` se archiva en los ficheros versionados del roadmap y se crea un nuevo `daily.md` para el siguiente sprint.
 
 Nota sobre estándar C++:
-- Este repositorio ahora requiere C++23 como estándar de compilación en `CMakeLists.txt`. Asegúrate de que tu entorno local/CI tenga toolchains compatibles (MSVC/Clang/GCC) antes de compilar.
+- Este repositorio usa C++14 como estándar de compilación en `CMakeLists.txt`. Asegúrate de que tu entorno local/CI tenga toolchains compatibles (MSVC/Clang/GCC) antes de compilar.

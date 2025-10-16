@@ -13,6 +13,9 @@ public:
     bool HasNativeDevice() const;
     // Opaque pointer to native device (ID3D12Device*) when available
     void* NativeDevice() const;
+private:
+    bool hasNativeDevice_ = false;
+    void* nativeDevice_ = nullptr;
 };
 
 } // namespace Renderer
