@@ -105,7 +105,7 @@ static int RunApp(HINSTANCE hInstance)
     Renderer::DX12Renderer renderer;
     UI::SimpleUI ui;
 
-    renderer.Initialize();
+    renderer.Initialize(hwnd);
     ui.Initialize(window.GetHWND());
 
     Assets::AssetManager assets;

@@ -17,7 +17,33 @@ void DX12Renderer::Initialize()
     device_ = new DX12Device();
     device_->Initialize();
     rt_ = new RenderTarget();
-    rt_->Create(800, 600);
+    if (device_->HasNativeDevice())
+    {
+        // No HWND provided: create fallback sized RT
+        rt_->Create(800, 600);
+    }
+    else
+    {
+        rt_->Create(800, 600);
+    }
+    allocator_ = new CommandAllocator();
+    fence_ = new Fence();
+}
+
+void DX12Renderer::Initialize(HWND hwnd)
+{
+    std::cout << "DX12Renderer: Initialize(HWND)\n";
+    device_ = new DX12Device();
+    device_->Initialize();
+    rt_ = new RenderTarget();
+    if (device_->HasNativeDevice())
+    {
+        rt_->CreateForWindow(device_->NativeDevice(), reinterpret_cast<void*>(hwnd), 800, 600);
+    }
+    else
+    {
+        rt_->Create(800, 600);
+    }
     allocator_ = new CommandAllocator();
     fence_ = new Fence();
 }

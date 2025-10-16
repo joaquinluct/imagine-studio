@@ -5,6 +5,8 @@
 #include "IRenderer.h"
 
 #include <string>
+// Windows HWND needed for swapchain init
+#include <windows.h>
 namespace Renderer {
 
 class DX12Renderer : public IRenderer {
@@ -12,7 +14,10 @@ public:
     DX12Renderer();
     ~DX12Renderer() override;
 
+    // Initialize without window is deprecated for DX12; prefer Initialize(HWND)
     void Initialize() override;
+    // Initialize with HWND for swapchain creation
+    void Initialize(HWND hwnd);
     void Shutdown() override;
     void RenderFrame() override;
     // Prepare render target for UI composition
