@@ -107,3 +107,30 @@ This prevents Visual Studio line ending dialogs from appearing during file edits
 
 Files changed: `.gitattributes` (created), `assets/*.dat` (normalized)
 
+- docs: plan sprint v1.1.0 - DX12 Minimal Renderer
+
+Created complete sprint planning for v1.1.0 with AAA-level DX12 renderer implementation.
+
+Sprint Goal: Implement minimal DirectX 12 renderer showing a colored quad rendered via GPU.
+
+Sprint files populated:
+- `docs/sprint.md`: Sprint overview, milestones (H1-H4), acceptance criteria, comparison with v1.0.0
+- `docs/sprint_histories.md`: 4 user stories with detailed descriptions
+  * H1: DX12 Initialization (Device, SwapChain, Heaps, Commands)
+  * H2: Pipeline State & Shaders (Root Signature, PSO, HLSL)
+  * H3: Geometry & Resources (Vertex Buffer, Constant Buffer)
+  * H4: Command Recording & Execution (Draw Call, Fence, Present)
+- `docs/sprint_tasks.md`: 15 detailed tasks (T1.1-T4.4) with implementation code snippets
+
+Each task is a small, actionable iteration following AAA standards:
+- Code implementation details included (DirectX 12 API calls)
+- Files affected listed
+- Success criteria defined
+- Follows DX12 best practices (no shortcuts or temporary solutions)
+
+Updated `docs/daily.md`:
+- Hecho: 0.02 Planning - Sprint v1.1.0 defined (DX12 Minimal Renderer)
+- Siguiente: T1.1 Create DX12 Device and DXGI Factory
+
+Files changed: `docs/sprint.md`, `docs/sprint_histories.md`, `docs/sprint_tasks.md`, `docs/daily.md`
+
