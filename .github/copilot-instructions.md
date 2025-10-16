@@ -77,6 +77,16 @@ Versioning of Roadmap files (sprint snapshots):
 - The assistant will then create fresh empty files for the next sprint with the active names.
 - This versioning policy ensures traceability of completed sprints and keeps the active files small and focused.
 
+Backlog file (`docs/backlog.md`)
+--------------------------------
+- Purpose: `docs/backlog.md` is the long-term repository for items that are NOT part of the active sprint. Use it as a persistent "baúl" for ideas, deferred stories, low-priority tasks and technical debt that should be kept for future prioritization.
+- Workflow and usage:
+  - When a story or task is identified but not selected for the current sprint, add a short entry to `docs/backlog.md` with a brief description, priority tag (Low/Med/High) and optional reference to related history/task IDs in `docs/roadmap_histories.md` or `docs/roadmap_tasks.md`.
+  - The backlog is the source for sprint planning: during sprint planning items may be moved from `docs/backlog.md` into `docs/roadmap_histories.md` (as a history) and broken into tasks in `docs/roadmap_tasks.md` for the active sprint.
+  - Entries in `docs/backlog.md` should be concise and linkable (include a short path or anchor to the related code/files if applicable).
+  - The assistant will not implement items directly from the backlog unless they are moved into the active sprint files.
+
+
 Formato de la explicación final de cada iteración:
 - Requisito: Al final de cada iteración (cuando se informa lo realizado y el siguiente punto), la explicación debe contener obligatoriamente dos títulos numerados siguiendo el esquema del Roadmap:
   - "Hecho: <número> <título>" (por ejemplo, "Hecho: 9.18 Shading/material...") que describe en breve lo completado.
