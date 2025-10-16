@@ -16,6 +16,9 @@ public:
 private:
     void* swapchain_ = nullptr; // opaque IDXGISwapChain*
     void* commandQueue_ = nullptr; // opaque ID3D12CommandQueue*
+    void* fenceNative_ = nullptr; // opaque ID3D12Fence*
+    unsigned long long fenceValue_ = 0;
+    void* fenceEvent_ = nullptr; // HANDLE
 };
 
 } // namespace Renderer

@@ -72,9 +72,27 @@ bool RenderTarget::CreateForWindow(void* nativeDevice, void* hwnd, int width, in
 
     swapchain_ = reinterpret_cast<void*>(sc);
     commandQueue_ = reinterpret_cast<void*>(cq);
+
+    // Create a fence for CPU/GPU synchronization
+    ID3D12Fence* fence = nullptr;
+    if (FAILED(d3d->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence))))
+    {
+        std::cout << "RenderTarget: CreateForWindow - CreateFence failed, proceeding without native fence\n";
+        fenceNative_ = nullptr;
+        fenceEvent_ = nullptr;
+    }
+    else
+    {
+        fenceNative_ = reinterpret_cast<void*>(fence);
+        fenceValue_ = 0;
+        // Create an event for waiting on the fence
+        HANDLE ev = CreateEvent(NULL, FALSE, FALSE, NULL);
+        fenceEvent_ = reinterpret_cast<void*>(ev);
+    }
+
     factory->Release();
 
-    std::cout << "RenderTarget: CreateForWindow - swapchain and command queue created\n";
+    std::cout << "RenderTarget: CreateForWindow - swapchain, command queue and optional fence created\n";
     return true;
 #else
     return Create(width, height);
@@ -109,6 +127,21 @@ void RenderTarget::Present()
         IDXGISwapChain* sc = reinterpret_cast<IDXGISwapChain*>(swapchain_);
         // Present with 1 sync interval, no flags
         sc->Present(1, 0);
+
+        // If we have a native fence and command queue, increment and signal
+        if (commandQueue_ && fenceNative_)
+        {
+            ID3D12CommandQueue* cq = reinterpret_cast<ID3D12CommandQueue*>(commandQueue_);
+            ID3D12Fence* fence = reinterpret_cast<ID3D12Fence*>(fenceNative_);
+            fenceValue_++;
+            cq->Signal(fence, fenceValue_);
+            // Wait for the fence on CPU with event (brief wait)
+            if (fenceEvent_)
+            {
+                fence->SetEventOnCompletion(fenceValue_, reinterpret_cast<HANDLE>(fenceEvent_));
+                WaitForSingleObject(reinterpret_cast<HANDLE>(fenceEvent_), 1); // short wait
+            }
+        }
         return;
     }
 #endif
