@@ -1,5 +1,13 @@
 #include "RenderTarget.h"
 
+#if defined(_WIN32) && defined(_MSC_VER)
+#include <windows.h>
+#include <d3d12.h>
+#include <dxgi1_4.h>
+#pragma comment(lib, "d3d12.lib")
+#pragma comment(lib, "dxgi.lib")
+#endif
+
 #include <iostream>
 namespace Renderer {
 
@@ -76,11 +84,35 @@ bool RenderTarget::CreateForWindow(void* nativeDevice, void* hwnd, int width, in
 void RenderTarget::Destroy()
 {
     std::cout << "RenderTarget: Destroy (stub)\n";
+#if defined(_WIN32) && defined(_MSC_VER)
+    if (swapchain_)
+    {
+        IDXGISwapChain* sc = reinterpret_cast<IDXGISwapChain*>(swapchain_);
+        sc->Release();
+        swapchain_ = nullptr;
+    }
+    if (commandQueue_)
+    {
+        ID3D12CommandQueue* cq = reinterpret_cast<ID3D12CommandQueue*>(commandQueue_);
+        cq->Release();
+        commandQueue_ = nullptr;
+    }
+#endif
 }
 
 void RenderTarget::Present()
 {
-    std::cout << "RenderTarget: Present (stub)\n";
+    std::cout << "RenderTarget: Present\n";
+#if defined(_WIN32) && defined(_MSC_VER)
+    if (swapchain_)
+    {
+        IDXGISwapChain* sc = reinterpret_cast<IDXGISwapChain*>(swapchain_);
+        // Present with 1 sync interval, no flags
+        sc->Present(1, 0);
+        return;
+    }
+#endif
+    std::cout << "RenderTarget: Present (stub fallback)\n";
 }
 
 } // namespace Renderer
