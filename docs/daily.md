@@ -1,4 +1,4 @@
 # Daily Log
 
-Hecho: 3.01 Plataforma - robustez en creación de ventana y prueba WM_PAINT
-Siguiente: 4.00 Backend de render inicial - DirectX12 minimal
+Hecho: 0.01 Documentación - crear MAIN.md y renombrar roadmap a sprint
+Siguiente: 0.02 Planificación - definir sprint actual con hitos y tareas

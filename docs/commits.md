@@ -77,3 +77,21 @@ Added Daily.md section explaining the simplified tracking format.
 
 Files changed: `.github/copilot-instructions.md`, `docs/daily.md` (created), `docs/roadmap_log.md` (deleted)
 
+- docs: refactor documentation structure - create MAIN.md and rename roadmap to sprint
+
+Created docs/MAIN.md with project fundamentals (4 pillars, AAA standards, architecture).
+Updated copilot-instructions.md to reference MAIN.md as LEER PRIMERO (read first).
+Renamed all roadmap* files to sprint* (better naming convention):
+  - roadmap.md -> sprint.md
+  - roadmap_histories.md -> sprint_histories.md
+  - roadmap_tasks.md -> sprint_tasks.md
+  - roadmap_v1.0.0.md -> sprint_v1.0.0.md
+  - roadmap_histories_v1.0.0.md -> sprint_histories_v1.0.0.md
+  - roadmap_tasks_v1.0.0.md -> sprint_tasks_v1.0.0.md
+
+Cleared content of active sprint files (sprint.md, sprint_histories.md, sprint_tasks.md).
+Updated all documentation references from roadmap to sprint.
+Updated backlog.md with reference to MAIN.md.
+
+Files changed: `.github/copilot-instructions.md`, `docs/MAIN.md` (created), `docs/backlog.md`, `docs/sprint*.md` (renamed and cleared)
+
