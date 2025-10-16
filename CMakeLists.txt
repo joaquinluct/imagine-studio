@@ -106,6 +106,8 @@ set_target_properties(ImagineStudio PROPERTIES
 
 if (MSVC)
     target_link_libraries(ImagineStudio PRIVATE Msimg32)
+    # Link DirectX libraries for optional DX12 backend
+    target_link_libraries(ImagineStudio PRIVATE d3d12 dxgi d3dcompiler)
 else()
     # On other platforms link adjustments can be added here if needed
 endif()
