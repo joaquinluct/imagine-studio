@@ -123,6 +123,33 @@ This ensures compilation verification matches what developers see when pressing 
 
 Files changed: `.github/copilot-instructions.md`
 
+- feat(renderer): implement Command Queue creation (T1.2)
+
+Implemented Task T1.2 - Create `ID3D12CommandQueue` following AAA standards.
+
+Key changes:
+- Created Command Queue immediately after Device creation in `Initialize()`
+- Used `D3D12_COMMAND_LIST_TYPE_DIRECT` for graphics commands
+- Added error handling with fallback to next adapter if queue creation fails
+- Added logging for successful Command Queue creation using `CORE_LOG_INFO`
+- Stored queue in `m_commandQueue` member variable (already declared in T1.1)
+- Command Queue is released properly in `Shutdown()` (release order: Queue ? Device ? Adapter ? Factory)
+
+Implementation details:
+```cpp
+D3D12_COMMAND_QUEUE_DESC queueDesc = {};
+queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+hr = m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_commandQueue));
+```
+
+Files changed: `src/renderer/DX12Device.cpp` (added Command Queue creation after Device creation)
+
+Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
+
+**Hecho: T1.2 Crear Command Queue**  
+**Siguiente: T1.3 Crear SwapChain con Back Buffers**
+
 - docs: plan sprint v1.1.0 - DX12 Minimal Renderer
 
 Created complete sprint planning for v1.1.0 with AAA-level DX12 renderer implementation.
