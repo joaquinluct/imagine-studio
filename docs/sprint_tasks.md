@@ -64,21 +64,20 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.2.
 
 ## Historia 2: Input Manager y Toggle UI con F1 (H2)
 
-### Tarea H2.1: Crear clase InputManager b�sica
-**Estado**: Pendiente  
-**Archivos nuevos**: `src/platform/InputManager.h`, `src/platform/InputManager.cpp`  
-**Archivos modificados**: `CMakeLists.txt`
+### Tarea H2.1: Crear clase InputManager básica
+**Estado**: ✅ Completada  
+**Archivos modificados**: `src/platform/Input.h`, `src/platform/Input.cpp`
 
-**Descripci�n**: Crear clase `InputManager` con polling de teclado b�sico usando `GetAsyncKeyState()` (Win32).
+**Descripción**: Añadir método `InputManager::IsKeyPressed()` para detección de flancos de subida (key press).
 
 **Pasos**:
-1. Crear `InputManager.h` con:
-   - `void Update()` (polling de teclado)
-   - `bool IsKeyPressed(int vkCode)` (detecta flanco de subida)
-   - `bool IsKeyDown(int vkCode)` (detecta estado actual)
-2. Crear `InputManager.cpp` con implementaci�n Win32
-3. A�adir archivos a `CMakeLists.txt`
-4. Compilar y validar (0 errores, 0 warnings)
+1. ✅ Añadir método `bool IsKeyPressed(int vkCode)` a `InputManager`
+2. ✅ Añadir array `prevKeyStates_[256]` para almacenar estado previo
+3. ✅ `Update()` guarda estado actual en `prevKeyStates_` antes de actualizar
+4. ✅ `IsKeyPressed()` detecta flanco de subida (key down ahora && key up antes)
+5. ✅ Compilar y validar (0 errores, 0 warnings)
+
+**Commit**: aeceac8
 
 ---
 
@@ -274,7 +273,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.2.
 | H1 | H1.1 | Refactorizar RenderFrame() | ✅ Completada |
 | H1 | H1.2 | Crear OpaquePass() y UIPass() | ✅ Completada |
 | H1 | H1.3 | Comentarios para futuros passes | ✅ Completada |
-| H2 | H2.1 | Crear InputManager básico | Pendiente |
+| H2 | H2.1 | Crear InputManager básico | ✅ Completada |
 | H2 | H2.2 | Integrar con Win32 message loop | Pendiente |
 | H2 | H2.3 | Implementar toggle F1 | Pendiente |
 | H2 | H2.4 | Validar toggle F1 | Pendiente |
@@ -287,4 +286,4 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.2.
 | H4 | H4.2 | Conectar UIPass con F1 | Pendiente |
 | H4 | H4.3 | Validar UI Pass con F1 | Pendiente |
 
-**Total**: 15 tareas (3 completadas, 12 pendientes)
+**Total**: 15 tareas (4 completadas, 11 pendientes)

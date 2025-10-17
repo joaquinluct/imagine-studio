@@ -1,4 +1,4 @@
 ﻿# Daily Log
 
-Hecho: H1.3 Añadir comentarios para futuros passes (Deferred)
-Siguiente: H2.1 Crear clase InputManager básica
+Hecho: H2.1 Crear clase InputManager básica con IsKeyPressed()
+Siguiente: H2.2 Integrar InputManager con Win32 message loop

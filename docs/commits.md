@@ -971,6 +971,26 @@ Implementada tarea H1.3 del Sprint v1.2.0 - Añadir comentarios para futuros pas
 Files changed: `src/renderer/DX12Renderer.h`
 Refs: Sprint v1.2.0 - H1.3 (commit cf9d309)
 
+- feat(input): añadir método IsKeyPressed() para detección de flancos de subida (H2.1)
+
+Implementada tarea H2.1 del Sprint v1.2.0 - Crear clase InputManager básica con detección de flancos de subida.
+
+**Cambios:**
+- Añadido método `InputManager::IsKeyPressed()` que detecta flancos de subida (key press)
+- Añadido array `prevKeyStates_[256]` para almacenar estado de teclas del frame anterior
+- `IsKeyPressed()` retorna true solo cuando la tecla está presionada este frame pero no estaba presionada el anterior
+- `Update()` ahora guarda estado previo antes de actualizar estado actual
+- Mantiene funcionalidad existente de `IsKeyDown()` para detección de estado actual
+
+**Archivos modificados:**
+- `src/platform/Input.h`: Añadida declaración de `IsKeyPressed()` y miembro `prevKeyStates_`
+- `src/platform/Input.cpp`: Implementación de `IsKeyPressed()` con lógica de flanco de subida
+
+**Compilación:** CMake Debug OK + MSBuild VS Debug OK (0 errores, 0 warnings)
+
+Files changed: `src/platform/Input.h`, `src/platform/Input.cpp`
+Refs: Sprint v1.2.0 - H2.1 (commit aeceac8)
+
 
 
 
