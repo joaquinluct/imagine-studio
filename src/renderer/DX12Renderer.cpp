@@ -774,6 +774,33 @@ void DX12Renderer::RenderFrame()
     commandQueue->ExecuteCommandLists(1, ppCommandLists);
     
     CORE_LOG_INFO("DX12Renderer: Command list executed on GPU");
+    
+    // Signal fence after GPU work submission
+    const UINT64 fenceValueForThisFrame = m_fenceValue;
+    hr = commandQueue->Signal(m_fence, fenceValueForThisFrame);
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to signal fence");
+        return;
+    }
+    
+    m_fenceValue++; // Increment for next frame
+    
+    // Wait for GPU to finish rendering (synchronous for now, optimize later with double buffering)
+    if (m_fence->GetCompletedValue() < fenceValueForThisFrame)
+    {
+        // GPU hasn't reached this fence value yet, wait for it
+        hr = m_fence->SetEventOnCompletion(fenceValueForThisFrame, m_fenceEvent);
+        if (FAILED(hr))
+        {
+            CORE_LOG_ERROR("DX12Renderer: Failed to set event on fence completion");
+            return;
+        }
+        
+        WaitForSingleObject(m_fenceEvent, INFINITE);
+    }
+    
+    CORE_LOG_INFO("DX12Renderer: Frame synchronized (CPU waited for GPU)");
 #else
     // Stub: call ComposeUI for composition and present the render target
     // Simulate recording commands
