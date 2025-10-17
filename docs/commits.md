@@ -1127,6 +1127,36 @@ Marcada tarea H3.2 del Sprint v1.2.0 - Crear shader HLSL simple para triángulos
 Files changed: `docs/sprint_tasks.md`, `docs/daily.md`, `docs/commits.md`
 Refs: Sprint v1.2.0 - H3.2 (verificación completada)
 
+- docs(sprint): marcar tarea H3.3 como completada (verificación de PSO existente)
+
+Marcada tarea H3.3 del Sprint v1.2.0 - Crear PSO para triángulos como completada.
+
+**Verificación:**
+- ✅ PSO (`m_pipelineState`) completamente implementado en `DX12Renderer::Initialize(HWND)` desde v1.1.0
+- ✅ `D3D12_GRAPHICS_PIPELINE_STATE_DESC` configurado correctamente:
+  * Input layout: 2 elementos (POSITION: R32G32B32_FLOAT @ offset 0, COLOR: R32G32B32A32_FLOAT @ offset 12)
+  * Root signature: Configurado con MVP matrix (root constants)
+  * Vertex shader: Asignado desde `quad.hlsl` (VSMain, vs_5_0)
+  * Pixel shader: Asignado desde `quad.hlsl` (PSMain, ps_5_0)
+  * Rasterizer state: Solid fill, backface culling (D3D12_CULL_MODE_BACK), clockwise front faces
+  * Blend state: Sin blending (opaque rendering)
+  * Depth/stencil: Disabled (2D rendering sin depth buffer)
+  * Primitive topology: D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
+  * Render target format: DXGI_FORMAT_R8G8B8A8_UNORM (matches swap chain)
+  * Sample count: 1 (no MSAA)
+- ✅ PSO creado exitosamente con `CreateGraphicsPipelineState()`
+- ✅ Usado en `OpaquePass()` para renderizar 2 triángulos con colores interpolados
+
+**Nota**: El PSO está completamente funcional y optimizado para renderizado de triángulos con colores interpolados. Implementación existente desde Sprint v1.1.0 cumple todos los requisitos de H3.3.
+
+**Archivos verificados:**
+- `src/renderer/DX12Renderer.cpp`: Contiene implementación completa del PSO
+
+**Compilación:** No requiere recompilación (solo actualización de documentación)
+
+Files changed: `docs/sprint_tasks.md`, `docs/daily.md`, `docs/commits.md`
+Refs: Sprint v1.2.0 - H3.3 (verificación completada)
+
 
 
 

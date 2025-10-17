@@ -1,4 +1,4 @@
 ﻿# Daily Log
 
-Hecho: H3.2 Verificar shader HLSL para triángulos (implementación existente)
-Siguiente: H3.3 Crear PSO para triángulos
+Hecho: H3.3 Verificar PSO para triángulos (implementación existente)
+Siguiente: H3.4 Renderizar triángulos en OpaquePass()
