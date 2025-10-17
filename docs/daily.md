@@ -1,4 +1,4 @@
 ﻿# Daily Log
 
-Hecho: H3.1 Verificar vertex buffer para triángulos (implementación existente)
-Siguiente: H3.2 Crear shader HLSL simple para triángulos
+Hecho: H3.2 Verificar shader HLSL para triángulos (implementación existente)
+Siguiente: H3.3 Crear PSO para triángulos

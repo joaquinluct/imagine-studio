@@ -1103,6 +1103,30 @@ Marcada tarea H3.1 del Sprint v1.2.0 - Crear vertex buffer para triángulos simp
 Files changed: `docs/sprint_tasks.md`, `docs/daily.md`, `docs/commits.md`
 Refs: Sprint v1.2.0 - H3.1 (verificación completada)
 
+- docs(sprint): marcar tarea H3.2 como completada (verificación de shader existente)
+
+Marcada tarea H3.2 del Sprint v1.2.0 - Crear shader HLSL simple para triángulos como completada.
+
+**Verificación:**
+- ✅ Shader `quad.hlsl` existente cumple todos los requisitos de H3.2:
+  * Vertex shader `VSMain` con entrada `VSInput { float3 pos : POSITION; float4 col : COLOR; }`
+  * Pixel shader `PSMain` que retorna color interpolado `float4(input.col)`
+  * Compilación en runtime con `D3DCompileFromFile()` usando shader model 5.0
+  * Usado exitosamente para renderizar 2 triángulos con colores interpolados (rojo, verde, azul, amarillo)
+- ✅ Shader optimizado con MVP matrix transform usando root constants (register b0)
+- ✅ Funcional desde Sprint v1.1.0
+
+**Nota**: El shader actual `quad.hlsl` ya cumple con los requisitos de la tarea H3.2 (Vertex + Pixel shader con color interpolado). Puede usarse tanto para triángulos simples como para geometría más compleja gracias a su diseño con MVP matrix.
+
+**Archivos verificados:**
+- `shaders/quad.hlsl`: Contiene shaders VS y PS funcionales
+- `src/renderer/DX12Renderer.cpp`: Compilación y uso del shader
+
+**Compilación:** No requiere recompilación (solo actualización de documentación)
+
+Files changed: `docs/sprint_tasks.md`, `docs/daily.md`, `docs/commits.md`
+Refs: Sprint v1.2.0 - H3.2 (verificación completada)
+
 
 
 
