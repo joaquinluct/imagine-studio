@@ -541,6 +541,36 @@ Files changed: src/renderer/DX12Renderer.cpp
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
 Refs: T4.2
 
+- feat(renderer): implement fence GPU synchronization (T4.3)
+
+Implemented Task T4.3 - Signal fence and wait for GPU/CPU synchronization following AAA standards.
+
+Key changes:
+- Signal fence after ExecuteCommandLists with unique value per frame
+- Increment m_fenceValue for next frame tracking
+- Check GetCompletedValue() to verify if GPU finished
+- SetEventOnCompletion() to configure Win32 event
+- WaitForSingleObject(INFINITE) for synchronous wait
+- Logging added to confirm synchronization
+
+Implementation details:
+- Fence value increments each frame (1, 2, 3, ...)
+- GPU signals fence when commands complete
+- CPU waits only if GPU hasn't reached fence value yet
+- Synchronous implementation (wait per frame) - optimize with double buffering later
+- Prevents tearing and ensures frame completion before present
+
+Technical notes:
+- Current implementation: Synchronous (CPU waits for GPU every frame)
+- Future optimization: Double/triple buffering with frame pacing
+- Fence event handle created during initialization, reused per frame
+
+Files changed: src/renderer/DX12Renderer.cpp
+Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
+Refs: T4.3
+
+
+
 
 
 
