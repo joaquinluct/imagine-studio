@@ -9,31 +9,37 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 ## Historia 1: ImGui Core Integration (H1)
 
 ### Tarea H1.1: Descargar e integrar ImGui en el proyecto
-**Estado**: ?? Pendiente  
-**Archivos afectados**: `external/imgui/` (nuevo directorio)
+**Estado**: ? Completada  
+**Archivos afectados**: `external/imgui/` (nuevo directorio), `scripts/install-imgui.ps1` (nuevo), `docs/IMGUI_INSTALL.md` (nuevo)
 
-**Descripción**: Descargar la última versión estable de ImGui desde GitHub oficial y copiar archivos necesarios al proyecto.
+**Descripción**: Descargar la última versión estable de ImGui desde GitHub oficial y copiar archivos necesarios al proyecto usando script automatizado.
 
 **Pasos**:
-1. [ ] Descargar ImGui v1.91.x (o posterior) desde https://github.com/ocornut/imgui
-2. [ ] Crear directorio `external/imgui/`
-3. [ ] Copiar archivos core:
-   - `imgui.h`
-   - `imgui.cpp`
-   - `imgui_draw.cpp`
-   - `imgui_tables.cpp`
-   - `imgui_widgets.cpp`
-   - `imgui_internal.h`
-   - `imconfig.h`
-   - `imstb_rectpack.h`
-   - `imstb_textedit.h`
-   - `imstb_truetype.h`
-4. [ ] Copiar backends oficiales:
-   - `backends/imgui_impl_dx12.h`
-   - `backends/imgui_impl_dx12.cpp`
-   - `backends/imgui_impl_win32.h`
-   - `backends/imgui_impl_win32.cpp`
-5. [ ] Verificar archivos copiados correctamente
+1. [x] Crear script automatizado `scripts/install-imgui.ps1` para descarga e instalación
+2. [x] Crear documentación completa en `docs/IMGUI_INSTALL.md` (origen, instalación, actualización, reinstalación)
+3. [x] Ejecutar script: `.\scripts\install-imgui.ps1 -Version v1.91.5`
+4. [x] Descargar ImGui v1.91.5 desde https://github.com/ocornut/imgui
+5. [x] Crear directorio `external/imgui/`
+6. [x] Copiar archivos core (10 archivos):
+   - `imgui.h` ?
+   - `imgui.cpp` ?
+   - `imgui_draw.cpp` ?
+   - `imgui_tables.cpp` ?
+   - `imgui_widgets.cpp` ?
+   - `imgui_internal.h` ?
+   - `imconfig.h` ?
+   - `imstb_rectpack.h` ?
+   - `imstb_textedit.h` ?
+   - `imstb_truetype.h` ?
+7. [x] Copiar backends oficiales (4 archivos):
+   - `backends/imgui_impl_dx12.h` ?
+   - `backends/imgui_impl_dx12.cpp` ?
+   - `backends/imgui_impl_win32.h` ?
+   - `backends/imgui_impl_win32.cpp` ?
+8. [x] Crear archivo VERSION.txt con tracking de versión
+9. [x] Verificar archivos copiados correctamente (14 archivos + VERSION.txt)
+
+**Resultado**: ImGui v1.91.5 instalado correctamente con script automatizado y documentación completa.
 
 **Commit**: [Hash pendiente]
 
@@ -568,7 +574,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 
 | Historia | Tarea | Título | Estado |
 |----------|-------|--------|--------|
-| H1 | H1.1 | Descargar e integrar ImGui | ?? Pendiente |
+| H1 | H1.1 | Descargar e integrar ImGui | ? Completada |
 | H1 | H1.2 | Añadir ImGui a CMakeLists.txt | ?? Pendiente |
 | H1 | H1.3 | Añadir ImGui a Visual Studio project | ?? Pendiente |
 | H1 | H1.4 | Crear ImGui context en main.cpp | ?? Pendiente |
@@ -585,4 +591,4 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 | H4 | H4.4 | Crear panel Viewport | ?? Pendiente |
 | H4 | H4.5 | Habilitar docking y validar UI completa | ?? Pendiente |
 
-**Total**: 16 tareas (0 completadas, 16 pendientes)
+**Total**: 16 tareas (1 completada, 15 pendientes)

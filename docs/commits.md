@@ -1336,6 +1336,43 @@ Files changed: `docs/sprint.md`, `docs/sprint_histories.md`, `docs/sprint_tasks.
 Compilation: No requiere compilación (solo planificación de documentación)
 Refs: Sprint v1.3.0 planning
 
+- feat(imgui): descargar e integrar ImGui v1.91.5 en el proyecto (H1.1)
+
+Implementada tarea H1.1 del Sprint v1.3.0 - Descargar e integrar ImGui en el proyecto.
+
+**Cambios**:
+- Creado script automatizado `scripts/install-imgui.ps1` para descarga e instalación de ImGui
+  * Descarga última versión (o versión específica) desde GitHub oficial
+  * Extrae archivos core (10 archivos) y backends (4 archivos DX12 + Win32)
+  * Crea archivo VERSION.txt con tracking de versión y fecha
+  * Soporta flags `-Version` (versión específica) y `-Reinstall` (forzar reinstalación)
+- Creado documentación completa en `docs/IMGUI_INSTALL.md`
+  * Origen de ImGui (GitHub oficial, MIT license)
+  * Instalación inicial (script automatizado)
+  * Actualización y reinstalación
+  * Verificación de instalación
+  * Integración con build system (CMake + Visual Studio)
+  * Troubleshooting y enlaces útiles
+- Instalado ImGui v1.91.5 con script automatizado en `external/imgui/`:
+  * Core files (10): imgui.h, imgui.cpp, imgui_draw.cpp, imgui_tables.cpp, imgui_widgets.cpp, imgui_internal.h, imconfig.h, imstb_*.h
+  * Backend files (4): imgui_impl_dx12.h/cpp, imgui_impl_win32.h/cpp
+  * VERSION.txt: tracking de versión instalada (v1.91.5, fecha: 2025-10-18)
+
+**Archivos creados**:
+- `scripts/install-imgui.ps1` - Script automatizado de instalación ImGui
+- `docs/IMGUI_INSTALL.md` - Documentación completa de instalación/actualización/reinstalación
+- `external/imgui/` (14 archivos + VERSION.txt) - ImGui v1.91.5 instalado
+
+**Archivos actualizados**:
+- `docs/sprint_tasks.md` - Tarea H1.1 marcada como completada (1/16 tareas)
+- `docs/daily.md` - Actualizado para siguiente tarea H1.2
+
+**Compilación**: CMake Debug OK + MSBuild VS Debug OK (0 errores, 0 warnings)
+
+**Próxima tarea**: H1.2 - Añadir ImGui a CMakeLists.txt
+
+Refs: Sprint v1.3.0 - H1.1
+
 
 
 

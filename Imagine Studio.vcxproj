@@ -134,6 +134,7 @@
     <None Include="docs\backlog.md" />
     <None Include="docs\commits.md" />
     <None Include="docs\daily.md" />
+    <None Include="docs\IMGUI_INSTALL.md" />
     <None Include="docs\MAIN.md" />
     <None Include="docs\roadmap.md" />
     <None Include="docs\roadmap_histories.md" />
@@ -154,6 +155,7 @@
     <None Include="examples\scene1\scene.json" />
     <None Include="README.md" />
     <None Include="scripts\check-encoding.ps1" />
+    <None Include="scripts\install-imgui.ps1" />
     <None Include="tools\reorder_includes.py" />
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +216,7 @@
     <Text Include="commit_msg_h4_1.txt" />
     <Text Include="commit_sprint_complete.txt" />
     <Text Include="commit_sprint_v120_close.txt" />
+    <Text Include="commit_sprint_v130_plan.txt" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shaders\quad.hlsl">
