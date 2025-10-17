@@ -801,6 +801,19 @@ void DX12Renderer::RenderFrame()
     }
     
     CORE_LOG_INFO("DX12Renderer: Frame synchronized (CPU waited for GPU)");
+    
+    // Present the frame with VSync enabled (60 FPS)
+    hr = m_swapChain->Present(1, 0); // 1 = VSync on, 0 = no flags
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to present frame");
+        return;
+    }
+    
+    // Update frame index for next frame
+    m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
+    
+    CORE_LOG_INFO("DX12Renderer: Frame presented successfully (VSync enabled, 60 FPS)");
 #else
     // Stub: call ComposeUI for composition and present the render target
     // Simulate recording commands
