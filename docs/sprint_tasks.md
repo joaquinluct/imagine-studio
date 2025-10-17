@@ -106,8 +106,8 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 ---
 
 ### Tarea H1.4: Crear ImGui context e inicializar en main.cpp
-**Estado**: ?? Pendiente  
-**Archivos afectados**: `src/main.cpp`
+**Estado**: ? Completada  
+**Archivos afectados**: `src/main.cpp`, `scripts/install-imgui.ps1`, `external/imgui/` (actualizado a rama docking), `Imagine Studio.vcxproj`, `src/platform/Input.h` (eliminado), `src/platform/Input.cpp` (eliminado), `src/platform/InputManager.cpp` (actualizado a C++14)
 
 **Descripción**: Inicializar ImGui context, configurar ImGuiIO, y establecer estilo por defecto (dark theme).
 
@@ -579,7 +579,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 | H1 | H1.1 | Descargar e integrar ImGui | ? Completada |
 | H1 | H1.2 | Añadir ImGui a CMakeLists.txt | ? Completada |
 | H1 | H1.3 | Añadir ImGui a Visual Studio project | ? Completada |
-| H1 | H1.4 | Crear ImGui context en main.cpp | ?? Pendiente |
+| H1 | H1.4 | Crear ImGui context en main.cpp | ? Completada |
 | H2 | H2.1 | Crear descriptor heap SRV para ImGui | ?? Pendiente |
 | H2 | H2.2 | Inicializar backend ImGui DX12 | ?? Pendiente |
 | H2 | H2.3 | Integrar ImGui_ImplDX12_NewFrame() | ?? Pendiente |

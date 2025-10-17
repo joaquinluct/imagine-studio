@@ -105,6 +105,19 @@ void DX12Renderer::Initialize(HWND hwnd)
     m_cbvSrvUavDescriptorSize = d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     CORE_LOG_INFO("DX12Renderer: CBV/SRV/UAV descriptor heap created (shader visible)");
     
+    // Create descriptor heap for ImGui (SRV for font atlas - v1.3.0)
+    D3D12_DESCRIPTOR_HEAP_DESC imguiSrvHeapDesc = {};
+    imguiSrvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+    imguiSrvHeapDesc.NumDescriptors = 1;  // Solo 1 descriptor para font atlas
+    imguiSrvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+    hr = d3dDevice->CreateDescriptorHeap(&imguiSrvHeapDesc, IID_PPV_ARGS(&m_imguiSrvHeap));
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("Failed to create ImGui SRV descriptor heap");
+        return;
+    }
+    CORE_LOG_INFO("ImGui SRV descriptor heap created");
+    
     // Create command allocator (one per frame, reused after GPU finishes)
     hr = d3dDevice->CreateCommandAllocator(
         D3D12_COMMAND_LIST_TYPE_DIRECT,
@@ -1210,6 +1223,13 @@ void DX12Renderer::Shutdown()
         m_commandAllocator->Release();
         m_commandAllocator = nullptr;
         CORE_LOG_INFO("DX12Renderer: Command Allocator released");
+    }
+    
+    // Release ImGui SRV descriptor heap (v1.3.0)
+    if (m_imguiSrvHeap)
+    {
+        m_imguiSrvHeap->Release();
+        m_imguiSrvHeap = nullptr;
     }
     
     // Release CBV/SRV/UAV descriptor heap

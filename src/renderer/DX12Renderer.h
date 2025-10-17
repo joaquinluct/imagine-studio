@@ -69,6 +69,9 @@ private:
     ID3D12DescriptorHeap* m_cbvSrvUavHeap = nullptr;
     UINT m_cbvSrvUavDescriptorSize = 0;
     
+    // ImGui SRV descriptor heap (for font atlas texture - v1.3.0)
+    ID3D12DescriptorHeap* m_imguiSrvHeap = nullptr;
+    
     // Command recording and synchronization
     ID3D12CommandAllocator* m_commandAllocator = nullptr;
     ID3D12GraphicsCommandList* m_commandList = nullptr;
