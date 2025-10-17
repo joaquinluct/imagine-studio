@@ -416,6 +416,176 @@ void DX12Renderer::Initialize(HWND hwnd)
     }
     
     CORE_LOG_INFO("DX12Renderer: Pipeline State Object created successfully");
+    
+    // Create vertex buffer with 6 vertices (2 triangles for a quad)
+    struct Vertex {
+        float pos[3];  // Position (x, y, z)
+        float col[4];  // Color (r, g, b, a)
+    };
+    
+    // Define quad vertices (2 triangles, clockwise winding)
+    // Triangle 1: bottom-left, bottom-right, top-left
+    // Triangle 2: bottom-right, top-right, top-left
+    Vertex vertices[] = {
+        {{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}}, // Bottom-left, red
+        {{ 0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}}, // Bottom-right, green
+        {{-0.5f,  0.5f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}, // Top-left, blue
+        {{ 0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}}, // Bottom-right, green
+        {{ 0.5f,  0.5f, 0.0f}, {1.0f, 1.0f, 0.0f, 1.0f}}, // Top-right, yellow
+        {{-0.5f,  0.5f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}, // Top-left, blue
+    };
+    
+    const UINT vertexBufferSize = sizeof(vertices);
+    
+    // Create vertex buffer in upload heap (staging for CPU to GPU transfer)
+    D3D12_HEAP_PROPERTIES uploadHeapProps = {};
+    uploadHeapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
+    uploadHeapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+    uploadHeapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+    uploadHeapProps.CreationNodeMask = 1;
+    uploadHeapProps.VisibleNodeMask = 1;
+    
+    D3D12_RESOURCE_DESC uploadBufferDesc = {};
+    uploadBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+    uploadBufferDesc.Alignment = 0;
+    uploadBufferDesc.Width = vertexBufferSize;
+    uploadBufferDesc.Height = 1;
+    uploadBufferDesc.DepthOrArraySize = 1;
+    uploadBufferDesc.MipLevels = 1;
+    uploadBufferDesc.Format = DXGI_FORMAT_UNKNOWN;
+    uploadBufferDesc.SampleDesc.Count = 1;
+    uploadBufferDesc.SampleDesc.Quality = 0;
+    uploadBufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+    uploadBufferDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+    
+    hr = d3dDevice->CreateCommittedResource(
+        &uploadHeapProps,
+        D3D12_HEAP_FLAG_NONE,
+        &uploadBufferDesc,
+        D3D12_RESOURCE_STATE_GENERIC_READ, // Upload heap must be in GENERIC_READ state
+        nullptr,
+        IID_PPV_ARGS(&m_vertexBufferUpload)
+    );
+    
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to create vertex buffer upload heap");
+        return;
+    }
+    
+    CORE_LOG_INFO("DX12Renderer: Vertex buffer upload heap created");
+    
+    // Copy vertex data to upload heap
+    void* pVertexDataBegin = nullptr;
+    D3D12_RANGE readRange = { 0, 0 }; // We do not intend to read from this resource on the CPU
+    hr = m_vertexBufferUpload->Map(0, &readRange, &pVertexDataBegin);
+    
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to map vertex buffer upload heap");
+        return;
+    }
+    
+    memcpy(pVertexDataBegin, vertices, vertexBufferSize);
+    m_vertexBufferUpload->Unmap(0, nullptr);
+    
+    CORE_LOG_INFO("DX12Renderer: Vertex data copied to upload heap");
+    
+    // Create vertex buffer in default heap (GPU-only memory, optimal performance)
+    D3D12_HEAP_PROPERTIES defaultHeapProps = {};
+    defaultHeapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
+    defaultHeapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+    defaultHeapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+    defaultHeapProps.CreationNodeMask = 1;
+    defaultHeapProps.VisibleNodeMask = 1;
+    
+    D3D12_RESOURCE_DESC vertexBufferDesc = {};
+    vertexBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+    vertexBufferDesc.Alignment = 0;
+    vertexBufferDesc.Width = vertexBufferSize;
+    vertexBufferDesc.Height = 1;
+    vertexBufferDesc.DepthOrArraySize = 1;
+    vertexBufferDesc.MipLevels = 1;
+    vertexBufferDesc.Format = DXGI_FORMAT_UNKNOWN;
+    vertexBufferDesc.SampleDesc.Count = 1;
+    vertexBufferDesc.SampleDesc.Quality = 0;
+    vertexBufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+    vertexBufferDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+    
+    hr = d3dDevice->CreateCommittedResource(
+        &defaultHeapProps,
+        D3D12_HEAP_FLAG_NONE,
+        &vertexBufferDesc,
+        D3D12_RESOURCE_STATE_COPY_DEST, // Start in copy destination state
+        nullptr,
+        IID_PPV_ARGS(&m_vertexBuffer)
+    );
+    
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to create vertex buffer (default heap)");
+        return;
+    }
+    
+    CORE_LOG_INFO("DX12Renderer: Vertex buffer (default heap) created");
+    
+    // Record copy command from upload heap to default heap
+    // Reset command allocator and command list for initial setup
+    m_commandAllocator->Reset();
+    m_commandList->Reset(m_commandAllocator, nullptr);
+    
+    // Copy buffer region from upload to default heap
+    m_commandList->CopyBufferRegion(m_vertexBuffer, 0, m_vertexBufferUpload, 0, vertexBufferSize);
+    
+    // Transition vertex buffer from COPY_DEST to VERTEX_AND_CONSTANT_BUFFER state
+    D3D12_RESOURCE_BARRIER barrier = {};
+    barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    barrier.Transition.pResource = m_vertexBuffer;
+    barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+    barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
+    barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    
+    m_commandList->ResourceBarrier(1, &barrier);
+    
+    // Close command list
+    m_commandList->Close();
+    
+    // Execute copy command
+    ID3D12CommandList* ppCommandLists[] = { m_commandList };
+    commandQueue->ExecuteCommandLists(1, ppCommandLists);
+    
+    // Wait for copy to complete (synchronous initialization)
+    const UINT64 fenceValueForCopy = m_fenceValue;
+    hr = commandQueue->Signal(m_fence, fenceValueForCopy);
+    m_fenceValue++;
+    
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to signal fence for vertex buffer copy");
+        return;
+    }
+    
+    // Wait until the fence value is reached (GPU finished copying)
+    if (m_fence->GetCompletedValue() < fenceValueForCopy)
+    {
+        hr = m_fence->SetEventOnCompletion(fenceValueForCopy, m_fenceEvent);
+        if (FAILED(hr))
+        {
+            CORE_LOG_ERROR("DX12Renderer: Failed to set event on completion for vertex buffer copy");
+            return;
+        }
+        WaitForSingleObject(m_fenceEvent, INFINITE);
+    }
+    
+    CORE_LOG_INFO("DX12Renderer: Vertex buffer copy completed");
+    
+    // Configure vertex buffer view for pipeline binding
+    m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
+    m_vertexBufferView.StrideInBytes = sizeof(Vertex); // 28 bytes (3 floats + 4 floats)
+    m_vertexBufferView.SizeInBytes = vertexBufferSize;  // 6 * 28 = 168 bytes
+    
+    CORE_LOG_INFO("DX12Renderer: Vertex buffer view configured (6 vertices, stride 28 bytes)");
 #endif
     
     allocator_ = new CommandAllocator();
@@ -460,6 +630,21 @@ void DX12Renderer::OnAssetLoaded(const std::string& path)
 void DX12Renderer::Shutdown()
 {
 #if defined(_WIN32) && defined(_MSC_VER)
+    // Release vertex buffer resources
+    if (m_vertexBufferUpload)
+    {
+        m_vertexBufferUpload->Release();
+        m_vertexBufferUpload = nullptr;
+        CORE_LOG_INFO("DX12Renderer: Vertex buffer upload heap released");
+    }
+    
+    if (m_vertexBuffer)
+    {
+        m_vertexBuffer->Release();
+        m_vertexBuffer = nullptr;
+        CORE_LOG_INFO("DX12Renderer: Vertex buffer released");
+    }
+    
     // Release pipeline state object
     if (m_pipelineState)
     {

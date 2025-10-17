@@ -9,16 +9,10 @@
 #include <windows.h>
 
 #if defined(_WIN32) && defined(_MSC_VER)
+#include <d3d12.h> // For D3D12 types and structures
 #include <d3dcommon.h> // For ID3DBlob
 
 struct IDXGISwapChain3;
-struct ID3D12Resource;
-struct ID3D12DescriptorHeap;
-struct ID3D12CommandAllocator;
-struct ID3D12GraphicsCommandList;
-struct ID3D12Fence;
-struct ID3D12RootSignature;
-struct ID3D12PipelineState;
 #endif
 
 namespace Renderer {
@@ -75,6 +69,11 @@ private:
     
     // Pipeline State Object (defines complete graphics pipeline state)
     ID3D12PipelineState* m_pipelineState = nullptr;
+    
+    // Vertex buffer resources
+    ID3D12Resource* m_vertexBuffer = nullptr;        // GPU default heap (final location)
+    ID3D12Resource* m_vertexBufferUpload = nullptr;  // CPU upload heap (staging)
+    D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView = {}; // View for binding to pipeline
 #endif
 };
 
