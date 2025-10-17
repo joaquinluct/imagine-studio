@@ -569,6 +569,46 @@ Files changed: src/renderer/DX12Renderer.cpp
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
 Refs: T4.3
 
+- feat(renderer): implement Present with VSync - SPRINT COMPLETED (T4.4)
+
+Implemented Task T4.4 - Present frame with VSync enabled following AAA standards.
+
+? **SPRINT v1.1.0 COMPLETED - DX12 Minimal Renderer FUNCTIONAL**
+
+Key changes:
+- Present frame with VSync enabled (Present(1, 0))
+- Parameter 1 = VSync ON for stable 60 FPS
+- Parameter 0 = no additional flags
+- Update frame index with GetCurrentBackBufferIndex()
+- Logging added to confirm successful present
+
+DX12 Pipeline Complete:
+- ? Device, SwapChain, Command Queue
+- ? Root Signature, Shaders (VS/PS), PSO
+- ? Vertex Buffer, Constant Buffer
+- ? Command Recording (Clear + DrawInstanced)
+- ? Command Execution, Fence Sync, Present
+
+Result: Colored quad rendered via GPU with AAA pipeline.
+
+Implementation details:
+- Present(1, 0) waits for VSync before flipping buffers
+- Frame index updated to point to next back buffer
+- Double buffering ensures tear-free rendering
+- VSync locks framerate to display refresh rate (typically 60 Hz)
+
+Sprint Summary:
+- 15/15 tasks completed (100%)
+- All compilation clean (0 errors, 0 warnings)
+- Full DX12 renderer functional from scratch
+- First GPU-rendered frame ("Hello World" visual)
+
+Files changed: src/renderer/DX12Renderer.cpp
+Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
+Refs: T4.4
+
+
+
 
 
 
