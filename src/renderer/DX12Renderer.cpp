@@ -659,23 +659,127 @@ void DX12Renderer::Initialize(HWND hwnd)
 
 void DX12Renderer::RenderFrame()
 {
+#if defined(_WIN32) && defined(_MSC_VER)
+    // Only render if we have native DX12 device
+    if (!device_ || !device_->HasNativeDevice())
+    {
+        // Fallback to stub rendering
+        Renderer::CommandBuffer cmd;
+        cmd.Initialize(1024);
+        unsigned long long submitIndex = cmd.Submit();
+        if (fence_) fence_->Signal();
+        ComposeUI();
+        if (rt_) rt_->Present();
+        return;
+    }
+    
+    // Get command queue from device
+    ID3D12CommandQueue* commandQueue = static_cast<ID3D12CommandQueue*>(device_->NativeCommandQueue());
+    if (!commandQueue)
+    {
+        CORE_LOG_ERROR("DX12Renderer: No command queue available for rendering");
+        return;
+    }
+    
+    // Reset command allocator (reuse memory for new frame)
+    HRESULT hr = m_commandAllocator->Reset();
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to reset command allocator");
+        return;
+    }
+    
+    // Reset command list with PSO (starts recording)
+    hr = m_commandList->Reset(m_commandAllocator, m_pipelineState);
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to reset command list");
+        return;
+    }
+    
+    // Set root signature
+    m_commandList->SetGraphicsRootSignature(m_rootSignature);
+    
+    // Set viewport (800x600, hardcoded for now)
+    D3D12_VIEWPORT viewport = {};
+    viewport.TopLeftX = 0.0f;
+    viewport.TopLeftY = 0.0f;
+    viewport.Width = 800.0f;
+    viewport.Height = 600.0f;
+    viewport.MinDepth = 0.0f;
+    viewport.MaxDepth = 1.0f;
+    m_commandList->RSSetViewports(1, &viewport);
+    
+    // Set scissor rect (full viewport)
+    D3D12_RECT scissorRect = {};
+    scissorRect.left = 0;
+    scissorRect.top = 0;
+    scissorRect.right = 800;
+    scissorRect.bottom = 600;
+    m_commandList->RSSetScissorRects(1, &scissorRect);
+    
+    // Transition render target from PRESENT to RENDER_TARGET state
+    D3D12_RESOURCE_BARRIER barrierToRT = {};
+    barrierToRT.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    barrierToRT.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    barrierToRT.Transition.pResource = m_renderTargets[m_frameIndex];
+    barrierToRT.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+    barrierToRT.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    barrierToRT.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    m_commandList->ResourceBarrier(1, &barrierToRT);
+    
+    // Get RTV handle for current back buffer
+    D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
+    rtvHandle.ptr += m_frameIndex * m_rtvDescriptorSize;
+    
+    // Set render target
+    m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+    
+    // Clear render target with dark blue color
+    const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
+    m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+    
+    // Set primitive topology
+    m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    
+    // Set vertex buffer
+    m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
+    
+    // Set root constants (MVP matrix) - use identity matrix
+    m_commandList->SetGraphicsRoot32BitConstants(0, 16, m_mvpMatrix, 0);
+    
+    // DRAW CALL - 6 vertices (2 triangles forming a quad)
+    m_commandList->DrawInstanced(6, 1, 0, 0);
+    
+    // Transition render target from RENDER_TARGET back to PRESENT state
+    D3D12_RESOURCE_BARRIER barrierToPresent = {};
+    barrierToPresent.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    barrierToPresent.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    barrierToPresent.Transition.pResource = m_renderTargets[m_frameIndex];
+    barrierToPresent.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    barrierToPresent.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+    barrierToPresent.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    m_commandList->ResourceBarrier(1, &barrierToPresent);
+    
+    // Close command list (finish recording)
+    hr = m_commandList->Close();
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to close command list");
+        return;
+    }
+    
+    CORE_LOG_INFO("DX12Renderer: Command list recorded successfully");
+#else
     // Stub: call ComposeUI for composition and present the render target
     // Simulate recording commands
     Renderer::CommandBuffer cmd;
     cmd.Initialize(1024);
-    // ... allocate and record
     unsigned long long submitIndex = cmd.Submit();
-
-    // signal fence (stub). Do NOT wait here on the same thread — the
-    // stubbed Fence implementation would deadlock because Signal and Wait
-    // are on the same thread. In real GPU code the GPU would signal the
-    // fence and the CPU could wait asynchronously or poll for completion.
     if (fence_) fence_->Signal();
-    else
-        (void)0;
-
     ComposeUI();
     if (rt_) rt_->Present();
+#endif
 }
 
 bool DX12Renderer::ComposeUI()
