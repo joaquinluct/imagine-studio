@@ -102,6 +102,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -123,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include=".gitattributes" />
     <None Include=".github\copilot-instructions.md" />
     <None Include=".github\workflows\ci.yml" />
     <None Include=".gitignore" />
@@ -131,13 +133,21 @@
     <None Include="assets\example_asset.dat" />
     <None Include="docs\backlog.md" />
     <None Include="docs\commits.md" />
+    <None Include="docs\daily.md" />
+    <None Include="docs\MAIN.md" />
     <None Include="docs\roadmap.md" />
     <None Include="docs\roadmap_histories.md" />
     <None Include="docs\roadmap_histories_v1.0.0.md" />
-    <None Include="docs\roadmap_log.md" />
     <None Include="docs\roadmap_tasks.md" />
     <None Include="docs\roadmap_tasks_v1.0.0.md" />
     <None Include="docs\roadmap_v1.0.0.md" />
+    <None Include="docs\sprint.md" />
+    <None Include="docs\sprint_histories.md" />
+    <None Include="docs\sprint_histories_v1.0.0.md" />
+    <None Include="docs\sprint_tasks.md" />
+    <None Include="docs\sprint_tasks_v1.0.0.md" />
+    <None Include="docs\sprint_v1.0.0.md" />
+    <None Include="docs\TEMPLATE.md" />
     <None Include="examples\scene1\README.md" />
     <None Include="examples\scene1\scene.json" />
     <None Include="README.md" />

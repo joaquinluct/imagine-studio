@@ -12,6 +12,9 @@
 struct IDXGISwapChain3;
 struct ID3D12Resource;
 struct ID3D12DescriptorHeap;
+struct ID3D12CommandAllocator;
+struct ID3D12GraphicsCommandList;
+struct ID3D12Fence;
 #endif
 
 namespace Renderer {
@@ -51,6 +54,13 @@ private:
     // CBV/SRV/UAV descriptor heap (for constant buffers and textures)
     ID3D12DescriptorHeap* m_cbvSrvUavHeap = nullptr;
     UINT m_cbvSrvUavDescriptorSize = 0;
+    
+    // Command recording and synchronization
+    ID3D12CommandAllocator* m_commandAllocator = nullptr;
+    ID3D12GraphicsCommandList* m_commandList = nullptr;
+    ID3D12Fence* m_fence = nullptr;
+    UINT64 m_fenceValue = 0;
+    HANDLE m_fenceEvent = nullptr;
 #endif
 };
 

@@ -98,6 +98,65 @@ void DX12Renderer::Initialize(HWND hwnd)
     m_cbvSrvUavDescriptorSize = d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     CORE_LOG_INFO("DX12Renderer: CBV/SRV/UAV descriptor heap created (shader visible)");
     
+    // Create command allocator (one per frame, reused after GPU finishes)
+    hr = d3dDevice->CreateCommandAllocator(
+        D3D12_COMMAND_LIST_TYPE_DIRECT,
+        IID_PPV_ARGS(&m_commandAllocator)
+    );
+    
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to create Command Allocator");
+        return;
+    }
+    
+    CORE_LOG_INFO("DX12Renderer: Command Allocator created");
+    
+    // Create command list (initially closed state)
+    hr = d3dDevice->CreateCommandList(
+        0, // GPU node (single GPU)
+        D3D12_COMMAND_LIST_TYPE_DIRECT,
+        m_commandAllocator, // Associated allocator
+        nullptr, // Initial pipeline state (none)
+        IID_PPV_ARGS(&m_commandList)
+    );
+    
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to create Command List");
+        return;
+    }
+    
+    // Command lists are created in recording state, close it immediately
+    m_commandList->Close();
+    CORE_LOG_INFO("DX12Renderer: Command List created (closed)");
+    
+    // Create fence for GPU/CPU synchronization
+    m_fenceValue = 1;
+    hr = d3dDevice->CreateFence(
+        0, // Initial value
+        D3D12_FENCE_FLAG_NONE,
+        IID_PPV_ARGS(&m_fence)
+    );
+    
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to create Fence");
+        return;
+    }
+    
+    CORE_LOG_INFO("DX12Renderer: Fence created");
+    
+    // Create event for fence signaling
+    m_fenceEvent = CreateEventEx(nullptr, nullptr, 0, EVENT_ALL_ACCESS);
+    if (m_fenceEvent == nullptr)
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to create Fence event");
+        return;
+    }
+    
+    CORE_LOG_INFO("DX12Renderer: Fence event created");
+    
     // Create swap chain
     DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
     swapChainDesc.Width = 800;  // TODO: Get from window
@@ -201,6 +260,38 @@ void DX12Renderer::OnAssetLoaded(const std::string& path)
 void DX12Renderer::Shutdown()
 {
 #if defined(_WIN32) && defined(_MSC_VER)
+    // Close fence event handle
+    if (m_fenceEvent)
+    {
+        CloseHandle(m_fenceEvent);
+        m_fenceEvent = nullptr;
+        CORE_LOG_INFO("DX12Renderer: Fence event closed");
+    }
+    
+    // Release fence
+    if (m_fence)
+    {
+        m_fence->Release();
+        m_fence = nullptr;
+        CORE_LOG_INFO("DX12Renderer: Fence released");
+    }
+    
+    // Release command list
+    if (m_commandList)
+    {
+        m_commandList->Release();
+        m_commandList = nullptr;
+        CORE_LOG_INFO("DX12Renderer: Command List released");
+    }
+    
+    // Release command allocator
+    if (m_commandAllocator)
+    {
+        m_commandAllocator->Release();
+        m_commandAllocator = nullptr;
+        CORE_LOG_INFO("DX12Renderer: Command Allocator released");
+    }
+    
     // Release CBV/SRV/UAV descriptor heap
     if (m_cbvSrvUavHeap)
     {
