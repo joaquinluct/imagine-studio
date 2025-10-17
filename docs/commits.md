@@ -366,3 +366,23 @@ Files changed: src/renderer/DX12Renderer.h, src/renderer/DX12Renderer.cpp
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
 Refs: T1.5
 
+- feat(renderer): implement Root Signature with root constants (T2.1)
+
+Implemented Task T2.1 - Create Root Signature with root constants for MVP matrix following AAA standards.
+
+Key changes:
+- Created Root Signature with root constants for MVP matrix (16 floats = 64 bytes)
+- Configured root parameter with D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS
+- Set shader register to b0 (register(b0) in HLSL)
+- Configured 16 32-bit values (4x4 matrix)
+- Set shader visibility to VERTEX shader only (D3D12_SHADER_VISIBILITY_VERTEX)
+- Serialized root signature with D3D12SerializeRootSignature
+- Created root signature with CreateRootSignature
+- Added error handling with HRESULT checks and logging
+- Proper cleanup in Shutdown() - release Root Signature first (before fence)
+- Implementation follows DX12 best practices
+
+Files changed: src/renderer/DX12Renderer.h, src/renderer/DX12Renderer.cpp
+Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
+Refs: T2.1
+
