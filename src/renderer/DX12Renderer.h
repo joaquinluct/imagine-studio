@@ -31,6 +31,8 @@ public:
     
     // Forward rendering (v1.2.0 - IMPLEMENTAR AHORA)
     void RenderForwardPass();
+    void OpaquePass();
+    void UIPass();
     
     // Prepare render target for UI composition
     bool ComposeUI();

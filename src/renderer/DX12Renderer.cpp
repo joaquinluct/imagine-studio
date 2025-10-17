@@ -669,6 +669,15 @@ void DX12Renderer::RenderFrame()
 
 void DX12Renderer::RenderForwardPass()
 {
+    // Pass 1: Opaque
+    OpaquePass();
+    
+    // Pass 2: UI (condicional)
+    // UIPass(); // TODO: Implementar en H4
+}
+
+void DX12Renderer::OpaquePass()
+{
 #if defined(_WIN32) && defined(_MSC_VER)
     // Only render if we have native DX12 device
     if (!device_ || !device_->HasNativeDevice())
@@ -828,6 +837,12 @@ void DX12Renderer::RenderForwardPass()
     ComposeUI();
     if (rt_) rt_->Present();
 #endif
+}
+
+void DX12Renderer::UIPass()
+{
+    // TODO: Implementar UI Pass en H4
+    // Este pass renderizará UI overlay después del Opaque Pass
 }
 
 bool DX12Renderer::ComposeUI()
