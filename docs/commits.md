@@ -410,3 +410,26 @@ Files changed: shaders/quad.hlsl (new), src/renderer/DX12Renderer.h, src/rendere
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
 Refs: T2.2
 
+- feat(renderer): implement Pipeline State Object creation (T2.3)
+
+Implemented Task T2.3 - Create Pipeline State Object following AAA standards.
+
+Key changes:
+- Created input layout with 2 elements (POSITION + COLOR)
+- POSITION: DXGI_FORMAT_R32G32B32_FLOAT at offset 0 (12 bytes)
+- COLOR: DXGI_FORMAT_R32G32B32A32_FLOAT at offset 12 (16 bytes)
+- Configured rasterizer state (solid fill, backface culling)
+- Configured blend state (no blending, write all channels)
+- Disabled depth/stencil testing (2D rendering)
+- Set primitive topology to TRIANGLE
+- Set render target format to DXGI_FORMAT_R8G8B8A8_UNORM (matches swap chain)
+- Sample count: 1 (no MSAA)
+- Created PSO with CreateGraphicsPipelineState linking all components
+- Added error handling with HRESULT checks and logging
+- Proper cleanup in Shutdown() - release PSO before shaders
+- Implementation follows DX12 best practices
+
+Files changed: src/renderer/DX12Renderer.h, src/renderer/DX12Renderer.cpp
+Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
+Refs: T2.3
+

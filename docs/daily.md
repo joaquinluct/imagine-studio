@@ -1,4 +1,4 @@
 # Daily Log
 
-Hecho: T2.2 Compilar Shaders HLSL (Vertex & Pixel)
-Siguiente: T2.3 Crear Pipeline State Object (PSO)
+Hecho: T2.3 Crear Pipeline State Object (PSO)
+Siguiente: T3.1 Crear Vertex Buffer (Upload + Default Heap)
