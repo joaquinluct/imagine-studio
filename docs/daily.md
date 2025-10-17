@@ -1,4 +1,4 @@
 ﻿# Daily Log
 
-Hecho: Sprint v1.1.0 cerrado (DX12 Minimal Renderer completado)
-Siguiente: BUG-001 - Resolver quad no visible (debugging con culling deshabilitado)
+Hecho: BUG-001 resuelto - Quad ahora visible (winding order corregido)
+Siguiente: Sprint v1.1.0 finalizado - Sin sprint activo

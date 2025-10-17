@@ -37,14 +37,14 @@ Este fichero contiene el **historial de bugs resueltos** durante el sprint activ
 **Archivos afectados**: 
 - `src/renderer/DX12Renderer.cpp` (winding order de vértices corregido, culling restaurado, logging reducido)
 
-**Commit de resolución**: [PENDIENTE]
+**Commit de resolución**: 0222c47
 
 
 ## 📊 Resumen
 
 | ID | Título | Prioridad | Fecha Entrada | Fecha Resolución | Commit |
 |----|--------|-----------|---------------|------------------|--------|
-| FIX-001 | Quad no visible en pantalla (solo fondo azul) | Crítica | 2025-01-17 | 2025-01-17 | [PENDIENTE] |
+| FIX-001 | Quad no visible en pantalla (solo fondo azul) | Crítica | 2025-01-17 | 2025-01-17 | 0222c47 |
 
 **Total bugs resueltos**: 1
 

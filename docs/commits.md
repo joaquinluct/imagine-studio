@@ -801,3 +801,24 @@ Files normalized: 13 files (docs/, src/, README.md)
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
 Refs: Sprint v1.1.0 closed - encoding infrastructure established
 
+- fix(renderer): corregir winding order y backface culling - BUG-001 resuelto
+
+Resuelve BUG-001: Quad no visible en pantalla.
+
+Causa: Triángulos con winding order counter-clockwise se descartaban por backface culling. DirectX con FrontCounterClockwise=FALSE considera clockwise como front faces.
+
+Solución:
+1. Invertido winding order de vértices a clockwise:
+   - Triangle 1: bottom-left → top-left → bottom-right (clockwise)
+   - Triangle 2: bottom-right → top-left → top-right (clockwise)
+2. Restaurado backface culling (D3D12_CULL_MODE_BACK) para optimización (se había deshabilitado temporalmente para debugging)
+3. Reducido logging excesivo en RenderFrame() (eliminados CORE_LOG_INFO del render loop, solo errores críticos)
+
+Resultado: Quad ahora visible correctamente con colores interpolados (rojo, verde, azul, amarillo) y backface culling activo para optimización.
+
+Files changed: `src/renderer/DX12Renderer.cpp` (winding order corregido, culling restaurado, logging reducido), `docs/sprint_bugs.md` (bug movido a sprint_fix.md), `docs/sprint_fix.md` (bug resuelto registrado), `docs/daily.md` (actualizado)
+Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
+Refs: BUG-001 → FIX-001 (commit 0222c47)
+
+
+
