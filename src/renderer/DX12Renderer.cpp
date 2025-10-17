@@ -82,6 +82,22 @@ void DX12Renderer::Initialize(HWND hwnd)
     m_rtvDescriptorSize = d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
     CORE_LOG_INFO("DX12Renderer: RTV descriptor heap created");
     
+    // Create descriptor heap for CBV/SRV/UAV (Constant Buffers, Shader Resources, Unordered Access)
+    D3D12_DESCRIPTOR_HEAP_DESC cbvSrvUavHeapDesc = {};
+    cbvSrvUavHeapDesc.NumDescriptors = 1; // Start with 1 descriptor for constant buffer
+    cbvSrvUavHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+    cbvSrvUavHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE; // Must be shader visible
+    
+    hr = d3dDevice->CreateDescriptorHeap(&cbvSrvUavHeapDesc, IID_PPV_ARGS(&m_cbvSrvUavHeap));
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to create CBV/SRV/UAV descriptor heap");
+        return;
+    }
+    
+    m_cbvSrvUavDescriptorSize = d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    CORE_LOG_INFO("DX12Renderer: CBV/SRV/UAV descriptor heap created (shader visible)");
+    
     // Create swap chain
     DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
     swapChainDesc.Width = 800;  // TODO: Get from window
@@ -185,6 +201,14 @@ void DX12Renderer::OnAssetLoaded(const std::string& path)
 void DX12Renderer::Shutdown()
 {
 #if defined(_WIN32) && defined(_MSC_VER)
+    // Release CBV/SRV/UAV descriptor heap
+    if (m_cbvSrvUavHeap)
+    {
+        m_cbvSrvUavHeap->Release();
+        m_cbvSrvUavHeap = nullptr;
+        CORE_LOG_INFO("DX12Renderer: CBV/SRV/UAV descriptor heap released");
+    }
+    
     // Release render targets
     for (UINT i = 0; i < BACK_BUFFER_COUNT; ++i)
     {

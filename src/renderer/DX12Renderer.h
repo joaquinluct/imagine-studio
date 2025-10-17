@@ -47,6 +47,10 @@ private:
     ID3D12DescriptorHeap* m_rtvHeap = nullptr;
     UINT m_rtvDescriptorSize = 0;
     UINT m_frameIndex = 0;
+    
+    // CBV/SRV/UAV descriptor heap (for constant buffers and textures)
+    ID3D12DescriptorHeap* m_cbvSrvUavHeap = nullptr;
+    UINT m_cbvSrvUavDescriptorSize = 0;
 #endif
 };
 
