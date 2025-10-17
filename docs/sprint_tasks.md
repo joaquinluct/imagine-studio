@@ -24,18 +24,20 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.2.
 
 ---
 
-### Tarea H1.2: Crear m�todos OpaquePass() y UIPass()
-**Estado**: Pendiente  
+### Tarea H1.2: Crear métodos OpaquePass() y UIPass()
+**Estado**: ✅ Completada  
 **Archivos afectados**: `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`
 
-**Descripci�n**: Separar `RenderForwardPass()` en dos m�todos independientes: `OpaquePass()` y `UIPass()`.
+**Descripción**: Separar `RenderForwardPass()` en dos métodos independientes: `OpaquePass()` y `UIPass()`.
 
 **Pasos**:
-1. Crear m�todo `void OpaquePass()`
-2. Crear m�todo `void UIPass()`
-3. Mover c�digo de renderizado de geometr�a a `OpaquePass()`
-4. `RenderForwardPass()` llama a `OpaquePass()` y luego `UIPass()`
-5. Compilar y validar (0 errores, 0 warnings)
+1. ✅ Crear método `void OpaquePass()`
+2. ✅ Crear método `void UIPass()`
+3. ✅ Mover código de renderizado de geometría a `OpaquePass()`
+4. ✅ `RenderForwardPass()` llama a `OpaquePass()` y luego `UIPass()`
+5. ✅ Compilar y validar (0 errores, 0 warnings)
+
+**Commit**: baae685
 
 ---
 
@@ -268,7 +270,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.2.
 | Historia | Tarea | T�tulo | Estado |
 |----------|-------|--------|--------|
 | H1 | H1.1 | Refactorizar RenderFrame() | ✅ Completada |
-| H1 | H1.2 | Crear OpaquePass() y UIPass() | Pendiente |
+| H1 | H1.2 | Crear OpaquePass() y UIPass() | ✅ Completada |
 | H1 | H1.3 | Comentarios para futuros passes | Pendiente |
 | H2 | H2.1 | Crear InputManager b�sico | Pendiente |
 | H2 | H2.2 | Integrar con Win32 message loop | Pendiente |
@@ -283,4 +285,4 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.2.
 | H4 | H4.2 | Conectar UIPass con F1 | Pendiente |
 | H4 | H4.3 | Validar UI Pass con F1 | Pendiente |
 
-**Total**: 15 tareas (1 completada, 14 pendientes)
+**Total**: 15 tareas (2 completadas, 13 pendientes)

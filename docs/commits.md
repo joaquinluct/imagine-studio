@@ -933,6 +933,25 @@ Implementada tarea H1.1 del Sprint v1.2.0 - Refactorizar RenderFrame() para mult
 Files changed: `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`
 Refs: Sprint v1.2.0 - H1.1 (commit 21cc105)
 
+- feat(renderer): crear métodos OpaquePass() y UIPass() para multi-pass (H1.2)
+
+Implementada tarea H1.2 del Sprint v1.2.0 - Crear métodos OpaquePass() y UIPass().
+
+**Cambios:**
+- Creados métodos `OpaquePass()` (contiene toda la lógica de renderizado de geometría) y `UIPass()` (stub vacío por ahora)
+- `RenderForwardPass()` ahora llama a `OpaquePass()` y `UIPass()` secuencialmente
+- Arquitectura multi-pass funcional con separación clara de responsabilidades
+- `UIPass()` se implementará completamente en tarea H4
+
+**Archivos modificados:**
+- `src/renderer/DX12Renderer.h`: Añadidas declaraciones `OpaquePass()` y `UIPass()`
+- `src/renderer/DX12Renderer.cpp`: Refactorizado `RenderForwardPass()` → `OpaquePass()` + `UIPass()`
+
+**Compilación:** CMake Debug OK + MSBuild VS Debug OK (0 errores, 0 warnings)
+
+Files changed: `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`
+Refs: Sprint v1.2.0 - H1.2 (commit baae685)
+
 
 
 
