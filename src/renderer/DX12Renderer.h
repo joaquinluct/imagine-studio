@@ -15,6 +15,7 @@ struct ID3D12DescriptorHeap;
 struct ID3D12CommandAllocator;
 struct ID3D12GraphicsCommandList;
 struct ID3D12Fence;
+struct ID3D12RootSignature;
 #endif
 
 namespace Renderer {
@@ -61,6 +62,9 @@ private:
     ID3D12Fence* m_fence = nullptr;
     UINT64 m_fenceValue = 0;
     HANDLE m_fenceEvent = nullptr;
+    
+    // Root signature (defines shader parameter layout)
+    ID3D12RootSignature* m_rootSignature = nullptr;
 #endif
 };
 

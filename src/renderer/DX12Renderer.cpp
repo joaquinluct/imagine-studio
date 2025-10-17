@@ -216,6 +216,59 @@ void DX12Renderer::Initialize(HWND hwnd)
     }
     
     CORE_LOG_INFO("DX12Renderer: Created " + std::to_string(BACK_BUFFER_COUNT) + " render target views");
+    
+    // Create root signature with root constants for MVP matrix (16 floats = 64 bytes)
+    D3D12_ROOT_PARAMETER rootParam = {};
+    rootParam.ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
+    rootParam.Constants.ShaderRegister = 0; // register(b0) in HLSL
+    rootParam.Constants.RegisterSpace = 0;
+    rootParam.Constants.Num32BitValues = 16; // 4x4 matrix = 16 floats
+    rootParam.ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX; // Only visible to vertex shader
+    
+    D3D12_ROOT_SIGNATURE_DESC rootSigDesc = {};
+    rootSigDesc.NumParameters = 1;
+    rootSigDesc.pParameters = &rootParam;
+    rootSigDesc.NumStaticSamplers = 0;
+    rootSigDesc.pStaticSamplers = nullptr;
+    rootSigDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+    
+    // Serialize the root signature
+    ID3DBlob* signature = nullptr;
+    ID3DBlob* error = nullptr;
+    hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error);
+    
+    if (FAILED(hr))
+    {
+        if (error)
+        {
+            CORE_LOG_ERROR("DX12Renderer: Failed to serialize root signature: " + 
+                std::string(static_cast<const char*>(error->GetBufferPointer())));
+            error->Release();
+        }
+        else
+        {
+            CORE_LOG_ERROR("DX12Renderer: Failed to serialize root signature");
+        }
+        return;
+    }
+    
+    // Create the root signature
+    hr = d3dDevice->CreateRootSignature(
+        0, // GPU node mask (single GPU)
+        signature->GetBufferPointer(),
+        signature->GetBufferSize(),
+        IID_PPV_ARGS(&m_rootSignature)
+    );
+    
+    signature->Release();
+    
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to create root signature");
+        return;
+    }
+    
+    CORE_LOG_INFO("DX12Renderer: Root Signature created (16 root constants for MVP matrix)");
 #endif
     
     allocator_ = new CommandAllocator();
@@ -260,6 +313,14 @@ void DX12Renderer::OnAssetLoaded(const std::string& path)
 void DX12Renderer::Shutdown()
 {
 #if defined(_WIN32) && defined(_MSC_VER)
+    // Release root signature
+    if (m_rootSignature)
+    {
+        m_rootSignature->Release();
+        m_rootSignature = nullptr;
+        CORE_LOG_INFO("DX12Renderer: Root Signature released");
+    }
+    
     // Close fence event handle
     if (m_fenceEvent)
     {
