@@ -28,6 +28,10 @@ public:
     void Initialize(HWND hwnd);
     void Shutdown() override;
     void RenderFrame() override;
+    
+    // Forward rendering (v1.2.0 - IMPLEMENTAR AHORA)
+    void RenderForwardPass();
+    
     // Prepare render target for UI composition
     bool ComposeUI();
     // Notify renderer that an asset loaded (path)

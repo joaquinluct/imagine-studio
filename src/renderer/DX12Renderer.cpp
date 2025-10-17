@@ -663,6 +663,12 @@ void DX12Renderer::Initialize(HWND hwnd)
 
 void DX12Renderer::RenderFrame()
 {
+    // Forward Rendering (v1.2.0)
+    RenderForwardPass();
+}
+
+void DX12Renderer::RenderForwardPass()
+{
 #if defined(_WIN32) && defined(_MSC_VER)
     // Only render if we have native DX12 device
     if (!device_ || !device_->HasNativeDevice())
