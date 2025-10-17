@@ -386,3 +386,27 @@ Files changed: src/renderer/DX12Renderer.h, src/renderer/DX12Renderer.cpp
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
 Refs: T2.1
 
+- feat(renderer): implement HLSL shader compilation (T2.2)
+
+Implemented Task T2.2 - Create and compile HLSL shaders following AAA standards.
+
+Key changes:
+- Created shaders/quad.hlsl with vertex and pixel shaders
+- Vertex shader transforms position using MVP matrix from root constants
+- Pixel shader outputs interpolated vertex color
+- Input structure: POSITION (float3) + COLOR (float4)
+- Output structure: SV_POSITION (float4) + COLOR (float4)
+- Compiled shaders at runtime using D3DCompileFromFile
+- Vertex shader: VSMain entry point, vs_5_0 target (Shader Model 5.0)
+- Pixel shader: PSMain entry point, ps_5_0 target (Shader Model 5.0)
+- Debug compilation flags: D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION
+- Stored compiled bytecode in ID3DBlob objects
+- Added error handling with detailed compilation error messages
+- Proper cleanup in Shutdown() - release shader blobs before root signature
+- Linked d3dcompiler.lib via pragma comment
+- Implementation follows DX12 best practices
+
+Files changed: shaders/quad.hlsl (new), src/renderer/DX12Renderer.h, src/renderer/DX12Renderer.cpp
+Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
+Refs: T2.2
+

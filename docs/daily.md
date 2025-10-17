@@ -1,4 +1,4 @@
 # Daily Log
 
-Hecho: T2.1 Crear Root Signature
-Siguiente: T2.2 Compilar Shaders HLSL (Vertex & Pixel)
+Hecho: T2.2 Compilar Shaders HLSL (Vertex & Pixel)
+Siguiente: T2.3 Crear Pipeline State Object (PSO)
