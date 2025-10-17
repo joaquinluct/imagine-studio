@@ -166,8 +166,8 @@ void DX12Renderer::Initialize(HWND hwnd)
     
     // Create swap chain
     DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
-    swapChainDesc.Width = 800;  // TODO: Get from window
-    swapChainDesc.Height = 600; // TODO: Get from window
+    swapChainDesc.Width = 1920;  // Full HD width
+    swapChainDesc.Height = 1080; // Full HD height
     swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     swapChainDesc.BufferCount = BACK_BUFFER_COUNT;
     swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
@@ -701,12 +701,12 @@ void DX12Renderer::RenderFrame()
     // Set root signature
     m_commandList->SetGraphicsRootSignature(m_rootSignature);
     
-    // Set viewport (800x600, hardcoded for now)
+    // Set viewport (1920x1080 Full HD)
     D3D12_VIEWPORT viewport = {};
     viewport.TopLeftX = 0.0f;
     viewport.TopLeftY = 0.0f;
-    viewport.Width = 800.0f;
-    viewport.Height = 600.0f;
+    viewport.Width = 1920.0f;
+    viewport.Height = 1080.0f;
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
     m_commandList->RSSetViewports(1, &viewport);
@@ -715,8 +715,8 @@ void DX12Renderer::RenderFrame()
     D3D12_RECT scissorRect = {};
     scissorRect.left = 0;
     scissorRect.top = 0;
-    scissorRect.right = 800;
-    scissorRect.bottom = 600;
+    scissorRect.right = 1920;
+    scissorRect.bottom = 1080;
     m_commandList->RSSetScissorRects(1, &scissorRect);
     
     // Transition render target from PRESENT to RENDER_TARGET state
