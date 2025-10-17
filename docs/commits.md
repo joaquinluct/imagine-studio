@@ -683,6 +683,50 @@ Files changed: `.github/copilot-instructions.md`, `docs/TEMPLATE.md`, `docs/spri
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
 Refs: Sprint v1.1.0 finalizado - mejoras metodológicas
 
+- docs: separar tracking de bugs en sprint_bugs.md (pendientes) y sprint_fix.md (resueltos)
+
+Separación completa del tracking de bugs en dos ficheros con flujo automático:
+
+1. **sprint_bugs.md** (contenedor inicial de bugs reportados):
+   - ID con prefijo BUG-XXX (ej: BUG-001, BUG-002)
+   - Estados: Reportado/En progreso
+   - Contenedor temporal hasta resolución
+   - Bugs pendientes se archivan como sprint_bugs_v<version>.md al finalizar sprint
+
+2. **sprint_fix.md** (historial de bugs resueltos):
+   - ID con prefijo FIX-XXX (ej: FIX-001, FIX-002)
+   - Contiene bugs que fueron reportados en sprint_bugs.md y resueltos
+   - Incluye ID original (BUG-XXX), solución implementada, commit hash
+   - Bugs resueltos se archivan como sprint_fix_v<version>.md al finalizar sprint
+
+3. **Flujo automático**:
+   - Usuario reporta bug ? Asistente añade a sprint_bugs.md con ID BUG-XXX y estado "Reportado"
+   - Asistente comienza trabajo ? Estado actualizado a "En progreso" en sprint_bugs.md
+   - Bug resuelto ? Asistente **mueve automáticamente** a sprint_fix.md con:
+     * ID cambiado a FIX-XXX
+     * Estado "Resuelto"
+     * Fecha de resolución
+     * Hash del commit de resolución
+     * Descripción de la solución implementada
+   - Bug eliminado de sprint_bugs.md tras mover
+
+4. **Actualización daily.md**:
+   - Formato con sprint activo: "Hecho: <n> <descripción>" + "Siguiente: <n> <descripción>"
+   - Formato sin sprint activo: "Sprint v1.1.0 cerrado. Sin sprint activo."
+   - Actualizado al finalizar sprint v1.1.0
+
+5. **Actualización copilot-instructions.md y TEMPLATE.md**:
+   - Nuevas secciones "Fichero Sprint Bugs" y "Fichero Sprint Fix" con flujo completo
+   - Proceso de versionado incluye ambos ficheros
+   - Lista de archivos principales actualizada
+   - Sincronización aplicada a TEMPLATE.md con [PLACEHOLDER]
+
+Sprint v1.1.0 completado y cerrado correctamente (0 bugs reportados).
+
+Files changed: `docs/sprint_bugs.md` (created), `docs/sprint_fix.md` (updated), `docs/daily.md`, `.github/copilot-instructions.md`, `docs/TEMPLATE.md`
+Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
+Refs: Sprint v1.1.0 finalizado - metodología bugs completada
+
 
 
 
