@@ -488,6 +488,41 @@ Files changed: src/renderer/DX12Renderer.h, src/renderer/DX12Renderer.cpp
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
 Refs: T3.2
 
+- feat(renderer): implement command list recording with clear and draw call (T4.1)
+
+Implemented Task T4.1 - Record command list with RTV clear and DrawInstanced following AAA standards.
+
+Key changes:
+- Replaced RenderFrame() stub with real DX12 implementation
+- Reset command allocator and command list with PSO
+- Configured viewport (800x600) and scissor rect
+- Resource barrier: PRESENT ? RENDER_TARGET
+- Obtained RTV handle for current back buffer (m_frameIndex)
+- Set render target with OMSetRenderTargets
+- Cleared render target with dark blue color (0.0, 0.2, 0.4, 1.0)
+- Set primitive topology: D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST
+- Set vertex buffer with IASetVertexBuffers
+- Set root constants (MVP identity matrix) with SetGraphicsRoot32BitConstants
+- DRAW CALL: DrawInstanced(6, 1, 0, 0) - 6 vertices, 1 instance
+- Resource barrier: RENDER_TARGET ? PRESENT
+- Closed command list
+- Fallback to stub rendering if no native device available
+
+Implementation details:
+- Command allocator reset enables memory reuse per frame
+- PSO bound during command list reset (optimization)
+- Viewport/scissor match swap chain dimensions (800x600)
+- Resource barriers ensure correct state transitions
+- RTV handle calculated using frame index and descriptor size
+- Root constants pass MVP matrix directly (no CBV needed)
+- Draw call renders 2 triangles (6 vertices) forming a colored quad
+
+Files changed: src/renderer/DX12Renderer.cpp
+Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
+Refs: T4.1
+
+
+
 
 
 
