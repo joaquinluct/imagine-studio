@@ -1,8 +1,9 @@
 # ImGui Installation Script for Imagine Studio
-# Downloads and integrates ImGui (latest stable version) from GitHub
+# Downloads and integrates ImGui from GitHub (supports branches and releases)
 
 param(
     [string]$Version = "latest",  # "latest" or specific version like "v1.91.5"
+    [string]$Branch = "docking",   # Branch name (e.g., "docking", "master") - takes priority over Version
     [switch]$Reinstall = $false    # Force reinstall even if already exists
 )
 
@@ -35,27 +36,36 @@ if (-not (Test-Path "external")) {
     New-Item -ItemType Directory -Path "external" | Out-Null
 }
 
-# Determine version to download
-if ($Version -eq "latest") {
-    Write-Host "Fetching latest ImGui release version..." -ForegroundColor Cyan
-    try {
-        $latestRelease = Invoke-RestMethod -Uri "$ImGuiRepo/releases/latest" -Headers @{ "User-Agent" = "PowerShell" }
-        $Version = $latestRelease.tag_name
-        Write-Host "Latest version: $Version" -ForegroundColor Green
-    } catch {
-        Write-Host "Failed to fetch latest release. Using default v1.91.5" -ForegroundColor Yellow
-        $Version = "v1.91.5"
-    }
+# Determine download source (branch takes priority over version)
+if ($Branch) {
+    # Download from branch
+    Write-Host "Using branch: $Branch" -ForegroundColor Green
+    $DownloadUrl = "$ImGuiRepo/archive/refs/heads/$Branch.zip"
+    $VersionTag = "branch-$Branch"
 } else {
-    Write-Host "Using specified version: $Version" -ForegroundColor Green
+    # Download from release tag
+    if ($Version -eq "latest") {
+        Write-Host "Fetching latest ImGui release version..." -ForegroundColor Cyan
+        try {
+            $latestRelease = Invoke-RestMethod -Uri "$ImGuiRepo/releases/latest" -Headers @{ "User-Agent" = "PowerShell" }
+            $Version = $latestRelease.tag_name
+            Write-Host "Latest version: $Version" -ForegroundColor Green
+        } catch {
+            Write-Host "Failed to fetch latest release. Using default v1.91.5" -ForegroundColor Yellow
+            $Version = "v1.91.5"
+        }
+    } else {
+        Write-Host "Using specified version: $Version" -ForegroundColor Green
+    }
+    $DownloadUrl = "$ImGuiRepo/archive/refs/tags/$Version.zip"
+    $VersionTag = $Version
 }
 
-# Download URL
-$DownloadUrl = "$ImGuiRepo/archive/refs/tags/$Version.zip"
 $ZipFile = "$TempDir.zip"
 
 Write-Host ""
-Write-Host "Downloading ImGui $Version from GitHub..." -ForegroundColor Cyan
+Write-Host "Downloading ImGui from GitHub..." -ForegroundColor Cyan
+Write-Host "Source: $(if ($Branch) { "Branch '$Branch'" } else { "Release '$Version'" })" -ForegroundColor Gray
 Write-Host "URL: $DownloadUrl" -ForegroundColor Gray
 
 try {
@@ -136,9 +146,10 @@ try {
     Write-Host "Creating version tracking file..." -ForegroundColor Cyan
     $VersionFile = Join-Path $ImGuiDir "VERSION.txt"
     @"
-ImGui Version: $Version
+ImGui Version: $VersionTag
 Downloaded: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
 Source: $ImGuiRepo
+Download Type: $(if ($Branch) { "Branch: $Branch" } else { "Release: $Version" })
 "@ | Out-File -FilePath $VersionFile -Encoding UTF8
     Write-Host "  ? VERSION.txt created" -ForegroundColor Green
     
@@ -154,7 +165,8 @@ Source: $ImGuiRepo
     Write-Host "================================" -ForegroundColor Cyan
     Write-Host "Installation Summary" -ForegroundColor Cyan
     Write-Host "================================" -ForegroundColor Cyan
-    Write-Host "ImGui Version: $Version" -ForegroundColor Green
+    Write-Host "ImGui Version: $VersionTag" -ForegroundColor Green
+    Write-Host "Download Type: $(if ($Branch) { "Branch '$Branch'" } else { "Release '$Version'" })" -ForegroundColor Green
     Write-Host "Installation Path: $ImGuiDir" -ForegroundColor Green
     Write-Host "Core Files: $($CoreFiles.Count) files" -ForegroundColor Green
     Write-Host "Backend Files: $($BackendFiles.Count) files (DX12 + Win32)" -ForegroundColor Green

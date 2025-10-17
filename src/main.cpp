@@ -3,7 +3,7 @@
 #include "core/Log.h"
 #include "jobs/TaskGraph.h"
 #include "jobs/ThreadPool.h"
-#include "platform/Input.h"
+#include "platform/InputManager.h"
 #include "platform/Window.h"
 #include "renderer/DX12Renderer.h"
 #include "tools/Profiler.h"
@@ -112,15 +112,12 @@ static int RunApp(HINSTANCE hInstance)
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     
     // Enable docking (preparar para H4 - Editor Panels & Docking)
-    // NOTE: ImGuiConfigFlags_DockingEnable requiere la rama 'docking' de ImGui
-    // La versión v1.91.5 (release) no incluye docking por defecto
-    // Se habilitará cuando se actualice a la rama docking en sprint futuro
-    // io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     
     // Setup Dear ImGui style (dark theme)
     ImGui::StyleColorsDark();
     
-    CORE_LOG_INFO("ImGui context created and initialized (v1.3.0)");
+    CORE_LOG_INFO("ImGui context created and initialized (v1.3.0 - docking enabled)");
 
     // Simple message loop
     Platform::InputManager input;
@@ -165,7 +162,7 @@ static int RunApp(HINSTANCE hInstance)
     while (window.ProcessMessages())
     {
         auto frameStart = std::chrono::high_resolution_clock::now();
-        input.Update(window.GetHWND());
+        input.Update();
 
         // Example: if Escape pressed, exit
         if (input.IsKeyDown(VK_ESCAPE))

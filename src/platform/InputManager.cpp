@@ -21,11 +21,11 @@ void InputManager::Update()
     
     // Poll current state for all virtual key codes we track
     // We only track keys that have been queried before to avoid polling all 256 keys
-    for (auto& [vkCode, state] : m_currentKeyStates)
+    for (auto& pair : m_currentKeyStates)
     {
         // GetAsyncKeyState returns high-order bit set if key is down
-        short keyState = GetAsyncKeyState(vkCode);
-        state = (keyState & 0x8000) != 0;
+        short keyState = GetAsyncKeyState(pair.first);
+        pair.second = (keyState & 0x8000) != 0;
     }
 }
 

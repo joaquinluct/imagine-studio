@@ -165,7 +165,7 @@
     <ClCompile Include="src\jobs\TaskGraph.cpp" />
     <ClCompile Include="src\jobs\ThreadPool.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\platform\Input.cpp" />
+    <ClCompile Include="src\platform\InputManager.cpp" />
     <ClCompile Include="src\platform\Window.cpp" />
     <ClCompile Include="src\renderer\AdapterFactory.cpp" />
     <ClCompile Include="src\renderer\CommandBuffer.cpp" />

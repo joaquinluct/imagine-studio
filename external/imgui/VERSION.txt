@@ -1,3 +1,4 @@
-﻿ImGui Version: v1.91.5
-Downloaded: 2025-10-18 00:37:15
+﻿ImGui Version: branch-docking
+Downloaded: 2025-10-18 00:58:54
 Source: https://github.com/ocornut/imgui
+Download Type: Branch: docking
