@@ -13,9 +13,10 @@ Este documento define los 4 pilares fundamentales y principios del proyecto Imag
 Archivos principales de trabajo:
 - `docs/MAIN.md` - **[LEER PRIMERO]** Decálogo y pilares fundamentales del proyecto.
 - `docs/sprint.md` - Sprint actual con hitos y objetivos.
-- `docs/daily.md` - Última tarea completada y tarea actual en progreso.
+- `docs/daily.md` - Última tarea completada y tarea actual en progreso (o "Sprint vX.Y.Z cerrado. Sin sprint activo." si no hay sprint activo).
 - `docs/commits.md` - Convenciones de commits y mensajes.
-- `docs/sprint_fix.md` - Tracking de bugs/errores reportados durante el sprint.
+- `docs/sprint_bugs.md` - Tracking de bugs reportados (pendientes de resolución).
+- `docs/sprint_fix.md` - Historial de bugs resueltos durante el sprint.
 
 Flujo de trabajo por sesión:
 1) Leer estas instrucciones.
@@ -100,12 +101,14 @@ Versionado de los ficheros del Sprint (snapshots de sprint):
   - `docs/sprint.md` (sprint de alto nivel con hitos y objetivos)
   - `docs/sprint_histories.md` (historias de usuario para el sprint)
   - `docs/sprint_tasks.md` (tareas detalladas por historia; unidad mínima de trabajo e iteración)
-  - `docs/sprint_fix.md` (tracking de bugs/errores reportados durante el sprint)
+  - `docs/sprint_bugs.md` (tracking de bugs reportados y pendientes de resolución)
+  - `docs/sprint_fix.md` (historial de bugs resueltos durante el sprint)
 - Al final de un sprint (release), el asistente archivará los ficheros de trabajo renombrándolos con la versión, por ejemplo:
   - `docs/sprint_v<version>.md`
   - `docs/sprint_histories_v<version>.md`
   - `docs/sprint_tasks_v<version>.md`
-  - `docs/sprint_fix_v<version>.md`
+  - `docs/sprint_bugs_v<version>.md` (bugs que quedaron pendientes al cerrar sprint)
+  - `docs/sprint_fix_v<version>.md` (bugs resueltos durante el sprint)
 - A continuación el asistente creará ficheros nuevos y vacíos con los nombres activos para el siguiente sprint.
 - Esta política de versionado garantiza trazabilidad de los sprints completados y mantiene los ficheros activos pequeños y enfocados.
 
@@ -118,40 +121,76 @@ Fichero Backlog (`docs/backlog.md`)
   - Las entradas en `docs/backlog.md` deben ser concisas y enlazables (incluir una ruta o ancla al código relacionado si procede).
   - El asistente no implementará ítems directamente desde el backlog a menos que se muevan a los ficheros activos del sprint.
 
-Fichero Sprint Fix (`docs/sprint_fix.md`)
-------------------------------------------
-- Propósito: `docs/sprint_fix.md` es el fichero de tracking de bugs y errores reportados durante el sprint activo. Permite mantener trazabilidad de defectos encontrados, su estado y resolución.
-- Contenido: Cada entrada de bug/error debe incluir:
-  - **ID**: Identificador único del bug (ej: FIX-001, FIX-002)
+Fichero Sprint Bugs (`docs/sprint_bugs.md`)
+----------------------------------------------
+- Propósito: `docs/sprint_bugs.md` es el **contenedor inicial** de bugs reportados durante el sprint activo. Permite mantener trazabilidad de defectos encontrados y su estado actual.
+- Contenido: Cada entrada de bug debe incluir:
+  - **ID**: Identificador único del bug con prefijo BUG- (ej: BUG-001, BUG-002)
   - **Título**: Descripción breve del error
   - **Descripción**: Detalle del error, pasos para reproducir, comportamiento esperado vs observado
   - **Prioridad**: Crítica/Alta/Media/Baja
-  - **Estado**: Reportado/En progreso/Resuelto/Verificado
+  - **Estado**: Reportado/En progreso
   - **Fecha de entrada**: Fecha en que se reportó el bug
-  - **Fecha de resolución**: Fecha en que se resolvió (si aplica)
   - **Archivos afectados**: Lista de archivos relacionados con el bug
-  - **Commit de resolución**: Hash del commit que resolvió el bug (si aplica)
+- Formato ejemplo:
+  ```markdown
+  ### BUG-001 - Crash al renderizar quad sin shader
+  **ID**: BUG-001
+  **Prioridad**: Crítica
+  **Estado**: Reportado
+  **Fecha de entrada**: 2025-01-15
+  
+  **Descripción**: La aplicación crashea al intentar renderizar el quad si no se compila correctamente el shader HLSL.
+  
+  **Archivos afectados**: `src/renderer/DX12Renderer.cpp`, `shaders/quad.hlsl`
+  ```
+- Flujo de trabajo:
+  - Cuando el usuario reporte un bug durante el sprint, el asistente añadirá una entrada en `docs/sprint_bugs.md` con ID **BUG-XXX** y estado "Reportado"
+  - Al comenzar a trabajar en el bug, actualizar estado a "En progreso"
+  - Al resolver el bug (commit exitoso), el asistente **moverá automáticamente** la entrada a `docs/sprint_fix.md` con:
+    * ID cambiado a **FIX-XXX**
+    * Estado "Resuelto"
+    * Fecha de resolución
+    * Hash del commit de resolución
+    * Descripción de la solución implementada
+  - El bug se elimina de `docs/sprint_bugs.md` tras moverlo a `docs/sprint_fix.md`
+  - Los bugs pendientes se archivan como `docs/sprint_bugs_v<version>.md` al finalizar el sprint
+- El asistente NO implementará bugs directamente a menos que se indique explícitamente; primero los registrará en `docs/sprint_bugs.md` para priorización.
+
+Fichero Sprint Fix (`docs/sprint_fix.md`)
+------------------------------------------
+- Propósito: `docs/sprint_fix.md` es el **historial de bugs resueltos** durante el sprint activo. Contiene bugs que fueron reportados en `docs/sprint_bugs.md` y posteriormente solucionados.
+- Contenido: Cada entrada de bug resuelto debe incluir:
+  - **ID Original**: Identificador original del bug (BUG-XXX del sprint_bugs.md)
+  - **ID Resolución**: Identificador con prefijo FIX- (ej: FIX-001, FIX-002)
+  - **Título**: Descripción breve del error
+  - **Descripción del problema**: Detalle original del error
+  - **Solución implementada**: Descripción de cómo se resolvió el bug
+  - **Prioridad**: Crítica/Alta/Media/Baja
+  - **Fecha de entrada**: Fecha en que se reportó originalmente
+  - **Fecha de resolución**: Fecha en que se resolvió
+  - **Archivos afectados**: Lista de archivos relacionados con el bug y su resolución
+  - **Commit de resolución**: Hash del commit que resolvió el bug
 - Formato ejemplo:
   ```markdown
   ### FIX-001 - Crash al renderizar quad sin shader
-  **ID**: FIX-001
+  **ID Original**: BUG-001
   **Prioridad**: Crítica
-  **Estado**: Resuelto
   **Fecha de entrada**: 2025-01-15
   **Fecha de resolución**: 2025-01-15
   
-  **Descripción**: La aplicación crashea al intentar renderizar el quad si no se compila correctamente el shader HLSL.
+  **Descripción del problema**: La aplicación crasheaba al intentar renderizar el quad si no se compilaba correctamente el shader HLSL.
+  
+  **Solución implementada**: Se añadió validación del shader compilado antes de crear el PSO y mensaje de error descriptivo.
   
   **Archivos afectados**: `src/renderer/DX12Renderer.cpp`, `shaders/quad.hlsl`
   
   **Commit de resolución**: abc123def
   ```
 - Flujo de trabajo:
-  - Cuando el usuario reporte un bug durante el sprint, el asistente añadirá una entrada en `docs/sprint_fix.md` con estado "Reportado"
-  - Al comenzar a trabajar en el bug, actualizar estado a "En progreso"
-  - Al resolver el bug (commit exitoso), actualizar estado a "Resuelto" y añadir fecha de resolución y hash del commit
-  - Los bugs se archivan junto con los demás ficheros del sprint al finalizar (como `docs/sprint_fix_v<version>.md`)
-- El asistente NO implementará bugs directamente a menos que se indique explícitamente; primero los registrará en `docs/sprint_fix.md` para priorización.
+  - Los bugs resueltos se mueven automáticamente desde `docs/sprint_bugs.md`
+  - El asistente actualiza el ID (BUG-XXX → FIX-XXX), añade fecha de resolución, commit hash y descripción de la solución
+  - Los bugs resueltos se archivan como `docs/sprint_fix_v<version>.md` al finalizar el sprint
 
 Sincronización con TEMPLATE.md (`docs/TEMPLATE.md`)
 ----------------------------------------------------
@@ -190,15 +229,21 @@ Fichero Daily (`docs/daily.md`)
 - Contenido: El fichero solo contiene DOS cosas:
   1. **Última tarea realizada**: Número y descripción de la tarea completada (formato: "Hecho: <n> <descripción>")
   2. **Tarea actual**: Número y descripción de la siguiente tarea a realizar (formato: "Siguiente: <n> <descripción>")
-- Formato ejemplo:
+- Formato ejemplo (con sprint activo):
   ```
   # Daily Log
 
   Hecho: 3.01 Plataforma - robustez en creación de ventana y prueba WM_PAINT
   Siguiente: 4.00 Backend de render inicial - DirectX12 minimal
   ```
+- Formato ejemplo (sin sprint activo):
+  ```
+  # Daily Log
+
+  Sprint v1.1.0 cerrado. Sin sprint activo.
+  ```
 - El asistente actualiza este fichero automáticamente tras cada commit exitoso.
-- Al finalizar un sprint (release), el contenido de `daily.md` se archiva en los ficheros versionados del sprint y se crea un nuevo `daily.md` para el siguiente sprint.
+- Al finalizar un sprint (release), el contenido de `daily.md` se actualiza a "Sprint vX.Y.Z cerrado. Sin sprint activo." y se archiva en los ficheros versionados del sprint. Se crea un nuevo `daily.md` para el siguiente sprint cuando este comienza.
 
 Nota sobre estándar C++:
 - Este repositorio usa C++14 como estándar de compilación en `CMakeLists.txt`. Asegúrate de que tu entorno local/CI tenga toolchains compatibles (MSVC/Clang/GCC) antes de compilar.

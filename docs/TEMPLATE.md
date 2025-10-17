@@ -22,10 +22,11 @@ Archivos principales que el asistente debe consultar en cada sesión:
 
 - **`docs/MAIN.md`** - [LEER PRIMERO] Fundamentos del proyecto (pilares, arquitectura, estándares)
 - **`docs/sprint.md`** - Sprint actual con hitos y objetivos
-- **`docs/daily.md`** - Última tarea completada y tarea actual en progreso
+- **`docs/daily.md`** - Última tarea completada y tarea actual en progreso (o "Sprint vX.Y.Z cerrado. Sin sprint activo." si no hay sprint activo)
 - **`docs/commits.md`** - Convenciones de commits y mensajes
 - **`docs/backlog.md`** - Repositorio de ítems no incluidos en el sprint actual
-- **`docs/sprint_fix.md`** - Tracking de bugs/errores reportados durante el sprint
+- **`docs/sprint_bugs.md`** - Tracking de bugs reportados (pendientes de resolución)
+- **`docs/sprint_fix.md`** - Historial de bugs resueltos durante el sprint
 
 ---
 
@@ -146,14 +147,16 @@ Si aparece un **bloqueo técnico**, **decisión arquitectónica crítica** o **depen
 - `docs/sprint.md` - Sprint de alto nivel con hitos y objetivos
 - `docs/sprint_histories.md` - Historias de usuario para el sprint
 - `docs/sprint_tasks.md` - Tareas detalladas por historia (unidad mínima de trabajo e iteración)
-- `docs/sprint_fix.md` - Tracking de bugs/errores reportados durante el sprint
+- `docs/sprint_bugs.md` - Tracking de bugs reportados (pendientes de resolución)
+- `docs/sprint_fix.md` - Historial de bugs resueltos durante el sprint
 
 ### Al final de un sprint (release):
 1. El asistente **archivará** los ficheros de trabajo renombrándolos con la versión:
    - `docs/sprint_v<version>.md`
    - `docs/sprint_histories_v<version>.md`
    - `docs/sprint_tasks_v<version>.md`
-   - `docs/sprint_fix_v<version>.md`
+   - `docs/sprint_bugs_v<version>.md` (bugs que quedaron pendientes al cerrar sprint)
+   - `docs/sprint_fix_v<version>.md` (bugs resueltos durante el sprint)
 
 2. El asistente **creará ficheros nuevos y vacíos** con los nombres activos para el siguiente sprint
 
@@ -188,47 +191,100 @@ Esta política garantiza **trazabilidad** de los sprints completados y mantiene l
 
 ---
 
-## ?? Fichero Sprint Fix (`docs/sprint_fix.md`)
+## ?? Fichero Sprint Bugs (`docs/sprint_bugs.md`)
 
 ### Propósito:
-`docs/sprint_fix.md` es el fichero de **tracking de bugs y errores** reportados durante el sprint activo. Permite mantener trazabilidad de defectos encontrados, su estado y resolución.
+`docs/sprint_bugs.md` es el **contenedor inicial** de bugs reportados durante el sprint activo. Permite mantener trazabilidad de defectos encontrados y su estado actual.
 
 ### Contenido:
-Cada entrada de bug/error debe incluir:
-- **ID**: Identificador único del bug (ej: FIX-001, FIX-002)
+Cada entrada de bug debe incluir:
+- **ID**: Identificador único del bug con prefijo BUG- (ej: BUG-001, BUG-002)
 - **Título**: Descripción breve del error
 - **Descripción**: Detalle del error, pasos para reproducir, comportamiento esperado vs observado
 - **Prioridad**: Crítica/Alta/Media/Baja
-- **Estado**: Reportado/En progreso/Resuelto/Verificado
+- **Estado**: Reportado/En progreso
 - **Fecha de entrada**: Fecha en que se reportó el bug
-- **Fecha de resolución**: Fecha en que se resolvió (si aplica)
 - **Archivos afectados**: Lista de archivos relacionados con el bug
-- **Commit de resolución**: Hash del commit que resolvió el bug (si aplica)
 
 ### Formato ejemplo:
 ```markdown
-### FIX-001 - [PLACEHOLDER: Título del bug]
-**ID**: FIX-001
+### BUG-001 - [PLACEHOLDER: Título del bug]
+**ID**: BUG-001
 **Prioridad**: Crítica
-**Estado**: Resuelto
+**Estado**: Reportado
 **Fecha de entrada**: 2025-01-15
-**Fecha de resolución**: 2025-01-15
 
 **Descripción**: [PLACEHOLDER: Descripción detallada del error, pasos para reproducir, comportamiento esperado vs observado]
 
 **Archivos afectados**: [PLACEHOLDER: lista de archivos]
+```
+
+### Flujo de trabajo:
+1. Cuando el usuario **reporte un bug** durante el sprint, el asistente añadirá una entrada en `docs/sprint_bugs.md` con ID **BUG-XXX** y estado "Reportado"
+2. Al comenzar a trabajar en el bug, **actualizar estado** a "En progreso"
+3. Al resolver el bug (commit exitoso), el asistente **moverá automáticamente** la entrada a `docs/sprint_fix.md` con:
+   - ID cambiado a **FIX-XXX**
+   - Estado "Resuelto"
+   - Fecha de resolución
+   - Hash del commit de resolución
+   - Descripción de la solución implementada
+4. El bug se elimina de `docs/sprint_bugs.md` tras moverlo a `docs/sprint_fix.md`
+5. Los bugs pendientes se **archivan** como `docs/sprint_bugs_v<version>.md` al finalizar el sprint
+
+### Regla:
+El asistente **NO implementará** bugs directamente a menos que se indique explícitamente; primero los registrará en `docs/sprint_bugs.md` para priorización.
+
+---
+
+## ? Fichero Sprint Fix (`docs/sprint_fix.md`)
+
+### Propósito:
+`docs/sprint_fix.md` es el **historial de bugs resueltos** durante el sprint activo. Contiene bugs que fueron reportados en `docs/sprint_bugs.md` y posteriormente solucionados.
+
+### Contenido:
+Cada entrada de bug resuelto debe incluir:
+- **ID Original**: Identificador original del bug (BUG-XXX del sprint_bugs.md)
+- **ID Resolución**: Identificador con prefijo FIX- (ej: FIX-001, FIX-002)
+- **Título**: Descripción breve del error
+- **Descripción del problema**: Detalle original del error
+- **Solución implementada**: Descripción de cómo se resolvió el bug
+- **Prioridad**: Crítica/Alta/Media/Baja
+- **Fecha de entrada**: Fecha en que se reportó originalmente
+- **Fecha de resolución**: Fecha en que se resolvió
+- **Archivos afectados**: Lista de archivos relacionados con el bug y su resolución
+- **Commit de resolución**: Hash del commit que resolvió el bug
+
+### Formato ejemplo:
+```markdown
+### FIX-001 - [PLACEHOLDER: Título del bug]
+**ID Original**: BUG-001
+**Prioridad**: Crítica
+**Fecha de entrada**: 2025-01-15
+**Fecha de resolución**: 2025-01-15
+
+**Descripción del problema**: [PLACEHOLDER: Descripción detallada del error, pasos para reproducir, comportamiento esperado vs observado]
+
+**Solución implementada**: [PLACEHOLDER: Descripción de cómo se resolvió el bug]
+
+**Archivos afectados**: [PLACEHOLDER: lista de archivos relacionados con el bug y su resolución]
 
 **Commit de resolución**: [PLACEHOLDER: hash del commit]
 ```
 
 ### Flujo de trabajo:
-1. Cuando el usuario **reporte un bug** durante el sprint, el asistente añadirá una entrada en `docs/sprint_fix.md` con estado "Reportado"
-2. Al comenzar a trabajar en el bug, **actualizar estado** a "En progreso"
-3. Al resolver el bug (commit exitoso), **actualizar estado** a "Resuelto" y añadir fecha de resolución y hash del commit
-4. Los bugs se **archivan** junto con los demás ficheros del sprint al finalizar (como `docs/sprint_fix_v<version>.md`)
+1. Bug reportado ? Se registra en `docs/sprint_bugs.md` con ID **BUG-XXX**
+2. Bug en progreso ? Estado actualizado en `docs/sprint_bugs.md`
+3. Bug resuelto ? Se **mueve automáticamente** a `docs/sprint_fix.md` con:
+   - ID cambiado a **FIX-XXX**
+   - Estado "Resuelto"
+   - Fecha de resolución
+   - Hash del commit de resolución
+   - Descripción de la solución implementada
+4. Bug eliminado de `docs/sprint_bugs.md`
+5. Los bugs resueltos se **archivan** como `docs/sprint_fix_v<version>.md` al finalizar el sprint
 
 ### Regla:
-El asistente **NO implementará** bugs directamente a menos que se indique explícitamente; primero los registrará en `docs/sprint_fix.md` para priorización.
+Los bugs se mueven automáticamente desde `docs/sprint_bugs.md` al resolverse. El asistente actualiza el ID (BUG-XXX ? FIX-XXX), añade fecha de resolución, commit hash y descripción de la solución.
 
 ---
 
@@ -308,9 +364,16 @@ Hecho: 3.01 [PLACEHOLDER: Nombre de tarea completada]
 Siguiente: 4.00 [PLACEHOLDER: Nombre de siguiente tarea]
 ```
 
+### Formato ejemplo (sin sprint activo):
+```markdown
+# Daily Log
+
+Sprint v[PLACEHOLDER: versión] cerrado. Sin sprint activo.
+```
+
 ### Actualización:
 - El asistente actualiza este fichero **automáticamente** tras cada commit exitoso
-- Al finalizar un sprint (release), el contenido de `daily.md` se **archiva** en los ficheros versionados del sprint y se crea un nuevo `daily.md` para el siguiente sprint
+- Al finalizar un sprint (release), el contenido de `daily.md` se actualiza a "Sprint vX.Y.Z cerrado. Sin sprint activo." y se archiva en los ficheros versionados del sprint. Se crea un nuevo `daily.md` para el siguiente sprint cuando este comienza
 
 ---
 
