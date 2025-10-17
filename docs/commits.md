@@ -852,6 +852,52 @@ Files changed: `docs/sprint_v1.1.0.md`, `docs/sprint_histories_v1.1.0.md`, `docs
 
 Refs: Sprint v1.1.0 COMPLETADO (commit 60ddcd1)
 
+- docs: planificar sprint v1.2.0 - Forward Rendering + Multi-Pass Architecture
+
+Sprint v1.2.0 planificado con arquitectura multi-pass (Opaque + UI) y sistema de input.
+
+**Decisión arquitectónica:**
+- Implementar Forward Rendering (v1.2.0) como base sólida
+- Diseñar arquitectura extensible para Deferred (v1.3.0+) y Hybrid (v1.4.0+)
+- Seguir patrón de Unity/Unreal: Forward primero, Deferred opcional
+
+**Archivos creados:**
+- `docs/sprint.md`: Objetivos, hitos y criterios de aceptación del sprint v1.2.0
+- `docs/sprint_histories.md`: 4 historias de usuario (H1-H4)
+  * H1: Arquitectura Multi-Pass (refactorizar RenderFrame)
+  * H2: Input Manager + Toggle UI con F1
+  * H3: Geometry Simple - Triángulos en Opaque Pass
+  * H4: UI Pass Overlay Simple
+- `docs/sprint_tasks.md`: 15 tareas detalladas con pasos de implementación
+
+**Archivos actualizados:**
+- `docs/daily.md`: Preparado para iniciar tarea H1.1
+
+**Hitos del sprint:**
+1. Arquitectura Multi-Pass (Opaque + UI)
+2. Input Manager & UI Toggle (F1)
+3. Geometry Simple (Triángulos)
+4. UI Pass Overlay
+
+**Criterios de aceptación:**
+- 2 render passes separados (Opaque + UI)
+- F1 toggle para UI
+- Triángulos renderizados en Opaque Pass
+- UI overlay con toggle funcional
+- Arquitectura extensible para Deferred
+- Compilación limpia (0 errores, 0 warnings)
+- 60 FPS estables
+
+**Próxima tarea:** H1.1 - Refactorizar RenderFrame() para multi-pass
+
+**Referencia:** docs/MAIN.md (pilares fundamentales)
+
+**Estado:** Sprint v1.2.0 listo para comenzar
+
+Files changed: `docs/sprint.md`, `docs/sprint_histories.md`, `docs/sprint_tasks.md`, `docs/daily.md`
+Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
+Refs: Sprint v1.2.0 (commit a6da671)
+
 
 
 

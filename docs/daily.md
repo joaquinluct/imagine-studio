@@ -1,3 +1,4 @@
 ﻿# Daily Log
 
-Sprint v1.1.0 cerrado. Esperando planificación del Sprint v1.2.0.
+Hecho: Sprint v1.2.0 planificado (Forward Rendering + Multi-Pass Architecture)
+Siguiente: H1.1 Refactorizar RenderFrame() para multi-pass
