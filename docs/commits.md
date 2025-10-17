@@ -1184,6 +1184,108 @@ Implementada tarea H4.1 del Sprint v1.2.0 - UIPass con overlay simple (rectángu
 
 Refs: Sprint v1.2.0 - H4.1 (commit 51384f7)
 
+- docs(sprint): marcar tarea H4.2 como completada (verificación de conexión UIPass con F1)
+
+Marcada tarea H4.2 del Sprint v1.2.0 - Conectar UIPass() con toggle F1 como completada.
+
+**Verificación:**
+- ✅ `RenderForwardPass()` estructura correcta (OpaquePass → UIPass condicional → Present)
+- ✅ UIPass() verifica `m_uiVisible` antes de renderizar con early exit
+- ✅ Toggle F1 funcional (implementado en H2.3, validado en H2.4)
+- ✅ Conexión entre UIPass() y toggle F1 implementada en múltiples commits:
+  * H1.2 (baae685): Estructura multi-pass con OpaquePass() + UIPass()
+  * H2.3 (8900b88): Toggle F1 que modifica m_uiVisible y condiciona llamada a UIPass()
+  * H4.1 (51384f7): UIPass() con verificación de m_uiVisible y renderizado de overlay
+
+**Nota**: La conexión entre UIPass() y toggle F1 fue implementada progresivamente en las tareas H1.2, H2.3 y H4.1. La tarea H4.2 solo requiere verificación de que todo funciona correctamente en conjunto.
+
+**Archivos verificados:**
+- `src/renderer/DX12Renderer.cpp`: Contiene estructura multi-pass completa con condicional F1
+
+**Compilación:** No requiere recompilación (solo actualización de documentación)
+
+Files changed: `docs/sprint_tasks.md`, `docs/daily.md`, `docs/commits.md`
+Refs: Sprint v1.2.0 - H4.2 (verificación completada)
+
+- test(renderer): validar UI Pass con toggle F1 - testing visual completado (H4.3)
+
+Completada tarea H4.3 del Sprint v1.2.0 - Validar UI Pass con toggle F1 (testing visual).
+
+**Resultado del testing**:
+- ✅ UI visible al iniciar aplicación (rectángulo blanco semi-transparente 40%x40% en top-left corner)
+- ✅ F1 toggle funcional:
+  * Primera presión de F1: UI desaparece (logs: "UI visibility toggled: hidden")
+  * Segunda presión de F1: UI reaparece (logs: "UI visibility toggled: visible")
+  * Estado persistente entre frames sin parpadeo
+- ✅ UI renderizada como overlay:
+  * UIPass() ejecutado después de OpaquePass()
+  * Sin depth buffer (overlay puro)
+  * UI aparece delante de geometría de fondo (triángulos de colores)
+- ✅ Integración completa multi-pass funcional:
+  * Opaque Pass renderiza geometría base (triángulos con colores interpolados)
+  * UI Pass renderiza overlay condicional (controlado por F1)
+  * Present() una vez al final de todos los passes
+- ✅ 60 FPS estables con VSync
+
+**Estructura validada**:
+```cpp
+RenderFrame() → RenderForwardPass() → {
+    OpaquePass();        // Geometría base (triángulos colores)
+    if (m_uiVisible) {   // Toggle controlado por F1
+        UIPass();        // Overlay UI (rectángulo blanco)
+    }
+    Present();           // Una vez al final
+}
+```
+
+**Nota**: La validación visual confirma que la arquitectura multi-pass (Opaque + UI) implementada en el Sprint v1.2.0 es completamente funcional. El toggle F1 permite mostrar/ocultar el UI overlay sin afectar el renderizado de geometría base. La implementación cumple todos los criterios de aceptación del sprint.
+
+✅ **SPRINT v1.2.0 COMPLETADO** ✅
+- 4/4 historias completadas (100%)
+- 15/15 tareas completadas (100%)
+- 0 bugs reportados
+- Arquitectura multi-pass funcional (Opaque + UI)
+- Input Manager con toggle F1 implementado
+- UI overlay con toggle funcional
+- Geometría renderizada en Opaque Pass
+- Preparado para evolución a Deferred Rendering (v1.3.0+)
+
+**Historia H4 completada** (UI Pass Overlay Simple) ✅
+- H4.1: Implementar UIPass() con overlay simple ✅
+- H4.2: Conectar UIPass() con toggle F1 ✅
+- H4.3: Validar UI Pass con toggle F1 (testing visual) ✅
+
+**Compilación:** CMake Debug OK + MSBuild VS Debug OK (0 errores, 0 warnings)
+
+Files changed: `docs/sprint_tasks.md`, `docs/daily.md`, `docs/commits.md`
+Refs: Sprint v1.2.0 - H4.3 ✅ SPRINT COMPLETADO
+
+- chore: Cerrar Sprint v1.2.0 y archivar ficheros versionados
+
+Archivados ficheros de sprint v1.2.0:
+- docs/sprint.md → docs/sprint_v1.2.0.md
+- docs/sprint_histories.md → docs/sprint_histories_v1.2.0.md
+- docs/sprint_tasks.md → docs/sprint_tasks_v1.2.0.md
+- docs/sprint_bugs.md → docs/sprint_bugs_v1.2.0.md (vacío)
+- docs/sprint_fix.md → docs/sprint_fix_v1.2.0.md (vacío)
+
+Creados nuevos ficheros vacíos para siguiente sprint:
+- docs/sprint.md (placeholder)
+- docs/sprint_histories.md (placeholder)
+- docs/sprint_tasks.md (placeholder)
+- docs/sprint_bugs.md (placeholder)
+- docs/sprint_fix.md (placeholder)
+
+Actualizado docs/daily.md: Sprint v1.2.0 cerrado. Sin sprint activo.
+
+Sprint v1.2.0 cerrado exitosamente (15/15 tareas completadas)
+Ficheros versionados y archivados correctamente
+Compilación limpia (CMake + MSBuild, 0 errores, 0 warnings)
+
+Estado:
+- Hecho: Cerrar Sprint v1.2.0 y archivar ficheros versionados
+- Siguiente: Planificar Sprint v1.3.0 (próxima sesión)
+
 
 
 
