@@ -675,8 +675,24 @@ void DX12Renderer::RenderForwardPass()
     // Pass 2: UI (condicional - H2.3)
     if (m_uiVisible)
     {
-        UIPass(); // TODO: Implementar contenido real en H4
+        UIPass();
     }
+    
+#if defined(_WIN32) && defined(_MSC_VER)
+    // Present frame once at the end of all passes
+    if (device_ && device_->HasNativeDevice() && m_swapChain)
+    {
+        HRESULT hr = m_swapChain->Present(1, 0); // 1 = VSync on, 0 = no flags
+        if (FAILED(hr))
+        {
+            CORE_LOG_ERROR("DX12Renderer::RenderForwardPass: Failed to present frame");
+            return;
+        }
+        
+        // Update frame index for next frame
+        m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
+    }
+#endif
 }
 
 void DX12Renderer::OpaquePass()
@@ -820,16 +836,7 @@ void DX12Renderer::OpaquePass()
         WaitForSingleObject(m_fenceEvent, INFINITE);
     }
     
-    // Present the frame with VSync enabled (60 FPS)
-    hr = m_swapChain->Present(1, 0); // 1 = VSync on, 0 = no flags
-    if (FAILED(hr))
-    {
-        CORE_LOG_ERROR("DX12Renderer: Failed to present frame");
-        return;
-    }
-    
-    // Update frame index for next frame
-    m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
+    // NOTE: Present() is called once at the end of RenderForwardPass(), not here
 #else
     // Stub: call ComposeUI for composition and present the render target
     // Simulate recording commands
@@ -844,8 +851,235 @@ void DX12Renderer::OpaquePass()
 
 void DX12Renderer::UIPass()
 {
-    // TODO: Implementar UI Pass en H4
-    // Este pass renderizará UI overlay después del Opaque Pass
+    // Early exit if UI is not visible (controlled by F1 toggle)
+    if (!m_uiVisible)
+    {
+        return;
+    }
+    
+#if defined(_WIN32) && defined(_MSC_VER)
+    // Only render if we have native DX12 device
+    if (!device_ || !device_->HasNativeDevice())
+    {
+        return;
+    }
+    
+    // Get command queue from device
+    ID3D12CommandQueue* commandQueue = static_cast<ID3D12CommandQueue*>(device_->NativeCommandQueue());
+    if (!commandQueue)
+    {
+        CORE_LOG_ERROR("DX12Renderer::UIPass: No command queue available");
+        return;
+    }
+    
+    // Reset command allocator for UI pass
+    HRESULT hr = m_commandAllocator->Reset();
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer::UIPass: Failed to reset command allocator");
+        return;
+    }
+    
+    // Reset command list with PSO for UI rendering
+    hr = m_commandList->Reset(m_commandAllocator, m_pipelineState);
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer::UIPass: Failed to reset command list");
+        return;
+    }
+    
+    // Set root signature
+    m_commandList->SetGraphicsRootSignature(m_rootSignature);
+    
+    // Set viewport (1920x1080 Full HD)
+    D3D12_VIEWPORT viewport = {};
+    viewport.TopLeftX = 0.0f;
+    viewport.TopLeftY = 0.0f;
+    viewport.Width = 1920.0f;
+    viewport.Height = 1080.0f;
+    viewport.MinDepth = 0.0f;
+    viewport.MaxDepth = 1.0f;
+    m_commandList->RSSetViewports(1, &viewport);
+    
+    // Set scissor rect (full viewport)
+    D3D12_RECT scissorRect = {};
+    scissorRect.left = 0;
+    scissorRect.top = 0;
+    scissorRect.right = 1920;
+    scissorRect.bottom = 1080;
+    m_commandList->RSSetScissorRects(1, &scissorRect);
+    
+    // Transition render target from PRESENT to RENDER_TARGET state
+    D3D12_RESOURCE_BARRIER barrierToRT = {};
+    barrierToRT.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    barrierToRT.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    barrierToRT.Transition.pResource = m_renderTargets[m_frameIndex];
+    barrierToRT.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+    barrierToRT.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    barrierToRT.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    m_commandList->ResourceBarrier(1, &barrierToRT);
+    
+    // Get RTV handle for current back buffer
+    D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
+    rtvHandle.ptr += m_frameIndex * m_rtvDescriptorSize;
+    
+    // Set render target (no clear, render on top of opaque pass)
+    m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+    
+    // Set primitive topology
+    m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    
+    // Create UI overlay quad (small rectangle in top-left corner)
+    // This will be a simple colored quad to indicate UI is active
+    // Position: top-left corner, Size: 20% of screen width/height
+    // Color: Semi-transparent white (to contrast with background)
+    
+    struct Vertex {
+        float pos[3];  // Position (x, y, z)
+        float col[4];  // Color (r, g, b, a)
+    };
+    
+    // UI quad vertices (NDC coordinates: -1.0 to 1.0)
+    // Top-left corner: x=-1.0 to -0.6, y=0.6 to 1.0
+    // Triangle 1: bottom-left, top-left, bottom-right (clockwise)
+    // Triangle 2: bottom-right, top-left, top-right (clockwise)
+    Vertex uiVertices[] = {
+        // Triangle 1 (clockwise winding)
+        {{-1.0f,  0.6f, 0.0f}, {1.0f, 1.0f, 1.0f, 0.7f}}, // Bottom-left, white semi-transparent
+        {{-1.0f,  1.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 0.7f}}, // Top-left, white semi-transparent
+        {{-0.6f,  0.6f, 0.0f}, {1.0f, 1.0f, 1.0f, 0.7f}}, // Bottom-right, white semi-transparent
+        
+        // Triangle 2 (clockwise winding)
+        {{-0.6f,  0.6f, 0.0f}, {1.0f, 1.0f, 1.0f, 0.7f}}, // Bottom-right, white semi-transparent
+        {{-1.0f,  1.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 0.7f}}, // Top-left, white semi-transparent
+        {{-0.6f,  1.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 0.7f}}, // Top-right, white semi-transparent
+    };
+    
+    const UINT uiVertexBufferSize = sizeof(uiVertices);
+    
+    // Create temporary upload heap for UI vertices (CPU -> GPU transfer)
+    ID3D12Resource* uiVertexBufferUpload = nullptr;
+    
+    D3D12_HEAP_PROPERTIES uploadHeapProps = {};
+    uploadHeapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
+    uploadHeapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+    uploadHeapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+    uploadHeapProps.CreationNodeMask = 1;
+    uploadHeapProps.VisibleNodeMask = 1;
+    
+    D3D12_RESOURCE_DESC uploadBufferDesc = {};
+    uploadBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+    uploadBufferDesc.Alignment = 0;
+    uploadBufferDesc.Width = uiVertexBufferSize;
+    uploadBufferDesc.Height = 1;
+    uploadBufferDesc.DepthOrArraySize = 1;
+    uploadBufferDesc.MipLevels = 1;
+    uploadBufferDesc.Format = DXGI_FORMAT_UNKNOWN;
+    uploadBufferDesc.SampleDesc.Count = 1;
+    uploadBufferDesc.SampleDesc.Quality = 0;
+    uploadBufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+    uploadBufferDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+    
+    ID3D12Device* d3dDevice = static_cast<ID3D12Device*>(device_->NativeDevice());
+    hr = d3dDevice->CreateCommittedResource(
+        &uploadHeapProps,
+        D3D12_HEAP_FLAG_NONE,
+        &uploadBufferDesc,
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr,
+        IID_PPV_ARGS(&uiVertexBufferUpload)
+    );
+    
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer::UIPass: Failed to create UI vertex buffer upload heap");
+        return;
+    }
+    
+    // Map and copy UI vertex data
+    void* pUIVertexDataBegin = nullptr;
+    D3D12_RANGE readRange = { 0, 0 };
+    hr = uiVertexBufferUpload->Map(0, &readRange, &pUIVertexDataBegin);
+    
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer::UIPass: Failed to map UI vertex buffer");
+        uiVertexBufferUpload->Release();
+        return;
+    }
+    
+    memcpy(pUIVertexDataBegin, uiVertices, uiVertexBufferSize);
+    uiVertexBufferUpload->Unmap(0, nullptr);
+    
+    // Configure vertex buffer view for UI quad
+    D3D12_VERTEX_BUFFER_VIEW uiVertexBufferView = {};
+    uiVertexBufferView.BufferLocation = uiVertexBufferUpload->GetGPUVirtualAddress();
+    uiVertexBufferView.StrideInBytes = sizeof(Vertex); // 28 bytes
+    uiVertexBufferView.SizeInBytes = uiVertexBufferSize; // 6 * 28 = 168 bytes
+    
+    // Set UI vertex buffer
+    m_commandList->IASetVertexBuffers(0, 1, &uiVertexBufferView);
+    
+    // Set root constants (MVP identity matrix)
+    m_commandList->SetGraphicsRoot32BitConstants(0, 16, m_mvpMatrix, 0);
+    
+    // DRAW CALL - 6 vertices (2 triangles forming UI quad)
+    m_commandList->DrawInstanced(6, 1, 0, 0);
+    
+    // Transition render target back to PRESENT state
+    D3D12_RESOURCE_BARRIER barrierToPresent = {};
+    barrierToPresent.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    barrierToPresent.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    barrierToPresent.Transition.pResource = m_renderTargets[m_frameIndex];
+    barrierToPresent.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    barrierToPresent.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+    barrierToPresent.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    m_commandList->ResourceBarrier(1, &barrierToPresent);
+    
+    // Close command list
+    hr = m_commandList->Close();
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer::UIPass: Failed to close command list");
+        uiVertexBufferUpload->Release();
+        return;
+    }
+    
+    // Execute command list
+    ID3D12CommandList* ppCommandLists[] = { m_commandList };
+    commandQueue->ExecuteCommandLists(1, ppCommandLists);
+    
+    // Signal fence
+    const UINT64 fenceValueForUIPass = m_fenceValue;
+    hr = commandQueue->Signal(m_fence, fenceValueForUIPass);
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer::UIPass: Failed to signal fence");
+        uiVertexBufferUpload->Release();
+        return;
+    }
+    
+    m_fenceValue++;
+    
+    // Wait for GPU to finish (synchronous for now)
+    if (m_fence->GetCompletedValue() < fenceValueForUIPass)
+    {
+        hr = m_fence->SetEventOnCompletion(fenceValueForUIPass, m_fenceEvent);
+        if (FAILED(hr))
+        {
+            CORE_LOG_ERROR("DX12Renderer::UIPass: Failed to set event on fence completion");
+            uiVertexBufferUpload->Release();
+            return;
+        }
+        
+        WaitForSingleObject(m_fenceEvent, INFINITE);
+    }
+    
+    // Clean up temporary upload buffer
+    uiVertexBufferUpload->Release();
+    
+    // NOTE: Present() is called once at the end of RenderForwardPass(), not here
+#endif
 }
 
 bool DX12Renderer::ComposeUI()
