@@ -433,3 +433,31 @@ Files changed: src/renderer/DX12Renderer.h, src/renderer/DX12Renderer.cpp
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
 Refs: T2.3
 
+- feat(renderer): implement Vertex Buffer with Upload and Default Heap (T3.1)
+
+Implemented Task T3.1 - Create Vertex Buffer with Upload heap staging and Default heap GPU storage following AAA standards.
+
+Key changes:
+- Defined Vertex structure (pos[3] + col[4] = 28 bytes per vertex)
+- Created 6 vertices for colored quad (2 triangles with clockwise winding):
+  * Triangle 1: bottom-left (red), bottom-right (green), top-left (blue)
+  * Triangle 2: bottom-right (green), top-right (yellow), top-left (blue)
+- Created Upload heap (D3D12_HEAP_TYPE_UPLOAD) for CPU-to-GPU staging
+- Mapped upload buffer and copied vertex data with memcpy
+- Created Default heap (D3D12_HEAP_TYPE_DEFAULT) for optimal GPU performance
+- Recorded copy command with CopyBufferRegion
+- Transitioned resource state: COPY_DEST -> VERTEX_AND_CONSTANT_BUFFER (ResourceBarrier)
+- Executed copy command and synchronized with Fence (Signal/Wait pattern)
+- Configured Vertex Buffer View:
+  * GPU virtual address from vertex buffer
+  * Stride: 28 bytes (sizeof Vertex)
+  * Size: 168 bytes (6 vertices ? 28 bytes)
+- Added proper cleanup in Shutdown() - release upload buffer and vertex buffer before PSO
+- Implementation follows DX12 best practices (explicit barriers, GPU sync, resource management)
+
+Files changed: src/renderer/DX12Renderer.h, src/renderer/DX12Renderer.cpp
+Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
+Refs: T3.1
+
+
+
