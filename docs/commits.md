@@ -896,7 +896,23 @@ Sprint v1.2.0 planificado con arquitectura multi-pass (Opaque + UI) y sistema de
 
 Files changed: `docs/sprint.md`, `docs/sprint_histories.md`, `docs/sprint_tasks.md`, `docs/daily.md`
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
-Refs: Sprint v1.2.0 (commit a6da671)
+Refs: Sprint v1.2.0 (commit d9b3906)
+
+- fix(encoding): normalizar UTF-8 con BOM y CRLF en archivos del sprint v1.2.0
+
+Corregido encoding de archivos creados/modificados durante la planificación del sprint v1.2.0.
+
+Ejecutado `check-encoding.ps1 -Fix` para corregir:
+- Mixed line endings en `backlog.md`, `commits.md`, `daily.md`
+- Missing UTF-8 BOM en `sprint.md`, `sprint_tasks.md`
+
+Normalizado índice Git con `git add --renormalize`.
+
+**Verificación:** Todos los archivos con encoding correcto (UTF-8 con BOM + CRLF).
+
+Files changed: `docs/sprint.md`, `docs/sprint_tasks.md`, `docs/backlog.md`, `docs/commits.md`, `docs/daily.md`, `Imagine Studio.vcxproj`, `metrics_asset_manager.json`
+Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
+Refs: Sprint v1.2.0 encoding fix (commit 0a64bc0)
 
 
 
