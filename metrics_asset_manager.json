@@ -5,7 +5,7 @@
   "cancelled": 0,
   "by_priority": {
     "0": { "requested": 1, "completed": 0, "cancelled": 0, "total_ms": 0 },
-    "1": { "requested": 4, "completed": 2, "cancelled": 0, "total_ms": 13 },
-    "2": { "requested": 2, "completed": 1, "cancelled": 0, "total_ms": 4 }
+    "1": { "requested": 4, "completed": 2, "cancelled": 0, "total_ms": 0 },
+    "2": { "requested": 2, "completed": 1, "cancelled": 0, "total_ms": 0 }
   }
 }
