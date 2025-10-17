@@ -652,6 +652,37 @@ Benefits:
 Files changed: src/renderer/DX12Renderer.cpp
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
 
+- docs: añadir tracking de bugs con sprint_fix.md y sincronización con TEMPLATE.md
+
+Añadida metodología completa para tracking de bugs y sincronización de documentación genérica:
+
+1. **Nuevo fichero sprint_fix.md**:
+   - Tracking de bugs/errores reportados durante sprint activo
+   - Campos: ID, Título, Descripción, Prioridad, Estado, Fechas, Archivos, Commit
+   - Estados: Reportado/En progreso/Resuelto/Verificado
+   - Se archiva junto con otros ficheros del sprint (sprint_fix_v<version>.md)
+   
+2. **Regla de sincronización con TEMPLATE.md**:
+   - Siempre que se modifique .github/copilot-instructions.md (metodología), actualizar TEMPLATE.md
+   - Mantener TEMPLATE.md genérico con [PLACEHOLDER] para reusabilidad
+   - Asegura que template esté actualizado para otros proyectos
+   
+3. **Actualización proceso de versionado**:
+   - Incluye sprint_fix.md en archivos activos del sprint
+   - Se archiva como sprint_fix_v<version>.md al finalizar sprint
+   
+4. **Actualización TEMPLATE.md**:
+   - Añadida sección "Fichero Sprint Fix" con formato genérico
+   - Añadida sección "Sincronización con Metodología Genérica"
+   - Actualizada lista de archivos principales de trabajo
+   - Actualizada lista de recursos adicionales
+
+Sprint v1.1.0 completado sin bugs reportados (sprint_fix.md inicial vacío).
+
+Files changed: `.github/copilot-instructions.md`, `docs/TEMPLATE.md`, `docs/sprint_fix.md` (created)
+Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
+Refs: Sprint v1.1.0 finalizado - mejoras metodológicas
+
 
 
 

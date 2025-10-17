@@ -1,4 +1,4 @@
 # Daily Log
 
-Hecho: T4.4 Implementar Present con VSync - SPRINT v1.1.0 COMPLETADO ?
-Siguiente: Sprint v1.1.0 finalizado - planificar siguiente sprint
+Hecho: Metodología - añadir sprint_fix.md para tracking de bugs y sincronización con TEMPLATE.md
+Siguiente: Sprint v1.1.0 finalizado - archivar sprint y planificar v1.2.0
