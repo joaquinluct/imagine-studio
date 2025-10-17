@@ -74,6 +74,11 @@ private:
     ID3D12Resource* m_vertexBuffer = nullptr;        // GPU default heap (final location)
     ID3D12Resource* m_vertexBufferUpload = nullptr;  // CPU upload heap (staging)
     D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView = {}; // View for binding to pipeline
+    
+    // Constant buffer for MVP matrix
+    ID3D12Resource* m_constantBuffer = nullptr;      // Upload heap (persistently mapped)
+    void* m_cbMappedData = nullptr;                  // Mapped pointer for updates
+    float m_mvpMatrix[16] = {};                       // MVP matrix data (identity)
 #endif
 };
 

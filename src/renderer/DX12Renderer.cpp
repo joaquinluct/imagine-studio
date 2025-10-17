@@ -586,6 +586,69 @@ void DX12Renderer::Initialize(HWND hwnd)
     m_vertexBufferView.SizeInBytes = vertexBufferSize;  // 6 * 28 = 168 bytes
     
     CORE_LOG_INFO("DX12Renderer: Vertex buffer view configured (6 vertices, stride 28 bytes)");
+    
+    // Create constant buffer for MVP matrix (identity matrix for "Hola Mundo")
+    // Initialize MVP matrix to identity
+    m_mvpMatrix[0] = 1.0f;  m_mvpMatrix[1] = 0.0f;  m_mvpMatrix[2] = 0.0f;  m_mvpMatrix[3] = 0.0f;
+    m_mvpMatrix[4] = 0.0f;  m_mvpMatrix[5] = 1.0f;  m_mvpMatrix[6] = 0.0f;  m_mvpMatrix[7] = 0.0f;
+    m_mvpMatrix[8] = 0.0f;  m_mvpMatrix[9] = 0.0f;  m_mvpMatrix[10] = 1.0f; m_mvpMatrix[11] = 0.0f;
+    m_mvpMatrix[12] = 0.0f; m_mvpMatrix[13] = 0.0f; m_mvpMatrix[14] = 0.0f; m_mvpMatrix[15] = 1.0f;
+    
+    // Constant buffers must be 256-byte aligned
+    const UINT constantBufferSize = (sizeof(m_mvpMatrix) + 255) & ~255; // Align to 256 bytes
+    
+    // Create constant buffer in upload heap (CPU writable, persistently mapped)
+    D3D12_HEAP_PROPERTIES cbUploadHeapProps = {};
+    cbUploadHeapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
+    cbUploadHeapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+    cbUploadHeapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+    cbUploadHeapProps.CreationNodeMask = 1;
+    cbUploadHeapProps.VisibleNodeMask = 1;
+    
+    D3D12_RESOURCE_DESC cbDesc = {};
+    cbDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+    cbDesc.Alignment = 0;
+    cbDesc.Width = constantBufferSize;
+    cbDesc.Height = 1;
+    cbDesc.DepthOrArraySize = 1;
+    cbDesc.MipLevels = 1;
+    cbDesc.Format = DXGI_FORMAT_UNKNOWN;
+    cbDesc.SampleDesc.Count = 1;
+    cbDesc.SampleDesc.Quality = 0;
+    cbDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+    cbDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+    
+    hr = d3dDevice->CreateCommittedResource(
+        &cbUploadHeapProps,
+        D3D12_HEAP_FLAG_NONE,
+        &cbDesc,
+        D3D12_RESOURCE_STATE_GENERIC_READ, // Upload heap must be in GENERIC_READ state
+        nullptr,
+        IID_PPV_ARGS(&m_constantBuffer)
+    );
+    
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to create constant buffer");
+        return;
+    }
+    
+    CORE_LOG_INFO("DX12Renderer: Constant buffer created (256-byte aligned)");
+    
+    // Map constant buffer persistently (will remain mapped for updates)
+    D3D12_RANGE cbReadRange = { 0, 0 }; // We do not intend to read from this resource on the CPU
+    hr = m_constantBuffer->Map(0, &cbReadRange, &m_cbMappedData);
+    
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to map constant buffer");
+        return;
+    }
+    
+    // Copy initial MVP matrix data to constant buffer
+    memcpy(m_cbMappedData, m_mvpMatrix, sizeof(m_mvpMatrix));
+    
+    CORE_LOG_INFO("DX12Renderer: Constant buffer mapped and initialized with identity matrix");
 #endif
     
     allocator_ = new CommandAllocator();
@@ -630,6 +693,19 @@ void DX12Renderer::OnAssetLoaded(const std::string& path)
 void DX12Renderer::Shutdown()
 {
 #if defined(_WIN32) && defined(_MSC_VER)
+    // Unmap and release constant buffer
+    if (m_constantBuffer)
+    {
+        if (m_cbMappedData)
+        {
+            m_constantBuffer->Unmap(0, nullptr);
+            m_cbMappedData = nullptr;
+        }
+        m_constantBuffer->Release();
+        m_constantBuffer = nullptr;
+        CORE_LOG_INFO("DX12Renderer: Constant buffer released");
+    }
+    
     // Release vertex buffer resources
     if (m_vertexBufferUpload)
     {
