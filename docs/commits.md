@@ -1157,6 +1157,33 @@ Marcada tarea H3.3 del Sprint v1.2.0 - Crear PSO para triángulos como completad
 Files changed: `docs/sprint_tasks.md`, `docs/daily.md`, `docs/commits.md`
 Refs: Sprint v1.2.0 - H3.3 (verificación completada)
 
+- feat(renderer): implementar UIPass() con overlay simple (H4.1)
+
+Implementada tarea H4.1 del Sprint v1.2.0 - UIPass con overlay simple (rectángulo blanco semi-transparente).
+
+**Cambios:**
+- Implementado UIPass() con verificación de m_uiVisible (early exit si oculto)
+- Creado UI overlay simple: rectángulo blanco semi-transparente (70% opacidad) en esquina superior izquierda
+- UI quad: 40% ancho x 40% alto, posición top-left corner
+- Reutiliza PSO y shader de OpaquePass (mismo vertex format y pipeline)
+- Sin depth buffer (overlay puro sobre Opaque Pass)
+- Upload heap temporal para UI vertices (creado/destruido por frame)
+- Refactorizado manejo de Present():
+  * OpaquePass() NO hace Present (solo renderiza)
+  * UIPass() NO hace Present (solo renderiza)
+  * RenderForwardPass() hace Present UNA VEZ al final (después de todos los passes)
+
+**Implementación:**
+- 6 vértices (2 triángulos, winding clockwise)
+- Colores: blanco semi-transparente {1.0f, 1.0f, 1.0f, 0.7f}
+- NDC coordinates: x=-1.0 to -0.6, y=0.6 to 1.0
+- MVP matrix: identidad (sin transformaciones)
+
+**Archivos afectados:** src/renderer/DX12Renderer.cpp
+**Compilación:** CMake Debug OK + MSBuild VS Debug OK (0 errores, 0 warnings)
+
+Refs: Sprint v1.2.0 - H4.1 (commit 51384f7)
+
 
 
 

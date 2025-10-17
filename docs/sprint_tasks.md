@@ -281,20 +281,34 @@ El PSO está optimizado para renderizar triángulos con colores interpolados y e
 ## Historia 4: UI Pass Overlay Simple (H4)
 
 ### Tarea H4.1: Implementar UIPass() con overlay simple
-**Estado**: Pendiente  
+**Estado**: ✅ Completada  
 **Archivos afectados**: `src/renderer/DX12Renderer.cpp`
 
-**Descripci�n**: Implementar `UIPass()` para renderizar un overlay simple (texto o rect�ngulo) despu�s de `OpaquePass()`.
+**Descripción**: Implementar `UIPass()` para renderizar un overlay simple (rectángulo) después de `OpaquePass()`.
 
 **Pasos**:
-1. En `UIPass()`:
-   - Verificar `if (!m_uiVisible) return;`
-   - Renderizar overlay simple (texto "UI Active" o rect�ngulo)
-   - No usar depth buffer (overlay puro)
-2. Opciones de implementaci�n:
-   - **Opci�n A**: Reutilizar DirectWrite de v1.1.0 para texto
-   - **Opci�n B**: Crear vertex buffer minimal para quad de UI con color
-3. Compilar y validar (0 errores, 0 warnings)
+1. ✅ En `UIPass()`:
+   - Verificar `if (!m_uiVisible) return;` (early exit si UI oculto)
+   - Renderizar overlay simple: rectángulo blanco semi-transparente
+   - Sin depth buffer (overlay puro)
+2. ✅ Implementación elegida: **Opción B** (vertex buffer minimal para quad de UI con color)
+   - Razón: DirectWrite no disponible en código actual, vertex buffer es más directo
+   - UI quad: 40% ancho x 40% alto, posición top-left corner
+   - Colores: blanco semi-transparente {1.0f, 1.0f, 1.0f, 0.7f}
+   - Reutiliza PSO y shader de OpaquePass
+3. ✅ Refactorizado manejo de Present():
+   - OpaquePass() NO hace Present (solo renderiza)
+   - UIPass() NO hace Present (solo renderiza)
+   - RenderForwardPass() hace Present UNA VEZ al final
+4. ✅ Compilar y validar (0 errores, 0 warnings)
+
+**Implementación**:
+- 6 vértices (2 triángulos, winding clockwise)
+- Upload heap temporal para UI vertices (creado/destruido por frame)
+- MVP matrix: identidad (sin transformaciones)
+- NDC coordinates: x=-1.0 to -0.6, y=0.6 to 1.0
+
+**Commit**: 51384f7
 
 ---
 
@@ -346,8 +360,8 @@ El PSO está optimizado para renderizar triángulos con colores interpolados y e
 | H3 | H3.3 | Crear PSO triángulos | ✅ Completada |
 | H3 | H3.4 | Renderizar triángulos OpaquePass | ✅ Completada |
 | H3 | H3.5 | Validar renderizado triángulos | ✅ Completada |
-| H4 | H4.1 | Implementar UIPass overlay | Pendiente |
+| H4 | H4.1 | Implementar UIPass overlay | ✅ Completada |
 | H4 | H4.2 | Conectar UIPass con F1 | Pendiente |
 | H4 | H4.3 | Validar UI Pass con F1 | Pendiente |
 
-**Total**: 15 tareas (12 completadas, 3 pendientes)
+**Total**: 15 tareas (13 completadas, 2 pendientes)
