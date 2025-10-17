@@ -1,4 +1,4 @@
 ﻿# Daily Log
 
-Hecho: H2.3 Implementar toggle de UI con F1
-Siguiente: H2.4 Validar toggle de UI (testing manual)
+Hecho: H2.4 Validar toggle de UI (testing manual)
+Siguiente: H3.4 Renderizar triángulos en OpaquePass()
