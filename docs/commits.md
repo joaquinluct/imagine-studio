@@ -743,3 +743,58 @@ Refs: Sprint v1.1.0 finalizado - metodolog�a bugs completada
 
 
 
+
+- fix(encoding): establish UTF-8 with BOM and CRLF standard + encoding checker
+
+**PROBLEMA IDENTIFICADO:**
+Los archivos se corrompían debido a codificaciones y line endings mixtos:
+- Git almacena archivos con LF en repositorio
+- Herramientas (GitHub Copilot, editores) crean archivos con LF por defecto
+- El proyecto espera CRLF para Windows
+- Caracteres especiales (emojis, tildes) se corrompían sin UTF-8 BOM
+- Resultado: Line endings mixtos (CRLF + LF) causando problemas de visualización
+
+**SOLUCIÓN IMPLEMENTADA:**
+
+1. **Actualizado .gitattributes:**
+   - Encoding explícito UTF-8 (working-tree-encoding) para todos los archivos de texto
+   - Reglas claras de CRLF para archivos Windows
+   - Añadidos archivos .hlsl shader a reglas de texto
+   - Comentarios de documentación explicando la política de encoding
+
+2. **Creado scripts/check-encoding.ps1:**
+   - Verificador automatizado de UTF-8 BOM y line endings
+   - Puede auto-corregir problemas con flag -Fix
+   - Verifica todos los archivos de texto (md, cpp, h, hlsl, etc.)
+   - Retorna exit code para integración CI
+
+3. **Actualizado .github/copilot-instructions.md:**
+   - Reglas obligatorias de encoding para asistente IA
+   - UTF-8 con BOM requerido para todos los archivos de texto
+   - CRLF requerido para archivos Windows
+   - Referencia al script para corregir problemas de encoding
+   - Advertencia clara de que mensajes Git 'LF will be replaced by CRLF' son esperados
+
+4. **Normalizados todos los archivos existentes:**
+   - Convertidos 13 archivos a UTF-8 con BOM + CRLF
+   - Corregidos line endings mixtos en markdown y archivos fuente
+   - Ejecutado git add --renormalize para actualizar índice Git
+
+**VERIFICACIÓN:**
+- CMake Debug build: OK (0 errors, 0 warnings)
+- MSBuild VS Debug build: OK (0 errors, 0 warnings)
+- Encoding checker: OK (todos los archivos limpios)
+
+**IMPACTO:**
+Este fix previene permanentemente problemas de corrupción de encoding futuros.
+
+**CÓMO USAR:**
+- Para verificar encoding: .\scripts\check-encoding.ps1
+- Para auto-corregir: .\scripts\check-encoding.ps1 -Fix
+- Después de fix: git add --renormalize .
+
+Files changed: .gitattributes, .github/copilot-instructions.md, scripts/check-encoding.ps1 (new)
+Files normalized: 13 files (docs/, src/, README.md)
+Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
+Refs: Sprint v1.1.0 closed - encoding infrastructure established
+
