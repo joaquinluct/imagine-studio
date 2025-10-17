@@ -34,6 +34,11 @@ public:
     void OpaquePass();
     void UIPass();
     
+    // Deferred rendering (v1.3.0+ - FUTURO, SOLO COMENTARIOS)
+    // void RenderDeferredPass();  // v1.3.0+
+    // void GBufferPass();         // v1.3.0+
+    // void LightingPass();        // v1.3.0+
+    
     // Prepare render target for UI composition
     bool ComposeUI();
     // Notify renderer that an asset loaded (path)
@@ -85,6 +90,11 @@ private:
     ID3D12Resource* m_constantBuffer = nullptr;      // Upload heap (persistently mapped)
     void* m_cbMappedData = nullptr;                  // Mapped pointer for updates
     float m_mvpMatrix[16] = {};                       // MVP matrix data (identity)
+    
+    // Future G-Buffer textures (v1.3.0+ - Deferred Rendering)
+    // ID3D12Resource* m_gBufferAlbedo = nullptr;   // v1.3.0+ - Albedo (base color) texture
+    // ID3D12Resource* m_gBufferNormal = nullptr;   // v1.3.0+ - World-space normals texture
+    // ID3D12Resource* m_gBufferDepth = nullptr;    // v1.3.0+ - Depth texture
 #endif
 };
 
