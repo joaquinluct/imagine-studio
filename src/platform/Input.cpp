@@ -3,6 +3,10 @@ namespace Platform {
 
 void InputManager::Update(HWND hwnd)
 {
+    // Store previous frame key states for edge detection
+    for (int i = 0; i < 256; ++i)
+        prevKeyStates_[i] = keyStates_[i];
+
     // sample keyboard
     for (int i = 0; i < 256; ++i)
         keyStates_[i] = GetAsyncKeyState(i);
@@ -23,6 +27,14 @@ void InputManager::Update(HWND hwnd)
 bool InputManager::IsKeyDown(int vkey) const
 {
     return (keyStates_[vkey] & 0x8000) != 0;
+}
+
+bool InputManager::IsKeyPressed(int vkey) const
+{
+    // Rising edge: key is down this frame but was not down previous frame
+    bool isDownNow = (keyStates_[vkey] & 0x8000) != 0;
+    bool wasDownBefore = (prevKeyStates_[vkey] & 0x8000) != 0;
+    return isDownNow && !wasDownBefore;
 }
 
 bool InputManager::IsMouseButtonDown(int button) const
