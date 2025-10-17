@@ -218,25 +218,30 @@ El PSO está optimizado para renderizar triángulos con colores interpolados y e
 
 ---
 
-### Tarea H3.4: Renderizar tri�ngulos en OpaquePass()
-**Estado**: Pendiente  
-**Archivos afectados**: `src/renderer/DX12Renderer.cpp`
+### Tarea H3.4: Renderizar triángulos en OpaquePass()
+**Estado**: ✅ Completada (implementación existente desde refactorización H1.2)
+**Archivos verificados**: `src/renderer/DX12Renderer.cpp`
 
-**Descripci�n**: Implementar `OpaquePass()` para renderizar tri�ngulos con PSO y vertex buffer de H3.1 y H3.3.
+**Descripción**: Implementar `OpaquePass()` para renderizar triángulos con PSO y vertex buffer de H3.1 y H3.3.
 
 **Pasos**:
-1. En `OpaquePass()`:
+1. ✅ En `OpaquePass()`:
    - Reset command allocator
-   - Reset command list
+   - Reset command list con PSO
    - Set render target (back buffer)
-   - Clear render target (blue)
-   - Set PSO de tri�ngulos
+   - Clear render target (dark blue)
+   - Set PSO de triángulos
    - Set root signature
    - Set vertex buffer
-   - `DrawInstanced(3 o 6 v�rtices, 1 instancia, 0, 0)`
+   - `DrawInstanced(6 vértices, 1 instancia, 0, 0)` ✅
    - Close command list
-2. Ejecutar command list en command queue
-3. Compilar y validar (0 errores, 0 warnings)
+2. ✅ Ejecutar command list en command queue
+3. ✅ Fence sync + Present con VSync
+4. ✅ Compilar y validar (0 errores, 0 warnings)
+
+**Nota**: `OpaquePass()` ya contiene toda la lógica de renderizado movida desde `RenderFrame()` durante la refactorización H1.2. El método renderiza 6 vértices (2 triángulos con winding clockwise) usando el PSO y vertex buffer de v1.1.0, cumpliendo todos los requisitos de H3.4.
+
+**Commit**: Implementación existente desde baae685 (H1.2)
 
 ---
 
@@ -323,10 +328,10 @@ El PSO está optimizado para renderizar triángulos con colores interpolados y e
 | H3 | H3.1 | Crear vertex buffer triángulos | ✅ Completada |
 | H3 | H3.2 | Crear shader HLSL triángulos | ✅ Completada |
 | H3 | H3.3 | Crear PSO triángulos | ✅ Completada |
-| H3 | H3.4 | Renderizar tri�ngulos OpaquePass | Pendiente |
+| H3 | H3.4 | Renderizar triángulos OpaquePass | ✅ Completada |
 | H3 | H3.5 | Validar renderizado tri�ngulos | Pendiente |
 | H4 | H4.1 | Implementar UIPass overlay | Pendiente |
 | H4 | H4.2 | Conectar UIPass con F1 | Pendiente |
 | H4 | H4.3 | Validar UI Pass con F1 | Pendiente |
 
-**Total**: 15 tareas (10 completadas, 5 pendientes)
+**Total**: 15 tareas (11 completadas, 4 pendientes)

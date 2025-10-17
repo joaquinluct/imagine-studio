@@ -1,4 +1,4 @@
 ﻿# Daily Log
 
-Hecho: H2.4 Validar toggle de UI (testing manual)
-Siguiente: H3.4 Renderizar triángulos en OpaquePass()
+Hecho: H3.4 Renderizar triángulos en OpaquePass() (verificación)
+Siguiente: H3.5 Validar renderizado de triángulos (testing visual)
