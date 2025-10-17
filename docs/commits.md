@@ -1039,6 +1039,46 @@ Implementada tarea H2.3 del Sprint v1.2.0 - Añadir lógica de toggle de UI con 
 Files changed: `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`, `src/main.cpp`, `docs/sprint_tasks.md`, `docs/daily.md`, `docs/commits.md`
 Refs: Sprint v1.2.0 - H2.3
 
+- test(input): validar toggle de UI con F1 - testing manual completado (H2.4)
+
+Completada tarea H2.4 del Sprint v1.2.0 - Validar toggle de UI (testing manual).
+
+**Resultado del testing**:
+- ✅ Detección de F1 funcional: `IsKeyPressed(VK_F1)` detecta flancos de subida correctamente
+- ✅ Toggle de estado funcional: alterna entre `visible` y `hidden` sin errores
+- ✅ Estado persistente entre frames: múltiples toggles funcionan sin parpadeo
+- ✅ Logs confirman funcionamiento:
+  * "F1 key state changed: DOWN" al presionar
+  * "UI visibility toggled: visible/hidden" al alternar
+  * "F1 key state changed: UP" al soltar
+
+**Evidencia**:
+```
+[INFO] F1 key state changed: DOWN
+[INFO] UI visibility toggled: hidden
+[INFO] F1 key state changed: UP
+[INFO] F1 key state changed: DOWN
+[INFO] UI visibility toggled: visible
+[INFO] F1 key state changed: UP
+```
+
+**Nota importante**: No se observan cambios visuales porque `UIPass()` está actualmente vacío (stub). La implementación visual real del UI Pass se realizará en Historia H4 (tareas H4.1-H4.3). El toggle de estado funciona correctamente y está listo para conectarse con el UI Pass real.
+
+**Cambios en código**:
+- Eliminado logging de debug temporal de detección de F1 en `main.cpp`
+- Mantenido logging de toggle de UI para trazabilidad
+
+**Historia H2 completada** (Input Manager y Toggle UI con F1) ✅
+- H2.1: Crear InputManager básica ✅
+- H2.2: Integrar con Win32 message loop ✅
+- H2.3: Implementar toggle F1 ✅
+- H2.4: Validar toggle F1 (testing) ✅
+
+**Compilación:** CMake Debug OK + MSBuild VS Debug OK (0 errores, 0 warnings)
+
+Files changed: `src/main.cpp`, `docs/sprint_tasks.md`, `docs/daily.md`, `docs/commits.md`
+Refs: Sprint v1.2.0 - H2.4
+
 
 
 
