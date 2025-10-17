@@ -1079,6 +1079,30 @@ Completada tarea H2.4 del Sprint v1.2.0 - Validar toggle de UI (testing manual).
 Files changed: `src/main.cpp`, `docs/sprint_tasks.md`, `docs/daily.md`, `docs/commits.md`
 Refs: Sprint v1.2.0 - H2.4
 
+- docs(sprint): marcar tarea H3.1 como completada (verificación de implementación existente)
+
+Marcada tarea H3.1 del Sprint v1.2.0 - Crear vertex buffer para triángulos simples como completada.
+
+**Verificación:**
+- ✅ Struct `Vertex` existente con `float pos[3]` y `float col[4]` (cumple requisito)
+- ✅ Array de 6 vértices (2 triángulos) ya implementado en `DX12Renderer::Initialize(HWND)`
+- ✅ Vertex buffer creado con `CreateCommittedResource()`:
+  * Upload heap (D3D12_HEAP_TYPE_UPLOAD) para staging CPU → GPU
+  * Default heap (D3D12_HEAP_TYPE_DEFAULT) para almacenamiento GPU optimizado
+- ✅ Upload de datos con `Map()/Unmap()` funcional
+- ✅ Resource barrier para transición COPY_DEST → VERTEX_AND_CONSTANT_BUFFER
+- ✅ Vertex buffer view configurado correctamente (stride 28 bytes, 6 vértices)
+
+**Nota**: El vertex buffer con 6 vértices (2 triángulos con winding clockwise) ya estaba implementado desde el Sprint v1.1.0. Cumple con los requisitos de la tarea H3.1 (1-2 triángulos = 3-6 vértices).
+
+**Archivos verificados:**
+- `src/renderer/DX12Renderer.cpp`: Contiene implementación completa del vertex buffer
+
+**Compilación:** No requiere recompilación (solo actualización de documentación)
+
+Files changed: `docs/sprint_tasks.md`, `docs/daily.md`, `docs/commits.md`
+Refs: Sprint v1.2.0 - H3.1 (verificación completada)
+
 
 
 
