@@ -25,6 +25,7 @@ Archivos principales que el asistente debe consultar en cada sesión:
 - **`docs/daily.md`** - Última tarea completada y tarea actual en progreso
 - **`docs/commits.md`** - Convenciones de commits y mensajes
 - **`docs/backlog.md`** - Repositorio de ítems no incluidos en el sprint actual
+- **`docs/sprint_fix.md`** - Tracking de bugs/errores reportados durante el sprint
 
 ---
 
@@ -145,12 +146,14 @@ Si aparece un **bloqueo técnico**, **decisión arquitectónica crítica** o **depen
 - `docs/sprint.md` - Sprint de alto nivel con hitos y objetivos
 - `docs/sprint_histories.md` - Historias de usuario para el sprint
 - `docs/sprint_tasks.md` - Tareas detalladas por historia (unidad mínima de trabajo e iteración)
+- `docs/sprint_fix.md` - Tracking de bugs/errores reportados durante el sprint
 
 ### Al final de un sprint (release):
 1. El asistente **archivará** los ficheros de trabajo renombrándolos con la versión:
    - `docs/sprint_v<version>.md`
    - `docs/sprint_histories_v<version>.md`
    - `docs/sprint_tasks_v<version>.md`
+   - `docs/sprint_fix_v<version>.md`
 
 2. El asistente **creará ficheros nuevos y vacíos** con los nombres activos para el siguiente sprint
 
@@ -182,6 +185,68 @@ Esta política garantiza **trazabilidad** de los sprints completados y mantiene l
 3. Las entradas en `docs/backlog.md` deben ser **concisas y enlazables** (incluir una ruta o ancla al código relacionado si procede)
 
 4. El asistente **NO implementará** ítems directamente desde el backlog a menos que se muevan a los ficheros activos del sprint
+
+---
+
+## ?? Fichero Sprint Fix (`docs/sprint_fix.md`)
+
+### Propósito:
+`docs/sprint_fix.md` es el fichero de **tracking de bugs y errores** reportados durante el sprint activo. Permite mantener trazabilidad de defectos encontrados, su estado y resolución.
+
+### Contenido:
+Cada entrada de bug/error debe incluir:
+- **ID**: Identificador único del bug (ej: FIX-001, FIX-002)
+- **Título**: Descripción breve del error
+- **Descripción**: Detalle del error, pasos para reproducir, comportamiento esperado vs observado
+- **Prioridad**: Crítica/Alta/Media/Baja
+- **Estado**: Reportado/En progreso/Resuelto/Verificado
+- **Fecha de entrada**: Fecha en que se reportó el bug
+- **Fecha de resolución**: Fecha en que se resolvió (si aplica)
+- **Archivos afectados**: Lista de archivos relacionados con el bug
+- **Commit de resolución**: Hash del commit que resolvió el bug (si aplica)
+
+### Formato ejemplo:
+```markdown
+### FIX-001 - [PLACEHOLDER: Título del bug]
+**ID**: FIX-001
+**Prioridad**: Crítica
+**Estado**: Resuelto
+**Fecha de entrada**: 2025-01-15
+**Fecha de resolución**: 2025-01-15
+
+**Descripción**: [PLACEHOLDER: Descripción detallada del error, pasos para reproducir, comportamiento esperado vs observado]
+
+**Archivos afectados**: [PLACEHOLDER: lista de archivos]
+
+**Commit de resolución**: [PLACEHOLDER: hash del commit]
+```
+
+### Flujo de trabajo:
+1. Cuando el usuario **reporte un bug** durante el sprint, el asistente añadirá una entrada en `docs/sprint_fix.md` con estado "Reportado"
+2. Al comenzar a trabajar en el bug, **actualizar estado** a "En progreso"
+3. Al resolver el bug (commit exitoso), **actualizar estado** a "Resuelto" y añadir fecha de resolución y hash del commit
+4. Los bugs se **archivan** junto con los demás ficheros del sprint al finalizar (como `docs/sprint_fix_v<version>.md`)
+
+### Regla:
+El asistente **NO implementará** bugs directamente a menos que se indique explícitamente; primero los registrará en `docs/sprint_fix.md` para priorización.
+
+---
+
+## ?? Sincronización con Metodología Genérica
+
+### Regla de sincronización:
+Este documento (`docs/TEMPLATE.md`) es el **template maestro** de la metodología genérica de trabajo con asistentes IA.
+
+**IMPORTANTE**: Cuando se modifique la metodología específica del proyecto (por ejemplo, en `.github/copilot-instructions.md` o similar):
+- El asistente debe **actualizar también este template** para reflejar los cambios de forma genérica
+- Usar **placeholders** `[PLACEHOLDER]` para mantener la reusabilidad en otros proyectos
+- Ejemplos de cambios que requieren sincronización:
+  - Añadir/eliminar secciones de la metodología
+  - Cambiar flujo de trabajo
+  - Actualizar proceso de versionado
+  - Añadir nuevos ficheros de tracking (ej: `sprint_fix.md`)
+
+Esta regla asegura que el template esté siempre actualizado y pueda ser reutilizado en otros proyectos.
 
 ---
 
@@ -425,6 +490,7 @@ Para adaptar este template a tu proyecto específico:
 - Ver sprints completados: `docs/sprint_v*.md`
 - Ver historias completadas: `docs/sprint_histories_v*.md`
 - Ver tareas completadas: `docs/sprint_tasks_v*.md`
+- Ver bugs/errores del sprint: `docs/sprint_fix_v*.md`
 - Convenciones de commits: `docs/commits.md`
 - Backlog de ítems futuros: `docs/backlog.md`
 

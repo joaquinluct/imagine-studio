@@ -15,6 +15,7 @@ Archivos principales de trabajo:
 - `docs/sprint.md` - Sprint actual con hitos y objetivos.
 - `docs/daily.md` - Última tarea completada y tarea actual en progreso.
 - `docs/commits.md` - Convenciones de commits y mensajes.
+- `docs/sprint_fix.md` - Tracking de bugs/errores reportados durante el sprint.
 
 Flujo de trabajo por sesión:
 1) Leer estas instrucciones.
@@ -99,10 +100,12 @@ Versionado de los ficheros del Sprint (snapshots de sprint):
   - `docs/sprint.md` (sprint de alto nivel con hitos y objetivos)
   - `docs/sprint_histories.md` (historias de usuario para el sprint)
   - `docs/sprint_tasks.md` (tareas detalladas por historia; unidad mínima de trabajo e iteración)
+  - `docs/sprint_fix.md` (tracking de bugs/errores reportados durante el sprint)
 - Al final de un sprint (release), el asistente archivará los ficheros de trabajo renombrándolos con la versión, por ejemplo:
   - `docs/sprint_v<version>.md`
   - `docs/sprint_histories_v<version>.md`
   - `docs/sprint_tasks_v<version>.md`
+  - `docs/sprint_fix_v<version>.md`
 - A continuación el asistente creará ficheros nuevos y vacíos con los nombres activos para el siguiente sprint.
 - Esta política de versionado garantiza trazabilidad de los sprints completados y mantiene los ficheros activos pequeños y enfocados.
 
@@ -114,6 +117,49 @@ Fichero Backlog (`docs/backlog.md`)
   - El backlog es la fuente para la planificación del sprint: durante la planificación los ítems pueden moverse de `docs/backlog.md` a `docs/sprint_histories.md` (como historia) y descomponerse en tareas en `docs/sprint_tasks.md` para el sprint activo.
   - Las entradas en `docs/backlog.md` deben ser concisas y enlazables (incluir una ruta o ancla al código relacionado si procede).
   - El asistente no implementará ítems directamente desde el backlog a menos que se muevan a los ficheros activos del sprint.
+
+Fichero Sprint Fix (`docs/sprint_fix.md`)
+------------------------------------------
+- Propósito: `docs/sprint_fix.md` es el fichero de tracking de bugs y errores reportados durante el sprint activo. Permite mantener trazabilidad de defectos encontrados, su estado y resolución.
+- Contenido: Cada entrada de bug/error debe incluir:
+  - **ID**: Identificador único del bug (ej: FIX-001, FIX-002)
+  - **Título**: Descripción breve del error
+  - **Descripción**: Detalle del error, pasos para reproducir, comportamiento esperado vs observado
+  - **Prioridad**: Crítica/Alta/Media/Baja
+  - **Estado**: Reportado/En progreso/Resuelto/Verificado
+  - **Fecha de entrada**: Fecha en que se reportó el bug
+  - **Fecha de resolución**: Fecha en que se resolvió (si aplica)
+  - **Archivos afectados**: Lista de archivos relacionados con el bug
+  - **Commit de resolución**: Hash del commit que resolvió el bug (si aplica)
+- Formato ejemplo:
+  ```markdown
+  ### FIX-001 - Crash al renderizar quad sin shader
+  **ID**: FIX-001
+  **Prioridad**: Crítica
+  **Estado**: Resuelto
+  **Fecha de entrada**: 2025-01-15
+  **Fecha de resolución**: 2025-01-15
+  
+  **Descripción**: La aplicación crashea al intentar renderizar el quad si no se compila correctamente el shader HLSL.
+  
+  **Archivos afectados**: `src/renderer/DX12Renderer.cpp`, `shaders/quad.hlsl`
+  
+  **Commit de resolución**: abc123def
+  ```
+- Flujo de trabajo:
+  - Cuando el usuario reporte un bug durante el sprint, el asistente añadirá una entrada en `docs/sprint_fix.md` con estado "Reportado"
+  - Al comenzar a trabajar en el bug, actualizar estado a "En progreso"
+  - Al resolver el bug (commit exitoso), actualizar estado a "Resuelto" y añadir fecha de resolución y hash del commit
+  - Los bugs se archivan junto con los demás ficheros del sprint al finalizar (como `docs/sprint_fix_v<version>.md`)
+- El asistente NO implementará bugs directamente a menos que se indique explícitamente; primero los registrará en `docs/sprint_fix.md` para priorización.
+
+Sincronización con TEMPLATE.md (`docs/TEMPLATE.md`)
+----------------------------------------------------
+- Propósito: `docs/TEMPLATE.md` es el documento maestro que define la metodología genérica de trabajo con asistentes IA, aplicable a cualquier proyecto.
+- Regla de sincronización: **Siempre que se modifique la metodología en `.github/copilot-instructions.md`** (añadir/eliminar secciones, cambiar flujo de trabajo, actualizar proceso de versionado, etc.), el asistente debe actualizar también `docs/TEMPLATE.md` para reflejar los cambios de forma genérica.
+- Ejemplo: Si se añade una nueva sección como "Fichero Sprint Fix", debe añadirse también a `TEMPLATE.md` con placeholders genéricos `[PLACEHOLDER]` para que sea aplicable a otros proyectos.
+- El asistente ejecutará esta sincronización automáticamente antes de crear commits que afecten a la metodología.
+- Esta regla asegura que `TEMPLATE.md` esté siempre actualizado y pueda ser reutilizado en otros proyectos.
 
 
 Formato de la explicación final de cada iteración:

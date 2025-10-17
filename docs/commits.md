@@ -637,6 +637,23 @@ Result:
 Files changed: src/renderer/DX12Renderer.cpp
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
 
+- fix(renderer): increase resolution to 1920x1080 Full HD
+
+Increased rendering resolution from 800x600 to 1920x1080 (Full HD):
+- SwapChain: Width 800?1920, Height 600?1080
+- Viewport: Updated to 1920x1080
+- Scissor rect: Updated to 1920x1080
+
+Benefits:
+- Better visual quality on modern displays
+- Standard Full HD resolution
+- Improved quad visibility with higher pixel density
+
+Files changed: src/renderer/DX12Renderer.cpp
+Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
+
+
+
 
 
 
