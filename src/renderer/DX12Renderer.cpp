@@ -25,6 +25,13 @@ namespace Renderer {
 DX12Renderer::DX12Renderer() : device_(nullptr), rt_(nullptr) {}
 DX12Renderer::~DX12Renderer() { Shutdown(); }
 
+#if defined(_WIN32) && defined(_MSC_VER)
+ID3D12Device* DX12Renderer::GetDevice() const
+{
+    return device_ ? static_cast<ID3D12Device*>(device_->NativeDevice()) : nullptr;
+}
+#endif
+
 void DX12Renderer::Initialize()
 {
     std::cout << "DX12Renderer: Initialize (stub)\n";

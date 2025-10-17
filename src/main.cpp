@@ -19,6 +19,11 @@
 #include "imgui_impl_dx12.h"
 #include "imgui_impl_win32.h"
 
+// DirectX 12 headers (for ImGui backend initialization)
+#if defined(_WIN32) && defined(_MSC_VER)
+#include <d3d12.h>
+#endif
+
 // For DPI helper functions
 #include <VersionHelpers.h>
 static int RunApp(HINSTANCE hInstance)
@@ -125,6 +130,39 @@ static int RunApp(HINSTANCE hInstance)
     UI::SimpleUI ui;
 
     renderer.Initialize(hwnd);
+    
+    // Setup Platform/Renderer backends (H2.2 - ImGui DX12 Backend)
+#if defined(_WIN32) && defined(_MSC_VER)
+    // Get ImGui SRV descriptor heap and device from renderer
+    ID3D12DescriptorHeap* imguiSrvHeap = renderer.GetImGuiSrvHeap();
+    ID3D12Device* device = renderer.GetDevice();
+    
+    if (imguiSrvHeap && device)
+    {
+        // Get CPU and GPU descriptor handles for ImGui font atlas
+        D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = imguiSrvHeap->GetCPUDescriptorHandleForHeapStart();
+        D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = imguiSrvHeap->GetGPUDescriptorHandleForHeapStart();
+        
+        // Initialize ImGui DX12 backend
+        ImGui_ImplDX12_Init(
+            device,                           // ID3D12Device*
+            2,                                // num frames in flight (double buffering)
+            DXGI_FORMAT_R8G8B8A8_UNORM,      // RTV format (matches swap chain)
+            imguiSrvHeap,                     // ID3D12DescriptorHeap* (SRV heap)
+            cpuHandle,                        // CPU handle for font atlas
+            gpuHandle                         // GPU handle for font atlas
+        );
+        
+        CORE_LOG_INFO("ImGui DX12 backend initialized");
+    }
+    else
+    {
+        CORE_LOG_WARN("ImGui DX12 backend not initialized: device or SRV heap not available");
+    }
+#else
+    CORE_LOG_WARN("ImGui DX12 backend not initialized: platform not supported");
+#endif
+    
     ui.Initialize(window.GetHWND());
 
     Assets::AssetManager assets;
@@ -182,13 +220,23 @@ static int RunApp(HINSTANCE hInstance)
             renderer.OnAssetLoaded(loadedPath);
         }
 
+        // Start ImGui frame (H2.3 - ImGui DX12 NewFrame integration)
+        ImGui_ImplDX12_NewFrame();
+        ImGui::NewFrame();
+        
+        // ImGui demo window (placeholder - remover en H4)
+        ImGui::ShowDemoWindow();
+        
+        // Render ImGui
+        ImGui::Render();
+
+        // Renderer renderiza frame (incluye UIPass con ImGui draw data)
         renderer.RenderFrame();
         ui.Draw();
         ui.DrawOverlay();
         auto frameEnd = std::chrono::high_resolution_clock::now();
         double ms = std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(frameEnd - frameStart).count();
         Tools::Profiler::Instance().RecordFrame(ms);
-        // TODO: update and render calls will go here
     }
 
     assets.Shutdown();
@@ -196,7 +244,11 @@ static int RunApp(HINSTANCE hInstance)
     ui.Shutdown();
     renderer.Shutdown();
     
-    // Cleanup Dear ImGui
+    // Cleanup Dear ImGui (H2.2 - shutdown backends first, then context)
+#if defined(_WIN32) && defined(_MSC_VER)
+    ImGui_ImplDX12_Shutdown();
+    CORE_LOG_INFO("ImGui DX12 backend shutdown");
+#endif
     ImGui::DestroyContext();
     CORE_LOG_INFO("ImGui context destroyed");
 

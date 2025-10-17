@@ -145,7 +145,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 ## Historia 2: ImGui DX12 Rendering Backend (H2)
 
 ### Tarea H2.1: Crear descriptor heap SRV para ImGui
-**Estado**: ?? Pendiente  
+**Estado**: ? Completada  
 **Archivos afectados**: `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`
 
 **Descripción**: Crear descriptor heap SRV separado para ImGui (1 descriptor para font atlas texture). ImGui requiere un heap SRV shader-visible para renderizar font atlas.
@@ -180,50 +180,73 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 ---
 
 ### Tarea H2.2: Inicializar backend ImGui DX12
-**Estado**: ?? Pendiente  
-**Archivos afectados**: `src/main.cpp`
+**Estado**: ? Completada  
+**Archivos afectados**: `src/main.cpp`, `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`
 
 **Descripción**: Llamar a `ImGui_ImplDX12_Init()` con device, num frames, format y descriptor heap SRV de ImGui.
 
 **Pasos**:
-1. [ ] Obtener descriptores CPU/GPU handle del heap ImGui:
+1. [x] Añadir método público `GetDevice()` en `DX12Renderer.h` para obtener ID3D12Device*
+2. [x] Implementar `GetDevice()` en `DX12Renderer.cpp` (evitar forward declaration issues)
+3. [x] Incluir headers DirectX 12 en `main.cpp` (`<d3d12.h>`)
+4. [x] Obtener descriptores CPU/GPU handle del heap ImGui en `main.cpp`:
    ```cpp
-   D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = m_imguiSrvHeap->GetCPUDescriptorHandleForHeapStart();
-   D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = m_imguiSrvHeap->GetGPUDescriptorHandleForHeapStart();
+   D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = imguiSrvHeap->GetCPUDescriptorHandleForHeapStart();
+   D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = imguiSrvHeap->GetGPUDescriptorHandleForHeapStart();
    ```
-2. [ ] Inicializar backend ImGui DX12:
+5. [x] Inicializar backend ImGui DX12 en `main.cpp` (después de `renderer.Initialize(hwnd)`):
    ```cpp
-   // Setup Platform/Renderer backends
-   ImGui_ImplDX12_Init(device->NativeDevice(),     // ID3D12Device*
-                       2,                           // num frames in flight (double buffering)
-                       DXGI_FORMAT_R8G8B8A8_UNORM, // RTV format (matches swap chain)
-                       m_imguiSrvHeap,              // ID3D12DescriptorHeap* (SRV heap)
-                       cpuHandle,                   // CPU handle for font atlas
-                       gpuHandle);                  // GPU handle for font atlas
-   CORE_LOG_INFO("ImGui DX12 backend initialized");
+   // Get ImGui SRV descriptor heap and device from renderer
+   ID3D12DescriptorHeap* imguiSrvHeap = renderer.GetImGuiSrvHeap();
+   ID3D12Device* device = renderer.GetDevice();
+   
+   if (imguiSrvHeap && device)
+   {
+       // Get CPU and GPU descriptor handles for ImGui font atlas
+       D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = imguiSrvHeap->GetCPUDescriptorHandleForHeapStart();
+       D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = imguiSrvHeap->GetGPUDescriptorHandleForHeapStart();
+       
+       // Initialize ImGui DX12 backend
+       ImGui_ImplDX12_Init(
+           device,                           // ID3D12Device*
+           2,                                // num frames in flight (double buffering)
+           DXGI_FORMAT_R8G8B8A8_UNORM,      // RTV format (matches swap chain)
+           imguiSrvHeap,                     // ID3D12DescriptorHeap* (SRV heap)
+           cpuHandle,                        // CPU handle for font atlas
+           gpuHandle                         // GPU handle for font atlas
+       );
+       
+       CORE_LOG_INFO("ImGui DX12 backend initialized");
+   }
    ```
-3. [ ] Añadir shutdown en cleanup:
+6. [x] Añadir shutdown en cleanup:
    ```cpp
    ImGui_ImplDX12_Shutdown();
+   CORE_LOG_INFO("ImGui DX12 backend shutdown");
    ```
-4. [ ] Compilar y validar (CMake + MSBuild Debug, 0 errores, 0 warnings)
+7. [x] Compilar y validar (CMake Debug build: 0 errores, 0 warnings) ?
+
+**Resultado**: ImGui DX12 backend inicializado correctamente. Device y heap SRV accesibles desde main.cpp mediante métodos públicos del renderer. Backend shutdown correctamente en cleanup.
 
 **Commit**: [Hash pendiente]
 
 ---
 
 ### Tarea H2.3: Integrar ImGui_ImplDX12_NewFrame() en render loop
-**Estado**: ?? Pendiente  
-**Archivos afectados**: `src/main.cpp`
+**Estado**: ? Completada  
+**Archivos afectados**: `src/main.cpp`, `CMakeLists.txt`, `scripts/install-imgui.ps1`, `Imagine Studio.vcxproj`, `.github/copilot-instructions.md`
 
 **Descripción**: Llamar a `ImGui_ImplDX12_NewFrame()` antes de `ImGui::NewFrame()` en el render loop para preparar frame ImGui.
 
 **Pasos**:
-1. [ ] Añadir llamadas en render loop (antes de renderizar):
+1. [x] Añadir `imgui_demo.cpp` a `scripts/install-imgui.ps1` (necesario para `ImGui::ShowDemoWindow()`)
+2. [x] Reinstalar ImGui con demo incluido: `.\scripts\install-imgui.ps1 -Branch docking -Reinstall`
+3. [x] Añadir `imgui_demo.cpp` a `CMakeLists.txt` en la library ImGui
+4. [x] Añadir `imgui_demo.cpp` a `Imagine Studio.vcxproj` usando PowerShell XML
+5. [x] Verificar que render loop tiene llamadas correctas (ya implementadas):
    ```cpp
-   // Start ImGui frame
+   // Start ImGui frame (H2.3 - ImGui DX12 NewFrame integration)
    ImGui_ImplDX12_NewFrame();
-   ImGui_ImplWin32_NewFrame(); // H3 - añadir después
    ImGui::NewFrame();
    
    // ImGui demo window (placeholder - remover en H4)
@@ -235,9 +258,16 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
    // Renderer renderiza frame (incluye UIPass con ImGui)
    renderer.RenderFrame();
    ```
-2. [ ] Compilar y validar (CMake + MSBuild Debug, 0 errores, 0 warnings)
+6. [x] Compilar y validar (CMake Debug build: 0 errores, 0 warnings) ?
+7. [x] Compilar y validar (MSBuild Debug build: 0 errores, 0 warnings) ?
+8. [x] Documentar método de modificación de `.vcxproj` en `.github/copilot-instructions.md`
 
-**Nota**: En esta tarea aún no se renderizará ImGui (falta `ImGui_ImplDX12_RenderDrawData()` en H2.4). Solo prepara el frame.
+**Resultado**: Render loop preparado para ImGui frames. Demo window preparado (aún no visible porque falta rendering en UIPass de H2.4). Compilación limpia en ambos sistemas de build.
+
+**Notas técnicas**:
+- Se resolvió problema de linkeo: `ImGui::ShowDemoWindow()` requería `imgui_demo.cpp` que no estaba incluido
+- Se actualizó script de instalación para incluir demo en futuras instalaciones
+- Se documentó procedimiento correcto para modificar `.vcxproj` sin cerrar Visual Studio (PowerShell XML)
 
 **Commit**: [Hash pendiente]
 
@@ -580,9 +610,9 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 | H1 | H1.2 | Añadir ImGui a CMakeLists.txt | ? Completada |
 | H1 | H1.3 | Añadir ImGui a Visual Studio project | ? Completada |
 | H1 | H1.4 | Crear ImGui context en main.cpp | ? Completada |
-| H2 | H2.1 | Crear descriptor heap SRV para ImGui | ?? Pendiente |
-| H2 | H2.2 | Inicializar backend ImGui DX12 | ?? Pendiente |
-| H2 | H2.3 | Integrar ImGui_ImplDX12_NewFrame() | ?? Pendiente |
+| H2 | H2.1 | Crear descriptor heap SRV para ImGui | ? Completada |
+| H2 | H2.2 | Inicializar backend ImGui DX12 | ? Completada |
+| H2 | H2.3 | Integrar ImGui_ImplDX12_NewFrame() | ? Completada |
 | H2 | H2.4 | Renderizar ImGui draw data en UIPass() | ?? Pendiente |
 | H3 | H3.1 | Inicializar backend ImGui Win32 | ?? Pendiente |
 | H3 | H3.2 | Procesar eventos Win32 para ImGui | ?? Pendiente |
@@ -593,4 +623,4 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 | H4 | H4.4 | Crear panel Viewport | ?? Pendiente |
 | H4 | H4.5 | Habilitar docking y validar UI completa | ?? Pendiente |
 
-**Total**: 16 tareas (4 completadas, 12 pendientes)
+**Total**: 16 tareas (7 completadas, 9 pendientes)

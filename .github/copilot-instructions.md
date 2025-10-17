@@ -251,5 +251,56 @@ Fichero Daily (`docs/daily.md`)
 - El asistente actualiza este fichero automáticamente tras cada commit exitoso.
 - Al finalizar un sprint (release), el contenido de `daily.md` se actualiza a "Sprint vX.Y.Z cerrado. Sin sprint activo." y se archiva en los ficheros versionados del sprint. Se crea un nuevo `daily.md` para el siguiente sprint cuando este comienza.
 
+Modificación de archivos `.vcxproj` (Visual Studio Project Files)
+-------------------------------------------------------------------
+- **Problema**: Los archivos `.vcxproj` están bloqueados por Visual Studio cuando la solución está abierta. Intentar modificarlos directamente con `replace_string_in_file` fallará con error "El documento ya está abierto como proyecto o solución".
+- **Solución**: Usar comandos PowerShell con manipulación XML para modificar el `.vcxproj` sin necesidad de cerrarlo:
+
+**Método 1: Añadir archivo fuente al proyecto (.cpp)**
+```powershell
+# Cargar XML del proyecto
+[xml]$proj = Get-Content "Imagine Studio.vcxproj"
+
+# Encontrar el ItemGroup que contiene archivos .cpp
+$compileGroup = $proj.Project.ItemGroup | Where-Object { $_.ClCompile -ne $null } | Select-Object -First 1
+
+# Crear nuevo elemento ClCompile
+$newCompile = $proj.CreateElement("ClCompile", $proj.Project.NamespaceURI)
+$newCompile.SetAttribute("Include", "external\imgui\imgui_demo.cpp")
+
+# Añadir al grupo
+$compileGroup.AppendChild($newCompile) | Out-Null
+
+# Guardar cambios
+$proj.Save("Imagine Studio.vcxproj")
+```
+
+**Método 2: Añadir archivo header al proyecto (.h)**
+```powershell
+[xml]$proj = Get-Content "Imagine Studio.vcxproj"
+$includeGroup = $proj.Project.ItemGroup | Where-Object { $_.ClInclude -ne $null } | Select-Object -First 1
+$newInclude = $proj.CreateElement("ClInclude", $proj.Project.NamespaceURI)
+$newInclude.SetAttribute("Include", "src\editor\EditorUI.h")
+$includeGroup.AppendChild($newInclude) | Out-Null
+$proj.Save("Imagine Studio.vcxproj")
+```
+
+**Método 3: Modificar configuración del proyecto (ejemplo: cambiar standard C++)**
+```powershell
+[xml]$proj = Get-Content "Imagine Studio.vcxproj"
+$propertyGroups = $proj.Project.PropertyGroup | Where-Object { $_.LanguageStandard -ne $null }
+foreach ($pg in $propertyGroups) {
+    $pg.LanguageStandard = "stdcpp14"
+}
+$proj.Save("Imagine Studio.vcxproj")
+```
+
+- **IMPORTANTE**: Después de modificar el `.vcxproj` con PowerShell, Visual Studio detectará el cambio y mostrará un diálogo de recarga. El usuario debe hacer clic en "Reload" para que los cambios se reflejen.
+- **Alternativa CMake**: Si el proyecto usa CMake como sistema principal (como este proyecto), es preferible modificar `CMakeLists.txt` y regenerar el proyecto con `cmake -S . -B build` en lugar de modificar manualmente el `.vcxproj`. El `.vcxproj` se regenerará automáticamente desde CMake.
+- **Regla del asistente**: Cuando se necesite añadir archivos al proyecto:
+  1. **Primero** añadirlos a `CMakeLists.txt` (si existe)
+  2. **Después** regenerar con `cmake -S . -B build`
+  3. **Solo si CMake no se usa o hay conflictos**, modificar directamente el `.vcxproj` con PowerShell XML
+
 Nota sobre estándar C++:
 - Este repositorio usa C++14 como estándar de compilación en `CMakeLists.txt`. Asegúrate de que tu entorno local/CI tenga toolchains compatibles (MSVC/Clang/GCC) antes de compilar.

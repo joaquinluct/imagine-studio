@@ -1,0 +1,43 @@
+feat(imgui): Integrar ImGui_ImplDX12_NewFrame() en render loop (H2.3)
+
+CAMBIOS PRINCIPALES:
+- Añadido imgui_demo.cpp a scripts/install-imgui.ps1 (core files)
+- Reinstalado ImGui rama docking con demo incluido (11 core files)
+- Añadido imgui_demo.cpp a CMakeLists.txt (library ImGui estática)
+- Añadido imgui_demo.cpp a Imagine Studio.vcxproj (PowerShell XML)
+- Verificado render loop con ImGui_ImplDX12_NewFrame() + ImGui::ShowDemoWindow()
+- Documentado procedimiento de modificación de .vcxproj en copilot-instructions.md
+
+ARCHIVOS MODIFICADOS:
+- scripts/install-imgui.ps1 (core files: 10 ? 11, incluye imgui_demo.cpp)
+- CMakeLists.txt (library ImGui: añadido imgui_demo.cpp)
+- Imagine Studio.vcxproj (añadido external\imgui\imgui_demo.cpp)
+- .github/copilot-instructions.md (nueva sección: Modificación de .vcxproj)
+- external/imgui/VERSION.txt (rama docking, 11 core files)
+- external/imgui/imgui_demo.cpp (nuevo, rama docking)
+
+ARCHIVOS DE DOCUMENTACIÓN:
+- docs/sprint_tasks.md (H2.3: Pendiente ? Completada, 7/16 tareas)
+- docs/daily.md (H2.3 ? H2.4)
+
+COMPILACIÓN:
+- CMake Debug: 0 errores, 0 warnings ?
+- MSBuild Debug: 0 errores, 0 warnings ?
+
+RESULTADO:
+Render loop preparado para ImGui frames. Demo window generará draw data (aún no visible, rendering en H2.4). Resuelto problema de linkeo LNK2019 con ImGui::ShowDemoWindow(). Ambos sistemas de build (CMake + Visual Studio) compilan limpiamente.
+
+NOTAS TÉCNICAS:
+- ImGui::ShowDemoWindow() requiere imgui_demo.cpp (no incluido en instalación anterior)
+- Script actualizado para futuras instalaciones/reinstalaciones
+- Documentado método PowerShell XML para modificar .vcxproj sin cerrar Visual Studio
+- Comando usado: [xml]$proj = Get-Content; AppendChild(ClCompile)
+
+SPRINT: v1.3.0 (ImGui Integration)
+HISTORIA: H2 (ImGui DX12 Rendering Backend)
+TAREA: H2.3 (Integrar ImGui_ImplDX12_NewFrame() en render loop)
+PROGRESO: 7/16 tareas completadas (43.8%)
+
+??????????????????????????????????????????????????????????????????????
+?????????????????????????????????????????????????????????? 43.8%?
+??????????????????????????????????????????????????????????????????????

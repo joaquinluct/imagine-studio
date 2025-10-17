@@ -48,6 +48,15 @@ public:
     void SetUIVisible(bool visible) { m_uiVisible = visible; }
     bool IsUIVisible() const { return m_uiVisible; }
     void ToggleUI() { m_uiVisible = !m_uiVisible; }
+    
+    // ImGui SRV heap accessor (v1.3.0 - H2.2)
+#if defined(_WIN32) && defined(_MSC_VER)
+    ID3D12DescriptorHeap* GetImGuiSrvHeap() const { return m_imguiSrvHeap; }
+    ID3D12Device* GetDevice() const; // Implementation in .cpp to avoid forward declaration issues
+#else
+    void* GetImGuiSrvHeap() const { return nullptr; }
+    void* GetDevice() const { return nullptr; }
+#endif
 
 private:
     // stubs for device and render target ownership
