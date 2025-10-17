@@ -593,4 +593,4 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 | H4 | H4.4 | Crear panel Viewport | ?? Pendiente |
 | H4 | H4.5 | Habilitar docking y validar UI completa | ?? Pendiente |
 
-**Total**: 16 tareas (3 completadas, 13 pendientes)
+**Total**: 16 tareas (4 completadas, 12 pendientes)

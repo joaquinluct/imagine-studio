@@ -102,7 +102,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)external\imgui;$(ProjectDir)external\imgui\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -182,6 +182,12 @@
     <ClCompile Include="src\ui\DirectWriteTextRenderer.cpp" />
     <ClCompile Include="src\ui\SimpleUI.cpp" />
     <ClCompile Include="src\ui\Win32TextRenderer.cpp" />
+    <ClCompile Include="external\imgui\imgui.cpp" />
+    <ClCompile Include="external\imgui\imgui_draw.cpp" />
+    <ClCompile Include="external\imgui\imgui_tables.cpp" />
+    <ClCompile Include="external\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="external\imgui\backends\imgui_impl_dx12.cpp" />
+    <ClCompile Include="external\imgui\backends\imgui_impl_win32.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\assets\AssetManager.h" />
@@ -212,6 +218,8 @@
   <ItemGroup>
     <Text Include="CMakeLists.txt" />
     <Text Include="commit_imgui_h11.txt" />
+    <Text Include="commit_imgui_h12.txt" />
+    <Text Include="commit_imgui_h13.txt" />
     <Text Include="commit_msg.txt" />
     <Text Include="commit_msg2.txt" />
     <Text Include="commit_msg_h4_1.txt" />

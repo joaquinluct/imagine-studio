@@ -1432,6 +1432,46 @@ Esta tarea NO fue necesaria porque el proyecto principal de Visual Studio (`Imag
 
 Refs: Sprint v1.3.0 - H1.3
 
+- feat(imgui): crear ImGui context e inicializar en main.cpp (H1.4)
+
+Implementada tarea H1.4 del Sprint v1.3.0 - Crear ImGui context e inicializar en main.cpp.
+
+**Cambios en main.cpp**:
+- Añadidos headers ImGui: imgui.h, imgui_impl_dx12.h, imgui_impl_win32.h
+- Creado ImGui context después de inicializar ventana: ImGui::CreateContext()
+- Configurado ImGuiIO: io.ConfigFlags (docking comentado - requiere rama docking)
+- Aplicado estilo dark theme: ImGui::StyleColorsDark()
+- Añadido cleanup: ImGui::DestroyContext() antes de cerrar aplicación
+
+**Cambios en Imagine Studio.vcxproj**:
+- Añadidos archivos .cpp de ImGui al proyecto VS para linkeo correcto:
+  * external/imgui/imgui.cpp
+  * external/imgui/imgui_draw.cpp
+  * external/imgui/imgui_tables.cpp
+  * external/imgui/imgui_widgets.cpp
+  * external/imgui/backends/imgui_impl_dx12.cpp
+  * external/imgui/backends/imgui_impl_win32.cpp
+- Añadidos include directories de ImGui:
+  * $(ProjectDir)external\imgui
+  * $(ProjectDir)external\imgui\backends
+
+**Nota sobre docking**:
+- ImGuiConfigFlags_DockingEnable comentado (requiere rama 'docking' de ImGui)
+- La versión v1.91.5 (release) no incluye docking por defecto
+- Se habilitará cuando se actualice a rama docking en sprint futuro
+
+**Archivos modificados**:
+- src/main.cpp - ImGui context inicializado
+- Imagine Studio.vcxproj - Archivos ImGui añadidos y configurados
+- docs/sprint_tasks.md - Tarea H1.4 marcada como completada (4/16 tareas)
+- docs/daily.md - Actualizado para siguiente tarea H2.1
+
+**Compilación**: CMake Debug OK + MSBuild VS Debug OK (0 errores, 0 warnings)
+
+**Próxima tarea**: H2.1 - Crear descriptor heap SRV para ImGui
+
+Refs: Sprint v1.3.0 - H1.4
+
 
 
 

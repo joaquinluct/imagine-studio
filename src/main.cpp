@@ -13,6 +13,12 @@
 #include <fstream>
 #include <sstream>
 #include <windows.h>
+
+// ImGui headers (Dear ImGui - Editor UI Framework)
+#include "imgui.h"
+#include "imgui_impl_dx12.h"
+#include "imgui_impl_win32.h"
+
 // For DPI helper functions
 #include <VersionHelpers.h>
 static int RunApp(HINSTANCE hInstance)
@@ -100,6 +106,22 @@ static int RunApp(HINSTANCE hInstance)
     // remains responsive and the window is interactive during debugging.
     CORE_LOG_INFO(std::string("Render window should be visible (HWND=)") + std::to_string(reinterpret_cast<uintptr_t>(window.GetHWND())));
 
+    // Setup Dear ImGui context (v1.3.0 - Editor UI Framework)
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    
+    // Enable docking (preparar para H4 - Editor Panels & Docking)
+    // NOTE: ImGuiConfigFlags_DockingEnable requiere la rama 'docking' de ImGui
+    // La versión v1.91.5 (release) no incluye docking por defecto
+    // Se habilitará cuando se actualice a la rama docking en sprint futuro
+    // io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    
+    // Setup Dear ImGui style (dark theme)
+    ImGui::StyleColorsDark();
+    
+    CORE_LOG_INFO("ImGui context created and initialized (v1.3.0)");
+
     // Simple message loop
     Platform::InputManager input;
     Renderer::DX12Renderer renderer;
@@ -176,6 +198,10 @@ static int RunApp(HINSTANCE hInstance)
     assets.DumpMetrics();
     ui.Shutdown();
     renderer.Shutdown();
+    
+    // Cleanup Dear ImGui
+    ImGui::DestroyContext();
+    CORE_LOG_INFO("ImGui context destroyed");
 
     CORE_LOG_INFO("Application exiting");
 
