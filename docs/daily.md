@@ -1,4 +1,4 @@
 # Daily Log
 
-Hecho: T4.1 Grabar Command List (Clear + Draw Call)
-Siguiente: T4.2 Ejecutar Command Queue
+Hecho: T4.2 Ejecutar Command Queue
+Siguiente: T4.3 Implementar Fence GPU y Sincronización CPU/GPU
