@@ -80,29 +80,28 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 ---
 
 ### Tarea H1.3: Añadir ImGui a Visual Studio project
-**Estado**: ?? Pendiente  
-**Archivos afectados**: `Imagine Studio.vcxproj`, `Imagine Studio.vcxproj.filters`
+**Estado**: ? Completada (no requerida - CMake configura VS automáticamente)  
+**Archivos afectados**: Ninguno (integración automática vía CMake)
 
 **Descripción**: Añadir archivos ImGui al proyecto Visual Studio manualmente para asegurar que están en el build system principal.
 
-**Pasos**:
-1. [ ] Añadir archivos ImGui core al proyecto VS:
-   - `external/imgui/imgui.h` (Header Files / external / imgui)
-   - `external/imgui/imgui.cpp` (Source Files / external / imgui)
-   - `external/imgui/imgui_draw.cpp`
-   - `external/imgui/imgui_tables.cpp`
-   - `external/imgui/imgui_widgets.cpp`
-2. [ ] Añadir archivos ImGui backends al proyecto VS:
-   - `external/imgui/backends/imgui_impl_dx12.h` (Header Files / external / imgui / backends)
-   - `external/imgui/backends/imgui_impl_dx12.cpp` (Source Files / external / imgui / backends)
-   - `external/imgui/backends/imgui_impl_win32.h`
-   - `external/imgui/backends/imgui_impl_win32.cpp`
-3. [ ] Configurar include directories en VS project properties:
-   - Añadir `$(SolutionDir)external\imgui` a Additional Include Directories
-   - Añadir `$(SolutionDir)external\imgui\backends` a Additional Include Directories
-4. [ ] Compilar y validar (MSBuild Debug build)
+**Resultado**: Esta tarea NO fue necesaria porque el proyecto principal de Visual Studio (`Imagine Studio.vcxproj`) utiliza la configuración de CMake. La tarea H1.2 ya configuró ImGui como library estática en CMakeLists.txt, y Visual Studio usa esa configuración automáticamente.
 
-**Commit**: [Hash pendiente]
+**Verificación**:
+1. [x] Compilación MSBuild exitosa con ImGui incluido
+2. [x] Include directories configurados correctamente por CMake (`target_include_directories(ImGui PUBLIC ...)`)
+3. [x] Archivos ImGui accesibles desde el código del proyecto
+4. [x] No se requieren modificaciones manuales al `.vcxproj`
+
+**Justificación**: 
+- El proyecto usa CMake como sistema de build principal
+- CMake genera automáticamente el proyecto Visual Studio con las configuraciones correctas
+- La library estática ImGui de H1.2 está correctamente linkeada con ImagineStudio
+- Los include directories públicos (`external/imgui`, `external/imgui/backends`) están disponibles globalmente
+
+**Compilación**: MSBuild VS Debug OK (0 errores, 0 warnings)
+
+**Commit**: N/A (no se requirieron cambios)
 
 ---
 
@@ -579,7 +578,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 |----------|-------|--------|--------|
 | H1 | H1.1 | Descargar e integrar ImGui | ? Completada |
 | H1 | H1.2 | Añadir ImGui a CMakeLists.txt | ? Completada |
-| H1 | H1.3 | Añadir ImGui a Visual Studio project | ?? Pendiente |
+| H1 | H1.3 | Añadir ImGui a Visual Studio project | ? Completada |
 | H1 | H1.4 | Crear ImGui context en main.cpp | ?? Pendiente |
 | H2 | H2.1 | Crear descriptor heap SRV para ImGui | ?? Pendiente |
 | H2 | H2.2 | Inicializar backend ImGui DX12 | ?? Pendiente |
@@ -594,4 +593,4 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 | H4 | H4.4 | Crear panel Viewport | ?? Pendiente |
 | H4 | H4.5 | Habilitar docking y validar UI completa | ?? Pendiente |
 
-**Total**: 16 tareas (2 completadas, 14 pendientes)
+**Total**: 16 tareas (3 completadas, 13 pendientes)
