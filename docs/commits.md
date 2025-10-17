@@ -1373,6 +1373,36 @@ Implementada tarea H1.1 del Sprint v1.3.0 - Descargar e integrar ImGui en el pro
 
 Refs: Sprint v1.3.0 - H1.1
 
+- feat(imgui): añadir ImGui a CMakeLists.txt como library estática (H1.2)
+
+Implementada tarea H1.2 del Sprint v1.3.0 - Añadir ImGui a CMakeLists.txt.
+
+**Cambios**:
+- Añadida library estática `ImGui` en CMakeLists.txt con archivos core y backends:
+  * Core: imgui.cpp, imgui_draw.cpp, imgui_tables.cpp, imgui_widgets.cpp
+  * Backends: imgui_impl_dx12.cpp, imgui_impl_win32.cpp
+- Configurado `target_include_directories(ImGui PUBLIC ...)` con:
+  * external/imgui (headers core)
+  * external/imgui/backends (headers backends DX12 + Win32)
+- Linkeado ImGui con ImagineStudio: `target_link_libraries(ImagineStudio PRIVATE ImGui)`
+- Regenerado proyecto CMake: `cmake -S . -B build`
+
+**Resultado**:
+- ImGui compilado como library estática y linkeado correctamente
+- Include directories públicos permiten usar ImGui desde cualquier archivo del proyecto
+- Build system preparado para usar ImGui en H1.4 (crear context) y H2+ (rendering/input)
+
+**Archivos modificados**:
+- `CMakeLists.txt` - Añadida configuración ImGui library
+- `docs/sprint_tasks.md` - Tarea H1.2 marcada como completada (2/16 tareas)
+- `docs/daily.md` - Actualizado para siguiente tarea H1.3
+
+**Compilación**: CMake Debug OK + MSBuild VS Debug OK (0 errores, 0 warnings)
+
+**Próxima tarea**: H1.3 - Añadir ImGui a Visual Studio project
+
+Refs: Sprint v1.3.0 - H1.2
+
 
 
 

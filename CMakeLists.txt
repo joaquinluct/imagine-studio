@@ -104,12 +104,29 @@ set_target_properties(ImagineStudio PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )
 
+# ImGui library (Dear ImGui - Editor UI Framework)
+add_library(ImGui STATIC
+    external/imgui/imgui.cpp
+    external/imgui/imgui_draw.cpp
+    external/imgui/imgui_tables.cpp
+    external/imgui/imgui_widgets.cpp
+    external/imgui/backends/imgui_impl_dx12.cpp
+    external/imgui/backends/imgui_impl_win32.cpp
+)
+target_include_directories(ImGui PUBLIC 
+    external/imgui 
+    external/imgui/backends
+)
+
 if (MSVC)
     target_link_libraries(ImagineStudio PRIVATE Msimg32)
     # Link DirectX libraries for optional DX12 backend
     target_link_libraries(ImagineStudio PRIVATE d3d12 dxgi d3dcompiler)
+    # Link ImGui library
+    target_link_libraries(ImagineStudio PRIVATE ImGui)
 else()
     # On other platforms link adjustments can be added here if needed
+    target_link_libraries(ImagineStudio PRIVATE ImGui)
 endif()
 
 # Benchmarks - add specific bench sources to avoid duplicate mains

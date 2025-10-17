@@ -211,6 +211,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt" />
+    <Text Include="commit_imgui_h11.txt" />
     <Text Include="commit_msg.txt" />
     <Text Include="commit_msg2.txt" />
     <Text Include="commit_msg_h4_1.txt" />

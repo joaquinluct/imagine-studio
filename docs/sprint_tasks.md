@@ -46,15 +46,15 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 ---
 
 ### Tarea H1.2: Añadir ImGui a CMakeLists.txt
-**Estado**: ?? Pendiente  
+**Estado**: ? Completada  
 **Archivos afectados**: `CMakeLists.txt`
 
 **Descripción**: Configurar ImGui como library estática en CMake y linkear con el proyecto principal.
 
 **Pasos**:
-1. [ ] Añadir ImGui como library estática en CMakeLists.txt:
+1. [x] Añadir ImGui como library estática en CMakeLists.txt:
    ```cmake
-   # ImGui library
+   # ImGui library (Dear ImGui - Editor UI Framework)
    add_library(ImGui STATIC
        external/imgui/imgui.cpp
        external/imgui/imgui_draw.cpp
@@ -65,12 +65,15 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
    )
    target_include_directories(ImGui PUBLIC external/imgui external/imgui/backends)
    ```
-2. [ ] Linkear ImGui con el proyecto principal:
+2. [x] Linkear ImGui con el proyecto principal:
    ```cmake
    target_link_libraries(ImagineStudio PRIVATE ImGui d3d12 dxgi d3dcompiler)
    ```
-3. [ ] Regenerar proyecto CMake: `cmake -S . -B build`
-4. [ ] Compilar y validar (CMake Debug build)
+3. [x] Regenerar proyecto CMake: `cmake -S . -B build` ?
+4. [x] Compilar y validar (CMake Debug build) ?
+5. [x] Compilar y validar (MSBuild Debug build) ?
+
+**Resultado**: ImGui integrado en CMake como library estática y linkeado con ImagineStudio. Compilación limpia (0 errores, 0 warnings).
 
 **Commit**: [Hash pendiente]
 
@@ -575,7 +578,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 | Historia | Tarea | Título | Estado |
 |----------|-------|--------|--------|
 | H1 | H1.1 | Descargar e integrar ImGui | ? Completada |
-| H1 | H1.2 | Añadir ImGui a CMakeLists.txt | ?? Pendiente |
+| H1 | H1.2 | Añadir ImGui a CMakeLists.txt | ? Completada |
 | H1 | H1.3 | Añadir ImGui a Visual Studio project | ?? Pendiente |
 | H1 | H1.4 | Crear ImGui context en main.cpp | ?? Pendiente |
 | H2 | H2.1 | Crear descriptor heap SRV para ImGui | ?? Pendiente |
@@ -591,4 +594,4 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 | H4 | H4.4 | Crear panel Viewport | ?? Pendiente |
 | H4 | H4.5 | Habilitar docking y validar UI completa | ?? Pendiente |
 
-**Total**: 16 tareas (1 completada, 15 pendientes)
+**Total**: 16 tareas (2 completadas, 14 pendientes)
