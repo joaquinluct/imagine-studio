@@ -41,22 +41,24 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.2.
 
 ---
 
-### Tarea H1.3: A�adir comentarios para futuros passes (Deferred)
-**Estado**: Pendiente  
+### Tarea H1.3: Añadir comentarios para futuros passes (Deferred)
+**Estado**: ✅ Completada  
 **Archivos afectados**: `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`
 
-**Descripci�n**: A�adir comentarios en el c�digo con m�todos futuros para Deferred Rendering (v1.3.0+) sin implementarlos.
+**Descripción**: Añadir comentarios en el código con métodos futuros para Deferred Rendering (v1.3.0+) sin implementarlos.
 
 **Pasos**:
-1. A�adir comentarios en `DX12Renderer.h` para m�todos futuros:
+1. ✅ Añadir comentarios en `DX12Renderer.h` para métodos futuros:
    - `// void RenderDeferredPass();  // v1.3.0+`
    - `// void GBufferPass();         // v1.3.0+`
    - `// void LightingPass();        // v1.3.0+`
-2. A�adir comentarios para render targets futuros:
+2. ✅ Añadir comentarios para render targets futuros:
    - `// ID3D12Resource* m_gBufferAlbedo;  // v1.3.0+`
    - `// ID3D12Resource* m_gBufferNormal;  // v1.3.0+`
    - `// ID3D12Resource* m_gBufferDepth;   // v1.3.0+`
-3. Compilar y validar (0 errores, 0 warnings)
+3. ✅ Compilar y validar (0 errores, 0 warnings)
+
+**Commit**: cf9d309
 
 ---
 
@@ -271,8 +273,8 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.2.
 |----------|-------|--------|--------|
 | H1 | H1.1 | Refactorizar RenderFrame() | ✅ Completada |
 | H1 | H1.2 | Crear OpaquePass() y UIPass() | ✅ Completada |
-| H1 | H1.3 | Comentarios para futuros passes | Pendiente |
-| H2 | H2.1 | Crear InputManager b�sico | Pendiente |
+| H1 | H1.3 | Comentarios para futuros passes | ✅ Completada |
+| H2 | H2.1 | Crear InputManager básico | Pendiente |
 | H2 | H2.2 | Integrar con Win32 message loop | Pendiente |
 | H2 | H2.3 | Implementar toggle F1 | Pendiente |
 | H2 | H2.4 | Validar toggle F1 | Pendiente |
@@ -285,4 +287,4 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.2.
 | H4 | H4.2 | Conectar UIPass con F1 | Pendiente |
 | H4 | H4.3 | Validar UI Pass con F1 | Pendiente |
 
-**Total**: 15 tareas (2 completadas, 13 pendientes)
+**Total**: 15 tareas (3 completadas, 12 pendientes)

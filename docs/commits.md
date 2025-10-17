@@ -952,6 +952,25 @@ Implementada tarea H1.2 del Sprint v1.2.0 - Crear métodos OpaquePass() y UIPass
 Files changed: `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`
 Refs: Sprint v1.2.0 - H1.2 (commit baae685)
 
+- feat(renderer): añadir comentarios para futuros passes Deferred (H1.3)
+
+Implementada tarea H1.3 del Sprint v1.2.0 - Añadir comentarios para futuros passes (Deferred).
+
+**Cambios:**
+- Añadidos comentarios para métodos futuros de Deferred Rendering (RenderDeferredPass, GBufferPass, LightingPass) marcados como v1.3.0+
+- Añadidos comentarios para render targets futuros de G-Buffer (Albedo, Normal, Depth) marcados como v1.3.0+
+- Arquitectura extensible documentada en el código para evolución a Deferred/Hybrid rendering
+
+**Archivos modificados:**
+- `src/renderer/DX12Renderer.h`: Comentarios añadidos para métodos y recursos futuros
+
+**Compilación:** CMake Debug OK + MSBuild VS Debug OK (0 errores, 0 warnings)
+
+**Historia H1 completada:** Arquitectura Multi-Pass implementada (3/3 tareas)
+
+Files changed: `src/renderer/DX12Renderer.h`
+Refs: Sprint v1.2.0 - H1.3 (commit cf9d309)
+
 
 
 
