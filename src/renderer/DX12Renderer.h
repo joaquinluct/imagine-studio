@@ -9,6 +9,8 @@
 #include <windows.h>
 
 #if defined(_WIN32) && defined(_MSC_VER)
+#include <d3dcommon.h> // For ID3DBlob
+
 struct IDXGISwapChain3;
 struct ID3D12Resource;
 struct ID3D12DescriptorHeap;
@@ -65,6 +67,10 @@ private:
     
     // Root signature (defines shader parameter layout)
     ID3D12RootSignature* m_rootSignature = nullptr;
+    
+    // Compiled shaders (vertex and pixel shader bytecode)
+    ID3DBlob* m_vertexShaderBlob = nullptr;
+    ID3DBlob* m_pixelShaderBlob = nullptr;
 #endif
 };
 

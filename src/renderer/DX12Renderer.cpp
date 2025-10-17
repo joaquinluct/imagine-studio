@@ -8,7 +8,14 @@
 
 #if defined(_WIN32) && defined(_MSC_VER)
 #include <d3d12.h>
+#include <d3dcommon.h>
+#include <d3dcompiler.h>
 #include <dxgi1_4.h>
+
+// Link DirectX 12 and D3D compiler libraries
+#pragma comment(lib, "d3d12.lib")
+#pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "d3dcompiler.lib")
 #endif
 
 #include <iostream>
@@ -269,6 +276,68 @@ void DX12Renderer::Initialize(HWND hwnd)
     }
     
     CORE_LOG_INFO("DX12Renderer: Root Signature created (16 root constants for MVP matrix)");
+    
+    // Compile vertex shader from HLSL file
+    ID3DBlob* vsError = nullptr;
+    hr = D3DCompileFromFile(
+        L"shaders/quad.hlsl",           // Shader file path
+        nullptr,                         // No defines
+        nullptr,                         // No include handler
+        "VSMain",                        // Entry point function name
+        "vs_5_0",                        // Shader target (Shader Model 5.0)
+        D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // Debug flags
+        0,                               // No effect flags
+        &m_vertexShaderBlob,            // Output bytecode
+        &vsError                         // Error messages
+    );
+    
+    if (FAILED(hr))
+    {
+        if (vsError)
+        {
+            CORE_LOG_ERROR("DX12Renderer: Failed to compile vertex shader: " + 
+                std::string(static_cast<const char*>(vsError->GetBufferPointer())));
+            vsError->Release();
+        }
+        else
+        {
+            CORE_LOG_ERROR("DX12Renderer: Failed to compile vertex shader (file not found or compilation error)");
+        }
+        return;
+    }
+    
+    CORE_LOG_INFO("DX12Renderer: Vertex shader compiled successfully");
+    
+    // Compile pixel shader from HLSL file
+    ID3DBlob* psError = nullptr;
+    hr = D3DCompileFromFile(
+        L"shaders/quad.hlsl",           // Same shader file (contains both VS and PS)
+        nullptr,                         // No defines
+        nullptr,                         // No include handler
+        "PSMain",                        // Entry point function name
+        "ps_5_0",                        // Shader target (Shader Model 5.0)
+        D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // Debug flags
+        0,                               // No effect flags
+        &m_pixelShaderBlob,             // Output bytecode
+        &psError                         // Error messages
+    );
+    
+    if (FAILED(hr))
+    {
+        if (psError)
+        {
+            CORE_LOG_ERROR("DX12Renderer: Failed to compile pixel shader: " + 
+                std::string(static_cast<const char*>(psError->GetBufferPointer())));
+            psError->Release();
+        }
+        else
+        {
+            CORE_LOG_ERROR("DX12Renderer: Failed to compile pixel shader (file not found or compilation error)");
+        }
+        return;
+    }
+    
+    CORE_LOG_INFO("DX12Renderer: Pixel shader compiled successfully");
 #endif
     
     allocator_ = new CommandAllocator();
@@ -313,6 +382,21 @@ void DX12Renderer::OnAssetLoaded(const std::string& path)
 void DX12Renderer::Shutdown()
 {
 #if defined(_WIN32) && defined(_MSC_VER)
+    // Release compiled shaders
+    if (m_pixelShaderBlob)
+    {
+        m_pixelShaderBlob->Release();
+        m_pixelShaderBlob = nullptr;
+        CORE_LOG_INFO("DX12Renderer: Pixel shader blob released");
+    }
+    
+    if (m_vertexShaderBlob)
+    {
+        m_vertexShaderBlob->Release();
+        m_vertexShaderBlob = nullptr;
+        CORE_LOG_INFO("DX12Renderer: Vertex shader blob released");
+    }
+    
     // Release root signature
     if (m_rootSignature)
     {
