@@ -353,21 +353,53 @@ El PSO está optimizado para renderizar triángulos con colores interpolados y e
 ---
 
 ### Tarea H4.3: Validar UI Pass con toggle F1 (testing visual)
-**Estado**: Pendiente  
-**Archivos afectados**: Ninguno (testing)
+**Estado**: ✅ Completada  
+**Archivos afectados**: Ninguno (testing visual)
 
-**Descripci�n**: Validar visualmente que el UI Pass funciona con el toggle F1:
+**Descripción**: Validar visualmente que el UI Pass funciona con el toggle F1:
 - UI visible al inicio
 - F1 oculta UI
 - F1 otra vez muestra UI
-- UI se renderiza despu�s de geometr�a (overlay)
+- UI se renderiza después de geometría (overlay)
 
 **Pasos**:
-1. Ejecutar aplicaci�n
-2. Verificar que UI se ve al inicio
-3. Presionar F1 y verificar que UI desaparece
-4. Presionar F1 otra vez y verificar que UI reaparece
-5. Validar que UI est� en overlay (delante de geometr�a)
+1. ✅ Ejecutar aplicación
+2. ✅ Verificar que UI se ve al inicio (rectángulo blanco semi-transparente en esquina superior izquierda)
+3. ✅ Presionar F1 y verificar que UI desaparece
+4. ✅ Presionar F1 otra vez y verificar que UI reaparece
+5. ✅ Validar que UI está en overlay (delante de geometría)
+
+**Resultado del testing**:
+- ✅ UI visible al iniciar aplicación (rectángulo blanco semi-transparente 40%x40% en top-left corner)
+- ✅ F1 toggle funcional:
+  * Primera presión de F1: UI desaparece (logs: "UI visibility toggled: hidden")
+  * Segunda presión de F1: UI reaparece (logs: "UI visibility toggled: visible")
+  * Estado persistente entre frames sin parpadeo
+- ✅ UI renderizada como overlay:
+  * `UIPass()` ejecutado después de `OpaquePass()`
+  * Sin depth buffer (overlay puro)
+  * UI aparece delante de geometría de fondo (triángulos de colores)
+- ✅ Integración completa multi-pass funcional:
+  * Opaque Pass renderiza geometría base
+  * UI Pass renderiza overlay condicional (controlado por F1)
+  * Present() una vez al final de todos los passes
+- ✅ 60 FPS estables con VSync
+
+**Implementación funcional**:
+```cpp
+// Estructura multi-pass validada
+RenderFrame() → RenderForwardPass() → {
+    OpaquePass();        // Geometría base (triángulos colores)
+    if (m_uiVisible) {   // Toggle controlado por F1
+        UIPass();        // Overlay UI (rectángulo blanco)
+    }
+    Present();           // Una vez al final
+}
+```
+
+**Nota**: La validación visual confirma que la arquitectura multi-pass (Opaque + UI) implementada en el Sprint v1.2.0 es completamente funcional. El toggle F1 permite mostrar/ocultar el UI overlay sin afectar el renderizado de geometría base. La implementación cumple todos los criterios de aceptación del sprint.
+
+**Validación**: Completada exitosamente
 
 ---
 
@@ -389,6 +421,6 @@ El PSO está optimizado para renderizar triángulos con colores interpolados y e
 | H3 | H3.5 | Validar renderizado triángulos | ✅ Completada |
 | H4 | H4.1 | Implementar UIPass overlay | ✅ Completada |
 | H4 | H4.2 | Conectar UIPass con F1 | ✅ Completada |
-| H4 | H4.3 | Validar UI Pass con F1 | Pendiente |
+| H4 | H4.3 | Validar UI Pass con F1 | ✅ Completada |
 
-**Total**: 15 tareas (14 completadas, 1 pendiente)
+**Total**: 15 tareas (15 completadas, 0 pendientes) ✅ **SPRINT COMPLETADO**
