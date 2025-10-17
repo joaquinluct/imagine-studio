@@ -18,6 +18,7 @@ struct ID3D12CommandAllocator;
 struct ID3D12GraphicsCommandList;
 struct ID3D12Fence;
 struct ID3D12RootSignature;
+struct ID3D12PipelineState;
 #endif
 
 namespace Renderer {
@@ -71,6 +72,9 @@ private:
     // Compiled shaders (vertex and pixel shader bytecode)
     ID3DBlob* m_vertexShaderBlob = nullptr;
     ID3DBlob* m_pixelShaderBlob = nullptr;
+    
+    // Pipeline State Object (defines complete graphics pipeline state)
+    ID3D12PipelineState* m_pipelineState = nullptr;
 #endif
 };
 

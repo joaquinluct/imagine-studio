@@ -338,6 +338,84 @@ void DX12Renderer::Initialize(HWND hwnd)
     }
     
     CORE_LOG_INFO("DX12Renderer: Pixel shader compiled successfully");
+    
+    // Define input layout (vertex structure description)
+    D3D12_INPUT_ELEMENT_DESC inputElements[] = {
+        {
+            "POSITION",                              // Semantic name
+            0,                                        // Semantic index
+            DXGI_FORMAT_R32G32B32_FLOAT,             // Format (3 floats for position)
+            0,                                        // Input slot
+            0,                                        // Aligned byte offset (0 = start of struct)
+            D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, // Input slot class
+            0                                         // Instance data step rate
+        },
+        {
+            "COLOR",                                  // Semantic name
+            0,                                        // Semantic index
+            DXGI_FORMAT_R32G32B32A32_FLOAT,          // Format (4 floats for color)
+            0,                                        // Input slot (same as position)
+            12,                                       // Aligned byte offset (after 3 floats = 12 bytes)
+            D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, // Input slot class
+            0                                         // Instance data step rate
+        }
+    };
+    
+    // Define rasterizer state (default with backface culling)
+    D3D12_RASTERIZER_DESC rasterizerDesc = {};
+    rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
+    rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
+    rasterizerDesc.FrontCounterClockwise = FALSE;
+    rasterizerDesc.DepthBias = 0;
+    rasterizerDesc.DepthBiasClamp = 0.0f;
+    rasterizerDesc.SlopeScaledDepthBias = 0.0f;
+    rasterizerDesc.DepthClipEnable = TRUE;
+    rasterizerDesc.MultisampleEnable = FALSE;
+    rasterizerDesc.AntialiasedLineEnable = FALSE;
+    rasterizerDesc.ForcedSampleCount = 0;
+    rasterizerDesc.ConservativeRaster = D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF;
+    
+    // Define blend state (default with no blending)
+    D3D12_BLEND_DESC blendDesc = {};
+    blendDesc.AlphaToCoverageEnable = FALSE;
+    blendDesc.IndependentBlendEnable = FALSE;
+    blendDesc.RenderTarget[0].BlendEnable = FALSE;
+    blendDesc.RenderTarget[0].LogicOpEnable = FALSE;
+    blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_ONE;
+    blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ZERO;
+    blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+    blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+    blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
+    blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+    blendDesc.RenderTarget[0].LogicOp = D3D12_LOGIC_OP_NOOP;
+    blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+    
+    // Create Graphics Pipeline State Object (PSO)
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
+    psoDesc.InputLayout = { inputElements, 2 }; // 2 input elements (POSITION + COLOR)
+    psoDesc.pRootSignature = m_rootSignature;
+    psoDesc.VS = { m_vertexShaderBlob->GetBufferPointer(), m_vertexShaderBlob->GetBufferSize() };
+    psoDesc.PS = { m_pixelShaderBlob->GetBufferPointer(), m_pixelShaderBlob->GetBufferSize() };
+    psoDesc.RasterizerState = rasterizerDesc;
+    psoDesc.BlendState = blendDesc;
+    psoDesc.DepthStencilState.DepthEnable = FALSE; // No depth testing for 2D quad
+    psoDesc.DepthStencilState.StencilEnable = FALSE;
+    psoDesc.SampleMask = UINT_MAX;
+    psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+    psoDesc.NumRenderTargets = 1;
+    psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM; // Match swap chain format
+    psoDesc.SampleDesc.Count = 1;
+    psoDesc.SampleDesc.Quality = 0;
+    
+    hr = d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState));
+    
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to create Pipeline State Object");
+        return;
+    }
+    
+    CORE_LOG_INFO("DX12Renderer: Pipeline State Object created successfully");
 #endif
     
     allocator_ = new CommandAllocator();
@@ -382,6 +460,14 @@ void DX12Renderer::OnAssetLoaded(const std::string& path)
 void DX12Renderer::Shutdown()
 {
 #if defined(_WIN32) && defined(_MSC_VER)
+    // Release pipeline state object
+    if (m_pipelineState)
+    {
+        m_pipelineState->Release();
+        m_pipelineState = nullptr;
+        CORE_LOG_INFO("DX12Renderer: Pipeline State Object released");
+    }
+    
     // Release compiled shaders
     if (m_pixelShaderBlob)
     {
