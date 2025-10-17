@@ -112,7 +112,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.2.
 4. ✅ Actualizar `RenderForwardPass()` para llamar a `UIPass()` solo si `m_uiVisible == true`
 5. ✅ Compilar y validar (0 errores, 0 warnings)
 
-**Commit**: (pendiente)
+**Commit**: 8900b88
 
 ---
 

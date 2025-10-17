@@ -1,4 +1,4 @@
 ﻿# Daily Log
 
-Hecho: H3.3 Verificar PSO para triángulos (implementación existente)
-Siguiente: H3.4 Renderizar triángulos en OpaquePass()
+Hecho: H2.3 Implementar toggle de UI con F1
+Siguiente: H2.4 Validar toggle de UI (testing manual)
