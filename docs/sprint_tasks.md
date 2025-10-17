@@ -82,16 +82,20 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.2.
 ---
 
 ### Tarea H2.2: Integrar InputManager con Win32 message loop
-**Estado**: Pendiente  
-**Archivos afectados**: `src/platform/Win32Window.cpp`, `src/core/Application.cpp`
+**Estado**: ✅ Completada  
+**Archivos verificados**: `src/main.cpp`
 
-**Descripci�n**: Integrar `InputManager::Update()` en el message loop de Win32 para actualizar el estado del teclado cada frame.
+**Descripción**: Integrar `InputManager::Update()` en el message loop de Win32 para actualizar el estado del teclado cada frame.
 
 **Pasos**:
-1. A�adir `InputManager` como miembro de `Application`
-2. Llamar a `InputManager::Update()` en el loop principal (antes de renderizar)
-3. Procesar mensajes `WM_KEYDOWN` y `WM_KEYUP` si es necesario
-4. Compilar y validar (0 errores, 0 warnings)
+1. ✅ Verificar que `InputManager` existe en el loop principal (`main.cpp`)
+2. ✅ Verificar que `InputManager::Update()` se llama cada frame (antes de renderizar)
+3. ✅ Confirmar que la implementación con `GetAsyncKeyState()` es funcional (no requiere `WM_KEYDOWN`/`WM_KEYUP`)
+4. ✅ Compilar y validar (0 errores, 0 warnings)
+
+**Nota**: La integración ya estaba implementada en `main.cpp`. El `InputManager` se instancia como `Platform::InputManager input;` y `input.Update(window.GetHWND());` se llama cada frame antes de `renderer.RenderFrame()`.
+
+**Commit**: 174dadc (integración ya existente, tarea marcada como completada)
 
 ---
 
@@ -274,7 +278,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.2.
 | H1 | H1.2 | Crear OpaquePass() y UIPass() | ✅ Completada |
 | H1 | H1.3 | Comentarios para futuros passes | ✅ Completada |
 | H2 | H2.1 | Crear InputManager básico | ✅ Completada |
-| H2 | H2.2 | Integrar con Win32 message loop | Pendiente |
+| H2 | H2.2 | Integrar con Win32 message loop | ✅ Completada |
 | H2 | H2.3 | Implementar toggle F1 | Pendiente |
 | H2 | H2.4 | Validar toggle F1 | Pendiente |
 | H3 | H3.1 | Crear vertex buffer tri�ngulos | Pendiente |
@@ -286,4 +290,4 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.2.
 | H4 | H4.2 | Conectar UIPass con F1 | Pendiente |
 | H4 | H4.3 | Validar UI Pass con F1 | Pendiente |
 
-**Total**: 15 tareas (4 completadas, 11 pendientes)
+**Total**: 15 tareas (5 completadas, 10 pendientes)

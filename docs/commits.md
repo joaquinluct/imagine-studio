@@ -991,6 +991,24 @@ Implementada tarea H2.1 del Sprint v1.2.0 - Crear clase InputManager básica con
 Files changed: `src/platform/Input.h`, `src/platform/Input.cpp`
 Refs: Sprint v1.2.0 - H2.1 (commit aeceac8)
 
+- docs(sprint): marcar tarea H2.2 como completada (integración existente verificada)
+
+Marcada tarea H2.2 del Sprint v1.2.0 - Integrar InputManager con Win32 message loop como completada.
+
+**Verificación:**
+- `InputManager` ya está instanciado en `main.cpp` como `Platform::InputManager input;`
+- `input.Update(window.GetHWND());` ya se llama cada frame antes de `renderer.RenderFrame()`
+- Implementación con `GetAsyncKeyState()` es funcional y no requiere procesar `WM_KEYDOWN`/`WM_KEYUP`
+- La integración fue implementada en commits anteriores del proyecto
+
+**Archivos verificados:**
+- `src/main.cpp`: Contiene instancia de `InputManager` y llamada a `Update()` en el loop principal
+
+**Compilación:** CMake Debug OK + MSBuild VS Debug OK (0 errores, 0 warnings)
+
+Files changed: `docs/sprint_tasks.md`, `docs/daily.md`, `docs/commits.md`
+Refs: Sprint v1.2.0 - H2.2 (tarea marcada como completada)
+
 
 
 
