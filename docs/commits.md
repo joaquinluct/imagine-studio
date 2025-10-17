@@ -607,6 +607,38 @@ Files changed: src/renderer/DX12Renderer.cpp
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
 Refs: T4.4
 
+- fix(renderer): fix quad visibility and prevent crash on shutdown
+
+Fixed two critical issues found during first execution:
+
+1. **Quad visibility issue**:
+   - Increased quad size from 0.5 to 0.75 for better visibility
+   - Quad now occupies 75% of viewport instead of 50%
+   - Colors more visible: red, green, blue, yellow
+
+2. **Shutdown crash issue**:
+   - Added GPU wait in Shutdown() before releasing resources
+   - Signal fence with current fenceValue
+   - SetEventOnCompletion + WaitForSingleObject(INFINITE)
+   - Prevents D3D12 error: OBJECT_DELETED_WHILE_STILL_IN_USE
+   - Ensures all GPU work completes before resource cleanup
+
+Implementation details:
+- GPU fence signaled during shutdown with final value
+- CPU waits for GPU to complete all pending operations
+- Resources released only after GPU idle confirmation
+- Logging added to confirm safe shutdown
+
+Result:
+- ? Quad now visible on screen (colored triangle mesh)
+- ? Clean shutdown without GPU exceptions
+- ? No more D3D12 debug layer errors
+
+Files changed: src/renderer/DX12Renderer.cpp
+Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
+
+
+
 
 
 
