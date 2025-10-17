@@ -1286,6 +1286,56 @@ Estado:
 - Hecho: Cerrar Sprint v1.2.0 y archivar ficheros versionados
 - Siguiente: Planificar Sprint v1.3.0 (próxima sesión)
 
+- docs: planificar Sprint v1.3.0 - ImGui Integration (Editor UI Framework)
+
+Sprint v1.3.0 planificado con integración de ImGui como framework de UI para Editor/Tools.
+
+**Decisión arquitectónica**:
+- Implementar ImGui (Immediate Mode GUI) para Editor/Studio Mode (Pilar #1)
+- Estándar de la industria AAA (Unity Editor, Unreal Editor, Blender tools)
+- Arquitectura dual: ImGui para Editor (v1.3.0), Custom Retained-Mode UI para Runtime (v1.4.0+)
+
+**Archivos creados**:
+- `docs/sprint.md`: Objetivos, hitos y criterios de aceptación del sprint v1.3.0
+- `docs/sprint_histories.md`: 4 historias de usuario (H1-H4)
+  * H1: ImGui Core Integration (descargar, build system, context)
+  * H2: ImGui DX12 Rendering Backend (descriptor heap, rendering)
+  * H3: ImGui Win32 Input Backend (mouse, keyboard, scroll)
+  * H4: Editor Panels & Docking (Hierarchy, Inspector, Console, Viewport)
+- `docs/sprint_tasks.md`: 16 tareas detalladas con pasos de implementación
+
+**Archivos actualizados**:
+- `docs/backlog.md`: Añadidos sprints futuros al backlog
+  * BACK-001: Custom Runtime UI Framework (v1.4.0)
+  * BACK-002: UI Theming & Styling System (v1.5.0)
+  * BACK-003: Deferred Rendering (movido a prioridad más baja)
+- `docs/daily.md`: Preparado para iniciar tarea H1.1
+
+**Hitos del sprint**:
+1. ImGui Core Integration (descargar, build, context)
+2. ImGui DX12 Rendering Backend (SRV heap, text rendering)
+3. ImGui Win32 Input Backend (mouse, keyboard, scroll)
+4. Editor Panels & Docking (4 panels funcionales)
+
+**Criterios de aceptación**:
+- ImGui integrado y compilando (0 errores, 0 warnings)
+- Text rendering funcional (font atlas cargada, letras visibles)
+- Panels flotantes con docking habilitado
+- Input mouse/keyboard funcional en UI
+- Toggle F1 para mostrar/ocultar UI de Editor
+- 4 panels funcionales (Hierarchy, Inspector, Console, Viewport)
+- 60 FPS estables con ImGui activo
+
+**Próxima tarea**: H1.1 - Descargar e integrar ImGui en el proyecto
+
+**Referencia**: docs/MAIN.md (pilares fundamentales)
+
+**Estado**: Sprint v1.3.0 listo para comenzar
+
+Files changed: `docs/sprint.md`, `docs/sprint_histories.md`, `docs/sprint_tasks.md`, `docs/backlog.md`, `docs/daily.md`, `docs/commits.md`
+Compilation: No requiere compilación (solo planificación de documentación)
+Refs: Sprint v1.3.0 planning
+
 
 
 
