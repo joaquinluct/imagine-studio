@@ -1,4 +1,4 @@
 ﻿# Daily Log
 
-Hecho: H4.1 Implementar UIPass() con overlay simple
-Siguiente: H4.2 Conectar UIPass() con toggle F1
+Hecho: H4.2 Conectar UIPass() con toggle F1 (verificación)
+Siguiente: H4.3 Validar UI Pass con toggle F1 (testing visual)

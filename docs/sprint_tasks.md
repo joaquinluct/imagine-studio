@@ -313,15 +313,42 @@ El PSO está optimizado para renderizar triángulos con colores interpolados y e
 ---
 
 ### Tarea H4.2: Conectar UIPass() con toggle F1
-**Estado**: Pendiente  
-**Archivos afectados**: `src/renderer/DX12Renderer.cpp`
+**Estado**: ✅ Completada (implementación existente desde H1.2, H2.3 y H4.1)
+**Archivos verificados**: `src/renderer/DX12Renderer.cpp`
 
-**Descripci�n**: Validar que `UIPass()` solo se ejecuta si `m_uiVisible == true` (controlado por F1).
+**Descripción**: Validar que `UIPass()` solo se ejecuta si `m_uiVisible == true` (controlado por F1).
 
 **Pasos**:
-1. En `RenderForwardPass()`, llamar a `UIPass()` despu�s de `OpaquePass()`
-2. `UIPass()` verifica `m_uiVisible` antes de renderizar
-3. Compilar y validar (0 errores, 0 warnings)
+1. ✅ En `RenderForwardPass()`, llamar a `UIPass()` después de `OpaquePass()` (implementado en H1.2)
+2. ✅ `UIPass()` verifica `m_uiVisible` antes de renderizar con `if (!m_uiVisible) return;` (implementado en H4.1)
+3. ✅ Compilar y validar (0 errores, 0 warnings)
+
+**Verificación:**
+- ✅ `RenderForwardPass()` estructura correcta:
+  ```cpp
+  void DX12Renderer::RenderForwardPass() {
+      OpaquePass();           // Pass 1
+      if (m_uiVisible) {      // Condicional añadido en H2.3
+          UIPass();           // Pass 2
+      }
+      Present();              // Una vez al final
+  }
+  ```
+- ✅ `UIPass()` early exit implementado:
+  ```cpp
+  void DX12Renderer::UIPass() {
+      if (!m_uiVisible) return;  // Early exit si UI oculto
+      // ... renderizado de UI overlay
+  }
+  ```
+- ✅ Toggle funcional con F1 (implementado en H2.3, validado en H2.4)
+
+**Nota**: La conexión entre UIPass() y toggle F1 fue implementada progresivamente en múltiples tareas:
+- H1.2: Estructura multi-pass con `OpaquePass()` + `UIPass()`
+- H2.3: Toggle F1 que modifica `m_uiVisible` y condiciona llamada a `UIPass()`
+- H4.1: `UIPass()` con verificación de `m_uiVisible` y renderizado de overlay
+
+**Commit**: Implementación existente desde H1.2 (baae685), H2.3 (8900b88) y H4.1 (51384f7)
 
 ---
 
@@ -361,7 +388,7 @@ El PSO está optimizado para renderizar triángulos con colores interpolados y e
 | H3 | H3.4 | Renderizar triángulos OpaquePass | ✅ Completada |
 | H3 | H3.5 | Validar renderizado triángulos | ✅ Completada |
 | H4 | H4.1 | Implementar UIPass overlay | ✅ Completada |
-| H4 | H4.2 | Conectar UIPass con F1 | Pendiente |
+| H4 | H4.2 | Conectar UIPass con F1 | ✅ Completada |
 | H4 | H4.3 | Validar UI Pass con F1 | Pendiente |
 
-**Total**: 15 tareas (13 completadas, 2 pendientes)
+**Total**: 15 tareas (14 completadas, 1 pendiente)
