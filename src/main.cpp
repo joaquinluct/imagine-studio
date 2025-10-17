@@ -1,4 +1,4 @@
-// Application entry using Platform::Window
+ï»¿// Application entry using Platform::Window
 #include "assets/AssetManager.h"
 #include "core/Log.h"
 #include "jobs/TaskGraph.h"
@@ -88,7 +88,7 @@ static int RunApp(HINSTANCE hInstance)
         }
     }
 
-    // (Removed diagnostic repositioning — the window was intentionally set
+    // (Removed diagnostic repositioning ï¿½ the window was intentionally set
     // to borderless fullscreen above and repositioning here reverted it.)
 
     // Log HWND for diagnosis

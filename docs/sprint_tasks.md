@@ -1,24 +1,24 @@
-
+ï»¿
 # Sprint v1.1.0 - Tareas Detalladas
 
 > **Referencia**: Ver [`docs/MAIN.md`](MAIN.md) para los pilares fundamentales del proyecto.
 
 Este fichero contiene las tareas detalladas para cada historia de usuario del sprint activo.
 
-**NOTA**: Cada tarea es la unidad mínima implementable y seguirá el proceso de iteración (implementar, doble compilación, commit, actualizar docs).
+**NOTA**: Cada tarea es la unidad mï¿½nima implementable y seguirï¿½ el proceso de iteraciï¿½n (implementar, doble compilaciï¿½n, commit, actualizar docs).
 
 ---
 
 ## ?? Tareas por Historia
 
-### **Historia H1 - Inicialización DX12** ??
+### **Historia H1 - Inicializaciï¿½n DX12** ??
 
 #### **T1.1 - Crear DX12 Device y DXGI Factory**
 **ID**: T1.1  
 **Historia**: H1  
-**Descripción**: Implementar la creación de `IDXGIFactory4` (usando `CreateDXGIFactory2`), enumerar adaptadores GPU, y crear `ID3D12Device` con el adaptador seleccionado.
+**Descripciï¿½n**: Implementar la creaciï¿½n de `IDXGIFactory4` (usando `CreateDXGIFactory2`), enumerar adaptadores GPU, y crear `ID3D12Device` con el adaptador seleccionado.
 
-**Implementación**:
+**Implementaciï¿½n**:
 ```cpp
 // En DX12Device.cpp:
 - IDXGIFactory4* factory;
@@ -30,16 +30,16 @@ Este fichero contiene las tareas detalladas para cada historia de usuario del sp
 
 **Archivos afectados**: `src/renderer/DX12Device.h`, `src/renderer/DX12Device.cpp`
 
-**Criterio de éxito**: Device creado sin errores, logs confirman GPU seleccionada.
+**Criterio de ï¿½xito**: Device creado sin errores, logs confirman GPU seleccionada.
 
 ---
 
 #### **T1.2 - Crear Command Queue**
 **ID**: T1.2  
 **Historia**: H1  
-**Descripción**: Crear `ID3D12CommandQueue` de tipo DIRECT para enviar comandos a la GPU.
+**Descripciï¿½n**: Crear `ID3D12CommandQueue` de tipo DIRECT para enviar comandos a la GPU.
 
-**Implementación**:
+**Implementaciï¿½n**:
 ```cpp
 // En DX12Device.cpp:
 D3D12_COMMAND_QUEUE_DESC queueDesc = {};
@@ -50,16 +50,16 @@ m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_commandQueue));
 
 **Archivos afectados**: `src/renderer/DX12Device.h`, `src/renderer/DX12Device.cpp`
 
-**Criterio de éxito**: Command queue creada correctamente.
+**Criterio de ï¿½xito**: Command queue creada correctamente.
 
 ---
 
 #### **T1.3 - Crear SwapChain con Back Buffers**
 **ID**: T1.3  
 **Historia**: H1  
-**Descripción**: Crear `IDXGISwapChain3` con 2-3 back buffers usando `CreateSwapChainForHwnd`, obtener buffers con `GetBuffer` y crear RTVs.
+**Descripciï¿½n**: Crear `IDXGISwapChain3` con 2-3 back buffers usando `CreateSwapChainForHwnd`, obtener buffers con `GetBuffer` y crear RTVs.
 
-**Implementación**:
+**Implementaciï¿½n**:
 ```cpp
 // En DX12Renderer.cpp:
 DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
@@ -86,16 +86,16 @@ for (UINT i = 0; i < 2; ++i) {
 
 **Archivos afectados**: `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`
 
-**Criterio de éxito**: SwapChain creado, 2 back buffers obtenidos y RTVs creados.
+**Criterio de ï¿½xito**: SwapChain creado, 2 back buffers obtenidos y RTVs creados.
 
 ---
 
 #### **T1.4 - Crear Descriptor Heaps (RTV, CBV/SRV/UAV)**
 **ID**: T1.4  
 **Historia**: H1  
-**Descripción**: Crear descriptor heaps para Render Target Views (RTV) y para Constant/Shader/Unordered Access Views (CBV/SRV/UAV).
+**Descripciï¿½n**: Crear descriptor heaps para Render Target Views (RTV) y para Constant/Shader/Unordered Access Views (CBV/SRV/UAV).
 
-**Implementación**:
+**Implementaciï¿½n**:
 ```cpp
 // En DX12Device.cpp:
 D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
@@ -113,16 +113,16 @@ m_device->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&m_cbvHeap));
 
 **Archivos afectados**: `src/renderer/DX12Device.h`, `src/renderer/DX12Device.cpp`
 
-**Criterio de éxito**: Descriptor heaps creados y handles obtenidos.
+**Criterio de ï¿½xito**: Descriptor heaps creados y handles obtenidos.
 
 ---
 
 #### **T1.5 - Crear Command Allocators, Command List y Fence GPU**
 **ID**: T1.5  
 **Historia**: H1  
-**Descripción**: Crear `ID3D12CommandAllocator` por frame, `ID3D12GraphicsCommandList`, `ID3D12Fence` y evento Win32 para sincronización.
+**Descripciï¿½n**: Crear `ID3D12CommandAllocator` por frame, `ID3D12GraphicsCommandList`, `ID3D12Fence` y evento Win32 para sincronizaciï¿½n.
 
-**Implementación**:
+**Implementaciï¿½n**:
 ```cpp
 // En DX12Renderer.cpp:
 // Command Allocator (uno por frame)
@@ -149,7 +149,7 @@ m_fenceEvent = CreateEventEx(nullptr, nullptr, 0, EVENT_ALL_ACCESS);
 
 **Archivos afectados**: `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`
 
-**Criterio de éxito**: Command allocator, list, fence y evento creados sin errores.
+**Criterio de ï¿½xito**: Command allocator, list, fence y evento creados sin errores.
 
 ---
 
@@ -158,9 +158,9 @@ m_fenceEvent = CreateEventEx(nullptr, nullptr, 0, EVENT_ALL_ACCESS);
 #### **T2.1 - Crear Root Signature**
 **ID**: T2.1  
 **Historia**: H2  
-**Descripción**: Definir y crear Root Signature con root constants para MVP matrix (16 floats = 64 bytes).
+**Descripciï¿½n**: Definir y crear Root Signature con root constants para MVP matrix (16 floats = 64 bytes).
 
-**Implementación**:
+**Implementaciï¿½n**:
 ```cpp
 // En DX12Renderer.cpp:
 D3D12_ROOT_PARAMETER rootParam = {};
@@ -182,16 +182,16 @@ m_device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBu
 
 **Archivos afectados**: `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`
 
-**Criterio de éxito**: Root Signature creada y serializada correctamente.
+**Criterio de ï¿½xito**: Root Signature creada y serializada correctamente.
 
 ---
 
 #### **T2.2 - Compilar Shaders HLSL (Vertex & Pixel)**
 **ID**: T2.2  
 **Historia**: H2  
-**Descripción**: Crear archivos HLSL para vertex y pixel shaders, compilarlos con `D3DCompileFromFile` o runtime compilation.
+**Descripciï¿½n**: Crear archivos HLSL para vertex y pixel shaders, compilarlos con `D3DCompileFromFile` o runtime compilation.
 
-**Implementación**:
+**Implementaciï¿½n**:
 ```hlsl
 // shaders/quad.hlsl:
 cbuffer Constants : register(b0) {
@@ -230,16 +230,16 @@ D3DCompileFromFile(L"shaders/quad.hlsl", nullptr, nullptr, "PSMain", "ps_5_0", 0
 
 **Archivos afectados**: `shaders/quad.hlsl` (nuevo), `src/renderer/DX12Renderer.cpp`
 
-**Criterio de éxito**: Shaders compilados sin errores, bytecode listo.
+**Criterio de ï¿½xito**: Shaders compilados sin errores, bytecode listo.
 
 ---
 
 #### **T2.3 - Crear Pipeline State Object (PSO)**
 **ID**: T2.3  
 **Historia**: H2  
-**Descripción**: Crear PSO con InputLayout (POSITION, COLOR), shaders compilados y estados de render.
+**Descripciï¿½n**: Crear PSO con InputLayout (POSITION, COLOR), shaders compilados y estados de render.
 
-**Implementación**:
+**Implementaciï¿½n**:
 ```cpp
 // En DX12Renderer.cpp:
 D3D12_INPUT_ELEMENT_DESC inputElements[] = {
@@ -266,7 +266,7 @@ m_device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState));
 
 **Archivos afectados**: `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`
 
-**Criterio de éxito**: PSO creado sin errores.
+**Criterio de ï¿½xito**: PSO creado sin errores.
 
 ---
 
@@ -275,9 +275,9 @@ m_device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState));
 #### **T3.1 - Crear Vertex Buffer (Upload + Default Heap)**
 **ID**: T3.1  
 **Historia**: H3  
-**Descripción**: Crear vertex buffer con 6 vértices (quad = 2 triángulos), upload vía staging heap y copy a default heap.
+**Descripciï¿½n**: Crear vertex buffer con 6 vï¿½rtices (quad = 2 triï¿½ngulos), upload vï¿½a staging heap y copy a default heap.
 
-**Implementación**:
+**Implementaciï¿½n**:
 ```cpp
 // En DX12Renderer.cpp:
 struct Vertex {
@@ -319,16 +319,16 @@ commandList->ResourceBarrier(1, &barrier);
 
 **Archivos afectados**: `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`
 
-**Criterio de éxito**: Vertex buffer en GPU con datos correctos.
+**Criterio de ï¿½xito**: Vertex buffer en GPU con datos correctos.
 
 ---
 
 #### **T3.2 - Crear Constant Buffer (MVP Matrix)**
 **ID**: T3.2  
 **Historia**: H3  
-**Descripción**: Crear constant buffer con MVP matrix (identity para "Hola Mundo"), mapeado para updates.
+**Descripciï¿½n**: Crear constant buffer con MVP matrix (identity para "Hola Mundo"), mapeado para updates.
 
-**Implementación**:
+**Implementaciï¿½n**:
 ```cpp
 // En DX12Renderer.cpp:
 float mvp[16] = {1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1}; // Identity
@@ -344,16 +344,16 @@ memcpy(m_cbMappedData, mvp, sizeof(mvp));
 
 **Archivos afectados**: `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`
 
-**Criterio de éxito**: Constant buffer creado y mapeado.
+**Criterio de ï¿½xito**: Constant buffer creado y mapeado.
 
 ---
 
 #### **T3.3 - Configurar Vertex Buffer View**
 **ID**: T3.3  
 **Historia**: H3  
-**Descripción**: Configurar `D3D12_VERTEX_BUFFER_VIEW` para bind del vertex buffer en command list.
+**Descripciï¿½n**: Configurar `D3D12_VERTEX_BUFFER_VIEW` para bind del vertex buffer en command list.
 
-**Implementación**:
+**Implementaciï¿½n**:
 ```cpp
 // En DX12Renderer.cpp:
 m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
@@ -363,7 +363,7 @@ m_vertexBufferView.SizeInBytes = sizeof(vertices); // 6 * 28 = 168
 
 **Archivos afectados**: `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`
 
-**Criterio de éxito**: Vertex buffer view configurado correctamente.
+**Criterio de ï¿½xito**: Vertex buffer view configurado correctamente.
 
 ---
 
@@ -372,9 +372,9 @@ m_vertexBufferView.SizeInBytes = sizeof(vertices); // 6 * 28 = 168
 #### **T4.1 - Grabar Command List (Clear + Draw Call)**
 **ID**: T4.1  
 **Historia**: H4  
-**Descripción**: Implementar grabación de command list con clear de RTV y draw call `DrawInstanced`.
+**Descripciï¿½n**: Implementar grabaciï¿½n de command list con clear de RTV y draw call `DrawInstanced`.
 
-**Implementación**:
+**Implementaciï¿½n**:
 ```cpp
 // En DX12Renderer::RenderFrame():
 m_commandAllocator->Reset();
@@ -423,16 +423,16 @@ m_commandList->Close();
 
 **Archivos afectados**: `src/renderer/DX12Renderer.cpp`
 
-**Criterio de éxito**: Command list grabada sin errores, incluye clear y draw call.
+**Criterio de ï¿½xito**: Command list grabada sin errores, incluye clear y draw call.
 
 ---
 
 #### **T4.2 - Ejecutar Command Queue**
 **ID**: T4.2  
 **Historia**: H4  
-**Descripción**: Enviar command list a command queue para ejecución en GPU.
+**Descripciï¿½n**: Enviar command list a command queue para ejecuciï¿½n en GPU.
 
-**Implementación**:
+**Implementaciï¿½n**:
 ```cpp
 // En DX12Renderer::RenderFrame():
 ID3D12CommandList* ppCommandLists[] = {m_commandList};
@@ -441,16 +441,16 @@ m_commandQueue->ExecuteCommandLists(1, ppCommandLists);
 
 **Archivos afectados**: `src/renderer/DX12Renderer.cpp`
 
-**Criterio de éxito**: Command queue ejecuta command lists sin errores.
+**Criterio de ï¿½xito**: Command queue ejecuta command lists sin errores.
 
 ---
 
-#### **T4.3 - Implementar Fence GPU y Sincronización CPU/GPU**
+#### **T4.3 - Implementar Fence GPU y Sincronizaciï¿½n CPU/GPU**
 **ID**: T4.3  
 **Historia**: H4  
-**Descripción**: Señalizar fence tras ejecutar comandos y esperar en CPU usando evento Win32.
+**Descripciï¿½n**: Seï¿½alizar fence tras ejecutar comandos y esperar en CPU usando evento Win32.
 
-**Implementación**:
+**Implementaciï¿½n**:
 ```cpp
 // En DX12Renderer::RenderFrame():
 const UINT64 fenceValueNow = m_fenceValue;
@@ -466,16 +466,16 @@ if (m_fence->GetCompletedValue() < fenceValueNow) {
 
 **Archivos afectados**: `src/renderer/DX12Renderer.cpp`
 
-**Criterio de éxito**: Fence sincroniza CPU/GPU correctamente, sin deadlocks.
+**Criterio de ï¿½xito**: Fence sincroniza CPU/GPU correctamente, sin deadlocks.
 
 ---
 
 #### **T4.4 - Implementar Present con VSync**
 **ID**: T4.4  
 **Historia**: H4  
-**Descripción**: Llamar a `Present(1, 0)` para mostrar el frame con VSync habilitado (60 FPS).
+**Descripciï¿½n**: Llamar a `Present(1, 0)` para mostrar el frame con VSync habilitado (60 FPS).
 
-**Implementación**:
+**Implementaciï¿½n**:
 ```cpp
 // En DX12Renderer::RenderFrame():
 m_swapChain->Present(1, 0); // VSync habilitado
@@ -484,38 +484,38 @@ m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
 
 **Archivos afectados**: `src/renderer/DX12Renderer.cpp`
 
-**Criterio de éxito**: Present ejecutado correctamente, ventana muestra quad renderizado, 60 FPS con VSync.
+**Criterio de ï¿½xito**: Present ejecutado correctamente, ventana muestra quad renderizado, 60 FPS con VSync.
 
 ---
 
 ## ?? Resumen de Tareas
 
-| ID | Título | Historia | Prioridad | Estado |
+| ID | Tï¿½tulo | Historia | Prioridad | Estado |
 |----|--------|----------|-----------|--------|
-| T1.1 | Crear DX12 Device y DXGI Factory | H1 | ?? CRÍTICO | ? Pendiente |
-| T1.2 | Crear Command Queue | H1 | ?? CRÍTICO | ? Pendiente |
-| T1.3 | Crear SwapChain con Back Buffers | H1 | ?? CRÍTICO | ? Pendiente |
-| T1.4 | Crear Descriptor Heaps | H1 | ?? CRÍTICO | ? Pendiente |
-| T1.5 | Crear Command Allocators, List y Fence | H1 | ?? CRÍTICO | ? Pendiente |
+| T1.1 | Crear DX12 Device y DXGI Factory | H1 | ?? CRï¿½TICO | ? Pendiente |
+| T1.2 | Crear Command Queue | H1 | ?? CRï¿½TICO | ? Pendiente |
+| T1.3 | Crear SwapChain con Back Buffers | H1 | ?? CRï¿½TICO | ? Pendiente |
+| T1.4 | Crear Descriptor Heaps | H1 | ?? CRï¿½TICO | ? Pendiente |
+| T1.5 | Crear Command Allocators, List y Fence | H1 | ?? CRï¿½TICO | ? Pendiente |
 | T2.1 | Crear Root Signature | H2 | ?? ALTO | ? Pendiente |
 | T2.2 | Compilar Shaders HLSL | H2 | ?? ALTO | ? Pendiente |
 | T2.3 | Crear Pipeline State Object | H2 | ?? ALTO | ? Pendiente |
 | T3.1 | Crear Vertex Buffer | H3 | ?? MEDIO | ? Pendiente |
 | T3.2 | Crear Constant Buffer | H3 | ?? MEDIO | ? Pendiente |
 | T3.3 | Configurar Vertex Buffer View | H3 | ?? MEDIO | ? Pendiente |
-| T4.1 | Grabar Command List | H4 | ?? BÁSICO | ? Pendiente |
-| T4.2 | Ejecutar Command Queue | H4 | ?? BÁSICO | ? Pendiente |
-| T4.3 | Implementar Fence GPU | H4 | ?? BÁSICO | ? Pendiente |
-| T4.4 | Implementar Present con VSync | H4 | ?? BÁSICO | ? Pendiente |
+| T4.1 | Grabar Command List | H4 | ?? Bï¿½SICO | ? Pendiente |
+| T4.2 | Ejecutar Command Queue | H4 | ?? Bï¿½SICO | ? Pendiente |
+| T4.3 | Implementar Fence GPU | H4 | ?? Bï¿½SICO | ? Pendiente |
+| T4.4 | Implementar Present con VSync | H4 | ?? Bï¿½SICO | ? Pendiente |
 
-**Total**: 15 tareas (pasos pequeños, cada uno es una iteración completa)
+**Total**: 15 tareas (pasos pequeï¿½os, cada uno es una iteraciï¿½n completa)
 
 ---
 
-## ?? Proceso de Ejecución de Tareas
+## ?? Proceso de Ejecuciï¿½n de Tareas
 
-Cada tarea debe seguir las reglas de iteración:
-1. **Implementar** el código según la descripción
+Cada tarea debe seguir las reglas de iteraciï¿½n:
+1. **Implementar** el cï¿½digo segï¿½n la descripciï¿½n
 2. **Compilar CMake** (`cmake --build build --config Debug`)
 3. **Compilar MSBuild** (`msbuild "build/ImagineStudio.sln" /t:Build /p:Configuration=Debug /m`)
 4. **Corregir errores** hasta que ambas queden limpias (0 errores, 0 warnings)
@@ -527,7 +527,7 @@ Cada tarea debe seguir las reglas de iteración:
 
 - Para consultar tareas completadas, ver los archivos versionados `sprint_tasks_v*.md`.
 - Las tareas se derivan de las historias en `docs/sprint_histories.md`.
-- **Orden de ejecución**: T1.1 ? T1.2 ? T1.3 ? T1.4 ? T1.5 ? T2.1 ? T2.2 ? T2.3 ? T3.1 ? T3.2 ? T3.3 ? T4.1 ? T4.2 ? T4.3 ? T4.4
+- **Orden de ejecuciï¿½n**: T1.1 ? T1.2 ? T1.3 ? T1.4 ? T1.5 ? T2.1 ? T2.2 ? T2.3 ? T3.1 ? T3.2 ? T3.3 ? T4.1 ? T4.2 ? T4.3 ? T4.4
 - Cada tarea es **independiente y compilable** al finalizar (enfoque incremental AAA).
 
 

@@ -1,4 +1,4 @@
-# Convenciones de commits
+ï»¿# Convenciones de commits
 
 Formato recomendado para los mensajes de commit:
 
@@ -6,7 +6,7 @@ Formato recomendado para los mensajes de commit:
 
 - chore(app): switch to GUI-only entry (WinMain) and remove console main to hide console window during normal execution
 
-<tipo>(<ámbito>): <mensaje corto>
+<tipo>(<ï¿½mbito>): <mensaje corto>
 
 <mensaje largo opcional>
 
@@ -15,24 +15,24 @@ Refs: <issue/track-id>
 
 Tipos comunes:
 - feat: Nueva funcionalidad
-- fix: Corrección de errores
-- docs: Cambios en documentación
+- fix: Correcciï¿½n de errores
+- docs: Cambios en documentaciï¿½n
 - style: Formato, estilo, sin cambios funcionales
-- refactor: Refactorización sin cambios en comportamiento
+- refactor: Refactorizaciï¿½n sin cambios en comportamiento
 - perf: Mejoras de rendimiento
-- test: Añadir o corregir tests
+- test: Aï¿½adir o corregir tests
 - chore: Tareas de mantenimiento
 
 Ejemplo:
 ```
 feat(renderer): inicializa estructura base del renderer
 
-Añade clases básicas y estructura de carpetas para el renderer.
+Aï¿½ade clases bï¿½sicas y estructura de carpetas para el renderer.
 ```
 
 Historial de commits relevantes:
 
-- feat(core): implementar módulo core (logging, asserts, types) - incluye `core/Log.h`, `core/Assert.h`, `core/Types.h`. (Iteración inicial: estructura y compilación limpia)
+- feat(core): implementar mï¿½dulo core (logging, asserts, types) - incluye `core/Log.h`, `core/Assert.h`, `core/Types.h`. (Iteraciï¿½n inicial: estructura y compilaciï¿½n limpia)
 
 - chore(build): add CMake support and core module; ensure clean build
 - feat(platform): add InputManager (keyboard/mouse polling) and integrate in main loop
@@ -65,7 +65,7 @@ Files changed: `src/platform/Window.cpp`, `src/renderer/DX12Renderer.cpp`, `asse
 - docs: refactor instructions and tracking - add project pillars and daily.md
 
 Added 4 fundamental pillars of Imagine Studio to copilot-instructions.md:
-  1. Modo Edición/Studio (rich interface for 2D/3D world creation)
+  1. Modo Ediciï¿½n/Studio (rich interface for 2D/3D world creation)
   2. Multiplataforma (publish to Windows, Mac, Consoles, etc)
   3. Extensibilidad (programming in editor to customize engine)
   4. Performance y Calidad AAA (AAA-level code, performance and visual quality PRIMORDIAL)
@@ -159,7 +159,7 @@ Progress bar format:
 - White borders using box-drawing characters (???????)
 - Percentage display at the end of the bar
 - Bar width approximately 70-80 characters to fit prompt
-- Percentage calculated as: (completed tasks / total sprint tasks) × 100
+- Percentage calculated as: (completed tasks / total sprint tasks) ï¿½ 100
 
 Example format for 2 of 15 tasks (13.3%):
 ```
@@ -652,80 +652,80 @@ Benefits:
 Files changed: src/renderer/DX12Renderer.cpp
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
 
-- docs: añadir tracking de bugs con sprint_fix.md y sincronización con TEMPLATE.md
+- docs: aï¿½adir tracking de bugs con sprint_fix.md y sincronizaciï¿½n con TEMPLATE.md
 
-Añadida metodología completa para tracking de bugs y sincronización de documentación genérica:
+Aï¿½adida metodologï¿½a completa para tracking de bugs y sincronizaciï¿½n de documentaciï¿½n genï¿½rica:
 
 1. **Nuevo fichero sprint_fix.md**:
    - Tracking de bugs/errores reportados durante sprint activo
-   - Campos: ID, Título, Descripción, Prioridad, Estado, Fechas, Archivos, Commit
+   - Campos: ID, Tï¿½tulo, Descripciï¿½n, Prioridad, Estado, Fechas, Archivos, Commit
    - Estados: Reportado/En progreso/Resuelto/Verificado
    - Se archiva junto con otros ficheros del sprint (sprint_fix_v<version>.md)
    
-2. **Regla de sincronización con TEMPLATE.md**:
-   - Siempre que se modifique .github/copilot-instructions.md (metodología), actualizar TEMPLATE.md
-   - Mantener TEMPLATE.md genérico con [PLACEHOLDER] para reusabilidad
-   - Asegura que template esté actualizado para otros proyectos
+2. **Regla de sincronizaciï¿½n con TEMPLATE.md**:
+   - Siempre que se modifique .github/copilot-instructions.md (metodologï¿½a), actualizar TEMPLATE.md
+   - Mantener TEMPLATE.md genï¿½rico con [PLACEHOLDER] para reusabilidad
+   - Asegura que template estï¿½ actualizado para otros proyectos
    
-3. **Actualización proceso de versionado**:
+3. **Actualizaciï¿½n proceso de versionado**:
    - Incluye sprint_fix.md en archivos activos del sprint
    - Se archiva como sprint_fix_v<version>.md al finalizar sprint
    
-4. **Actualización TEMPLATE.md**:
-   - Añadida sección "Fichero Sprint Fix" con formato genérico
-   - Añadida sección "Sincronización con Metodología Genérica"
+4. **Actualizaciï¿½n TEMPLATE.md**:
+   - Aï¿½adida secciï¿½n "Fichero Sprint Fix" con formato genï¿½rico
+   - Aï¿½adida secciï¿½n "Sincronizaciï¿½n con Metodologï¿½a Genï¿½rica"
    - Actualizada lista de archivos principales de trabajo
    - Actualizada lista de recursos adicionales
 
-Sprint v1.1.0 completado sin bugs reportados (sprint_fix.md inicial vacío).
+Sprint v1.1.0 completado sin bugs reportados (sprint_fix.md inicial vacï¿½o).
 
 Files changed: `.github/copilot-instructions.md`, `docs/TEMPLATE.md`, `docs/sprint_fix.md` (created)
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
-Refs: Sprint v1.1.0 finalizado - mejoras metodológicas
+Refs: Sprint v1.1.0 finalizado - mejoras metodolï¿½gicas
 
 - docs: separar tracking de bugs en sprint_bugs.md (pendientes) y sprint_fix.md (resueltos)
 
-Separación completa del tracking de bugs en dos ficheros con flujo automático:
+Separaciï¿½n completa del tracking de bugs en dos ficheros con flujo automï¿½tico:
 
 1. **sprint_bugs.md** (contenedor inicial de bugs reportados):
    - ID con prefijo BUG-XXX (ej: BUG-001, BUG-002)
    - Estados: Reportado/En progreso
-   - Contenedor temporal hasta resolución
+   - Contenedor temporal hasta resoluciï¿½n
    - Bugs pendientes se archivan como sprint_bugs_v<version>.md al finalizar sprint
 
 2. **sprint_fix.md** (historial de bugs resueltos):
    - ID con prefijo FIX-XXX (ej: FIX-001, FIX-002)
    - Contiene bugs que fueron reportados en sprint_bugs.md y resueltos
-   - Incluye ID original (BUG-XXX), solución implementada, commit hash
+   - Incluye ID original (BUG-XXX), soluciï¿½n implementada, commit hash
    - Bugs resueltos se archivan como sprint_fix_v<version>.md al finalizar sprint
 
-3. **Flujo automático**:
-   - Usuario reporta bug ? Asistente añade a sprint_bugs.md con ID BUG-XXX y estado "Reportado"
+3. **Flujo automï¿½tico**:
+   - Usuario reporta bug ? Asistente aï¿½ade a sprint_bugs.md con ID BUG-XXX y estado "Reportado"
    - Asistente comienza trabajo ? Estado actualizado a "En progreso" en sprint_bugs.md
-   - Bug resuelto ? Asistente **mueve automáticamente** a sprint_fix.md con:
+   - Bug resuelto ? Asistente **mueve automï¿½ticamente** a sprint_fix.md con:
      * ID cambiado a FIX-XXX
      * Estado "Resuelto"
-     * Fecha de resolución
-     * Hash del commit de resolución
-     * Descripción de la solución implementada
+     * Fecha de resoluciï¿½n
+     * Hash del commit de resoluciï¿½n
+     * Descripciï¿½n de la soluciï¿½n implementada
    - Bug eliminado de sprint_bugs.md tras mover
 
-4. **Actualización daily.md**:
-   - Formato con sprint activo: "Hecho: <n> <descripción>" + "Siguiente: <n> <descripción>"
+4. **Actualizaciï¿½n daily.md**:
+   - Formato con sprint activo: "Hecho: <n> <descripciï¿½n>" + "Siguiente: <n> <descripciï¿½n>"
    - Formato sin sprint activo: "Sprint v1.1.0 cerrado. Sin sprint activo."
    - Actualizado al finalizar sprint v1.1.0
 
-5. **Actualización copilot-instructions.md y TEMPLATE.md**:
+5. **Actualizaciï¿½n copilot-instructions.md y TEMPLATE.md**:
    - Nuevas secciones "Fichero Sprint Bugs" y "Fichero Sprint Fix" con flujo completo
    - Proceso de versionado incluye ambos ficheros
    - Lista de archivos principales actualizada
-   - Sincronización aplicada a TEMPLATE.md con [PLACEHOLDER]
+   - Sincronizaciï¿½n aplicada a TEMPLATE.md con [PLACEHOLDER]
 
 Sprint v1.1.0 completado y cerrado correctamente (0 bugs reportados).
 
 Files changed: `docs/sprint_bugs.md` (created), `docs/sprint_fix.md` (updated), `docs/daily.md`, `.github/copilot-instructions.md`, `docs/TEMPLATE.md`
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
-Refs: Sprint v1.1.0 finalizado - metodología bugs completada
+Refs: Sprint v1.1.0 finalizado - metodologï¿½a bugs completada
 
 
 

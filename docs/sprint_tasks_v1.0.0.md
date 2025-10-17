@@ -1,4 +1,4 @@
-# Roadmap Tasks - v1.0.0 (completed tasks)
+﻿# Roadmap Tasks - v1.0.0 (completed tasks)
 
 This document lists main tasks completed in release v1.0.0 (high level summary). For full commit references see `docs/commits.md` and `docs/roadmap_log.md`.
 

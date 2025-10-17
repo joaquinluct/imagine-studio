@@ -1,25 +1,25 @@
-# Sprint v1.1.0 - Historias de usuario
+ï»¿# Sprint v1.1.0 - Historias de usuario
 
 > **Referencia**: Ver [`docs/MAIN.md`](MAIN.md) para los pilares fundamentales del proyecto.
 
-Este fichero contiene las historias de usuario que forman el backlog del sprint activo. Cada historia se descompondrá en tareas en `docs/sprint_tasks.md` y se ejecutará como iteraciones individuales (implementar, doble compilación, commit, actualizar docs).
+Este fichero contiene las historias de usuario que forman el backlog del sprint activo. Cada historia se descompondrï¿½ en tareas en `docs/sprint_tasks.md` y se ejecutarï¿½ como iteraciones individuales (implementar, doble compilaciï¿½n, commit, actualizar docs).
 
 ---
 
 ## Historias del Sprint v1.1.0
 
-### **H1 - Inicialización DX12** ?? (CRÍTICO)
+### **H1 - Inicializaciï¿½n DX12** ?? (CRï¿½TICO)
 **ID**: H1  
-**Prioridad**: CRÍTICA  
-**Descripción**: Implementar la inicialización completa del contexto DirectX 12, incluyendo Device, Factory, SwapChain, descriptor heaps y command infrastructure (allocators, lists, queue, fence).
+**Prioridad**: CRï¿½TICA  
+**Descripciï¿½n**: Implementar la inicializaciï¿½n completa del contexto DirectX 12, incluyendo Device, Factory, SwapChain, descriptor heaps y command infrastructure (allocators, lists, queue, fence).
 
-**Criterios de aceptación**:
+**Criterios de aceptaciï¿½n**:
 - ? `ID3D12Device` creado y funcional
 - ? `IDXGIFactory4` y adapter seleccionado (GPU)
 - ? `IDXGISwapChain3` con 2-3 back buffers (FLIP_DISCARD)
 - ? Descriptor heaps (RTV, CBV/SRV/UAV) creados
 - ? Command allocators, command list, command queue creados
-- ? `ID3D12Fence` real con evento para sincronización
+- ? `ID3D12Fence` real con evento para sincronizaciï¿½n
 
 **Tareas derivadas**: T1.1, T1.2, T1.3, T1.4, T1.5
 
@@ -28,9 +28,9 @@ Este fichero contiene las historias de usuario que forman el backlog del sprint 
 ### **H2 - Pipeline State & Shaders** ?? (ALTO)
 **ID**: H2  
 **Prioridad**: ALTA  
-**Descripción**: Crear el pipeline de renderizado con Root Signature, compilar shaders HLSL (Vertex y Pixel) y crear el Pipeline State Object (PSO) para renderizar geometría con colores.
+**Descripciï¿½n**: Crear el pipeline de renderizado con Root Signature, compilar shaders HLSL (Vertex y Pixel) y crear el Pipeline State Object (PSO) para renderizar geometrï¿½a con colores.
 
-**Criterios de aceptación**:
+**Criterios de aceptaciï¿½n**:
 - ? Root Signature creada con root constants (MVP matrix)
 - ? Vertex Shader compilado (transforma posiciones, pasa colores)
 - ? Pixel Shader compilado (retorna color interpolado)
@@ -44,10 +44,10 @@ Este fichero contiene las historias de usuario que forman el backlog del sprint 
 ### **H3 - Geometry & Resources** ?? (MEDIO)
 **ID**: H3  
 **Prioridad**: MEDIA  
-**Descripción**: Crear los recursos GPU necesarios para renderizar un quad: Vertex Buffer con 6 vértices (2 triángulos) y Constant Buffer con MVP matrix (identity para el "Hola Mundo").
+**Descripciï¿½n**: Crear los recursos GPU necesarios para renderizar un quad: Vertex Buffer con 6 vï¿½rtices (2 triï¿½ngulos) y Constant Buffer con MVP matrix (identity para el "Hola Mundo").
 
-**Criterios de aceptación**:
-- ? Vertex Buffer creado con 6 vértices (posición + color)
+**Criterios de aceptaciï¿½n**:
+- ? Vertex Buffer creado con 6 vï¿½rtices (posiciï¿½n + color)
 - ? Upload heap para staging de datos
 - ? Default heap con datos copiados
 - ? Resource barrier (COPY_DEST ? VERTEX_AND_CONSTANT_BUFFER)
@@ -58,17 +58,17 @@ Este fichero contiene las historias de usuario que forman el backlog del sprint 
 
 ---
 
-### **H4 - Command Recording & Execution** ?? (BÁSICO)
+### **H4 - Command Recording & Execution** ?? (Bï¿½SICO)
 **ID**: H4  
-**Prioridad**: BÁSICA (pero esencial)  
-**Descripción**: Implementar el loop de renderizado: grabar command list con clear + draw call, ejecutar en command queue, esperar fence, y hacer Present con VSync.
+**Prioridad**: Bï¿½SICA (pero esencial)  
+**Descripciï¿½n**: Implementar el loop de renderizado: grabar command list con clear + draw call, ejecutar en command queue, esperar fence, y hacer Present con VSync.
 
-**Criterios de aceptación**:
+**Criterios de aceptaciï¿½n**:
 - ? Command list grabada con clear + draw call
 - ? Resource barriers (PRESENT ? RENDER_TARGET ? PRESENT)
 - ? `DrawInstanced(6, 1, 0, 0)` ejecutado
 - ? Command queue ejecuta command lists
-- ? Fence señalizado y esperado correctamente
+- ? Fence seï¿½alizado y esperado correctamente
 - ? `Present(1, 0)` con VSync
 - ? 60 FPS estables
 
@@ -78,12 +78,12 @@ Este fichero contiene las historias de usuario que forman el backlog del sprint 
 
 ## ?? Estado de Historias
 
-| ID | Título | Prioridad | Tareas | Estado |
+| ID | Tï¿½tulo | Prioridad | Tareas | Estado |
 |----|--------|-----------|--------|--------|
-| H1 | Inicialización DX12 | ?? CRÍTICO | 5 | ? Pendiente |
+| H1 | Inicializaciï¿½n DX12 | ?? CRï¿½TICO | 5 | ? Pendiente |
 | H2 | Pipeline State & Shaders | ?? ALTO | 3 | ? Pendiente |
 | H3 | Geometry & Resources | ?? MEDIO | 3 | ? Pendiente |
-| H4 | Command Recording & Execution | ?? BÁSICO | 4 | ? Pendiente |
+| H4 | Command Recording & Execution | ?? Bï¿½SICO | 4 | ? Pendiente |
 
 **Total**: 4 historias, 15 tareas
 
@@ -92,6 +92,6 @@ Este fichero contiene las historias de usuario que forman el backlog del sprint 
 ## ?? Notas
 
 - Para consultar historias completadas, ver los archivos versionados `sprint_histories_v*.md`.
-- Las historias se priorizan desde `docs/backlog.md` durante la planificación del sprint.
-- Cada historia debe completarse en orden (H1 ? H2 ? H3 ? H4) por dependencias técnicas.
+- Las historias se priorizan desde `docs/backlog.md` durante la planificaciï¿½n del sprint.
+- Cada historia debe completarse en orden (H1 ? H2 ? H3 ? H4) por dependencias tï¿½cnicas.
 

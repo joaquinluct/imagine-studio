@@ -1,10 +1,10 @@
-# Sprint v1.1.0 - Bugs Resueltos
+ï»¿# Sprint v1.1.0 - Bugs Resueltos
 
 > **Referencia**: Ver [`docs/MAIN.md`](MAIN.md) para los pilares fundamentales del proyecto.
 
 Este fichero contiene el **historial de bugs resueltos** durante el sprint activo.
 
-**Propósito**: Mantener trazabilidad de bugs que fueron reportados en `docs/sprint_bugs.md` y posteriormente resueltos.
+**Propï¿½sito**: Mantener trazabilidad de bugs que fueron reportados en `docs/sprint_bugs.md` y posteriormente resueltos.
 
 ---
 
@@ -16,7 +16,7 @@ Este fichero contiene el **historial de bugs resueltos** durante el sprint activ
 
 ## ?? Resumen
 
-| ID | Título | Prioridad | Fecha Entrada | Fecha Resolución | Commit |
+| ID | Tï¿½tulo | Prioridad | Fecha Entrada | Fecha Resoluciï¿½n | Commit |
 |----|--------|-----------|---------------|------------------|--------|
 | - | - | - | - | - | - |
 
@@ -29,19 +29,19 @@ Este fichero contiene el **historial de bugs resueltos** durante el sprint activ
 Cada bug resuelto debe seguir este formato:
 
 ```markdown
-### FIX-XXX - Título del bug
+### FIX-XXX - Tï¿½tulo del bug
 **ID Original**: BUG-XXX (del sprint_bugs.md)
-**Prioridad**: Crítica/Alta/Media/Baja
+**Prioridad**: Crï¿½tica/Alta/Media/Baja
 **Fecha de entrada**: YYYY-MM-DD
-**Fecha de resolución**: YYYY-MM-DD
+**Fecha de resoluciï¿½n**: YYYY-MM-DD
 
-**Descripción del problema**: Descripción detallada del error, pasos para reproducir, comportamiento esperado vs observado.
+**Descripciï¿½n del problema**: Descripciï¿½n detallada del error, pasos para reproducir, comportamiento esperado vs observado.
 
-**Solución implementada**: Descripción de cómo se resolvió el bug.
+**Soluciï¿½n implementada**: Descripciï¿½n de cï¿½mo se resolviï¿½ el bug.
 
-**Archivos afectados**: Lista de archivos relacionados con el bug y su resolución
+**Archivos afectados**: Lista de archivos relacionados con el bug y su resoluciï¿½n
 
-**Commit de resolución**: Hash del commit que resolvió el bug
+**Commit de resoluciï¿½n**: Hash del commit que resolviï¿½ el bug
 ```
 
 ---
@@ -50,12 +50,12 @@ Cada bug resuelto debe seguir este formato:
 
 1. Bug reportado ? Se registra en `docs/sprint_bugs.md` con ID **BUG-XXX**
 2. Bug en progreso ? Estado actualizado en `docs/sprint_bugs.md`
-3. Bug resuelto ? Se **mueve automáticamente** aquí con:
+3. Bug resuelto ? Se **mueve automï¿½ticamente** aquï¿½ con:
    - ID cambiado a **FIX-XXX**
    - Estado "Resuelto"
-   - Fecha de resolución
-   - Hash del commit de resolución
-   - Descripción de la solución implementada
+   - Fecha de resoluciï¿½n
+   - Hash del commit de resoluciï¿½n
+   - Descripciï¿½n de la soluciï¿½n implementada
 4. Bug eliminado de `docs/sprint_bugs.md`
 
 ---
@@ -66,5 +66,5 @@ Cada bug resuelto debe seguir este formato:
 - Para ver bugs de sprints completados, ver los archivos versionados:
   - `docs/sprint_bugs_v<version>.md` (bugs que quedaron pendientes al cerrar sprint)
   - `docs/sprint_fix_v<version>.md` (bugs resueltos durante el sprint)
-- Los bugs se archivan junto con los demás ficheros del sprint al finalizar.
+- Los bugs se archivan junto con los demï¿½s ficheros del sprint al finalizar.
 

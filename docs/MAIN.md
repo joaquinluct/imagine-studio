@@ -1,40 +1,40 @@
-# Imagine Studio - Decálogo Fundamental
+ï»¿# Imagine Studio - Decï¿½logo Fundamental
 
 > **LEER PRIMERO**: Este documento define los pilares y principios fundamentales del proyecto.  
-> Todas las decisiones arquitectónicas y de implementación DEBEN alinearse con estos principios.
+> Todas las decisiones arquitectï¿½nicas y de implementaciï¿½n DEBEN alinearse con estos principios.
 
 ---
 
 ## ?? Objetivo Final
 
-**Imagine Studio** es un framework de creación de juegos tipo Unity/Roblox Studio:  
+**Imagine Studio** es un framework de creaciï¿½n de juegos tipo Unity/Roblox Studio:  
 Un motor de renderizado AAA modular con Editor integrado, soporte multiplataforma y extensibilidad completa.
 
 ---
 
 ## ??? Los 4 Pilares Fundamentales
 
-### 1. **Modo Edición/Studio**
+### 1. **Modo Ediciï¿½n/Studio**
 - Interfaz rica con recursos completos para crear mundos 2D y 3D
-- Editor MVP: vista de escena, inspección de propiedades, jerarquía de objetos, asset window
-- Separación clara Editor vs Runtime (APIs independientes)
+- Editor MVP: vista de escena, inspecciï¿½n de propiedades, jerarquï¿½a de objetos, asset window
+- Separaciï¿½n clara Editor vs Runtime (APIs independientes)
 
 ### 2. **Multiplataforma**
-- Publicación de juegos en Windows, Mac, Consolas y otras plataformas
-- Pipeline de exportación configurable (build targets)
-- Abstracción de backends de render (DirectX12, DX11, Vulkan, OpenGL)
+- Publicaciï¿½n de juegos en Windows, Mac, Consolas y otras plataformas
+- Pipeline de exportaciï¿½n configurable (build targets)
+- Abstracciï¿½n de backends de render (DirectX12, DX11, Vulkan, OpenGL)
 
 ### 3. **Extensibilidad**
-- Programación en modo edición/studio para personalizar el motor
+- Programaciï¿½n en modo ediciï¿½n/studio para personalizar el motor
 - Sistema de scripting y plugins
 - Importadores y pipeline de assets extensible
 - Binding de scripting para usuarios finales
 
 ### 4. **Performance y Calidad AAA**
-- Código de nivel profesional con performance y calidad visual como objetivo PRIMORDIAL
+- Cï¿½digo de nivel profesional con performance y calidad visual como objetivo PRIMORDIAL
 - Multithreading y job system (thread pool, task graph)
-- Streaming de assets asíncrono (VFS, pools)
-- Ring-buffers para comandos GPU, sincronización con fences
+- Streaming de assets asï¿½ncrono (VFS, pools)
+- Ring-buffers para comandos GPU, sincronizaciï¿½n con fences
 - Pipeline de render optimizado, materials y shaders
 - Profiler, debug overlays, herramientas de captura
 
@@ -48,31 +48,31 @@ Un motor de renderizado AAA modular con Editor integrado, soporte multiplataform
 ???????????????????????????????????????
 ?  UI Layer + Tools (Profiler, etc)  ?  ? Interfaz y debugging
 ???????????????????????????????????????
-?     Renderer (DX12/DX11/Vulkan)     ?  ? Backend gráfico abstracto
+?     Renderer (DX12/DX11/Vulkan)     ?  ? Backend grï¿½fico abstracto
 ???????????????????????????????????????
-?   Assets (VFS, streaming, pools)    ?  ? Gestión de recursos
+?   Assets (VFS, streaming, pools)    ?  ? Gestiï¿½n de recursos
 ???????????????????????????????????????
 ?    Jobs (ThreadPool, TaskGraph)     ?  ? Sistema de trabajos paralelos
 ???????????????????????????????????????
-?   Platform (Window, Input, OS)      ?  ? Abstracción de sistema
+?   Platform (Window, Input, OS)      ?  ? Abstracciï¿½n de sistema
 ???????????????????????????????????????
 ?   Core (Log, Assert, Types, etc)    ?  ? Fundamentos
 ???????????????????????????????????????
 ```
 
-**Principio de abstracción**:  
-Desacoplar backends (DX12) del Editor/Runtime para añadir adaptadores sin reescribir lógica de alto nivel.
+**Principio de abstracciï¿½n**:  
+Desacoplar backends (DX12) del Editor/Runtime para aï¿½adir adaptadores sin reescribir lï¿½gica de alto nivel.
 
 ---
 
-## ?? Estándares de Calidad AAA
+## ?? Estï¿½ndares de Calidad AAA
 
-1. **Código limpio y modular**: Headers/impl, namespaces, documentación inline
-2. **Cero warnings/errores**: Compilación limpia obligatoria antes de commits
-3. **Tests y validación**: Puntos de chequeo en cada módulo
+1. **Cï¿½digo limpio y modular**: Headers/impl, namespaces, documentaciï¿½n inline
+2. **Cero warnings/errores**: Compilaciï¿½n limpia obligatoria antes de commits
+3. **Tests y validaciï¿½n**: Puntos de chequeo en cada mï¿½dulo
 4. **Estilo consistente**: Naming conventions, include guards, orden de includes
-5. **Doble verificación**: CMake + MSBuild antes de cada commit
-6. **Diseño desde el principio**: Evitar partes temporales o incompletas
+5. **Doble verificaciï¿½n**: CMake + MSBuild antes de cada commit
+6. **Diseï¿½o desde el principio**: Evitar partes temporales o incompletas
 
 ---
 
@@ -80,34 +80,34 @@ Desacoplar backends (DX12) del Editor/Runtime para añadir adaptadores sin reescr
 
 - ? **Core**: Logging, assertions, types
 - ? **Platform**: Windowing, input polling
-- ? **Assets**: VFS con mounts, carga asíncrona, métricas
+- ? **Assets**: VFS con mounts, carga asï¿½ncrona, mï¿½tricas
 - ? **Jobs**: ThreadPool, TaskGraph con dependencias
 - ? **UI**: SimpleUI con texto, overlays de FPS/Profiler
 - ? **Renderer**: Stubs DX12 (Device, RenderTarget, CommandBuffer)
-- ? **Tools**: Profiler básico, métricas de assets
-- ? **Materials**: Sistema de materiales básico
-- ?? **Renderer DX12**: Integración real en progreso (Present, command lists)
+- ? **Tools**: Profiler bï¿½sico, mï¿½tricas de assets
+- ? **Materials**: Sistema de materiales bï¿½sico
+- ?? **Renderer DX12**: Integraciï¿½n real en progreso (Present, command lists)
 
 ---
 
-## ?? Criterios de Aceptación
+## ?? Criterios de Aceptaciï¿½n
 
-Cada módulo debe cumplir:
+Cada mï¿½dulo debe cumplir:
 - **Funcionalidad completa**: Sin stubs permanentes ni TODOs sin resolver
-- **Performance medible**: Métricas, profiling, benchmarks donde aplique
-- **Documentación**: README por módulo + comentarios inline
-- **Tests**: Cobertura básica o ejemplos funcionales
-- **Integración limpia**: Compile y funcione con el resto del sistema
+- **Performance medible**: Mï¿½tricas, profiling, benchmarks donde aplique
+- **Documentaciï¿½n**: README por mï¿½dulo + comentarios inline
+- **Tests**: Cobertura bï¿½sica o ejemplos funcionales
+- **Integraciï¿½n limpia**: Compile y funcione con el resto del sistema
 
 ---
 
-## ?? Próximos Hitos
+## ?? Prï¿½ximos Hitos
 
 - **Sprint actual**: Backend DirectX12 minimal (Present, command lists)
-- **Sprints futuros**: Shading/materials, Editor MVP, exportación multiplataforma
+- **Sprints futuros**: Shading/materials, Editor MVP, exportaciï¿½n multiplataforma
 
 ---
 
-**Versión**: 1.0.0  
-**Estándar**: C++14  
-**Última actualización**: 2025-01-XX
+**Versiï¿½n**: 1.0.0  
+**Estï¿½ndar**: C++14  
+**ï¿½ltima actualizaciï¿½n**: 2025-01-XX

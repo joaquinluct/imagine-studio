@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CommandAllocator.h"
 #include "Fence.h"

@@ -1,4 +1,4 @@
-# Roadmap Histories - v1.0.0 (completed)
+﻿# Roadmap Histories - v1.0.0 (completed)
 
 This file records the user stories / histories completed as part of release v1.0.0.
 

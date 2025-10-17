@@ -1,4 +1,4 @@
-# Sprint v1.1.0 - DX12 Minimal Renderer (Hola Mundo Visual)
+ï»¿# Sprint v1.1.0 - DX12 Minimal Renderer (Hola Mundo Visual)
 
 > **Referencia**: Ver [`docs/MAIN.md`](MAIN.md) para los pilares fundamentales del proyecto.
 
@@ -8,15 +8,15 @@ Detalle ampliado: ver `docs/sprint_histories.md` y `docs/sprint_tasks.md` para h
 
 ## ?? Objetivo del Sprint
 
-**Meta**: Implementar un renderer DirectX 12 minimal que muestre un **quad de colores renderizado vía GPU**, siguiendo estándares AAA (sin atajos ni soluciones temporales).
+**Meta**: Implementar un renderer DirectX 12 minimal que muestre un **quad de colores renderizado vï¿½a GPU**, siguiendo estï¿½ndares AAA (sin atajos ni soluciones temporales).
 
-**Resultado esperado**: Al finalizar el sprint, la ventana mostrará geometría renderizada por la GPU con el mismo pipeline que un juego AAA (command lists, PSO, root signature, fences, present).
+**Resultado esperado**: Al finalizar el sprint, la ventana mostrarï¿½ geometrï¿½a renderizada por la GPU con el mismo pipeline que un juego AAA (command lists, PSO, root signature, fences, present).
 
 ---
 
 ## ?? Hitos del Sprint
 
-### **Hito 1: Inicialización DX12** ??
+### **Hito 1: Inicializaciï¿½n DX12** ??
 - Crear `ID3D12Device` y `IDXGIFactory`
 - Crear SwapChain con back buffers
 - Configurar descriptor heaps (RTV, CBV/SRV/UAV)
@@ -28,32 +28,32 @@ Detalle ampliado: ver `docs/sprint_histories.md` y `docs/sprint_tasks.md` para h
 - Crear Pipeline State Object (PSO)
 
 ### **Hito 3: Geometry & Resources** ??
-- Crear Vertex Buffer (quad de 6 vértices)
+- Crear Vertex Buffer (quad de 6 vï¿½rtices)
 - Crear Constant Buffer (MVP matrix identity)
 - Upload de datos a GPU
 
 ### **Hito 4: Command Recording & Execution** ??
 - Grabar command list con draw call
 - Ejecutar command queue
-- Implementar fence GPU para sincronización
+- Implementar fence GPU para sincronizaciï¿½n
 - Present con VSync
 
 ---
 
-## ? Criterios de Aceptación
+## ? Criterios de Aceptaciï¿½n
 
-1. ? Ventana muestra un quad de colores renderizado vía GPU (DirectX 12)
+1. ? Ventana muestra un quad de colores renderizado vï¿½a GPU (DirectX 12)
 2. ? No hay rendering software (sin GDI/Win32 para rendering)
 3. ? Pipeline DX12 completo y funcional (Device, SwapChain, PSO, Commands)
 4. ? Fence GPU sincronizando CPU/GPU correctamente
 5. ? 60 FPS estables con VSync
-6. ? Compilación limpia (CMake Debug + MSBuild Debug, 0 errores, 0 warnings)
+6. ? Compilaciï¿½n limpia (CMake Debug + MSBuild Debug, 0 errores, 0 warnings)
 
 ---
 
 ## ?? Estado del Sprint
 
-- **Versión objetivo**: v1.1.0
+- **Versiï¿½n objetivo**: v1.1.0
 - **Sprint iniciado**: 2025-01-XX
 - **Sprint finalizado**: TBD
 - **Historias completadas**: 0/4
@@ -61,14 +61,14 @@ Detalle ampliado: ver `docs/sprint_histories.md` y `docs/sprint_tasks.md` para h
 
 ---
 
-## ?? Comparación con v1.0.0
+## ?? Comparaciï¿½n con v1.0.0
 
 | Aspecto | v1.0.0 (Anterior) | v1.1.0 (Este Sprint) |
 |---------|-------------------|----------------------|
 | **Rendering** | Software (GDI/Win32) | Hardware (DirectX 12 GPU) |
 | **Draw Calls** | Sin draw calls reales | DrawInstanced real |
-| **Pipeline** | Stubs sin implementación | Pipeline DX12 completo |
-| **Sincronización** | Fence stub (CPU-only) | ID3D12Fence (GPU real) |
+| **Pipeline** | Stubs sin implementaciï¿½n | Pipeline DX12 completo |
+| **Sincronizaciï¿½n** | Fence stub (CPU-only) | ID3D12Fence (GPU real) |
 | **Shaders** | No existen | HLSL compilados |
 | **AAA-level** | Infraestructura | Renderer funcional |
 
