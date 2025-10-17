@@ -3,10 +3,7 @@
 Formato recomendado para los mensajes de commit:
 
 ```
-
-- chore(app): switch to GUI-only entry (WinMain) and remove console main to hide console window during normal execution
-
-<tipo>(<�mbito>): <mensaje corto>
+<tipo>(<ámbito>): <mensaje corto>
 
 <mensaje largo opcional>
 
@@ -15,24 +12,24 @@ Refs: <issue/track-id>
 
 Tipos comunes:
 - feat: Nueva funcionalidad
-- fix: Correcci�n de errores
-- docs: Cambios en documentaci�n
+- fix: Corrección de errores
+- docs: Cambios en documentación
 - style: Formato, estilo, sin cambios funcionales
-- refactor: Refactorizaci�n sin cambios en comportamiento
+- refactor: Refactorización sin cambios en comportamiento
 - perf: Mejoras de rendimiento
-- test: A�adir o corregir tests
+- test: Añadir o corregir tests
 - chore: Tareas de mantenimiento
 
 Ejemplo:
 ```
 feat(renderer): inicializa estructura base del renderer
 
-A�ade clases b�sicas y estructura de carpetas para el renderer.
+Añade clases básicas y estructura de carpetas para el renderer.
 ```
 
 Historial de commits relevantes:
 
-- feat(core): implementar m�dulo core (logging, asserts, types) - incluye `core/Log.h`, `core/Assert.h`, `core/Types.h`. (Iteraci�n inicial: estructura y compilaci�n limpia)
+- feat(core): implementar módulo core (logging, asserts, types) - incluye `core/Log.h`, `core/Assert.h`, `core/Types.h`. (Iteración inicial: estructura y compilación limpia)
 
 - chore(build): add CMake support and core module; ensure clean build
 - feat(platform): add InputManager (keyboard/mouse polling) and integrate in main loop
@@ -65,7 +62,7 @@ Files changed: `src/platform/Window.cpp`, `src/renderer/DX12Renderer.cpp`, `asse
 - docs: refactor instructions and tracking - add project pillars and daily.md
 
 Added 4 fundamental pillars of Imagine Studio to copilot-instructions.md:
-  1. Modo Edici�n/Studio (rich interface for 2D/3D world creation)
+  1. Modo Edición/Studio (rich interface for 2D/3D world creation)
   2. Multiplataforma (publish to Windows, Mac, Consoles, etc)
   3. Extensibilidad (programming in editor to customize engine)
   4. Performance y Calidad AAA (AAA-level code, performance and visual quality PRIMORDIAL)
@@ -652,80 +649,86 @@ Benefits:
 Files changed: src/renderer/DX12Renderer.cpp
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
 
-- docs: a�adir tracking de bugs con sprint_fix.md y sincronizaci�n con TEMPLATE.md
+- docs: añadir tracking de bugs con sprint_fix.md y sincronización con TEMPLATE.md
 
-A�adida metodolog�a completa para tracking de bugs y sincronizaci�n de documentaci�n gen�rica:
+Añadida metodología completa para tracking de bugs y sincronización de documentación genérica:
 
 1. **Nuevo fichero sprint_fix.md**:
    - Tracking de bugs/errores reportados durante sprint activo
-   - Campos: ID, T�tulo, Descripci�n, Prioridad, Estado, Fechas, Archivos, Commit
+   - Campos: ID, Título, Descripción, Prioridad, Estado, Fechas, Archivos, Commit
    - Estados: Reportado/En progreso/Resuelto/Verificado
    - Se archiva junto con otros ficheros del sprint (sprint_fix_v<version>.md)
    
-2. **Regla de sincronizaci�n con TEMPLATE.md**:
-   - Siempre que se modifique .github/copilot-instructions.md (metodolog�a), actualizar TEMPLATE.md
-   - Mantener TEMPLATE.md gen�rico con [PLACEHOLDER] para reusabilidad
-   - Asegura que template est� actualizado para otros proyectos
+2. **Regla de sincronización con TEMPLATE.md**:
+   - Siempre que se modifique .github/copilot-instructions.md (metodología), actualizar TEMPLATE.md
+   - Mantener TEMPLATE.md genérico con [PLACEHOLDER] para reusabilidad
+   - Asegura que template esté actualizado para otros proyectos
    
-3. **Actualizaci�n proceso de versionado**:
+3. **Actualización proceso de versionado**:
    - Incluye sprint_fix.md en archivos activos del sprint
    - Se archiva como sprint_fix_v<version>.md al finalizar sprint
    
-4. **Actualizaci�n TEMPLATE.md**:
-   - A�adida secci�n "Fichero Sprint Fix" con formato gen�rico
-   - A�adida secci�n "Sincronizaci�n con Metodolog�a Gen�rica"
+4. **Actualización TEMPLATE.md**:
+   - Añadida sección "Fichero Sprint Fix" con formato genérico
+   - Añadida sección "Sincronización con Metodología Genérica"
    - Actualizada lista de archivos principales de trabajo
    - Actualizada lista de recursos adicionales
 
-Sprint v1.1.0 completado sin bugs reportados (sprint_fix.md inicial vac�o).
+Sprint v1.1.0 completado sin bugs reportados (sprint_fix.md inicial vacío).
 
 Files changed: `.github/copilot-instructions.md`, `docs/TEMPLATE.md`, `docs/sprint_fix.md` (created)
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
-Refs: Sprint v1.1.0 finalizado - mejoras metodol�gicas
+Refs: Sprint v1.1.0 finalizado - mejoras metodológicas
 
 - docs: separar tracking de bugs en sprint_bugs.md (pendientes) y sprint_fix.md (resueltos)
 
-Separaci�n completa del tracking de bugs en dos ficheros con flujo autom�tico:
+Separación completa del tracking de bugs en dos ficheros con flujo automático:
 
 1. **sprint_bugs.md** (contenedor inicial de bugs reportados):
    - ID con prefijo BUG-XXX (ej: BUG-001, BUG-002)
    - Estados: Reportado/En progreso
-   - Contenedor temporal hasta resoluci�n
+   - Contenedor temporal hasta resolución
    - Bugs pendientes se archivan como sprint_bugs_v<version>.md al finalizar sprint
 
 2. **sprint_fix.md** (historial de bugs resueltos):
    - ID con prefijo FIX-XXX (ej: FIX-001, FIX-002)
    - Contiene bugs que fueron reportados en sprint_bugs.md y resueltos
-   - Incluye ID original (BUG-XXX), soluci�n implementada, commit hash
+   - Incluye ID original (BUG-XXX), solución implementada, commit hash
    - Bugs resueltos se archivan como sprint_fix_v<version>.md al finalizar sprint
 
-3. **Flujo autom�tico**:
-   - Usuario reporta bug ? Asistente a�ade a sprint_bugs.md con ID BUG-XXX y estado "Reportado"
-   - Asistente comienza trabajo ? Estado actualizado a "En progreso" en sprint_bugs.md
-   - Bug resuelto ? Asistente **mueve autom�ticamente** a sprint_fix.md con:
+3. **Flujo automático**:
+   - Usuario reporta bug → Asistente añade a sprint_bugs.md con ID BUG-XXX y estado "Reportado"
+   - Asistente comienza trabajo → Estado actualizado a "En progreso" en sprint_bugs.md
+   - Bug resuelto → Asistente **mueve automáticamente** a sprint_fix.md con:
      * ID cambiado a FIX-XXX
      * Estado "Resuelto"
-     * Fecha de resoluci�n
-     * Hash del commit de resoluci�n
-     * Descripci�n de la soluci�n implementada
+     * Fecha de resolución
+     * Hash del commit de resolución
+     * Descripción de la solución implementada
    - Bug eliminado de sprint_bugs.md tras mover
 
-4. **Actualizaci�n daily.md**:
-   - Formato con sprint activo: "Hecho: <n> <descripci�n>" + "Siguiente: <n> <descripci�n>"
+4. **Actualización daily.md**:
+   - Formato con sprint activo: "Hecho: <n> <descripción>" + "Siguiente: <n> <descripción>"
    - Formato sin sprint activo: "Sprint v1.1.0 cerrado. Sin sprint activo."
    - Actualizado al finalizar sprint v1.1.0
 
-5. **Actualizaci�n copilot-instructions.md y TEMPLATE.md**:
+5. **Actualización copilot-instructions.md y TEMPLATE.md**:
    - Nuevas secciones "Fichero Sprint Bugs" y "Fichero Sprint Fix" con flujo completo
    - Proceso de versionado incluye ambos ficheros
    - Lista de archivos principales actualizada
-   - Sincronizaci�n aplicada a TEMPLATE.md con [PLACEHOLDER]
+   - Sincronización aplicada a TEMPLATE.md con [PLACEHOLDER]
 
 Sprint v1.1.0 completado y cerrado correctamente (0 bugs reportados).
 
 Files changed: `docs/sprint_bugs.md` (created), `docs/sprint_fix.md` (updated), `docs/daily.md`, `.github/copilot-instructions.md`, `docs/TEMPLATE.md`
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
-Refs: Sprint v1.1.0 finalizado - metodolog�a bugs completada
+Refs: Sprint v1.1.0 finalizado - metodología bugs completada
+
+- docs: corregir codificacion UTF-8 y line endings en TEMPLATE.md
+
+Restaura correctamente los caracteres especiales (acentos, emojis) que se habian corrompido por problemas de codificacion.
+
+Cambios: Todos los acentos corregidos, todos los emojis restaurados, line endings normalizados a CRLF, UTF-8 con BOM verificado.
 
 
 
