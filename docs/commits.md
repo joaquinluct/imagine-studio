@@ -459,5 +459,36 @@ Files changed: src/renderer/DX12Renderer.h, src/renderer/DX12Renderer.cpp
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
 Refs: T3.1
 
+- feat(renderer): implement Constant Buffer for MVP Matrix (T3.2)
+
+Implemented Task T3.2 - Create Constant Buffer with MVP identity matrix following AAA standards.
+
+Key changes:
+- Added members: m_constantBuffer, m_cbMappedData, m_mvpMatrix[16]
+- Initialized MVP matrix as identity matrix (4x4)
+- Created constant buffer in upload heap (D3D12_HEAP_TYPE_UPLOAD)
+- Applied 256-byte alignment requirement for constant buffers ((size + 255) & ~255)
+- Mapped persistently with Map() - pointer valid for buffer lifetime
+- Copied initial MVP matrix data to mapped buffer
+- Proper cleanup in Shutdown() with Unmap + Release
+
+Technical note:
+- Current root signature uses root constants (SetGraphicsRoot32BitConstants)
+- This constant buffer is created for demonstration and future use
+- For small data (<= 64 bytes), root constants are more efficient
+- For large data (> 64 bytes), constant buffer view is recommended
+
+Implementation details:
+- Constant buffer size: 256 bytes (64 bytes data + alignment padding)
+- Heap type: UPLOAD (CPU writable, GPU readable)
+- Resource state: GENERIC_READ (required for upload heap)
+- Mapping: Persistent (Map once, Unmap at shutdown)
+
+Files changed: src/renderer/DX12Renderer.h, src/renderer/DX12Renderer.cpp
+Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
+Refs: T3.2
+
+
+
 
 
