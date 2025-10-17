@@ -820,5 +820,39 @@ Files changed: `src/renderer/DX12Renderer.cpp` (winding order corregido, culling
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
 Refs: BUG-001 → FIX-001 (commit 0222c47)
 
+- docs: archivar Sprint v1.1.0 y preparar Sprint v1.2.0
+
+Cierre completo del Sprint v1.1.0 con archivado de ficheros versionados y creación de ficheros vacíos para v1.2.0.
+
+**Sprint v1.1.0 - Estado Final**:
+- ✅ 4/4 historias completadas (100%)
+- ✅ 14/14 tareas completadas (100%)
+- ✅ 1 bug resuelto (FIX-001: Quad visible con winding order corregido)
+- ✅ Todos los criterios de aceptación cumplidos
+
+**Archivos archivados**:
+- `docs/sprint_v1.1.0.md` (sprint principal con estado final)
+- `docs/sprint_histories_v1.1.0.md` (historias H1-H4 completadas)
+- `docs/sprint_tasks_v1.1.0.md` (tareas T1.1-T4.4 completadas)
+- `docs/sprint_bugs_v1.1.0.md` (sin bugs pendientes)
+- `docs/sprint_fix_v1.1.0.md` (1 bug resuelto: FIX-001)
+
+**Archivos creados para Sprint v1.2.0**:
+- `docs/sprint.md` (vacío, listo para planificación)
+- `docs/sprint_histories.md` (vacío)
+- `docs/sprint_tasks.md` (vacío)
+- `docs/sprint_bugs.md` (vacío)
+- `docs/sprint_fix.md` (vacío)
+
+**Daily actualizado**: "Sprint v1.1.0 cerrado. Esperando planificación del Sprint v1.2.0."
+
+Sprint v1.2.0 listo para planificación.
+
+Files changed: `docs/sprint_v1.1.0.md`, `docs/sprint_histories_v1.1.0.md`, `docs/sprint_tasks_v1.1.0.md`, `docs/sprint_bugs_v1.1.0.md`, `docs/sprint_fix_v1.1.0.md`, `docs/daily.md`, `docs/sprint.md` (nuevo vacío), `docs/sprint_histories.md` (nuevo vacío), `docs/sprint_tasks.md` (nuevo vacío), `docs/sprint_bugs.md` (nuevo vacío), `docs/sprint_fix.md` (nuevo vacío)
+
+Refs: Sprint v1.1.0 COMPLETADO (commit 60ddcd1)
+
+
+
 
 
