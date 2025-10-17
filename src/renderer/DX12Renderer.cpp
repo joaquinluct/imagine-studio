@@ -361,11 +361,11 @@ void DX12Renderer::Initialize(HWND hwnd)
         }
     };
     
-    // Define rasterizer state (default with backface culling)
+    // Define rasterizer state (backface culling enabled for optimization)
     D3D12_RASTERIZER_DESC rasterizerDesc = {};
     rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
-    rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
-    rasterizerDesc.FrontCounterClockwise = FALSE;
+    rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK; // Backface culling enabled
+    rasterizerDesc.FrontCounterClockwise = FALSE; // Clockwise = front face
     rasterizerDesc.DepthBias = 0;
     rasterizerDesc.DepthBiasClamp = 0.0f;
     rasterizerDesc.SlopeScaledDepthBias = 0.0f;
@@ -423,17 +423,20 @@ void DX12Renderer::Initialize(HWND hwnd)
         float col[4];  // Color (r, g, b, a)
     };
     
-    // Define quad vertices (2 triangles, clockwise winding)
-    // Triangle 1: bottom-left, bottom-right, top-left
-    // Triangle 2: bottom-right, top-right, top-left
+    // Define quad vertices (2 triangles, CLOCKWISE winding for front faces)
+    // Triangle 1: bottom-left, top-left, bottom-right (clockwise)
+    // Triangle 2: bottom-right, top-left, top-right (clockwise)
     // Using NDC coordinates: -1.0 to 1.0 (full screen quad)
     Vertex vertices[] = {
+        // Triangle 1 (clockwise winding)
         {{-0.75f, -0.75f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}}, // Bottom-left, red
-        {{ 0.75f, -0.75f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}}, // Bottom-right, green
         {{-0.75f,  0.75f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}, // Top-left, blue
         {{ 0.75f, -0.75f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}}, // Bottom-right, green
+        
+        // Triangle 2 (clockwise winding)
+        {{ 0.75f, -0.75f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}}, // Bottom-right, green
+        {{-0.75f,  0.75f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}, // Top-left, blue
         {{ 0.75f,  0.75f, 0.0f}, {1.0f, 1.0f, 0.0f, 1.0f}}, // Top-right, yellow
-        {{-0.75f,  0.75f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}, // Top-left, blue
     };
     
     const UINT vertexBufferSize = sizeof(vertices);
@@ -774,8 +777,6 @@ void DX12Renderer::RenderFrame()
     ID3D12CommandList* ppCommandLists[] = { m_commandList };
     commandQueue->ExecuteCommandLists(1, ppCommandLists);
     
-    CORE_LOG_INFO("DX12Renderer: Command list executed on GPU");
-    
     // Signal fence after GPU work submission
     const UINT64 fenceValueForThisFrame = m_fenceValue;
     hr = commandQueue->Signal(m_fence, fenceValueForThisFrame);
@@ -801,8 +802,6 @@ void DX12Renderer::RenderFrame()
         WaitForSingleObject(m_fenceEvent, INFINITE);
     }
     
-    CORE_LOG_INFO("DX12Renderer: Frame synchronized (CPU waited for GPU)");
-    
     // Present the frame with VSync enabled (60 FPS)
     hr = m_swapChain->Present(1, 0); // 1 = VSync on, 0 = no flags
     if (FAILED(hr))
@@ -813,8 +812,6 @@ void DX12Renderer::RenderFrame()
     
     // Update frame index for next frame
     m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
-    
-    CORE_LOG_INFO("DX12Renderer: Frame presented successfully (VSync enabled, 60 FPS)");
 #else
     // Stub: call ComposeUI for composition and present the render target
     // Simulate recording commands

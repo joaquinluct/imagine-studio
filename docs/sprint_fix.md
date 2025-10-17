@@ -8,19 +8,45 @@ Este fichero contiene el **historial de bugs resueltos** durante el sprint activ
 
 ---
 
-## ? Bugs Resueltos
+## ✅ Bugs Resueltos
 
-*No se resolvieron bugs durante este sprint (ninguno fue reportado).*
+### FIX-001 - Quad no visible en pantalla (solo fondo azul)
+**ID Original**: BUG-001
+**Prioridad**: Crítica
+**Fecha de entrada**: 2025-01-17
+**Fecha de resolución**: 2025-01-17
 
----
+**Descripción del problema**: Después de completar el Sprint v1.1.0 (DX12 Minimal Renderer), la aplicación renderizaba correctamente el fondo azul y liberaba recursos al pulsar ESC, pero **no se veía el quad coloreado** que debería renderizarse como "Hola Mundo" visual. Todos los logs indicaban que el renderizado se ejecutaba correctamente (sin errores), pero no había rastro del quad en pantalla.
 
-## ?? Resumen
+**Comportamiento observado**:
+- Solo fondo azul, sin quad visible
+- Sin errores en logs
+- Aplicación funcionaba correctamente (ventana, input, cierre limpio)
 
-| ID | T�tulo | Prioridad | Fecha Entrada | Fecha Resoluci�n | Commit |
+**Causa identificada**: **Backface culling con winding order incorrecto**. Los triángulos estaban definidos con winding order counter-clockwise (CCW), pero DirectX con `FrontCounterClockwise = FALSE` considera que los triángulos clockwise (CW) miran hacia adelante. Por lo tanto, los triángulos se descartaban por backface culling antes de renderizar.
+
+**Solución implementada**:
+1. Invertido el winding order de los vértices a clockwise (CW):
+   - Triangle 1: bottom-left → top-left → bottom-right (clockwise)
+   - Triangle 2: bottom-right → top-left → top-right (clockwise)
+2. Restaurado backface culling (`D3D12_CULL_MODE_BACK`) para optimización (se había deshabilitado temporalmente para debugging)
+3. Reducido logging excesivo en `RenderFrame()` (eliminados `CORE_LOG_INFO` del render loop, solo errores críticos)
+
+**Resultado**: Quad ahora visible correctamente con colores interpolados (rojo, verde, azul, amarillo) y backface culling activo para optimización.
+
+**Archivos afectados**: 
+- `src/renderer/DX12Renderer.cpp` (winding order de vértices corregido, culling restaurado, logging reducido)
+
+**Commit de resolución**: [PENDIENTE]
+
+
+## 📊 Resumen
+
+| ID | Título | Prioridad | Fecha Entrada | Fecha Resolución | Commit |
 |----|--------|-----------|---------------|------------------|--------|
-| - | - | - | - | - | - |
+| FIX-001 | Quad no visible en pantalla (solo fondo azul) | Crítica | 2025-01-17 | 2025-01-17 | [PENDIENTE] |
 
-**Total bugs resueltos**: 0
+**Total bugs resueltos**: 1
 
 ---
 

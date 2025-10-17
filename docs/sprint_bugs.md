@@ -8,15 +8,15 @@ Este fichero contiene los **bugs reportados y pendientes de resoluci�n** duran
 
 ---
 
-## ?? Bugs Reportados (Pendientes)
+## 🐛 Bugs Reportados (Pendientes)
 
 *No hay bugs pendientes actualmente.*
 
----
 
-## ?? Resumen
 
-| ID | T�tulo | Prioridad | Estado | Fecha Entrada |
+## 📊 Resumen
+
+| ID | Título | Prioridad | Estado | Fecha Entrada |
 |----|--------|-----------|--------|---------------|
 | - | - | - | - | - |
 
