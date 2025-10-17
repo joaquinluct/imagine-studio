@@ -206,6 +206,50 @@ Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
 **Hecho: T1.3 Crear SwapChain con Back Buffers**  
 **Siguiente: T1.4 Crear Descriptor Heaps (RTV, CBV/SRV/UAV)**
 
+- docs: create methodology template (TEMPLATE.md)
+
+Created generic methodology template abstracted from specific technologies.
+
+Key features:
+- **Agile-like sprint methodology** adapted for AI-assisted development
+- **Technology-agnostic**: uses `[PLACEHOLDER]` markers for language/framework/build system
+- Includes all core concepts:
+  * Sprints, histories, tasks
+  * Daily tracking (daily.md)
+  * Visual progress bar (??? with percentage)
+  * Commits conventions
+  * Backlog management
+  * Versioning/archiving of completed sprints
+
+**Reusable for any project type**:
+- Web (React, Vue, Angular)
+- Mobile (iOS, Android, Flutter)
+- Backend (Node, Python, Go, Rust)
+- Desktop (C++, C#, Electron)
+- Embedded, games, etc.
+
+**Validation process abstracted**:
+- Compile/execute/test depending on stack
+- Examples provided for:
+  * React + TypeScript ? `npm run lint && npm test && npm run build`
+  * Python FastAPI ? `pytest && mypy . && black --check .`
+  * Rust ? `cargo clippy && cargo test && cargo build`
+  * Unity C# ? Compilation + unit tests
+
+Template sections:
+1. Core workflow (read docs ? propose ? implement ? validate ? commit ? repeat)
+2. Sprint structure (sprint.md, histories.md, tasks.md)
+3. Daily tracking (daily.md with "Hecho/Siguiente")
+4. Visual progress bar (green/black squares with percentage)
+5. Backlog management
+6. Commit conventions
+7. Versioning/archiving of completed sprints
+8. Adaptation guide with technology-specific examples
+
+**Purpose**: This template can be used as base for `copilot-instructions.md` in any future project by replacing `[PLACEHOLDER]` markers with project-specific details.
+
+Files changed: `docs/TEMPLATE.md` (created - 436 lines)
+
 - docs: plan sprint v1.1.0 - DX12 Minimal Renderer
 
 Created complete sprint planning for v1.1.0 with AAA-level DX12 renderer implementation.
