@@ -426,13 +426,14 @@ void DX12Renderer::Initialize(HWND hwnd)
     // Define quad vertices (2 triangles, clockwise winding)
     // Triangle 1: bottom-left, bottom-right, top-left
     // Triangle 2: bottom-right, top-right, top-left
+    // Using NDC coordinates: -1.0 to 1.0 (full screen quad)
     Vertex vertices[] = {
-        {{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}}, // Bottom-left, red
-        {{ 0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}}, // Bottom-right, green
-        {{-0.5f,  0.5f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}, // Top-left, blue
-        {{ 0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}}, // Bottom-right, green
-        {{ 0.5f,  0.5f, 0.0f}, {1.0f, 1.0f, 0.0f, 1.0f}}, // Top-right, yellow
-        {{-0.5f,  0.5f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}, // Top-left, blue
+        {{-0.75f, -0.75f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}}, // Bottom-left, red
+        {{ 0.75f, -0.75f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}}, // Bottom-right, green
+        {{-0.75f,  0.75f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}, // Top-left, blue
+        {{ 0.75f, -0.75f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}}, // Bottom-right, green
+        {{ 0.75f,  0.75f, 0.0f}, {1.0f, 1.0f, 0.0f, 1.0f}}, // Top-right, yellow
+        {{-0.75f,  0.75f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}, // Top-left, blue
     };
     
     const UINT vertexBufferSize = sizeof(vertices);
@@ -841,6 +842,30 @@ void DX12Renderer::OnAssetLoaded(const std::string& path)
 void DX12Renderer::Shutdown()
 {
 #if defined(_WIN32) && defined(_MSC_VER)
+    // Wait for GPU to finish all pending work before releasing resources
+    if (device_ && device_->HasNativeDevice() && m_fence && m_fenceEvent)
+    {
+        ID3D12CommandQueue* commandQueue = static_cast<ID3D12CommandQueue*>(device_->NativeCommandQueue());
+        if (commandQueue)
+        {
+            // Signal fence with a high value
+            const UINT64 fenceValueForShutdown = m_fenceValue;
+            HRESULT hr = commandQueue->Signal(m_fence, fenceValueForShutdown);
+            
+            if (SUCCEEDED(hr))
+            {
+                // Wait for GPU to reach this fence value
+                if (m_fence->GetCompletedValue() < fenceValueForShutdown)
+                {
+                    m_fence->SetEventOnCompletion(fenceValueForShutdown, m_fenceEvent);
+                    WaitForSingleObject(m_fenceEvent, INFINITE);
+                }
+                
+                CORE_LOG_INFO("DX12Renderer: GPU work completed, safe to release resources");
+            }
+        }
+    }
+    
     // Unmap and release constant buffer
     if (m_constantBuffer)
     {
