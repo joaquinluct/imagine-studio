@@ -769,7 +769,11 @@ void DX12Renderer::RenderFrame()
         return;
     }
     
-    CORE_LOG_INFO("DX12Renderer: Command list recorded successfully");
+    // Execute command list on command queue
+    ID3D12CommandList* ppCommandLists[] = { m_commandList };
+    commandQueue->ExecuteCommandLists(1, ppCommandLists);
+    
+    CORE_LOG_INFO("DX12Renderer: Command list executed on GPU");
 #else
     // Stub: call ComposeUI for composition and present the render target
     // Simulate recording commands
