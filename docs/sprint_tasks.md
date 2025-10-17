@@ -9,16 +9,18 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.2.
 ## Historia 1: Arquitectura Multi-Pass (H1)
 
 ### Tarea H1.1: Refactorizar RenderFrame() para multi-pass
-**Estado**: Pendiente  
+**Estado**: ✅ Completada  
 **Archivos afectados**: `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`
 
 **Descripci�n**: Refactorizar `DX12Renderer::RenderFrame()` para llamar a `RenderForwardPass()` en lugar de tener todo el c�digo en `RenderFrame()`.
 
 **Pasos**:
-1. Crear m�todo `void RenderForwardPass()` en `DX12Renderer`
-2. Mover c�digo actual de `RenderFrame()` a `RenderForwardPass()`
-3. `RenderFrame()` solo llama a `RenderForwardPass()`
-4. Compilar y validar (0 errores, 0 warnings)
+1. ✅ Crear m�todo `void RenderForwardPass()` en `DX12Renderer`
+2. ✅ Mover c�digo actual de `RenderFrame()` a `RenderForwardPass()`
+3. ✅ `RenderFrame()` solo llama a `RenderForwardPass()`
+4. ✅ Compilar y validar (0 errores, 0 warnings)
+
+**Commit**: 21cc105
 
 ---
 
@@ -265,7 +267,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.2.
 
 | Historia | Tarea | T�tulo | Estado |
 |----------|-------|--------|--------|
-| H1 | H1.1 | Refactorizar RenderFrame() | Pendiente |
+| H1 | H1.1 | Refactorizar RenderFrame() | ✅ Completada |
 | H1 | H1.2 | Crear OpaquePass() y UIPass() | Pendiente |
 | H1 | H1.3 | Comentarios para futuros passes | Pendiente |
 | H2 | H2.1 | Crear InputManager b�sico | Pendiente |
@@ -281,4 +283,4 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.2.
 | H4 | H4.2 | Conectar UIPass con F1 | Pendiente |
 | H4 | H4.3 | Validar UI Pass con F1 | Pendiente |
 
-**Total**: 15 tareas (0 completadas, 15 pendientes)
+**Total**: 15 tareas (1 completada, 14 pendientes)

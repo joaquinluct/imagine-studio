@@ -914,6 +914,25 @@ Files changed: `docs/sprint.md`, `docs/sprint_tasks.md`, `docs/backlog.md`, `doc
 Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
 Refs: Sprint v1.2.0 encoding fix (commit 0a64bc0)
 
+- feat(renderer): refactorizar RenderFrame() para arquitectura multi-pass (H1.1)
+
+Implementada tarea H1.1 del Sprint v1.2.0 - Refactorizar RenderFrame() para multi-pass.
+
+**Cambios:**
+- Creado método `RenderForwardPass()` que contiene toda la lógica de renderizado
+- `RenderFrame()` ahora solo llama a `RenderForwardPass()`
+- Arquitectura preparada para añadir `OpaquePass()` y `UIPass()` en próximas tareas
+- Diseño extensible para futuro Deferred Rendering (v1.3.0+)
+
+**Archivos modificados:**
+- `src/renderer/DX12Renderer.h`: Añadido `RenderForwardPass()` declaration
+- `src/renderer/DX12Renderer.cpp`: Refactorizado `RenderFrame()` → `RenderForwardPass()`
+
+**Compilación:** CMake Debug OK + MSBuild VS Debug OK (0 errores, 0 warnings)
+
+Files changed: `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`
+Refs: Sprint v1.2.0 - H1.1 (commit 21cc105)
+
 
 
 
