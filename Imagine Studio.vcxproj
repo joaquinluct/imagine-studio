@@ -142,6 +142,8 @@
     <None Include="docs\roadmap_tasks_v1.0.0.md" />
     <None Include="docs\roadmap_v1.0.0.md" />
     <None Include="docs\sprint.md" />
+    <None Include="docs\sprint_bugs.md" />
+    <None Include="docs\sprint_fix.md" />
     <None Include="docs\sprint_histories.md" />
     <None Include="docs\sprint_histories_v1.0.0.md" />
     <None Include="docs\sprint_tasks.md" />
@@ -151,6 +153,7 @@
     <None Include="examples\scene1\README.md" />
     <None Include="examples\scene1\scene.json" />
     <None Include="README.md" />
+    <None Include="scripts\check-encoding.ps1" />
     <None Include="tools\reorder_includes.py" />
   </ItemGroup>
   <ItemGroup>
