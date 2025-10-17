@@ -250,6 +250,40 @@ Template sections:
 
 Files changed: `docs/TEMPLATE.md` (created - 436 lines)
 
+- feat(renderer): implement CBV/SRV/UAV descriptor heap creation (T1.4)
+
+Implemented Task T1.4 - Create CBV/SRV/UAV descriptor heap following AAA standards.
+
+Key changes:
+- Created **CBV/SRV/UAV descriptor heap** (`D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV`) with 1 descriptor
+- Configured heap as **SHADER_VISIBLE** (`D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE`) for GPU access
+- Stored descriptor size increment with `GetDescriptorHandleIncrementSize()`
+- Added proper cleanup in `Shutdown()` with correct release order:
+  * CBV/SRV/UAV heap (first)
+  * Render targets
+  * RTV heap
+  * SwapChain
+
+**Note**: T1.3 already created the RTV heap, so T1.4 only creates the CBV/SRV/UAV heap.  
+This heap will be used later for:
+- Constant buffers (T3.2)
+- Shader resources (textures)
+- Unordered access views
+
+Implementation follows DX12 best practices:
+- Proper error handling with HRESULT checks
+- Logging with `CORE_LOG_INFO` / `CORE_LOG_ERROR`
+- Correct resource release order in Shutdown()
+
+Files changed:
+- `src/renderer/DX12Renderer.h`: Added `m_cbvSrvUavHeap` and `m_cbvSrvUavDescriptorSize` members
+- `src/renderer/DX12Renderer.cpp`: Implemented CBV/SRV/UAV heap creation in `Initialize(HWND)`, updated `Shutdown()` with proper cleanup
+
+Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
+
+**Hecho: T1.4 Crear Descriptor Heaps (CBV/SRV/UAV)**  
+**Siguiente: T1.5 Crear Command Allocators, Command List y Fence GPU**
+
 - docs: plan sprint v1.1.0 - DX12 Minimal Renderer
 
 Created complete sprint planning for v1.1.0 with AAA-level DX12 renderer implementation.

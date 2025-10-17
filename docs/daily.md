@@ -1,4 +1,4 @@
 # Daily Log
 
-Hecho: T1.3 Crear SwapChain con Back Buffers
-Siguiente: T1.4 Crear Descriptor Heaps (RTV, CBV/SRV/UAV)
+Hecho: T1.4 Crear Descriptor Heaps (CBV/SRV/UAV)
+Siguiente: T1.5 Crear Command Allocators, Command List y Fence GPU
