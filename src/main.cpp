@@ -148,6 +148,13 @@ static int RunApp(HINSTANCE hInstance)
         // Example: if Escape pressed, exit
         if (input.IsKeyDown(VK_ESCAPE))
             break;
+        
+        // H2.3: Toggle UI visibility with F1 key
+        if (input.IsKeyPressed(VK_F1))
+        {
+            renderer.ToggleUI();
+            CORE_LOG_INFO(std::string("UI visibility toggled: ") + (renderer.IsUIVisible() ? "visible" : "hidden"));
+        }
 
         // Poll for loaded assets and notify renderer
         std::string loadedPath;

@@ -100,16 +100,19 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.2.
 ---
 
 ### Tarea H2.3: Implementar toggle de UI con F1
-**Estado**: Pendiente  
-**Archivos afectados**: `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`, `src/core/Application.cpp`
+**Estado**: ✅ Completada  
+**Archivos afectados**: `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`, `src/main.cpp`
 
-**Descripci�n**: A�adir l�gica de toggle de UI con tecla F1 usando `InputManager`.
+**Descripción**: Añadir lógica de toggle de UI con tecla F1 usando `InputManager`.
 
 **Pasos**:
-1. A�adir miembro `bool m_uiVisible = true;` en `DX12Renderer`
-2. En `Application::Run()`, detectar `InputManager::IsKeyPressed(VK_F1)`
-3. Si F1 es presionado, alternar `m_uiVisible` en `DX12Renderer`
-4. Compilar y validar (0 errores, 0 warnings)
+1. ✅ Añadir miembro `bool m_uiVisible = true;` en `DX12Renderer`
+2. ✅ Añadir métodos públicos `ToggleUI()`, `SetUIVisible()`, `IsUIVisible()` en `DX12Renderer`
+3. ✅ En `main.cpp`, detectar `InputManager::IsKeyPressed(VK_F1)` y llamar a `renderer.ToggleUI()`
+4. ✅ Actualizar `RenderForwardPass()` para llamar a `UIPass()` solo si `m_uiVisible == true`
+5. ✅ Compilar y validar (0 errores, 0 warnings)
+
+**Commit**: (pendiente)
 
 ---
 
@@ -279,7 +282,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.2.
 | H1 | H1.3 | Comentarios para futuros passes | ✅ Completada |
 | H2 | H2.1 | Crear InputManager básico | ✅ Completada |
 | H2 | H2.2 | Integrar con Win32 message loop | ✅ Completada |
-| H2 | H2.3 | Implementar toggle F1 | Pendiente |
+| H2 | H2.3 | Implementar toggle F1 | ✅ Completada |
 | H2 | H2.4 | Validar toggle F1 | Pendiente |
 | H3 | H3.1 | Crear vertex buffer tri�ngulos | Pendiente |
 | H3 | H3.2 | Crear shader HLSL tri�ngulos | Pendiente |
@@ -290,4 +293,4 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.2.
 | H4 | H4.2 | Conectar UIPass con F1 | Pendiente |
 | H4 | H4.3 | Validar UI Pass con F1 | Pendiente |
 
-**Total**: 15 tareas (5 completadas, 10 pendientes)
+**Total**: 15 tareas (6 completadas, 9 pendientes)

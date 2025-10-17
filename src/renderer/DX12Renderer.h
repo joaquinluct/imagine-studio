@@ -43,6 +43,11 @@ public:
     bool ComposeUI();
     // Notify renderer that an asset loaded (path)
     void OnAssetLoaded(const std::string& path);
+    
+    // UI visibility control (H2.3 - Toggle UI with F1)
+    void SetUIVisible(bool visible) { m_uiVisible = visible; }
+    bool IsUIVisible() const { return m_uiVisible; }
+    void ToggleUI() { m_uiVisible = !m_uiVisible; }
 
 private:
     // stubs for device and render target ownership
@@ -96,6 +101,9 @@ private:
     // ID3D12Resource* m_gBufferNormal = nullptr;   // v1.3.0+ - World-space normals texture
     // ID3D12Resource* m_gBufferDepth = nullptr;    // v1.3.0+ - Depth texture
 #endif
+    
+    // UI visibility state (H2.3 - Toggle UI with F1)
+    bool m_uiVisible = true; // UI visible by default
 };
 
 } // namespace Renderer

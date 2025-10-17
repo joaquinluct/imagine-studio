@@ -1009,6 +1009,36 @@ Marcada tarea H2.2 del Sprint v1.2.0 - Integrar InputManager con Win32 message l
 Files changed: `docs/sprint_tasks.md`, `docs/daily.md`, `docs/commits.md`
 Refs: Sprint v1.2.0 - H2.2 (tarea marcada como completada)
 
+- feat(input): implementar toggle de UI con F1 (H2.3)
+
+Implementada tarea H2.3 del Sprint v1.2.0 - Añadir lógica de toggle de UI con tecla F1.
+
+**Cambios:**
+- Añadido miembro `bool m_uiVisible = true;` en `DX12Renderer` (UI visible por defecto)
+- Añadidos métodos públicos:
+  * `ToggleUI()` - Alterna el estado de visibilidad de UI
+  * `SetUIVisible(bool visible)` - Establece el estado de visibilidad
+  * `IsUIVisible() const` - Consulta el estado actual
+- En `main.cpp`, detectar `InputManager::IsKeyPressed(VK_F1)` y llamar a `renderer.ToggleUI()`
+- Añadido logging cuando se presiona F1 (muestra estado: "visible" o "hidden")
+- Actualizado `RenderForwardPass()` para llamar a `UIPass()` solo si `m_uiVisible == true`
+
+**Implementación:**
+- Flanco de subida detectado con `IsKeyPressed(VK_F1)` (no con `IsKeyDown()` para evitar múltiples toggles)
+- Estado persistente entre frames
+- UI visible por defecto al iniciar aplicación
+- Preparado para implementación real de `UIPass()` en tarea H4
+
+**Archivos modificados:**
+- `src/renderer/DX12Renderer.h`: Añadidos métodos públicos y miembro `m_uiVisible`
+- `src/renderer/DX12Renderer.cpp`: Actualizado `RenderForwardPass()` con llamada condicional a `UIPass()`
+- `src/main.cpp`: Añadida detección de F1 y toggle de UI con logging
+
+**Compilación:** CMake Debug OK + MSBuild VS Debug OK (0 errores, 0 warnings)
+
+Files changed: `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`, `src/main.cpp`, `docs/sprint_tasks.md`, `docs/daily.md`, `docs/commits.md`
+Refs: Sprint v1.2.0 - H2.3
+
 
 
 

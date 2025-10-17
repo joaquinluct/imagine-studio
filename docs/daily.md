@@ -1,4 +1,4 @@
 ﻿# Daily Log
 
-Hecho: H2.2 Integrar InputManager con Win32 message loop (verificación)
-Siguiente: H2.3 Implementar toggle de UI con F1
+Hecho: H2.3 Implementar toggle de UI con F1
+Siguiente: H2.4 Validar toggle de UI (testing manual)

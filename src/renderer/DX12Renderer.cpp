@@ -672,8 +672,11 @@ void DX12Renderer::RenderForwardPass()
     // Pass 1: Opaque
     OpaquePass();
     
-    // Pass 2: UI (condicional)
-    // UIPass(); // TODO: Implementar en H4
+    // Pass 2: UI (condicional - H2.3)
+    if (m_uiVisible)
+    {
+        UIPass(); // TODO: Implementar contenido real en H4
+    }
 }
 
 void DX12Renderer::OpaquePass()
