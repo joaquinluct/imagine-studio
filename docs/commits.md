@@ -348,3 +348,21 @@ This ensures new AI sessions will always use the correct `msbuild` command for s
 
 Files changed: `.github/copilot-instructions.md`
 
+- feat(renderer): implement Command Allocators, Command List and Fence GPU (T1.5)
+
+Implemented Task T1.5 - Create Command Allocator, Command List, Fence and event following AAA standards.
+
+Key changes:
+- Created Command Allocator (ID3D12CommandAllocator) with D3D12_COMMAND_LIST_TYPE_DIRECT
+- Created Command List (ID3D12GraphicsCommandList) associated with allocator
+- Command List initialized in closed state (lists are created recording by default)
+- Created Fence GPU (ID3D12Fence) for CPU/GPU synchronization with initial value 0
+- Created Win32 event handle with CreateEventEx() for fence signaling
+- Added error handling with HRESULT checks and logging for all objects
+- Proper cleanup in Shutdown() with correct release order
+- Implementation follows DX12 best practices
+
+Files changed: src/renderer/DX12Renderer.h, src/renderer/DX12Renderer.cpp
+Compilation: CMake Debug OK + MSBuild VS Debug OK (0 errors, 0 warnings)
+Refs: T1.5
+
