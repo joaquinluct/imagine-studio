@@ -5,6 +5,9 @@ namespace Scene { class Scene; }
 
 namespace Editor {
 
+// Forward declaration (v1.5.0 H3.1)
+class Viewport;
+
 /// <summary>
 /// EditorUI - Renders all editor panels (Hierarchy, Inspector, Console, Viewport)
 /// Integrated with Scene for real entity management
@@ -27,7 +30,7 @@ public:
     static void RenderConsole();
     
     /// <summary>
-    /// Render Viewport panel - Shows 3D scene render target (H4.4)
+    /// Render Viewport panel - Shows 3D scene render target (v1.5.0 H3.1)
     /// </summary>
     static void RenderViewport();
     
@@ -35,6 +38,12 @@ public:
     /// Render all editor panels at once (convenience method for H4.5)
     /// </summary>
     static void RenderAllPanels(Scene::Scene* scene);
+    
+    // v1.5.0 H3.1 - Get viewport instance (singleton pattern)
+    static Viewport* GetViewport();
+
+private:
+    static Viewport* s_viewport; // Singleton instance (v1.5.0 H3.1)
 };
 
 } // namespace Editor

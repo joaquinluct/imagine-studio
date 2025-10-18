@@ -1,4 +1,5 @@
 #include "EditorUI.h"
+#include "Viewport.h"  // v1.5.0 H3.1
 #include "../scene/Scene.h"
 #include "../scene/Entity.h"
 #include "../scene/Transform.h"
@@ -6,6 +7,9 @@
 #include "imgui.h"
 
 namespace Editor {
+
+// v1.5.0 H3.1 - Viewport singleton
+Viewport* EditorUI::s_viewport = nullptr;
 
 void EditorUI::RenderHierarchy(Scene::Scene* scene)
 {
@@ -180,51 +184,12 @@ void EditorUI::RenderConsole()
 
 void EditorUI::RenderViewport()
 {
-    ImGui::Begin("Viewport");
-    
-    // Placeholder: Información del viewport
-    ImGui::Text("3D Viewport");
-    ImGui::Separator();
-    
-    // Información técnica del render target
-    ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "Render Target:");
-    ImGui::Text("  Resolution: 1920x1080 (Full HD)");
-    ImGui::Text("  Format: DXGI_FORMAT_R8G8B8A8_UNORM");
-    ImGui::Text("  Samples: 1 (no MSAA)");
-    
-    ImGui::Spacing();
-    ImGui::Separator();
-    ImGui::Spacing();
-    
-    // Placeholder para el render target como textura
-    ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO:");
-    ImGui::TextWrapped("Expose back buffer as SRV texture and render with ImGui::Image()");
-    
-    ImGui::Spacing();
-    ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "Future implementation:");
-    ImGui::BulletText("Create SRV for render target");
-    ImGui::BulletText("Transition render target to SHADER_RESOURCE state");
-    ImGui::BulletText("Render with ImGui::Image(srvGpuHandle, size)");
-    ImGui::BulletText("Handle viewport resizing");
-    
-    ImGui::Spacing();
-    ImGui::Separator();
-    ImGui::Spacing();
-    
-    // Estadísticas de renderizado
-    ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Rendering Stats:");
-    ImGui::Text("  Draw Calls: 1");
-    ImGui::Text("  Vertices: 6");
-    ImGui::Text("  Triangles: 2");
-    ImGui::Text("  Primitives: Quad");
-    
-    // Nota: El render 3D actualmente se muestra detrás de los panels
-    // con fondo semitransparente (70%% opacidad)
-    ImGui::Spacing();
-    ImGui::TextColored(ImVec4(0.5f, 0.5f, 1.0f, 1.0f), "Note:");
-    ImGui::TextWrapped("Currently, the 3D scene is rendered behind editor panels with semi-transparent background (70%% opacity).");
-    
-    ImGui::End();
+    // v1.5.0 H3.1 - Use real Viewport class
+    Viewport* viewport = GetViewport();
+    if (viewport)
+    {
+        viewport->Render();
+    }
 }
 
 void EditorUI::RenderAllPanels(Scene::Scene* scene)
@@ -234,6 +199,16 @@ void EditorUI::RenderAllPanels(Scene::Scene* scene)
     RenderInspector(scene);
     RenderConsole();
     RenderViewport();
+}
+
+// v1.5.0 H3.1 - Get/create viewport singleton
+Viewport* EditorUI::GetViewport()
+{
+    if (!s_viewport)
+    {
+        s_viewport = new Viewport();
+    }
+    return s_viewport;
 }
 
 } // namespace Editor

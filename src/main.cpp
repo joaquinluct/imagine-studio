@@ -2,15 +2,16 @@
 #include "assets/AssetManager.h"
 #include "core/Log.h"
 #include "editor/EditorUI.h"
+#include "editor/Viewport.h"    // v1.5.0 H3.1 - Viewport panel
 #include "jobs/TaskGraph.h"
 #include "jobs/ThreadPool.h"
 #include "platform/InputManager.h"
 #include "platform/Window.h"
 #include "renderer/Camera.h"     // v1.5.0 H2.3 - Camera controls
 #include "renderer/DX12Renderer.h"
+#include "scene/Scene.h"
 #include "tools/Profiler.h"
 #include "ui/SimpleUI.h"
-#include "scene/Scene.h"
 
 #include <chrono>
 #include <fstream>
@@ -302,6 +303,17 @@ static int RunApp(HINSTANCE hInstance)
             // ✅ AAA STANDARD: Dockspace principal ANTES de panels (Unity/Unreal style)
             // Permite docking flexible de todos los panels del editor
             ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
+            
+            // v1.5.0 H3.1 - Update viewport with render target SRV
+            Editor::Viewport* viewport = Editor::EditorUI::GetViewport();
+            if (viewport)
+            {
+#if defined(_WIN32) && defined(_MSC_VER)
+                // Get render target SRV from renderer
+                D3D12_GPU_DESCRIPTOR_HANDLE srvHandle = renderer.GetRenderTargetSRV();
+                viewport->SetRenderTargetSRV(reinterpret_cast<void*>(srvHandle.ptr));
+#endif
+            }
             
             // ✅ H4: Render all editor panels with Scene integration
             Editor::EditorUI::RenderAllPanels(&scene);
