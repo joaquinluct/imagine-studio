@@ -795,3 +795,72 @@ docs/
 ```
 
 **Regla**: Los históricos de sprints se mantienen en `docs/sprints/` para mejor organización y facilitar búsqueda de decisiones pasadas.
+
+---
+
+## ⚠️ **OBLIGATORIO AL FINALIZAR SPRINT: Registrar Sesión IA**
+
+**CRÍTICO**: Al finalizar un sprint (ejecutar `close-sprint.ps1`), el asistente **DEBE**:
+
+1. **Registrar la sesión IA** en `docs/sprint_ia_sessions.md` **ANTES** de archivar
+2. **Incluir TODA la información** de la sesión:
+   - Prompts ejecutados (lista completa)
+   - Tareas completadas durante la sesión
+   - Commits creados
+   - Archivos creados/modificados
+   - Métricas finales del sprint
+   - Duración de la sesión
+   - Consumo de tokens
+3. **Archivar** el fichero con el script: `sprint_ia_sessions_v<version>.md`
+
+**¿Por qué es OBLIGATORIO?**
+- ✅ **Trazabilidad completa** del desarrollo asistido por IA
+- ✅ **Análisis retrospectivo** de metodología y prompts efectivos
+- ✅ **Documentación valiosa** para futuros sprints
+- ✅ **Auditoría** de decisiones tomadas durante el desarrollo
+- ✅ **Continuidad** entre sesiones y sprints
+
+**Proceso al cerrar sprint**:
+```powershell
+# 1. Actualizar docs/sprint_ia_sessions.md con resumen de sesión
+# 2. Ejecutar script de cierre (archiva automáticamente)
+.\scripts\close-sprint.ps1 -Version "X.Y.Z"
+# 3. Commit final de cierre
+git add -A
+git commit -m "chore: Cerrar Sprint vX.Y.Z - 100% completado"
+```
+
+**Plantilla mínima obligatoria** (ver sección "Gestión de Sesiones IA" para template completo):
+```markdown
+## Sesión IA #001 - Sprint vX.Y.Z
+
+**LLM**: GitHub Copilot (Claude 3.5 Sonnet)
+**Fecha/Hora**: [YYYY-MM-DD HH:MM-HH:MM UTC]
+**Usuario (Orquestador)**: [username]
+**Consumo de Tokens**: [~XXX,000] / 1,000,000 ([XX.X]%
+**Estado**: ⚠️ SPRINT COMPLETADO
+
+### Resumen de la Sesión:
+[Lista de logros principales]
+
+### Prompt Ejecutado:
+[Lista de prompts usados]
+
+### Tareas completadas en sesión:
+[Lista de todas las tareas HX.Y]
+
+### Commits Creados:
+[Lista de commits con hash]
+
+### Métricas del Sprint (Final):
+[Tareas, tests, performance, bugs, etc.]
+```
+
+**Excepciones**: Si el sprint NO tuvo sesiones IA (desarrollo manual), dejar `sprint_ia_sessions.md` vacío con nota:
+```markdown
+# Sprint IA Sessions - vX.Y.Z
+
+*No hubo sesiones IA durante este sprint. Desarrollo realizado manualmente.*
+```
+
+---
