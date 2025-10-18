@@ -713,6 +713,74 @@ Compilación: CMake Debug OK + MSBuild VS Debug OK (0 errores, 0 warnings)
 
 Ref: #BUG-001 #FIX-001
 
+# Historial de Commits
+
+Este archivo registra todos los commits realizados durante el desarrollo del proyecto Imagine Studio, organizados cronológicamente.
+
+---
+
+## 2025-01-18
+
+### `07fc72c` - fix(Window): Corregir registro de clase y eliminar fallback STATIC - BUG-002 Intento 5
+
+**Tipo**: Bug fix (BUG-002 Intento #5)  
+**Ámbito**: Window  
+**Descripción**: Corregir registro de clase de ventana y eliminar fallback problemático a clase STATIC
+
+**Problema identificado** (Intento #4):
+- `CreateWindowExW` falla con error 1400 (`ERROR_INVALID_WINDOW_HANDLE`)
+- Fallback a clase `STATIC` permite arranque pero sin eventos de mouse
+- `WndProc` nunca recibe `WM_LBUTTONDOWN`/`WM_LBUTTONUP`
+- ImGui detecta hover pero no clicks (`io.MouseDown[0]=0` siempre)
+
+**Causa raíz**:
+- Posible mismatch de `hInstance` entre registro de clase y creación de ventana
+- Clase fallback `STATIC` no tiene nuestro `WndProc` correctamente asociado
+- Eventos de mouse no llegan a `WndProc` con clase `STATIC`
+
+**Solución implementada**:
+- Usar `GetModuleHandle(NULL)` **consistentemente** en registro y creación
+- Verificar si clase ya existe antes de intentar registro con `GetClassInfoExW`
+- Usar nombre de clase directamente (no atom) en `CreateWindowExW`
+- **ELIMINAR** fallback a clase `STATIC` (enmascara problema real)
+- Abortar con error detallado si creación falla (en lugar de continuar con ventana defectuosa)
+
+**Cambios en código**:
+```cpp
+// ANTES (problemático):
+HINSTANCE regInstance = hInstance_ ? hInstance_ : GetModuleHandle(NULL);
+RegisterClassExW(&wc);  // Con regInstance
+CreateWindowExW(..., regInstance, ...);  // Falla → usa fallback STATIC
+
+// DESPUÉS (correcto):
+HINSTANCE moduleInstance = GetModuleHandle(NULL);  // Siempre el mismo
+BOOL classExists = GetClassInfoExW(moduleInstance, CLASS_NAME, &existingClass);
+if (!classExists) { RegisterClassExW(&wc); }  // Solo registrar si no existe
+CreateWindowExW(..., CLASS_NAME, ..., moduleInstance, ...);  // Sin fallback
+if (!hwnd_) { /* Abortar con error - SIN FALLBACK */ }
+```
+
+**Archivos modificados**:
+- `src/platform/Window.cpp`: Corregir registro de clase, eliminar fallback, añadir logs
+- `docs/sprint_bug_attempts.md`: **Nuevo archivo** con registro completo de intentos BUG-002
+- `docs/sprint_bugs.md`: Actualizar estado a "Pendiente validación usuario (Intento #5)"
+
+**Compilación**: ✅ Limpia
+- CMake Build (Debug): 0 errores, 0 warnings
+- MSBuild "Imagine Studio.sln" (Debug): 0 errores, 0 warnings
+
+**Estado**: ⏳ **PENDIENTE VALIDACIÓN USUARIO**
+- Usuario debe ejecutar `x64\Debug\Imagine Studio.exe`
+- Verificar ventana se crea sin error 1400
+- Verificar logs `[WndProc] Mouse button DOWN/UP` al hacer click
+- Verificar clicks funcionan en UI de ImGui (abrir menús, botones, etc.)
+
+**Expectativa**:
+- Si mismatch de `hInstance` era el problema → ventana se creará correctamente
+- Si persiste error 1400 → investigar permisos o conflictos de sistema operativo
+
+---
+
 
 
 

@@ -1,5 +1,5 @@
 ﻿# Daily Log
 
-Hecho: BUG-001 Intento #4 - Añadir logs detallados para diagnosticar eventos de mouse
-Siguiente: BUG-001 Validación logs - Usuario ejecuta y reporta logs de eventos de mouse
+Hecho: BUG-002 Intento #5 - Corregir registro de clase y eliminar fallback STATIC
+Siguiente: BUG-002 Validación usuario - Ejecutar aplicación y verificar clicks funcionan
 
