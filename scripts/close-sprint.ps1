@@ -17,6 +17,7 @@
 # - sprint_bugs.md -> sprint_bugs_vX.Y.Z.md
 # - sprint_bug_attempts.md -> sprint_bug_attempts_vX.Y.Z.md
 # - sprint_fix.md -> sprint_fix_vX.Y.Z.md
+# - sprint_commits.md -> sprint_commits_vX.Y.Z.md (NUEVO)
 # - sprint_deviations.md -> sprint_deviations_vX.Y.Z.md (si existe)
 # - sprint_ia_sessions.md -> sprint_ia_sessions_vX.Y.Z.md (si existe)
 
@@ -49,7 +50,8 @@ $requiredFiles = @(
     "sprint_tasks.md",
     "sprint_bugs.md",
     "sprint_bug_attempts.md",
-    "sprint_fix.md"
+    "sprint_fix.md",
+    "sprint_commits.md"
 )
 
 # 3. Lista de ficheros opcionales (pueden no existir)
@@ -123,7 +125,7 @@ Ver [`docs/sprint_histories.md`](sprint_histories.md) para historias detalladas.
 
 | ID | Historia | Prioridad | Estado |
 |----|----------|-----------|--------|
-| H1 | [Título] | Alta | ?? Pendiente |
+| H1 | [Título] | Alta | ? Pendiente |
 
 ## ?? Progreso
 
@@ -152,7 +154,7 @@ Este archivo contiene las historias de usuario (alto nivel) del sprint activo vX
 ### H1 - [Título de la historia]
 **ID**: H1  
 **Prioridad**: Alta  
-**Estado**: ?? Pendiente  
+**Estado**: ? Pendiente  
 
 **Descripción**: [Descripción de la historia]
 
@@ -182,7 +184,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo vX.Y.
 ## Historia 1: [NOMBRE] (H1)
 
 ### Tarea H1.1: [Título de la tarea]
-**Estado**: ?? Pendiente  
+**Estado**: ? Pendiente  
 **Archivos afectados**: [lista de archivos]
 
 **Descripción**: [Descripción de la tarea]
@@ -199,7 +201,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo vX.Y.
 
 | Historia | Tarea | Título | Estado |
 |----------|-------|--------|--------|
-| H1 | H1.1 | [Título] | ?? Pendiente |
+| H1 | H1.1 | [Título] | ? Pendiente |
 
 **Total**: 1 tarea (0 completadas, 1 pendiente)
 "@
@@ -268,6 +270,53 @@ Este archivo contiene el historial de bugs resueltos durante el sprint activo vX
 "@
 Set-Content "docs/sprint_fix.md" $fixContent -Encoding UTF8
 Write-Host "  [OK] sprint_fix.md (vacío)" -ForegroundColor Green
+
+# sprint_commits.md vacío (NUEVO)
+$commitsContent = @"
+# Sprint Commits - vX.Y.Z (Active)
+
+> **Referencia**: Ver [`docs/sprint.md`](sprint.md) para objetivo y progreso del sprint.
+
+Este archivo registra todos los commits realizados durante el **Sprint vX.Y.Z**.
+
+---
+
+## Convenciones de Commits
+
+Formato recomendado para los mensajes de commit:
+
+``````
+<tipo>(<ámbito>): <mensaje corto>
+
+<mensaje largo opcional>
+
+Refs: <issue/track-id>
+``````
+
+### Tipos comunes:
+- **feat**: Nueva funcionalidad
+- **fix**: Corrección de errores
+- **docs**: Cambios en documentación
+- **style**: Formato, estilo, sin cambios funcionales
+- **refactor**: Refactorización sin cambios en comportamiento
+- **perf**: Mejoras de rendimiento
+- **test**: Añadir o corregir tests
+- **chore**: Tareas de mantenimiento
+
+---
+
+## Historial de Commits (Sprint vX.Y.Z)
+
+*No hay commits registrados actualmente.*
+
+---
+
+**Versión**: v1.0  
+**Última actualización**: [FECHA]  
+**Sprint**: vX.Y.Z - **EN PROGRESO**
+"@
+Set-Content "docs/sprint_commits.md" $commitsContent -Encoding UTF8
+Write-Host "  [OK] sprint_commits.md (vacío)" -ForegroundColor Green
 
 # sprint_deviations.md vacío (opcional)
 $deviationsContent = @"

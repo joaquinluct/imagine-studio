@@ -1276,3 +1276,5 @@ This file has been truncated. (remaining 1121 lines are not shown)
 
 
 
+A c t u a l i z a r   c o m m i t s . m d   c o n   n u e v o   c o m m i t   d e   p l a n i f i c a c i o n   S p r i n t   v 1 . 5 . 0  
+ 

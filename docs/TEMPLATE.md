@@ -1,71 +1,71 @@
-ï»¿# MetodologÃ­a de Desarrollo Ãgil Asistido por IA - Template
+# Metodología de Desarrollo Ágil Asistido por IA - Template
 
-> **PropÃ³sito**: Este documento define la metodologÃ­a genÃ©rica de trabajo con asistentes IA (GitHub Copilot, ChatGPT, Claude, etc.) aplicable a cualquier proyecto de software.
+> **Propósito**: Este documento define la metodología genérica de trabajo con asistentes IA (GitHub Copilot, ChatGPT, Claude, etc.) aplicable a cualquier proyecto de software.
 
-**Nota para uso**: Adapta las secciones marcadas con `[PLACEHOLDER]` al contexto especÃ­fico de tu proyecto (tecnologÃ­a, lenguaje, sistema de build, estÃ¡ndares, etc.).
+**Nota para uso**: Adapta las secciones marcadas con `[PLACEHOLDER]` al contexto específico de tu proyecto (tecnología, lenguaje, sistema de build, estándares, etc.).
 
 ---
 
-## ğŸ“š LEER PRIMERO
+## ?? LEER PRIMERO
 
-**OBLIGATORIO**: Antes de comenzar cualquier sesiÃ³n con el asistente IA, leer:  
-ğŸ“– **[`docs/MAIN.md`](MAIN.md)** - [PLACEHOLDER: Documento fundamental del proyecto]
+**OBLIGATORIO**: Antes de comenzar cualquier sesión con el asistente IA, leer:  
+?? **[`docs/MAIN.md`](MAIN.md)** - [PLACEHOLDER: Documento fundamental del proyecto]
 
 Este documento define los pilares fundamentales, arquitectura y principios del proyecto.  
-**Todas las decisiones de implementaciÃ³n DEBEN alinearse con estos principios.**
+**Todas las decisiones de implementación DEBEN alinearse con estos principios.**
 
 ---
 
-## ğŸ“ Estructura de Archivos de Trabajo
+## ?? Estructura de Archivos de Trabajo
 
-Archivos principales que el asistente debe consultar en cada sesiÃ³n:
+Archivos principales que el asistente debe consultar en cada sesión:
 
-- **`docs/MAIN.md`** - [LEER PRIMERO] Fundamentos del proyecto (pilares, arquitectura, estÃ¡ndares)
+- **`docs/MAIN.md`** - [LEER PRIMERO] Fundamentos del proyecto (pilares, arquitectura, estándares)
 - **`docs/sprint.md`** - Sprint actual con hitos y objetivos
-- **`docs/daily.md`** - Ãšltima tarea completada y tarea actual en progreso (o "Sprint vX.Y.Z cerrado. Sin sprint activo." si no hay sprint activo)
-- **`docs/commits.md`** - Convenciones de commits y mensajes
-- **`docs/backlog.md`** - Repositorio de Ã­tems no incluidos en el sprint actual
-- **`docs/sprint_bugs.md`** - Tracking de bugs reportados (pendientes de resoluciÃ³n)
-- **`docs/sprint_bug_attempts.md`** - **[DEBUGGING]** Log detallado de TODOS los intentos de soluciÃ³n para cada bug (fallidos, parciales, exitosos)
+- **`docs/daily.md`** - Última tarea completada y tarea actual en progreso (o "Sprint vX.Y.Z cerrado. Sin sprint activo." si no hay sprint activo)
+- **`docs/sprint_commits.md`** - Convenciones de commits y mensajes
+- **`docs/backlog.md`** - Repositorio de ítems no incluidos en el sprint actual
+- **`docs/sprint_bugs.md`** - Tracking de bugs reportados (pendientes de resolución)
+- **`docs/sprint_bug_attempts.md`** - **[DEBUGGING]** Log detallado de TODOS los intentos de solución para cada bug (fallidos, parciales, exitosos)
 - **`docs/sprint_fix.md`** - Historial de bugs resueltos durante el sprint
-- **`docs/sprint_deviations.md`** - Desviaciones y ajustes arquitectÃ³nicos durante sprint
+- **`docs/sprint_deviations.md`** - Desviaciones y ajustes arquitectónicos durante sprint
 - **`docs/sprint_ia_sessions.md`** - **[NUEVO]** Sesiones IA que superan 85% de consumo
 
 ---
 
-## ğŸ”„ Flujo de Trabajo por SesiÃ³n
+## ?? Flujo de Trabajo por Sesión
 
 ### Proceso iterativo paso a paso:
 
-1. **Leer instrucciones** (este documento o el especÃ­fico del proyecto)
-2. **Consultar `docs/daily.md`** para ver la Ãºltima tarea completada y la tarea actual
-3. **Comparar con el cÃ³digo fuente** para entender el estado actual
+1. **Leer instrucciones** (este documento o el específico del proyecto)
+2. **Consultar `docs/daily.md`** para ver la última tarea completada y la tarea actual
+3. **Comparar con el código fuente** para entender el estado actual
 4. **Proponer el siguiente paso** (por parte del asistente)
 5. **Si se confirma**, el asistente implementa el paso:
    
    **a) Implementar el cambio**
    
-   **b) Validar el cambio** (compilar/ejecutar/probar segÃºn el proyecto):
-   - **[PLACEHOLDER: Sistema de validaciÃ³n]**
-     - Ejemplos segÃºn tecnologÃ­a:
-       - **C++/C#**: CompilaciÃ³n (CMake, MSBuild, gcc, clang, etc.)
+   **b) Validar el cambio** (compilar/ejecutar/probar según el proyecto):
+   - **[PLACEHOLDER: Sistema de validación]**
+     - Ejemplos según tecnología:
+       - **C++/C#**: Compilación (CMake, MSBuild, gcc, clang, etc.)
        - **Web (React/Vue/Angular)**: Ejecutar dev server + hot-reload
        - **Python**: Ejecutar tests unitarios (pytest, unittest)
        - **Backend (Node/Django/FastAPI)**: Ejecutar servidor + tests
-       - **MÃ³vil (iOS/Android)**: Compilar + ejecutar en simulador/emulador
+       - **Móvil (iOS/Android)**: Compilar + ejecutar en simulador/emulador
    
-   - **Requisito obligatorio**: [PLACEHOLDER: Criterio de validaciÃ³n exitosa]
+   - **Requisito obligatorio**: [PLACEHOLDER: Criterio de validación exitosa]
      - Ejemplos:
        - **Compilados**: 0 errores, 0 warnings
-       - **Web/Scripting**: EjecuciÃ³n sin errores, tests pasando
+       - **Web/Scripting**: Ejecución sin errores, tests pasando
        - **Calidad**: Linter limpio, cobertura de tests > X%
    
-   - Si la validaciÃ³n **falla**, el asistente corregirÃ¡ los errores y repetirÃ¡ hasta lograr validaciÃ³n limpia
-   - El asistente ejecutarÃ¡ automÃ¡ticamente la validaciÃ³n antes de crear commits
+   - Si la validación **falla**, el asistente corregirá los errores y repetirá hasta lograr validación limpia
+   - El asistente ejecutará automáticamente la validación antes de crear commits
    
-   **c) Una vez validaciÃ³n limpia**, crear el commit y actualizar los archivos Markdown pertinentes:
+   **c) Una vez validación limpia**, crear el commit y actualizar los archivos Markdown pertinentes:
    - `docs/daily.md`
-   - `docs/commits.md`
+   - `docs/sprint_commits.md`
    - `README.md` (cuando proceda)
    - `.github/copilot-instructions.md` (cuando proceda)
 
@@ -73,35 +73,35 @@ Archivos principales que el asistente debe consultar en cada sesiÃ³n:
 
 ---
 
-## âš™ï¸ Preferencias de Calidad y EstÃ¡ndares
+## ?? Preferencias de Calidad y Estándares
 
 **[PLACEHOLDER: Preferencias del propietario del repositorio]**
 
-Ejemplos genÃ©ricos:
+Ejemplos genéricos:
 - Prefiero hacer bien las cosas desde el principio: evitar partes intermedias, temporales, incompletas o no funcionales
-- Cada mÃ³dulo debe diseÃ±arse para cumplir los estÃ¡ndares [PLACEHOLDER: AAA/Enterprise/Production] desde su concepciÃ³n
-- En cada iteraciÃ³n, antes del commit, siempre se debe validar (compilar/ejecutar/probar) y corregir errores hasta lograr builds/ejecuciones limpias
-- **[PLACEHOLDER: Estilo de cÃ³digo especÃ­fico]**
+- Cada módulo debe diseñarse para cumplir los estándares [PLACEHOLDER: AAA/Enterprise/Production] desde su concepción
+- En cada iteración, antes del commit, siempre se debe validar (compilar/ejecutar/probar) y corregir errores hasta lograr builds/ejecuciones limpias
+- **[PLACEHOLDER: Estilo de código específico]**
   - Ejemplos:
-    - C++: Includes ordenados (proyecto primero, luego sistema, alfabÃ©tico)
+    - C++: Includes ordenados (proyecto primero, luego sistema, alfabético)
     - Python: PEP 8, type hints, docstrings
     - JavaScript: ESLint, Prettier, JSDoc
-    - Cualquier lenguaje: Nombres descriptivos, funciones pequeÃ±as, DRY, SOLID
+    - Cualquier lenguaje: Nombres descriptivos, funciones pequeñas, DRY, SOLID
 
 ---
 
-## ğŸ› ï¸ SecciÃ³n de ResoluciÃ³n de Problemas
+## ??? Sección de Resolución de Problemas
 
-**[PLACEHOLDER: Troubleshooting especÃ­fico del proyecto]**
+**[PLACEHOLDER: Troubleshooting específico del proyecto]**
 
-Ejemplos genÃ©ricos segÃºn tecnologÃ­a:
+Ejemplos genéricos según tecnología:
 
 ### Para proyectos compilados (C++, C#, Java, Go, Rust):
-1. Comprobar la existencia y ruta exacta del archivo de soluciÃ³n/proyecto
-2. Compilar explÃ­citamente con el comando correcto (ej: `msbuild`, `cargo build`, `go build`, `javac`)
-3. Si faltan archivos fuente, confirmar que estÃ¡n incluidos en el archivo de proyecto/build
-4. Si hay errores de enlace/linking: verificar dependencias, librerÃ­as, paths
-5. Si la compilaciÃ³n muestra errores/warnings: corregirlos hasta obtener build limpia
+1. Comprobar la existencia y ruta exacta del archivo de solución/proyecto
+2. Compilar explícitamente con el comando correcto (ej: `msbuild`, `cargo build`, `go build`, `javac`)
+3. Si faltan archivos fuente, confirmar que están incluidos en el archivo de proyecto/build
+4. Si hay errores de enlace/linking: verificar dependencias, librerías, paths
+5. Si la compilación muestra errores/warnings: corregirlos hasta obtener build limpia
 
 ### Para proyectos web (React, Vue, Angular, Node):
 1. Verificar `package.json` y dependencias instaladas (`npm install` / `yarn install`)
@@ -116,48 +116,48 @@ Ejemplos genÃ©ricos segÃºn tecnologÃ­a:
 3. Ejecutar tests (`pytest`, `python -m unittest`)
 4. Ejecutar linter/formatter (`black`, `flake8`, `mypy`)
 
-**Registrar en la bitÃ¡cora** (`docs/daily.md`) cualquier incidencia relevante y su resoluciÃ³n para futuras referencias.
+**Registrar en la bitácora** (`docs/daily.md`) cualquier incidencia relevante y su resolución para futuras referencias.
 
 ---
 
-## ğŸ” IteraciÃ³n Controlada (Proceso Obligatorio)
+## ?? Iteración Controlada (Proceso Obligatorio)
 
-### EjecuciÃ³n automÃ¡tica (sin necesidad de confirmaciÃ³n previa):
+### Ejecución automática (sin necesidad de confirmación previa):
 
-1. **Consulta**: El asistente consultarÃ¡ `docs/daily.md` y propondrÃ¡ el siguiente punto a ejecutar, acompaÃ±ado de una breve explicaciÃ³n (una frase) sobre en quÃ© consiste
+1. **Consulta**: El asistente consultará `docs/daily.md` y propondrá el siguiente punto a ejecutar, acompañado de una breve explicación (una frase) sobre en qué consiste
 
-2. **ImplementaciÃ³n**: Tras proponer el punto, el asistente implementarÃ¡ el cambio, validarÃ¡ (compilarÃ¡/ejecutarÃ¡/probarÃ¡) y corregirÃ¡ errores/warnings hasta lograr validaciÃ³n limpia
+2. **Implementación**: Tras proponer el punto, el asistente implementará el cambio, validará (compilará/ejecutará/probará) y corregirá errores/warnings hasta lograr validación limpia
 
-3. **Commit automÃ¡tico**: Si la validaciÃ³n queda limpia, el asistente realizarÃ¡ directamente el commit local siguiendo `docs/commits.md` y actualizarÃ¡ los ficheros necesarios (`docs/daily.md`, `docs/commits.md`, `README.md`, `.github/copilot-instructions.md`) **sin pedir permiso adicional**
+3. **Commit automático**: Si la validación queda limpia, el asistente realizará directamente el commit local siguiendo `docs/sprint_commits.md` y actualizará los ficheros necesarios (`docs/daily.md`, `docs/sprint_commits.md`, `README.md`, `.github/copilot-instructions.md`) **sin pedir permiso adicional**
 
-4. **Informe**: El asistente informarÃ¡ de lo realizado y del siguiente punto propuesto y continuarÃ¡ el ciclo
+4. **Informe**: El asistente informará de lo realizado y del siguiente punto propuesto y continuará el ciclo
 
 ### Excepciones:
-Si aparece un **bloqueo tÃ©cnico**, **decisiÃ³n arquitectÃ³nica crÃ­tica** o **dependencia que impida avanzar**, el asistente pausarÃ¡ y solicitarÃ¡ instrucciones al propietario.
+Si aparece un **bloqueo técnico**, **decisión arquitectónica crítica** o **dependencia que impida avanzar**, el asistente pausará y solicitará instrucciones al propietario.
 
 ---
 
-## ğŸ“ Regla Estricta sobre Commits y DocumentaciÃ³n
+## ?? Regla Estricta sobre Commits y Documentación
 
-- **Requisito**: Siempre que el asistente realice un commit local como resultado de una iteraciÃ³n (es decir, la validaciÃ³n queda limpia), actualizarÃ¡ automÃ¡ticamente `docs/daily.md` y `docs/commits.md` para reflejar el cambio **sin pedir confirmaciÃ³n adicional**
-- El **push al repositorio remoto** NO se realizarÃ¡ automÃ¡ticamente salvo instrucciÃ³n explÃ­cita del propietario
+- **Requisito**: Siempre que el asistente realice un commit local como resultado de una iteración (es decir, la validación queda limpia), actualizará automáticamente `docs/daily.md` y `docs/sprint_commits.md` para reflejar el cambio **sin pedir confirmación adicional**
+- El **push al repositorio remoto** NO se realizará automáticamente salvo instrucción explícita del propietario
 
 ---
 
-## ğŸ“¦ Versionado de los Ficheros del Sprint (Snapshots)
+## ?? Versionado de los Ficheros del Sprint (Snapshots)
 
 ### Ficheros activos del sprint actual:
 - `docs/sprint.md` - Sprint de alto nivel con hitos y objetivos
 - `docs/sprint_histories.md` - Historias de usuario para el sprint
-- `docs/sprint_tasks.md` - Tareas detalladas por historia (unidad mÃ­nima de trabajo e iteraciÃ³n)
-- `docs/sprint_bugs.md` - Tracking de bugs reportados (pendientes de resoluciÃ³n)
-- `docs/sprint_bug_attempts.md` - **[DEBUGGING]** Log detallado de TODOS los intentos de soluciÃ³n para cada bug (fallidos, parciales, exitosos)
+- `docs/sprint_tasks.md` - Tareas detalladas por historia (unidad mínima de trabajo e iteración)
+- `docs/sprint_bugs.md` - Tracking de bugs reportados (pendientes de resolución)
+- `docs/sprint_bug_attempts.md` - **[DEBUGGING]** Log detallado de TODOS los intentos de solución para cada bug (fallidos, parciales, exitosos)
 - `docs/sprint_fix.md` - Historial de bugs resueltos durante el sprint
-- `docs/sprint_deviations.md` - Desviaciones y ajustes arquitectÃ³nicos durante sprint
+- `docs/sprint_deviations.md` - Desviaciones y ajustes arquitectónicos durante sprint
 - **`docs/sprint_ia_sessions.md`** - **[NUEVO]** Sesiones IA que superan 85% de consumo
 
 ### Al final de un sprint (release):
-1. El asistente **archivarÃ¡** los ficheros a `docs/sprints/` renombrÃ¡ndolos con la versiÃ³n:
+1. El asistente **archivará** los ficheros a `docs/sprints/` renombrándolos con la versión:
    ```powershell
    # Crear carpeta si no existe
    New-Item -ItemType Directory -Force -Path "docs/sprints"
@@ -173,122 +173,122 @@ Si aparece un **bloqueo tÃ©cnico**, **decisiÃ³n arquitectÃ³nica crÃ­tica** o **d
    Move-Item "docs/sprint_ia_sessions_v<version>.md" "docs/sprints/"
    ```
 
-2. El asistente **crearÃ¡ ficheros nuevos y vacÃ­os** con los nombres activos para el siguiente sprint
+2. El asistente **creará ficheros nuevos y vacíos** con los nombres activos para el siguiente sprint
 
 **Estructura final**:
 ```
 docs/
-â”œâ”€â”€ sprints/
-â”‚   â”œâ”€â”€ sprint_v1.0.0.md
-â”‚   â”œâ”€â”€ sprint_histories_v1.0.0.md
-â”‚   â”œâ”€â”€ sprint_tasks_v1.0.0.md
-â”‚   â”œâ”€â”€ sprint_bugs_v1.0.0.md
-â”‚   â”œâ”€â”€ sprint_bug_attempts_v1.0.0.md
-â”‚   â”œâ”€â”€ sprint_fix_v1.0.0.md
-â”‚   â”œâ”€â”€ sprint_deviations_v1.0.0.md (si aplica)
-â”‚   â””â”€â”€ sprint_ia_sessions_v1.0.0.md (si aplica)
++-- sprints/
+¦   +-- sprint_v1.0.0.md
+¦   +-- sprint_histories_v1.0.0.md
+¦   +-- sprint_tasks_v1.0.0.md
+¦   +-- sprint_bugs_v1.0.0.md
+¦   +-- sprint_bug_attempts_v1.0.0.md
+¦   +-- sprint_fix_v1.0.0.md
+¦   +-- sprint_deviations_v1.0.0.md (si aplica)
+¦   +-- sprint_ia_sessions_v1.0.0.md (si aplica)
 ```
-Esta polÃ­tica garantiza **trazabilidad** de los sprints completados y mantiene los ficheros activos pequeÃ±os y enfocados.
+Esta política garantiza **trazabilidad** de los sprints completados y mantiene los ficheros activos pequeños y enfocados.
 
 ---
 
-## ğŸ“‹ Fichero Backlog (`docs/backlog.md`)
+## ?? Fichero Backlog (`docs/backlog.md`)
 
-### PropÃ³sito:
-`docs/backlog.md` es el repositorio a largo plazo para los Ã­tems que **NO forman parte del sprint activo**.
+### Propósito:
+`docs/backlog.md` es el repositorio a largo plazo para los ítems que **NO forman parte del sprint activo**.
 
-Ãšsalo como "baÃºl" persistente para:
+Úsalo como "baúl" persistente para:
 - Ideas
 - Historias diferidas
 - Tareas de baja prioridad
-- Deuda tÃ©cnica
+- Deuda técnica
 
 ### Flujo y uso:
-1. Cuando se identifique una historia o tarea pero **no se seleccione para el sprint actual**, aÃ±adir una entrada breve en `docs/backlog.md`:
-   - DescripciÃ³n corta
+1. Cuando se identifique una historia o tarea pero **no se seleccione para el sprint actual**, añadir una entrada breve en `docs/backlog.md`:
+   - Descripción corta
    - Etiqueta de prioridad (Baja/Media/Alta)
    - Opcionalmente: referencia al ID de historia/tarea en `docs/sprint_histories.md` o `docs/sprint_tasks.md`
 
-2. El backlog es la **fuente para la planificaciÃ³n del sprint**:
-   - Durante la planificaciÃ³n, los Ã­tems pueden moverse de `docs/backlog.md` a `docs/sprint_histories.md` (como historia)
+2. El backlog es la **fuente para la planificación del sprint**:
+   - Durante la planificación, los ítems pueden moverse de `docs/backlog.md` a `docs/sprint_histories.md` (como historia)
    - Luego se descomponen en tareas en `docs/sprint_tasks.md` para el sprint activo
 
-3. Las entradas en `docs/backlog.md` deben ser **concisas y enlazables** (incluir una ruta o ancla al cÃ³digo relacionado si procede)
+3. Las entradas en `docs/backlog.md` deben ser **concisas y enlazables** (incluir una ruta o ancla al código relacionado si procede)
 
-4. El asistente **NO implementarÃ¡** Ã­tems directamente desde el backlog a menos que se muevan a los ficheros activos del sprint
+4. El asistente **NO implementará** ítems directamente desde el backlog a menos que se muevan a los ficheros activos del sprint
 
 ---
 
-## ğŸ› Fichero Sprint Bugs (`docs/sprint_bugs.md`)
+## ?? Fichero Sprint Bugs (`docs/sprint_bugs.md`)
 
-### PropÃ³sito:
+### Propósito:
 `docs/sprint_bugs.md` es el **contenedor inicial** de bugs reportados durante el sprint activo. Permite mantener trazabilidad de defectos encontrados y su estado actual.
 
 ### Contenido:
 Cada entrada de bug debe incluir:
-- **ID**: Identificador Ãºnico del bug con prefijo BUG- (ej: BUG-001, BUG-002)
-- **TÃ­tulo**: DescripciÃ³n breve del error
-- **DescripciÃ³n**: Detalle del error, pasos para reproducir, comportamiento esperado vs observado
-- **Prioridad**: CrÃ­tica/Alta/Media/Baja
-- **Estado**: Reportado/En progreso/Pendiente validaciÃ³n usuario
-- **Fecha de entrada**: Fecha en que se reportÃ³ el bug
+- **ID**: Identificador único del bug con prefijo BUG- (ej: BUG-001, BUG-002)
+- **Título**: Descripción breve del error
+- **Descripción**: Detalle del error, pasos para reproducir, comportamiento esperado vs observado
+- **Prioridad**: Crítica/Alta/Media/Baja
+- **Estado**: Reportado/En progreso/Pendiente validación usuario
+- **Fecha de entrada**: Fecha en que se reportó el bug
 - **Archivos afectados**: Lista de archivos relacionados con el bug
 
 ### Formato ejemplo:
 ```markdown
-### BUG-001 - [PLACEHOLDER: TÃ­tulo del bug]
+### BUG-001 - [PLACEHOLDER: Título del bug]
 **ID**: BUG-001
-**Prioridad**: CrÃ­tica
+**Prioridad**: Crítica
 **Estado**: Reportado
 **Fecha de entrada**: 2025-01-15
 
-**DescripciÃ³n**: [PLACEHOLDER: DescripciÃ³n detallada del error, pasos para reproducir, comportamiento esperado vs observado]
+**Descripción**: [PLACEHOLDER: Descripción detallada del error, pasos para reproducir, comportamiento esperado vs observado]
 
 **Archivos afectados**: [PLACEHOLDER: lista de archivos]
 ```
 
-### **Flujo de trabajo con doble validaciÃ³n Agente-Usuario**:
-1. **Reporte**: Cuando el usuario reporte un bug, el asistente aÃ±adirÃ¡ entrada en `docs/sprint_bugs.md` con ID **BUG-XXX** y estado "Reportado"
+### **Flujo de trabajo con doble validación Agente-Usuario**:
+1. **Reporte**: Cuando el usuario reporte un bug, el asistente añadirá entrada en `docs/sprint_bugs.md` con ID **BUG-XXX** y estado "Reportado"
 2. **En progreso**: Al comenzar a trabajar en el bug, actualizar estado a "En progreso"
-3. **ImplementaciÃ³n**: El asistente implementa el fix, valida (compila/ejecuta/prueba segÃºn proyecto) y crea commit
-4. **Pendiente validaciÃ³n**: Actualizar estado a "Pendiente validaciÃ³n usuario" y **PAUSAR**
-5. **ValidaciÃ³n usuario**: El usuario ejecuta la aplicaciÃ³n y verifica que el bug estÃ¡ realmente resuelto
-6. **ConfirmaciÃ³n**: Si el usuario confirma que el fix funciona â†’ mover a `docs/sprint_fix.md`
-7. **Rechazado**: Si el usuario reporta que el bug persiste â†’ volver a estado "En progreso" y continuar debugging
+3. **Implementación**: El asistente implementa el fix, valida (compila/ejecuta/prueba según proyecto) y crea commit
+4. **Pendiente validación**: Actualizar estado a "Pendiente validación usuario" y **PAUSAR**
+5. **Validación usuario**: El usuario ejecuta la aplicación y verifica que el bug está realmente resuelto
+6. **Confirmación**: Si el usuario confirma que el fix funciona ? mover a `docs/sprint_fix.md`
+7. **Rechazado**: Si el usuario reporta que el bug persiste ? volver a estado "En progreso" y continuar debugging
 
-### **CRÃTICO**:
-- El asistente **NO debe mover automÃ¡ticamente** bugs de `sprint_bugs.md` a `sprint_fix.md` solo porque la validaciÃ³n automÃ¡tica (compilaciÃ³n/tests) sea limpia
-- La validaciÃ³n del usuario es **OBLIGATORIA** para confirmar que el fix es efectivo en ejecuciÃ³n real
-- **Excepciones** - Solo se permite mover automÃ¡ticamente si:
-  - El fix es trivial (typo, warning cosmÃ©tico)
-  - La prueba es determinista y verificable solo con validaciÃ³n automÃ¡tica (ej: error de sintaxis)
-  - El usuario da confirmaciÃ³n explÃ­cita sin necesidad de prueba manual
+### **CRÍTICO**:
+- El asistente **NO debe mover automáticamente** bugs de `sprint_bugs.md` a `sprint_fix.md` solo porque la validación automática (compilación/tests) sea limpia
+- La validación del usuario es **OBLIGATORIA** para confirmar que el fix es efectivo en ejecución real
+- **Excepciones** - Solo se permite mover automáticamente si:
+  - El fix es trivial (typo, warning cosmético)
+  - La prueba es determinista y verificable solo con validación automática (ej: error de sintaxis)
+  - El usuario da confirmación explícita sin necesidad de prueba manual
 
-### **RazÃ³n**:
-**La validaciÃ³n automÃ¡tica limpia NO garantiza que el bug estÃ© resuelto en runtime**.
+### **Razón**:
+**La validación automática limpia NO garantiza que el bug esté resuelto en runtime**.
 
-Muchos bugs solo se manifiestan durante la ejecuciÃ³n:
+Muchos bugs solo se manifiestan durante la ejecución:
 - Race conditions
 - Comportamiento de UI/UX
-- Crashes bajo condiciones especÃ­ficas
-- Problemas de integraciÃ³n con sistemas externos
-- Errores de lÃ³gica de negocio
+- Crashes bajo condiciones específicas
+- Problemas de integración con sistemas externos
+- Errores de lógica de negocio
 
 ### **Regla**:
 - El asistente implementa el fix
 - El asistente crea el commit
-- El asistente actualiza estado a "Pendiente validaciÃ³n usuario"
-- **PAUSA** y espera confirmaciÃ³n del usuario
-- Solo tras confirmaciÃ³n â†’ mover a `sprint_fix.md`
+- El asistente actualiza estado a "Pendiente validación usuario"
+- **PAUSA** y espera confirmación del usuario
+- Solo tras confirmación ? mover a `sprint_fix.md`
 
 Los bugs pendientes se **archivan** como `docs/sprint_bugs_v<version>.md` al finalizar el sprint.
 
 ---
 
-## ğŸ” Fichero Sprint Bug Attempts (`docs/sprint_bug_attempts.md`)
+## ?? Fichero Sprint Bug Attempts (`docs/sprint_bug_attempts.md`)
 
-### PropÃ³sito:
-`docs/sprint_bug_attempts.md` es el registro detallado de **TODOS los intentos de soluciÃ³n** para cada bug reportado durante el sprint activo.
+### Propósito:
+`docs/sprint_bug_attempts.md` es el registro detallado de **TODOS los intentos de solución** para cada bug reportado durante el sprint activo.
 
 Permite realizar un seguimiento exhaustivo de las acciones realizadas, incluyendo:
 - Enfoques fallidos
@@ -296,302 +296,302 @@ Permite realizar un seguimiento exhaustivo de las acciones realizadas, incluyend
 - Intentos exitosos
 
 ### Contenido:
-Cada intento de soluciÃ³n debe incluir:
+Cada intento de solución debe incluir:
 - **ID de Bug**: Identificador del bug asociado (ej: BUG-001)
-- **Intento #**: NÃºmero secuencial del intento de soluciÃ³n
-- **DescripciÃ³n del intento**: Breve descripciÃ³n de lo que se intentÃ³
-- **Resultado**: Ã‰xito/Parcial/Fallido
-- **Detalles del resultado**: ExplicaciÃ³n breve del resultado; incluir mensajes de error si los hubiese
+- **Intento #**: Número secuencial del intento de solución
+- **Descripción del intento**: Breve descripción de lo que se intentó
+- **Resultado**: Éxito/Parcial/Fallido
+- **Detalles del resultado**: Explicación breve del resultado; incluir mensajes de error si los hubiese
 - **Fecha y hora**: Timestamp del intento
 - **Archivos modificados**: Lista de archivos que fueron cambiados en el intento
 
 ### Formato ejemplo:
 ```markdown
-### BUG-001 - [PLACEHOLDER: TÃ­tulo del bug]
+### BUG-001 - [PLACEHOLDER: Título del bug]
 
 **Intento #1**
-- **DescripciÃ³n**: [PLACEHOLDER: QuÃ© se intentÃ³]
+- **Descripción**: [PLACEHOLDER: Qué se intentó]
 - **Resultado**: Fallido
-- **Detalles**: [PLACEHOLDER: Por quÃ© fallÃ³, mensajes de error]
+- **Detalles**: [PLACEHOLDER: Por qué falló, mensajes de error]
 - **Fecha y hora**: 2025-01-15 10:00
 - **Archivos modificados**: `[PLACEHOLDER: lista de archivos]`
 
 **Intento #2**
-- **DescripciÃ³n**: [PLACEHOLDER: Segundo enfoque]
+- **Descripción**: [PLACEHOLDER: Segundo enfoque]
 - **Resultado**: Parcial
-- **Detalles**: [PLACEHOLDER: QuÃ© funcionÃ³ y quÃ© no]
+- **Detalles**: [PLACEHOLDER: Qué funcionó y qué no]
 - **Fecha y hora**: 2025-01-15 10:15
 - **Archivos modificados**: `[PLACEHOLDER: lista de archivos]`
 
 **Intento #3**
-- **DescripciÃ³n**: [PLACEHOLDER: SoluciÃ³n final]
-- **Resultado**: Ã‰xito
-- **Detalles**: [PLACEHOLDER: ExplicaciÃ³n de la soluciÃ³n exitosa]
+- **Descripción**: [PLACEHOLDER: Solución final]
+- **Resultado**: Éxito
+- **Detalles**: [PLACEHOLDER: Explicación de la solución exitosa]
 - **Fecha y hora**: 2025-01-15 10:30
 - **Archivos modificados**: `[PLACEHOLDER: lista de archivos]`
 ```
 
-### **Flujo completo de resoluciÃ³n de bugs (OBLIGATORIO)**:
+### **Flujo completo de resolución de bugs (OBLIGATORIO)**:
 
-Cuando el asistente trabaje en la resoluciÃ³n de un bug, DEBE seguir este proceso:
+Cuando el asistente trabaje en la resolución de un bug, DEBE seguir este proceso:
 
 #### 1. **Contexto inicial**
-Antes de comenzar cualquier intento de soluciÃ³n, el asistente DEBE:
+Antes de comenzar cualquier intento de solución, el asistente DEBE:
 - Leer `docs/sprint_bugs.md` para conocer el bug actual
 - Leer `docs/sprint_bug_attempts.md` para revisar intentos previos (si existen)
 - Leer `.github/copilot-instructions.md` (o documento de instrucciones del proyecto)
 - Leer `docs/sprint.md` y `docs/daily.md` para entender el contexto del sprint
 
 #### 2. **Registro de intento**
-ANTES de modificar cÃ³digo, el asistente DEBE:
-- AÃ±adir una nueva entrada en `docs/sprint_bug_attempts.md` con:
+ANTES de modificar código, el asistente DEBE:
+- Añadir una nueva entrada en `docs/sprint_bug_attempts.md` con:
   - Intento # (secuencial)
-  - DescripciÃ³n clara del enfoque que se va a probar
+  - Descripción clara del enfoque que se va a probar
   - Fecha y hora actual
-- Esta entrada debe crearse **ANTES** de tocar cÃ³digo
+- Esta entrada debe crearse **ANTES** de tocar código
 
-#### 3. **ImplementaciÃ³n**
+#### 3. **Implementación**
 El asistente implementa el cambio propuesto
 
-#### 4. **ValidaciÃ³n**
-El asistente ejecuta la validaciÃ³n obligatoria del proyecto:
-- **[PLACEHOLDER: Sistema de validaciÃ³n especÃ­fico]**
-  - Ejemplos: compilaciÃ³n, tests, linter, ejecuciÃ³n manual
+#### 4. **Validación**
+El asistente ejecuta la validación obligatoria del proyecto:
+- **[PLACEHOLDER: Sistema de validación específico]**
+  - Ejemplos: compilación, tests, linter, ejecución manual
 
 #### 5. **Registro de resultado**
-DESPUÃ‰S de validar, el asistente DEBE:
+DESPUÉS de validar, el asistente DEBE:
 - Actualizar la entrada en `docs/sprint_bug_attempts.md` con:
-  - Resultado (Ã‰xito/Parcial/Fallido)
-  - Detalles del resultado (errores de compilaciÃ³n, comportamiento observado, etc.)
+  - Resultado (Éxito/Parcial/Fallido)
+  - Detalles del resultado (errores de compilación, comportamiento observado, etc.)
   - Archivos modificados en este intento
 
-#### 6. **ValidaciÃ³n usuario**
-Si validaciÃ³n automÃ¡tica es limpia:
-- Actualizar estado en `docs/sprint_bugs.md` a "Pendiente validaciÃ³n usuario"
-- **PAUSAR** y esperar confirmaciÃ³n del usuario
-- El asistente NO debe marcar el bug como resuelto automÃ¡ticamente
+#### 6. **Validación usuario**
+Si validación automática es limpia:
+- Actualizar estado en `docs/sprint_bugs.md` a "Pendiente validación usuario"
+- **PAUSAR** y esperar confirmación del usuario
+- El asistente NO debe marcar el bug como resuelto automáticamente
 
-#### 7. **IteraciÃ³n**
+#### 7. **Iteración**
 Si el intento falla o es parcial:
 - Volver al paso 2 con un nuevo intento
 - **IMPORTANTE**: NO repetir intentos ya probados (consultar `sprint_bug_attempts.md`)
 
-#### 8. **ResoluciÃ³n confirmada**
+#### 8. **Resolución confirmada**
 Solo cuando el usuario confirme que el fix funciona:
 - Mover bug de `docs/sprint_bugs.md` a `docs/sprint_fix.md`
 - Copiar el resumen de intentos exitosos en `docs/sprint_fix.md`
 - Archivar la entrada de `docs/sprint_bug_attempts.md` para ese bug (mantener historial)
 
-### **REGLA CRÃTICA**:
+### **REGLA CRÍTICA**:
 El asistente NO debe:
-- âŒ Modificar cÃ³digo sin antes registrar el intento en `sprint_bug_attempts.md`
-- âŒ Marcar un bug como resuelto solo porque la validaciÃ³n automÃ¡tica sea limpia
-- âŒ Repetir intentos de soluciÃ³n ya probados y registrados en `sprint_bug_attempts.md`
-- âŒ Olvidar actualizar el resultado del intento despuÃ©s de validar
+- ? Modificar código sin antes registrar el intento en `sprint_bug_attempts.md`
+- ? Marcar un bug como resuelto solo porque la validación automática sea limpia
+- ? Repetir intentos de solución ya probados y registrados en `sprint_bug_attempts.md`
+- ? Olvidar actualizar el resultado del intento después de validar
 
 ### **Beneficios de este flujo**:
-- âœ… Evita repetir soluciones fallidas
-- âœ… Proporciona contexto histÃ³rico invaluable para futuros bugs similares
-- âœ… Facilita la colaboraciÃ³n (otro desarrollador puede ver quÃ© se ha intentado)
-- âœ… Permite anÃ¡lisis post-mortem de bugs complejos
-- âœ… Detecta patrones en errores recurrentes
+- ? Evita repetir soluciones fallidas
+- ? Proporciona contexto histórico invaluable para futuros bugs similares
+- ? Facilita la colaboración (otro desarrollador puede ver qué se ha intentado)
+- ? Permite análisis post-mortem de bugs complejos
+- ? Detecta patrones en errores recurrentes
 
 ### **IMPORTANTE**:
-Siempre revisar `docs/sprint_bugs.md`, `docs/sprint_bug_attempts.md` y el cÃ³digo relacionado **ANTES** de comenzar a implementar cualquier soluciÃ³n para un bug.
+Siempre revisar `docs/sprint_bugs.md`, `docs/sprint_bug_attempts.md` y el código relacionado **ANTES** de comenzar a implementar cualquier solución para un bug.
 
 Esto asegura que se comprende completamente el problema y se evita repetir intentos fallidos.
 
 ---
 
-## âœ… Fichero Sprint Fix (`docs/sprint_fix.md`)
+## ? Fichero Sprint Fix (`docs/sprint_fix.md`)
 
-### PropÃ³sito:
+### Propósito:
 `docs/sprint_fix.md` es el **historial de bugs resueltos** durante el sprint activo. Contiene bugs que fueron reportados en `docs/sprint_bugs.md` y posteriormente solucionados.
 
 ### Contenido:
 Cada entrada de bug resuelto debe incluir:
 - **ID Original**: Identificador original del bug (BUG-XXX del sprint_bugs.md)
-- **ID ResoluciÃ³n**: Identificador con prefijo FIX- (ej: FIX-001, FIX-002)
-- **TÃ­tulo**: DescripciÃ³n breve del error
-- **DescripciÃ³n del problema**: Detalle original del error
-- **SoluciÃ³n implementada**: DescripciÃ³n de cÃ³mo se resolviÃ³ el bug
-- **Prioridad**: CrÃ­tica/Alta/Media/Baja
-- **Fecha de entrada**: Fecha en que se reportÃ³ originalmente
-- **Fecha de resoluciÃ³n**: Fecha en que se resolviÃ³
-- **Archivos afectados**: Lista de archivos relacionados con el bug y su resoluciÃ³n
-- **Commit de resoluciÃ³n**: Hash del commit que resolviÃ³ el bug
+- **ID Resolución**: Identificador con prefijo FIX- (ej: FIX-001, FIX-002)
+- **Título**: Descripción breve del error
+- **Descripción del problema**: Detalle original del error
+- **Solución implementada**: Descripción de cómo se resolvió el bug
+- **Prioridad**: Crítica/Alta/Media/Baja
+- **Fecha de entrada**: Fecha en que se reportó originalmente
+- **Fecha de resolución**: Fecha en que se resolvió
+- **Archivos afectados**: Lista de archivos relacionados con el bug y su resolución
+- **Commit de resolución**: Hash del commit que resolvió el bug
 
 ### Formato ejemplo:
 ```markdown
-### FIX-001 - [PLACEHOLDER: TÃ­tulo del bug]
+### FIX-001 - [PLACEHOLDER: Título del bug]
 **ID Original**: BUG-001
-**Prioridad**: CrÃ­tica
+**Prioridad**: Crítica
 **Fecha de entrada**: 2025-01-15
-**Fecha de resoluciÃ³n**: 2025-01-15
+**Fecha de resolución**: 2025-01-15
 
-**DescripciÃ³n del problema**: [PLACEHOLDER: DescripciÃ³n detallada del error, pasos para reproducir, comportamiento esperado vs observado]
+**Descripción del problema**: [PLACEHOLDER: Descripción detallada del error, pasos para reproducir, comportamiento esperado vs observado]
 
-**SoluciÃ³n implementada**: [PLACEHOLDER: DescripciÃ³n de cÃ³mo se resolviÃ³ el bug]
+**Solución implementada**: [PLACEHOLDER: Descripción de cómo se resolvió el bug]
 
-**Archivos afectados**: [PLACEHOLDER: lista de archivos relacionados con el bug y su resoluciÃ³n]
+**Archivos afectados**: [PLACEHOLDER: lista de archivos relacionados con el bug y su resolución]
 
-**Commit de resoluciÃ³n**: [PLACEHOLDER: hash del commit]
+**Commit de resolución**: [PLACEHOLDER: hash del commit]
 ```
 
 ### Flujo de trabajo:
-1. Bug reportado â†’ Se registra en `docs/sprint_bugs.md` con ID **BUG-XXX**
-2. Bug en progreso â†’ Estado actualizado en `docs/sprint_bugs.md`
-3. Bug resuelto â†’ Se **mueve automÃ¡ticamente** a `docs/sprint_fix.md` con:
+1. Bug reportado ? Se registra en `docs/sprint_bugs.md` con ID **BUG-XXX**
+2. Bug en progreso ? Estado actualizado en `docs/sprint_bugs.md`
+3. Bug resuelto ? Se **mueve automáticamente** a `docs/sprint_fix.md` con:
    - ID cambiado a **FIX-XXX**
    - Estado "Resuelto"
-   - Fecha de resoluciÃ³n
-   - Hash del commit de resoluciÃ³n
-   - DescripciÃ³n de la soluciÃ³n implementada
+   - Fecha de resolución
+   - Hash del commit de resolución
+   - Descripción de la solución implementada
 4. Bug eliminado de `docs/sprint_bugs.md`
 5. Los bugs resueltos se **archivan** como `docs/sprint_fix_v<version>.md` al finalizar el sprint
 
 ### Regla:
-Los bugs se mueven automÃ¡ticamente desde `docs/sprint_bugs.md` al resolverse. El asistente actualiza el ID (BUG-XXX â†’ FIX-XXX), aÃ±ade fecha de resoluciÃ³n, commit hash y descripciÃ³n de la soluciÃ³n.
+Los bugs se mueven automáticamente desde `docs/sprint_bugs.md` al resolverse. El asistente actualiza el ID (BUG-XXX ? FIX-XXX), añade fecha de resolución, commit hash y descripción de la solución.
 
 ---
 
-## ğŸ”„ SincronizaciÃ³n con MetodologÃ­a GenÃ©rica
+## ?? Sincronización con Metodología Genérica
 
-### Regla de sincronizaciÃ³n:
-Este documento (`docs/TEMPLATE.md`) es el **template maestro** de la metodologÃ­a genÃ©rica de trabajo con asistentes IA.
+### Regla de sincronización:
+Este documento (`docs/TEMPLATE.md`) es el **template maestro** de la metodología genérica de trabajo con asistentes IA.
 
-**IMPORTANTE**: Cuando se modifique la metodologÃ­a especÃ­fica del proyecto (por ejemplo, en `.github/copilot-instructions.md` o similar):
-- El asistente debe **actualizar tambiÃ©n este template** para reflejar los cambios de forma genÃ©rica
+**IMPORTANTE**: Cuando se modifique la metodología específica del proyecto (por ejemplo, en `.github/copilot-instructions.md` o similar):
+- El asistente debe **actualizar también este template** para reflejar los cambios de forma genérica
 - Usar **placeholders** `[PLACEHOLDER]` para mantener la reusabilidad en otros proyectos
-- Ejemplos de cambios que requieren sincronizaciÃ³n:
-  - AÃ±adir/eliminar secciones de la metodologÃ­a
+- Ejemplos de cambios que requieren sincronización:
+  - Añadir/eliminar secciones de la metodología
   - Cambiar flujo de trabajo
   - Actualizar proceso de versionado
-  - AÃ±adir nuevos ficheros de tracking (ej: `sprint_fix.md`)
+  - Añadir nuevos ficheros de tracking (ej: `sprint_fix.md`)
 
-Esta regla asegura que el template estÃ© siempre actualizado y pueda ser reutilizado en otros proyectos.
+Esta regla asegura que el template esté siempre actualizado y pueda ser reutilizado en otros proyectos.
 
 ---
 
-## ğŸ“Š Formato de la ExplicaciÃ³n Final de Cada IteraciÃ³n
+## ?? Formato de la Explicación Final de Cada Iteración
 
 ### Requisito:
-Al final de cada iteraciÃ³n (cuando se informa lo realizado y el siguiente punto), la explicaciÃ³n debe contener **obligatoriamente** estas **3 secciones en orden**:
+Al final de cada iteración (cuando se informa lo realizado y el siguiente punto), la explicación debe contener **obligatoriamente** estas **3 secciones en orden**:
 
-### 1. **Dos tÃ­tulos numerados** siguiendo el esquema del Sprint:
-- **"âœ… Hecho: \<nÃºmero\> \<tÃ­tulo\>"** (ej: "âœ… H1.3 - EntityManager implementado") que describe en breve lo completado
-- **"ğŸ“‹ Siguiente: \<nÃºmero\> \<tÃ­tulo\>"** (ej: "ğŸ“‹ H1.4 - Tests unitarios Entity System") que describe el siguiente punto propuesto
+### 1. **Dos títulos numerados** siguiendo el esquema del Sprint:
+- **"? Hecho: \<número\> \<título\>"** (ej: "? H1.3 - EntityManager implementado") que describe en breve lo completado
+- **"?? Siguiente: \<número\> \<título\>"** (ej: "?? H1.4 - Tests unitarios Entity System") que describe el siguiente punto propuesto
 
-### 2. **ğŸ¨ VisualizaciÃ³n** - Â¿QuÃ© cambia visualmente al ejecutar? (OBLIGATORIO)
+### 2. **?? Visualización** - ¿Qué cambia visualmente al ejecutar? (OBLIGATORIO)
 
-**âš ï¸ ESTA SECCIÃ“N ES OBLIGATORIA Y DEBE APARECER ANTES DE LA BARRA DE PROGRESO**
+**?? ESTA SECCIÓN ES OBLIGATORIA Y DEBE APARECER ANTES DE LA BARRA DE PROGRESO**
 
 **Formato estricto**:
 ```markdown
-### ğŸ¨ VisualizaciÃ³n:
+### ?? Visualización:
 
-**Â¿Algo nuevo que cambie la vista tras ejecuciÃ³n?**: **SÃ** âœ… / **NO** âŒ
+**¿Algo nuevo que cambie la vista tras ejecución?**: **SÍ** ? / **NO** ?
 
-[SI ES "SÃ âœ…"]
-**QuÃ© deberÃ­as ver al ejecutar** (F5 / npm run dev / etc):
-1. âœ… [PLACEHOLDER: Cambio visual especÃ­fico 1]
-2. âœ… [PLACEHOLDER: Cambio visual especÃ­fico 2]
-3. ğŸ†• [PLACEHOLDER: Nuevo componente UI visible]
+[SI ES "SÍ ?"]
+**Qué deberías ver al ejecutar** (F5 / npm run dev / etc):
+1. ? [PLACEHOLDER: Cambio visual específico 1]
+2. ? [PLACEHOLDER: Cambio visual específico 2]
+3. ?? [PLACEHOLDER: Nuevo componente UI visible]
 
-**QuÃ© ha cambiado** (si aplica):
-- ğŸ”„ [PLACEHOLDER: Componente modificado]
-- ğŸ”„ [PLACEHOLDER: Comportamiento actualizado]
+**Qué ha cambiado** (si aplica):
+- ?? [PLACEHOLDER: Componente modificado]
+- ?? [PLACEHOLDER: Comportamiento actualizado]
 
 **Ausente** (si aplica):
-- âŒ [PLACEHOLDER: Elemento que ya no se muestra]
-- âŒ [PLACEHOLDER: Feature deshabilitada temporalmente]
+- ? [PLACEHOLDER: Elemento que ya no se muestra]
+- ? [PLACEHOLDER: Feature deshabilitada temporalmente]
 
-[SI ES "NO âŒ"]
-**RazÃ³n**: [PLACEHOLDER: ExplicaciÃ³n breve de por quÃ© no hay cambios visuales]
+[SI ES "NO ?"]
+**Razón**: [PLACEHOLDER: Explicación breve de por qué no hay cambios visuales]
 Ejemplo: "Esta tarea implementa clases internas sin efecto en UI"
 ```
 
 **Especificaciones**:
-- **OBLIGATORIO**: La secciÃ³n debe aparecer en TODAS las iteraciones (incluso si la respuesta es "NO âŒ")
-- Indicar claramente con **SÃ** âœ… o **NO** âŒ si hay cambios visuales
-- Si es **SÃ** âœ…: Listar QUÃ‰ se deberÃ­a ver al ejecutar (F5, ejecutable, navegador, etc.)
-- Si es **NO** âŒ: Explicar brevemente POR QUÃ‰ (ej: "implementaciÃ³n interna", "tests unitarios", "refactorizaciÃ³n sin UI")
+- **OBLIGATORIO**: La sección debe aparecer en TODAS las iteraciones (incluso si la respuesta es "NO ?")
+- Indicar claramente con **SÍ** ? o **NO** ? si hay cambios visuales
+- Si es **SÍ** ?: Listar QUÉ se debería ver al ejecutar (F5, ejecutable, navegador, etc.)
+- Si es **NO** ?: Explicar brevemente POR QUÉ (ej: "implementación interna", "tests unitarios", "refactorización sin UI")
 - Incluir emojis para claridad:
-  - âœ… = Nuevo/Visible
-  - ğŸ”„ = Modificado/Actualizado
-  - âŒ = Ausente/Deshabilitado
-  - ğŸ†• = Nuevo componente aÃ±adido
-- **POSICIÃ“N**: Esta secciÃ³n DEBE aparecer DESPUÃ‰S de "Hecho/Siguiente" y ANTES de la barra de progreso
+  - ? = Nuevo/Visible
+  - ?? = Modificado/Actualizado
+  - ? = Ausente/Deshabilitado
+  - ?? = Nuevo componente añadido
+- **POSICIÓN**: Esta sección DEBE aparecer DESPUÉS de "Hecho/Siguiente" y ANTES de la barra de progreso
 
-**Ejemplos segÃºn tipo de tarea**:
+**Ejemplos según tipo de tarea**:
 
 **Ejemplo 1 - Tarea CON cambios visuales** (ej: H4.1 - Panel Hierarchy):
 ```markdown
-### ğŸ¨ VisualizaciÃ³n:
+### ?? Visualización:
 
-**Â¿Algo nuevo que cambie la vista tras ejecuciÃ³n?**: **SÃ** âœ…
+**¿Algo nuevo que cambie la vista tras ejecución?**: **SÍ** ?
 
-**QuÃ© deberÃ­as ver al ejecutar** (F5 en Visual Studio):
-1. âœ… Panel "Hierarchy" visible en la parte izquierda de la ventana
-2. âœ… Ãrbol expandible con objetos: Scene Root â†’ Camera, Lights, Geometry
-3. ğŸ†• Posibilidad de hacer dock/undock del panel arrastrÃ¡ndolo
+**Qué deberías ver al ejecutar** (F5 en Visual Studio):
+1. ? Panel "Hierarchy" visible en la parte izquierda de la ventana
+2. ? Árbol expandible con objetos: Scene Root ? Camera, Lights, Geometry
+3. ?? Posibilidad de hacer dock/undock del panel arrastrándolo
 
-**QuÃ© ha cambiado**:
-- ğŸ”„ El layout del editor ahora incluye un panel funcional (no solo ventana vacÃ­a)
+**Qué ha cambiado**:
+- ?? El layout del editor ahora incluye un panel funcional (no solo ventana vacía)
 
 **Ausente**:
-- âŒ Demo Window de ImGui ya no aparece (reemplazado por Hierarchy)
+- ? Demo Window de ImGui ya no aparece (reemplazado por Hierarchy)
 ```
 
 **Ejemplo 2 - Tarea SIN cambios visuales** (ej: H1.3 - EntityManager):
 ```markdown
-### ğŸ¨ VisualizaciÃ³n:
+### ?? Visualización:
 
-**Â¿Algo nuevo que cambie la vista tras ejecuciÃ³n?**: **NO** âŒ
+**¿Algo nuevo que cambie la vista tras ejecución?**: **NO** ?
 
-**RazÃ³n**: Esta tarea implementa clases internas (EntityManager, Entity) que no tienen representaciÃ³n visual directa. Los cambios visuales aparecerÃ¡n en H4 cuando el panel Hierarchy muestre entities reales en lugar de placeholder.
+**Razón**: Esta tarea implementa clases internas (EntityManager, Entity) que no tienen representación visual directa. Los cambios visuales aparecerán en H4 cuando el panel Hierarchy muestre entities reales en lugar de placeholder.
 ```
 
 ### 3. **Barra de progreso visual del sprint** mostrando el avance de tareas completadas:
 
-**Formato**: Barra horizontal con fondo negro (â¬›), progreso verde (ğŸŸ©), bordes blancos (â”‚), y porcentaje centrado
+**Formato**: Barra horizontal con fondo negro (?), progreso verde (??), bordes blancos (¦), y porcentaje centrado
 
 **Ejemplo** con 2 de 15 tareas (13.3%):
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚ğŸŸ©ğŸŸ©â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬› 13.3%â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
++--------------------------------------------------------------------+
+¦???????????????????????????????????????????????????? 13.3%¦
++--------------------------------------------------------------------+
 ```
 
 **Especificaciones**:
 - La barra debe ocupar todo el ancho disponible del prompt (aprox. 70-80 caracteres)
-- El porcentaje se calcula como: `(tareas completadas / total tareas sprint) Ã— 100`
+- El porcentaje se calcula como: `(tareas completadas / total tareas sprint) × 100`
 - Usar emojis/caracteres Unicode:
-  - ğŸŸ© (verde) = tarea completada
-  - â¬› (negro) = tarea pendiente
+  - ?? (verde) = tarea completada
+  - ? (negro) = tarea pendiente
 - Incluir el porcentaje en formato `"XX.X%"` al final de la barra
 
-**Datos para el cÃ¡lculo**:
-El asistente rellenarÃ¡ los nÃºmeros y calcularÃ¡ el progreso guiÃ¡ndose por:
+**Datos para el cálculo**:
+El asistente rellenará los números y calculará el progreso guiándose por:
 - `docs/sprint.md`
 - `docs/sprint_tasks.md`
 - `docs/daily.md`
 
 ---
 
-## ğŸ“… Fichero Daily (`docs/daily.md`)
+## ?? Fichero Daily (`docs/daily.md`)
 
-### PropÃ³sito:
+### Propósito:
 `docs/daily.md` es el fichero **simplificado de seguimiento diario**.
 
 ### Contenido:
 El fichero solo contiene **DOS cosas**:
 
-1. **Ãšltima tarea realizada**: NÃºmero y descripciÃ³n de la tarea completada  
-   Formato: `"Hecho: <n> <descripciÃ³n>"`
+1. **Última tarea realizada**: Número y descripción de la tarea completada  
+   Formato: `"Hecho: <n> <descripción>"`
 
-2. **Tarea actual**: NÃºmero y descripciÃ³n de la siguiente tarea a realizar  
-   Formato: `"Siguiente: <n> <descripciÃ³n>"`
+2. **Tarea actual**: Número y descripción de la siguiente tarea a realizar  
+   Formato: `"Siguiente: <n> <descripción>"`
 
 ### Formato ejemplo:
 ```markdown
@@ -605,43 +605,43 @@ Siguiente: 4.00 [PLACEHOLDER: Nombre de siguiente tarea]
 ```markdown
 # Daily Log
 
-Sprint v[PLACEHOLDER: versiÃ³n] cerrado. Sin sprint activo.
+Sprint v[PLACEHOLDER: versión] cerrado. Sin sprint activo.
 ```
 
-### ActualizaciÃ³n:
-- El asistente actualiza este fichero **automÃ¡ticamente** tras cada commit exitoso
+### Actualización:
+- El asistente actualiza este fichero **automáticamente** tras cada commit exitoso
 - Al finalizar un sprint (release), el contenido de `daily.md` se actualiza a "Sprint vX.Y.Z cerrado. Sin sprint activo." y se archiva en los ficheros versionados del sprint. Se crea un nuevo `daily.md` para el siguiente sprint cuando este comienza
 
 ---
 
-## ğŸ“‘ Estructura de Documentos del Sprint
+## ?? Estructura de Documentos del Sprint
 
 ### 1. `docs/sprint.md` - Sprint de Alto Nivel
 **Contenido**:
 - Objetivo del sprint
 - Hitos principales
-- Criterios de aceptaciÃ³n globales
-- ComparaciÃ³n con versiÃ³n anterior (opcional)
+- Criterios de aceptación globales
+- Comparación con versión anterior (opcional)
 - Estado del sprint (historias/tareas completadas)
 
 ### 2. `docs/sprint_histories.md` - Historias de Usuario
 **Contenido**:
 - ID de historia
-- TÃ­tulo y descripciÃ³n
+- Título y descripción
 - Prioridad
-- Criterios de aceptaciÃ³n
+- Criterios de aceptación
 - Lista de tareas derivadas
 
 **Ejemplo de historia**:
 ```markdown
-### H1 - [PLACEHOLDER: TÃ­tulo de Historia]
+### H1 - [PLACEHOLDER: Título de Historia]
 **ID**: H1
-**Prioridad**: CRÃTICA
-**DescripciÃ³n**: [PLACEHOLDER: DescripciÃ³n detallada]
+**Prioridad**: CRÍTICA
+**Descripción**: [PLACEHOLDER: Descripción detallada]
 
-**Criterios de aceptaciÃ³n**:
-- âœ… [PLACEHOLDER: Criterio 1]
-- âœ… [PLACEHOLDER: Criterio 2]
+**Criterios de aceptación**:
+- ? [PLACEHOLDER: Criterio 1]
+- ? [PLACEHOLDER: Criterio 2]
 
 **Tareas derivadas**: T1.1, T1.2, T1.3
 ```
@@ -650,91 +650,91 @@ Sprint v[PLACEHOLDER: versiÃ³n] cerrado. Sin sprint activo.
 **Contenido**:
 - ID de tarea
 - Historia asociada
-- DescripciÃ³n
-- ImplementaciÃ³n (cÃ³digo de ejemplo, pasos)
+- Descripción
+- Implementación (código de ejemplo, pasos)
 - Archivos afectados
-- Criterio de Ã©xito
+- Criterio de éxito
 
 **Ejemplo de tarea**:
 ```markdown
-### T1.1 - [PLACEHOLDER: TÃ­tulo de Tarea]
+### T1.1 - [PLACEHOLDER: Título de Tarea]
 **ID**: T1.1
 **Historia**: H1
-**DescripciÃ³n**: [PLACEHOLDER: DescripciÃ³n detallada]
+**Descripción**: [PLACEHOLDER: Descripción detallada]
 
-**ImplementaciÃ³n**:
+**Implementación**:
 ```[PLACEHOLDER: lenguaje]
-// [PLACEHOLDER: cÃ³digo de ejemplo]
+// [PLACEHOLDER: código de ejemplo]
 ```
 
 **Archivos afectados**: `[PLACEHOLDER: lista de archivos]`
 
-**Criterio de Ã©xito**: [PLACEHOLDER: condiciÃ³n de Ã©xito]
+**Criterio de éxito**: [PLACEHOLDER: condición de éxito]
 ```
 
 ### 4. `docs/sprint_deviations.md` - Desviaciones del Sprint (NUEVO)
 
-**PropÃ³sito**: Registrar **desviaciones**, **ajustes arquitectÃ³nicos** y **tareas emergentes** que surgen **durante** la ejecuciÃ³n del sprint.
+**Propósito**: Registrar **desviaciones**, **ajustes arquitectónicos** y **tareas emergentes** que surgen **durante** la ejecución del sprint.
 
 **Contenido**:
-- ID de desviaciÃ³n (DEV-XXX)
-- Tipo (Ajuste ArquitectÃ³nico | Tarea Emergente | Deuda TÃ©cnica | Bloqueador)
-- Punto de detecciÃ³n (en quÃ© tarea se detectÃ³)
+- ID de desviación (DEV-XXX)
+- Tipo (Ajuste Arquitectónico | Tarea Emergente | Deuda Técnica | Bloqueador)
+- Punto de detección (en qué tarea se detectó)
 - Prioridad
 - Contexto del problema
-- JustificaciÃ³n de por quÃ© NO pasÃ³ a backlog
-- DecisiÃ³n tomada
+- Justificación de por qué NO pasó a backlog
+- Decisión tomada
 - Tareas derivadas (DEV-XXX.Y)
 - Resultado
 - Impacto en sprint
 - Lecciones aprendidas
 
-**Ejemplo de desviaciÃ³n**:
+**Ejemplo de desviación**:
 ```markdown
-## DEV-001: [PLACEHOLDER: TÃ­tulo de la desviaciÃ³n]
+## DEV-001: [PLACEHOLDER: Título de la desviación]
 
-**Tipo**: Ajuste ArquitectÃ³nico
+**Tipo**: Ajuste Arquitectónico
 **Detectado en**: H2.3 - [PLACEHOLDER: nombre de tarea]
 **Fecha**: 2025-01-18
-**Prioridad**: CRÃTICA
+**Prioridad**: CRÍTICA
 
 ### Contexto:
-[PLACEHOLDER: DescripciÃ³n del problema arquitectÃ³nico/tÃ©cnico detectado]
+[PLACEHOLDER: Descripción del problema arquitectónico/técnico detectado]
 
-### Â¿Por quÃ© NO pasÃ³ a backlog?
-- âŒ **Bloqueante para H4**: [PLACEHOLDER: razÃ³n especÃ­fica]
-- âŒ **Viola pilares del proyecto**: [PLACEHOLDER: referencia a MAIN.md]
-- âœ… **Impacto inmediato**: [PLACEHOLDER: consecuencias si no se arregla]
+### ¿Por qué NO pasó a backlog?
+- ? **Bloqueante para H4**: [PLACEHOLDER: razón específica]
+- ? **Viola pilares del proyecto**: [PLACEHOLDER: referencia a MAIN.md]
+- ? **Impacto inmediato**: [PLACEHOLDER: consecuencias si no se arregla]
 
-### DecisiÃ³n:
-Pausar H4 temporalmente e implementar [PLACEHOLDER: soluciÃ³n] inmediatamente
+### Decisión:
+Pausar H4 temporalmente e implementar [PLACEHOLDER: solución] inmediatamente
 
 ### Tareas Derivadas:
-- DEV-001.1: âœ… [PLACEHOLDER: subtarea 1]
-- DEV-001.2: âœ… [PLACEHOLDER: subtarea 2]
+- DEV-001.1: ? [PLACEHOLDER: subtarea 1]
+- DEV-001.2: ? [PLACEHOLDER: subtarea 2]
 
 ### Resultado:
-âœ… **Completado** (commit: [PLACEHOLDER: hash])
+? **Completado** (commit: [PLACEHOLDER: hash])
 
 ### Impacto en Sprint:
 - H4.1-H4.5: [PLACEHOLDER: impacto positivo/negativo]
-- Progreso: [PLACEHOLDER: antes/despuÃ©s]
+- Progreso: [PLACEHOLDER: antes/después]
 
 ### Lecciones Aprendidas:
-[PLACEHOLDER: reflexiÃ³n para evitar en futuros sprints]
+[PLACEHOLDER: reflexión para evitar en futuros sprints]
 ```
 
 **Criterios de Uso**:
-- âœ… Bloqueante para sprint actual
-- âœ… Viola pilares del proyecto (docs/MAIN.md o estÃ¡ndares del proyecto)
-- âœ… Impacto inmediato en tareas en progreso o prÃ³ximas inmediatas
+- ? Bloqueante para sprint actual
+- ? Viola pilares del proyecto (docs/MAIN.md o estándares del proyecto)
+- ? Impacto inmediato en tareas en progreso o próximas inmediatas
 
 **Diferencia con backlog**:
-| Archivo | PropÃ³sito | CuÃ¡ndo usar |
+| Archivo | Propósito | Cuándo usar |
 |---------|-----------|-------------|
 | `sprint_tasks.md` | Tareas **planificadas** del sprint | Al inicio del sprint |
-| `sprint_deviations.md` | Tareas **emergentes/ajustes** durante sprint | Durante ejecuciÃ³n |
-| `backlog.md` | Ãtems **fuera** del sprint actual | PlanificaciÃ³n futura |
+| `sprint_deviations.md` | Tareas **emergentes/ajustes** durante sprint | Durante ejecución |
+| `backlog.md` | Ítems **fuera** del sprint actual | Planificación futura |
 
 **Versionado**: Archivado como `sprint_deviations_vX.Y.Z.md` al finalizar sprint
 
@@ -742,42 +742,42 @@ Pausar H4 temporalmente e implementar [PLACEHOLDER: soluciÃ³n] inmediatamente
 
 ### 5. `docs/sprint_ia_sessions.md` - Sesiones IA (NUEVO)
 
-**PropÃ³sito**: Registrar sesiones de trabajo con asistentes IA que superan el **85% de consumo de tokens/contexto**.
+**Propósito**: Registrar sesiones de trabajo con asistentes IA que superan el **85% de consumo de tokens/contexto**.
 
 **Contenido**:
-- ID de sesiÃ³n (SesiÃ³n #XXX)
-- LLM utilizado (nombre + versiÃ³n)
+- ID de sesión (Sesión #XXX)
+- LLM utilizado (nombre + versión)
 - Fecha/hora y usuario orquestador
-- Consumo de tokens/contexto (actual/lÃ­mite/porcentaje)
+- Consumo de tokens/contexto (actual/límite/porcentaje)
 - Prompt completo ejecutado
-- Contexto de sesiÃ³n (sprint, tareas completadas, pendientes)
-- Recomendaciones para prÃ³xima sesiÃ³n
+- Contexto de sesión (sprint, tareas completadas, pendientes)
+- Recomendaciones para próxima sesión
 
-**Ejemplo de sesiÃ³n**:
+**Ejemplo de sesión**:
 ```markdown
-## SesiÃ³n IA #001 - Sprint vX.Y.Z
+## Sesión IA #001 - Sprint vX.Y.Z
 
-**LLM**: [PLACEHOLDER: Nombre LLM] ([PLACEHOLDER: VersiÃ³n])
+**LLM**: [PLACEHOLDER: Nombre LLM] ([PLACEHOLDER: Versión])
 **Fecha/Hora**: [YYYY-MM-DD HH:MM:SS UTC]
 **Usuario (Orquestador)**: [PLACEHOLDER: username]
-**Consumo**: [actual] / [lÃ­mite] ([porcentaje]%)
-**Estado**: âš ï¸ LÃMITE 85% ALCANZADO - SesiÃ³n cerrada
+**Consumo**: [actual] / [límite] ([porcentaje]%)
+**Estado**: ?? LÍMITE 85% ALCANZADO - Sesión cerrada
 
-### Resumen de la SesiÃ³n:
+### Resumen de la Sesión:
 
-Esta sesiÃ³n ha sido muy productiva:
+Esta sesión ha sido muy productiva:
 
-1. âœ… **[PLACEHOLDER: Logro principal 1]**
+1. ? **[PLACEHOLDER: Logro principal 1]**
    - [Sub-logro 1]
    - [Sub-logro 2]
 
-2. âœ… **[PLACEHOLDER: Logro principal 2]**
+2. ? **[PLACEHOLDER: Logro principal 2]**
    - [Sub-logro 1]
    - [Sub-logro 2]
 
-3. âœ… **ValidaciÃ³n completa**
-   - ValidaciÃ³n automÃ¡tica: [resultado]
-   - ValidaciÃ³n usuario: [resultado si aplica]
+3. ? **Validación completa**
+   - Validación automática: [resultado]
+   - Validación usuario: [resultado si aplica]
 
 ### Prompt Ejecutado:
 ```
@@ -789,24 +789,24 @@ Esta sesiÃ³n ha sido muy productiva:
 - **Completadas**: [lista tareas]
 - **Pendientes**: [lista tareas]
 
-### PrÃ³xima SesiÃ³n:
+### Próxima Sesión:
 - Continuar: [referencia daily.md]
 - Leer: [archivos contexto]
 - Validar: [aspectos verificar]
 ```
 
-**Flujo AutomÃ¡tico al 85%**:
+**Flujo Automático al 85%**:
 
 1. **Detectar umbral**: Consumo > 85%
 2. **Completar tarea**: Implementar + validar + commit
 3. **Registrar**: Crear entrada en `sprint_ia_sessions.md`
 4. **Notificar**:
    ```
-   âš ï¸ LÃMITE DE SESIÃ“N (>85%)
-   âœ… Tarea completada: [nombre]
-   âœ… Commit: [hash]
-   ğŸ“Š Consumo: XXX/YYY (ZZ%)
-   ğŸ”„ Cerrar sesiÃ³n y abrir nuevo prompt
+   ?? LÍMITE DE SESIÓN (>85%)
+   ? Tarea completada: [nombre]
+   ? Commit: [hash]
+   ?? Consumo: XXX/YYY (ZZ%)
+   ?? Cerrar sesión y abrir nuevo prompt
    ```
 5. **PAUSAR**: Esperar cierre usuario
 
@@ -814,24 +814,24 @@ Esta sesiÃ³n ha sido muy productiva:
 
 ---
 
-## âœ”ï¸ Proceso de EjecuciÃ³n de Tareas
+## ?? Proceso de Ejecución de Tareas
 
-Cada tarea debe seguir las **reglas de iteraciÃ³n**:
+Cada tarea debe seguir las **reglas de iteración**:
 
-1. **Implementar** el cÃ³digo segÃºn la descripciÃ³n en `docs/sprint_tasks.md`
-2. **Validar** (compilar/ejecutar/probar segÃºn el proyecto):
-   - [PLACEHOLDER: Comando de validaciÃ³n especÃ­fico]
+1. **Implementar** el código según la descripción en `docs/sprint_tasks.md`
+2. **Validar** (compilar/ejecutar/probar según el proyecto):
+   - [PLACEHOLDER: Comando de validación específico]
    - Ejemplos: `npm test`, `cargo test`, `msbuild`, `pytest`, `go test`
-3. **Corregir errores** hasta obtener validaciÃ³n limpia (0 errores, 0 warnings)
-4. **Commit** y actualizar `docs/daily.md` y `docs/commits.md`
+3. **Corregir errores** hasta obtener validación limpia (0 errores, 0 warnings)
+4. **Commit** y actualizar `docs/daily.md` y `docs/sprint_commits.md`
 
 ---
 
-## ğŸ’¬ Convenciones de Commits (`docs/commits.md`)
+## ?? Convenciones de Commits (`docs/sprint_commits.md`)
 
 ### Formato recomendado:
 ```
-<tipo>(<Ã¡mbito>): <mensaje corto>
+<tipo>(<ámbito>): <mensaje corto>
 
 <mensaje largo opcional>
 
@@ -840,54 +840,54 @@ Refs: <issue/track-id>
 
 ### Tipos comunes:
 - **feat**: Nueva funcionalidad
-- **fix**: CorrecciÃ³n de errores
-- **docs**: Cambios en documentaciÃ³n
+- **fix**: Corrección de errores
+- **docs**: Cambios en documentación
 - **style**: Formato, estilo, sin cambios funcionales
-- **refactor**: RefactorizaciÃ³n sin cambios en comportamiento
+- **refactor**: Refactorización sin cambios en comportamiento
 - **perf**: Mejoras de rendimiento
-- **test**: AÃ±adir o corregir tests
+- **test**: Añadir o corregir tests
 - **chore**: Tareas de mantenimiento
 
 ### Ejemplo:
 ```
 feat(auth): implementar login con OAuth2
 
-AÃ±ade soporte para autenticaciÃ³n vÃ­a Google y GitHub.
-Incluye validaciÃ³n de tokens y refresh automÃ¡tico.
+Añade soporte para autenticación vía Google y GitHub.
+Incluye validación de tokens y refresh automático.
 
 Refs: #123
 ```
 
 ---
 
-## ğŸ¯ Principios de la MetodologÃ­a
+## ?? Principios de la Metodología
 
-Esta metodologÃ­a se basa en:
+Esta metodología se basa en:
 
-1. **Iteraciones pequeÃ±as y compilables/ejecutables**: Cada tarea debe dejar el proyecto en estado funcional
-2. **DocumentaciÃ³n continua**: Actualizar docs en cada commit
+1. **Iteraciones pequeñas y compilables/ejecutables**: Cada tarea debe dejar el proyecto en estado funcional
+2. **Documentación continua**: Actualizar docs en cada commit
 3. **Progreso visual**: Barra de progreso para feedback inmediato
-4. **AutomatizaciÃ³n IA**: El asistente ejecuta el ciclo completo sin intervenciÃ³n manual innecesaria
+4. **Automatización IA**: El asistente ejecuta el ciclo completo sin intervención manual innecesaria
 5. **Trazabilidad**: Versionado de sprints, commits descriptivos, historial claro
-6. **Calidad desde el inicio**: No soluciones temporales, solo cÃ³digo production-ready
-7. **Flexibilidad tecnolÃ³gica**: Aplicable a cualquier stack (backend, frontend, mÃ³vil, desktop, embedded, etc.)
+6. **Calidad desde el inicio**: No soluciones temporales, solo código production-ready
+7. **Flexibilidad tecnológica**: Aplicable a cualquier stack (backend, frontend, móvil, desktop, embedded, etc.)
 
 ---
 
-## ğŸ”§ AdaptaciÃ³n a Tu Proyecto
+## ?? Adaptación a Tu Proyecto
 
-Para adaptar este template a tu proyecto especÃ­fico:
+Para adaptar este template a tu proyecto específico:
 
 1. **Copia este archivo** como base para tu `.github/copilot-instructions.md`
 2. **Reemplaza todos los `[PLACEHOLDER]`** con:
-   - TecnologÃ­as especÃ­ficas (lenguaje, framework, herramientas)
-   - Comandos de build/validaciÃ³n reales
-   - EstÃ¡ndares de cÃ³digo del proyecto
+   - Tecnologías específicas (lenguaje, framework, herramientas)
+   - Comandos de build/validación reales
+   - Estándares de código del proyecto
    - Preferencias del equipo
-3. **AÃ±ade secciones especÃ­ficas** si tu proyecto requiere:
-   - ConfiguraciÃ³n de CI/CD
+3. **Añade secciones específicas** si tu proyecto requiere:
+   - Configuración de CI/CD
    - Despliegue automatizado
-   - GestiÃ³n de base de datos
+   - Gestión de base de datos
    - APIs externas
    - etc.
 4. **Crea `docs/MAIN.md`** con los pilares fundamentales de tu proyecto
@@ -897,80 +897,80 @@ Para adaptar este template a tu proyecto especÃ­fico:
    - `docs/sprint_tasks.md`
    - `docs/daily.md`
    - `docs/backlog.md`
-   - `docs/commits.md`
+   - `docs/sprint_commits.md`
 
 ---
 
-## ğŸ’¡ Ejemplo de Uso en Diferentes TecnologÃ­as
+## ?? Ejemplo de Uso en Diferentes Tecnologías
 
 ### Para un proyecto React + TypeScript:
-- **ValidaciÃ³n**: `npm run lint && npm test && npm run build`
+- **Validación**: `npm run lint && npm test && npm run build`
 - **Estilo**: ESLint + Prettier, componentes funcionales, hooks
 - **Stack**: React 18, TypeScript 5, Vite, Vitest
 
 ### Para un proyecto Python FastAPI:
-- **ValidaciÃ³n**: `pytest && mypy . && black --check .`
+- **Validación**: `pytest && mypy . && black --check .`
 - **Estilo**: PEP 8, type hints obligatorios, async/await
 - **Stack**: FastAPI, SQLAlchemy, Pydantic, pytest
 
 ### Para un proyecto Rust:
-- **ValidaciÃ³n**: `cargo clippy && cargo test && cargo build`
+- **Validación**: `cargo clippy && cargo test && cargo build`
 - **Estilo**: rustfmt, Clippy warnings = errores
 - **Stack**: Rust 1.70+, tokio, serde
 
 ### Para un proyecto Unity C#:
-- **ValidaciÃ³n**: CompilaciÃ³n Unity + tests unitarios
+- **Validación**: Compilación Unity + tests unitarios
 - **Estilo**: Convenciones Unity, componentes desacoplados
 - **Stack**: Unity 2022 LTS, C# 9.0, URP
 
 ---
 
-## ğŸ“š Recursos Adicionales
+## ?? Recursos Adicionales
 
 - Ver sprints completados: `docs/sprint_v*.md`
 - Ver historias completadas: `docs/sprint_histories_v*.md`
 - Ver tareas completadas: `docs/sprint_tasks_v*.md`
 - Ver bugs/errores del sprint: `docs/sprint_fix_v*.md`
-- Convenciones de commits: `docs/commits.md`
-- Backlog de Ã­tems futuros: `docs/backlog.md`
+- Convenciones de commits: `docs/sprint_commits.md`
+- Backlog de ítems futuros: `docs/backlog.md`
 
 ---
 
-**Fin del Template de MetodologÃ­a**
+**Fin del Template de Metodología**
 
-*VersiÃ³n: 1.0*  
-*Ãšltima actualizaciÃ³n: [PLACEHOLDER: Fecha]*
+*Versión: 1.0*  
+*Última actualización: [PLACEHOLDER: Fecha]*
 
 ---
 
-## âš ï¸ **OBLIGATORIO AL FINALIZAR SPRINT: Registrar SesiÃ³n IA**
+## ?? **OBLIGATORIO AL FINALIZAR SPRINT: Registrar Sesión IA**
 
-**CRÃTICO**: Al finalizar un sprint (ejecutar script de cierre), el asistente **DEBE**:
+**CRÍTICO**: Al finalizar un sprint (ejecutar script de cierre), el asistente **DEBE**:
 
-1. **Registrar la sesiÃ³n IA** en `docs/sprint_ia_sessions.md` **ANTES** de archivar
-2. **Incluir TODA la informaciÃ³n** de la sesiÃ³n:
+1. **Registrar la sesión IA** en `docs/sprint_ia_sessions.md` **ANTES** de archivar
+2. **Incluir TODA la información** de la sesión:
    - Prompts ejecutados (lista completa)
-   - Tareas completadas durante la sesiÃ³n
+   - Tareas completadas durante la sesión
    - Commits creados
    - Archivos creados/modificados
-   - MÃ©tricas finales del sprint
-   - DuraciÃ³n de la sesiÃ³n
+   - Métricas finales del sprint
+   - Duración de la sesión
    - Consumo de tokens
 3. **Archivar** el fichero con el script: `sprint_ia_sessions_v<version>.md`
 
-**Â¿Por quÃ© es OBLIGATORIO?**
-- âœ… **Trazabilidad completa** del desarrollo asistido por IA
-- âœ… **AnÃ¡lisis retrospectivo** de metodologÃ­a y prompts efectivos
-- âœ… **DocumentaciÃ³n valiosa** para futuros sprints
-- âœ… **AuditorÃ­a** de decisiones tomadas durante el desarrollo
-- âœ… **Continuidad** entre sesiones y sprints
+**¿Por qué es OBLIGATORIO?**
+- ? **Trazabilidad completa** del desarrollo asistido por IA
+- ? **Análisis retrospectivo** de metodología y prompts efectivos
+- ? **Documentación valiosa** para futuros sprints
+- ? **Auditoría** de decisiones tomadas durante el desarrollo
+- ? **Continuidad** entre sesiones y sprints
 
 **Proceso al cerrar sprint**:
 ```powershell
-# 1. Actualizar docs/sprint_ia_sessions.md con resumen de sesiÃ³n
-# 2. Ejecutar script de cierre (archiva automÃ¡ticamente)
+# 1. Actualizar docs/sprint_ia_sessions.md con resumen de sesión
+# 2. Ejecutar script de cierre (archiva automáticamente)
 [PLACEHOLDER: comando de cierre del sprint]
-# Ejemplos segÃºn proyecto:
+# Ejemplos según proyecto:
 # - .\scripts\close-sprint.ps1 -Version "X.Y.Z"  (PowerShell)
 # - npm run close-sprint -- --version X.Y.Z     (Node.js)
 # - python scripts/close_sprint.py --version X.Y.Z  (Python)
@@ -979,33 +979,33 @@ git add -A
 git commit -m "chore: Cerrar Sprint vX.Y.Z - 100% completado"
 ```
 
-**Plantilla mÃ­nima obligatoria** (ver secciÃ³n "Fichero Sprint IA Sessions" para template completo):
+**Plantilla mínima obligatoria** (ver sección "Fichero Sprint IA Sessions" para template completo):
 ```markdown
-## SesiÃ³n IA #001 - Sprint vX.Y.Z
+## Sesión IA #001 - Sprint vX.Y.Z
 
-**LLM**: [PLACEHOLDER: Nombre LLM] ([PLACEHOLDER: VersiÃ³n])
+**LLM**: [PLACEHOLDER: Nombre LLM] ([PLACEHOLDER: Versión])
 **Fecha/Hora**: [YYYY-MM-DD HH:MM-HH:MM UTC]
 **Usuario (Orquestador)**: [PLACEHOLDER: username]
-**Consumo de Tokens**: [~XXX,000] / [lÃ­mite] ([XX.X]())
-**Estado**: âš ï¸ SPRINT COMPLETADO
+**Consumo de Tokens**: [~XXX,000] / [límite] ([XX.X]())
+**Estado**: ?? SPRINT COMPLETADO
 
-### Resumen de la SesiÃ³n:
+### Resumen de la Sesión:
 [PLACEHOLDER: Lista de logros principales]
 
 ### Prompt Ejecutado:
 [PLACEHOLDER: Lista de prompts usados]
 
-### Tareas completadas en sesiÃ³n:
+### Tareas completadas en sesión:
 [PLACEHOLDER: Lista de todas las tareas completadas]
 
 ### Commits Creados:
 [PLACEHOLDER: Lista de commits con hash]
 
-### MÃ©tricas del Sprint (Final):
+### Métricas del Sprint (Final):
 [PLACEHOLDER: Tareas, tests, performance, bugs, etc.]
 ```
 
-**Excepciones**: Si el sprint NO tuvo sesiones IA (desarrollo manual), dejar `sprint_ia_sessions.md` vacÃ­o con nota:
+**Excepciones**: Si el sprint NO tuvo sesiones IA (desarrollo manual), dejar `sprint_ia_sessions.md` vacío con nota:
 ```markdown
 # Sprint IA Sessions - vX.Y.Z
 

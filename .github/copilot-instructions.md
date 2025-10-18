@@ -1,118 +1,118 @@
-ï»¿Este repositorio usa las siguientes instrucciones de trabajo para sesiones con el asistente (GitHub Copilot).
+Este repositorio usa las siguientes instrucciones de trabajo para sesiones con el asistente (GitHub Copilot).
 
 ## ?? LEER PRIMERO
 
-**OBLIGATORIO**: Antes de comenzar cualquier sesiÃ³n, leer:  
-?? **[`docs/MAIN.md`](../docs/MAIN.md)** - DecÃ¡logo fundamental del proyecto (pilares, arquitectura, estÃ¡ndares AAA)
+**OBLIGATORIO**: Antes de comenzar cualquier sesión, leer:  
+?? **[`docs/MAIN.md`](../docs/MAIN.md)** - Decálogo fundamental del proyecto (pilares, arquitectura, estándares AAA)
 
 Este documento define los 4 pilares fundamentales y principios del proyecto Imagine Studio.  
-**Todas las decisiones arquitectÃ³nicas y de implementaciÃ³n DEBEN alinearse con estos pilares.**
+**Todas las decisiones arquitectónicas y de implementación DEBEN alinearse con estos pilares.**
 
 ---
 
 Archivos principales de trabajo:
-- `docs/MAIN.md` - **[LEER PRIMERO]** DecÃ¡logo y pilares fundamentales del proyecto.
+- `docs/MAIN.md` - **[LEER PRIMERO]** Decálogo y pilares fundamentales del proyecto.
 - `docs/sprint.md` - Sprint actual con hitos y objetivos.
-- `docs/daily.md` - Ãšltima tarea completada y tarea actual en progreso (o "Sprint vX.Y.Z cerrado. Sin sprint activo." si no hay sprint activo).
-- `docs/commits.md` - Convenciones de commits y mensajes.
-- `docs/sprint_bugs.md` - Tracking de bugs reportados (pendientes de resoluciÃ³n).
-- `docs/sprint_bug_attempts.md` - **[DEBUGGING]** Log detallado de TODOS los intentos de soluciÃ³n para cada bug (fallidos, parciales, exitosos).
+- `docs/daily.md` - Última tarea completada y tarea actual en progreso (o "Sprint vX.Y.Z cerrado. Sin sprint activo." si no hay sprint activo).
+- `docs/sprint_commits.md` - Convenciones de commits y mensajes.
+- `docs/sprint_bugs.md` - Tracking de bugs reportados (pendientes de resolución).
+- `docs/sprint_bug_attempts.md` - **[DEBUGGING]** Log detallado de TODOS los intentos de solución para cada bug (fallidos, parciales, exitosos).
 - `docs/sprint_fix.md` - Historial de bugs resueltos durante el sprint.
 
-Flujo de trabajo por sesiÃ³n:
+Flujo de trabajo por sesión:
 1) Leer estas instrucciones.
-2) Consultar `docs/daily.md` para ver la Ãºltima tarea completada y la tarea actual.
-3) Comparar con el cÃ³digo fuente.
+2) Consultar `docs/daily.md` para ver la última tarea completada y la tarea actual.
+3) Comparar con el código fuente.
 4) Proponer el siguiente paso (por parte del asistente).
 5) Si se confirma, el asistente implementa el paso.
-   - Antes de crear el commit se debe compilar la soluciÃ³n/proyecto.
+   - Antes de crear el commit se debe compilar la solución/proyecto.
      - **Requisito obligatorio: DOS compilaciones limpias (0 errores, 0 warnings)**:
        
-       **CompilaciÃ³n 1 - CMake Build (Debug)**:
+       **Compilación 1 - CMake Build (Debug)**:
        ```powershell
        cmake --build build --config Debug
        ```
        
-       **CompilaciÃ³n 2 - Visual Studio Build Solution (Ctrl+MayÃºs+B equivalente)**:
+       **Compilación 2 - Visual Studio Build Solution (Ctrl+Mayús+B equivalente)**:
        ```powershell
        msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
        ```
        
-       **IMPORTANTE**: La compilaciÃ³n 2 debe ejecutarse **EXACTAMENTE** con el comando `msbuild` mostrado arriba.
-       Este comando replica **exactamente** lo que hace Visual Studio 2022 cuando pulsas **Ctrl+MayÃºs+B** ("Build Solution") en la soluciÃ³n principal `Imagine Studio.sln` de la raÃ­z.
+       **IMPORTANTE**: La compilación 2 debe ejecutarse **EXACTAMENTE** con el comando `msbuild` mostrado arriba.
+       Este comando replica **exactamente** lo que hace Visual Studio 2022 cuando pulsas **Ctrl+Mayús+B** ("Build Solution") en la solución principal `Imagine Studio.sln` de la raíz.
        
        **NOTA**: Existen DOS sistemas de build en este proyecto:
-       - **Sistema Principal (desarrollo)**: `Imagine Studio.sln` + `Imagine Studio.vcxproj` en la raÃ­z â†’ Usado para desarrollo diario con F5/Ctrl+MayÃºs+B
-       - **Sistema CMake (CI/automatizaciÃ³n)**: `build/ImagineStudio.sln` generado por CMake â†’ Usado para builds automatizados
+       - **Sistema Principal (desarrollo)**: `Imagine Studio.sln` + `Imagine Studio.vcxproj` en la raíz ? Usado para desarrollo diario con F5/Ctrl+Mayús+B
+       - **Sistema CMake (CI/automatización)**: `build/ImagineStudio.sln` generado por CMake ? Usado para builds automatizados
        
-       Ambos sistemas deben compilar sin errores. La CompilaciÃ³n 1 usa CMake, la CompilaciÃ³n 2 usa el proyecto principal de Visual Studio.
+       Ambos sistemas deben compilar sin errores. La Compilación 1 usa CMake, la Compilación 2 usa el proyecto principal de Visual Studio.
        
        **NO usar** variaciones como:
-       - âŒ `cmake --build` (eso es compilaciÃ³n 1, no compilaciÃ³n 2)
-       - âŒ `msbuild "build/ImagineStudio.sln"` (esa es la soluciÃ³n de CMake, no la principal)
-       - âŒ `devenv /build`
-       - âŒ Otros mÃ©todos alternativos
+       - ? `cmake --build` (eso es compilación 1, no compilación 2)
+       - ? `msbuild "build/ImagineStudio.sln"` (esa es la solución de CMake, no la principal)
+       - ? `devenv /build`
+       - ? Otros métodos alternativos
        
-       **SÃ usar**:
-       - âœ… `msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m`
+       **SÍ usar**:
+       - ? `msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m`
        
-     - Si alguna de las dos compilaciones produce errores o warnings, el asistente corregirÃ¡ los errores cuando sea posible y volverÃ¡ a ejecutar ambas compilaciones hasta obtener builds limpias.
-     - El asistente ejecutarÃ¡ automÃ¡ticamente ambas compilaciones (CMake + MSBuild) antes de crear commits durante sus iteraciones.
-   - Una vez ambas compilaciones estÃ©n limpias, crear el commit y actualizar los archivos Markdown pertinentes (`docs/daily.md`, `docs/commits.md`, `README.md` cuando proceda).
+     - Si alguna de las dos compilaciones produce errores o warnings, el asistente corregirá los errores cuando sea posible y volverá a ejecutar ambas compilaciones hasta obtener builds limpias.
+     - El asistente ejecutará automáticamente ambas compilaciones (CMake + MSBuild) antes de crear commits durante sus iteraciones.
+   - Una vez ambas compilaciones estén limpias, crear el commit y actualizar los archivos Markdown pertinentes (`docs/daily.md`, `docs/sprint_commits.md`, `README.md` cuando proceda).
 6) Repetir desde 1.
 
-Nota: Los archivos anteriores son la fuente de la verdad para la organizaciÃ³n del proyecto y la comunicaciÃ³n con el asistente.
+Nota: Los archivos anteriores son la fuente de la verdad para la organización del proyecto y la comunicación con el asistente.
 
 Preferencias del propietario del repositorio:
-- Prefiero hacer bien las cosas desde el principio: evitar partes intermedas, temporales, incompletes o no funcionales. Cada mÃ³dulo debe diseÃ±arse para cumplir los estÃ¡ndares AAA desde su concepciÃ³n.
-- En cada iteraciÃ³n, antes del commit, siempre se debe compilar y corregir errores/warnings para asegurar commits limpios y funcionales.
-- Estilo de includes: las directivas `#include` deben ordenarse siempre con las cabeceras del proyecto (entre comillas `"..."`) primero y despuÃ©s las cabeceras del sistema (`<...>`), y dentro de cada grupo deben aparecer en orden alfabÃ©tico. Esta regla serÃ¡ verificada por el asistente y aplicada o reportada como warning al preparar commits.
-- **CodificaciÃ³n de archivos**: TODOS los archivos de texto (`.md`, `.cpp`, `.h`, `.hlsl`, etc.) DEBEN usar **UTF-8 con BOM** y **line endings CRLF** (Windows). Esto es CRÃTICO para evitar problemas de codificaciÃ³n con caracteres especiales (emojis, caracteres no-ASCII). El asistente DEBE:
+- Prefiero hacer bien las cosas desde el principio: evitar partes intermedas, temporales, incompletes o no funcionales. Cada módulo debe diseñarse para cumplir los estándares AAA desde su concepción.
+- En cada iteración, antes del commit, siempre se debe compilar y corregir errores/warnings para asegurar commits limpios y funcionales.
+- Estilo de includes: las directivas `#include` deben ordenarse siempre con las cabeceras del proyecto (entre comillas `"..."`) primero y después las cabeceras del sistema (`<...>`), y dentro de cada grupo deben aparecer en orden alfabético. Esta regla será verificada por el asistente y aplicada o reportada como warning al preparar commits.
+- **Codificación de archivos**: TODOS los archivos de texto (`.md`, `.cpp`, `.h`, `.hlsl`, etc.) DEBEN usar **UTF-8 con BOM** y **line endings CRLF** (Windows). Esto es CRÍTICO para evitar problemas de codificación con caracteres especiales (emojis, caracteres no-ASCII). El asistente DEBE:
   - Al crear/editar archivos, asegurarse de que se guarden con UTF-8 con BOM
   - Verificar que no haya line endings mixtos (CRLF + LF)
-  - Si detecta problemas de codificaciÃ³n, ejecutar `.\scripts\check-encoding.ps1 -Fix` antes del commit
+  - Si detecta problemas de codificación, ejecutar `.\scripts\check-encoding.ps1 -Fix` antes del commit
   - Nunca usar UTF-8 sin BOM para archivos con caracteres no-ASCII
-  - Los warnings de Git "LF will be replaced by CRLF" son normales y esperados (Git normaliza automÃ¡ticamente)
+  - Los warnings de Git "LF will be replaced by CRLF" son normales y esperados (Git normaliza automáticamente)
 
-SecciÃ³n de resoluciÃ³n de problemas (ResoluciÃ³n de problemas)
-Si en algÃºn momento la herramienta no puede compilar la soluciÃ³n o no encuentra la `.sln`, o aparece un error de enlace tipo "unresolved external main", seguir estos pasos:
+Sección de resolución de problemas (Resolución de problemas)
+Si en algún momento la herramienta no puede compilar la solución o no encuentra la `.sln`, o aparece un error de enlace tipo "unresolved external main", seguir estos pasos:
 
-1) Comprobar la existencia y ruta exacta de la soluciÃ³n desde PowerShell:
-   - Ejecutar `Get-ChildItem -Force` o `ls` en el directorio raÃ­z del repositorio para localizar `*.sln` y obtener la ruta exacta.
-2) Compilar explÃ­citamente usando PowerShell y `msbuild` con la ruta entre comillas (importante si el nombre contiene espacios):
+1) Comprobar la existencia y ruta exacta de la solución desde PowerShell:
+   - Ejecutar `Get-ChildItem -Force` o `ls` en el directorio raíz del repositorio para localizar `*.sln` y obtener la ruta exacta.
+2) Compilar explícitamente usando PowerShell y `msbuild` con la ruta entre comillas (importante si el nombre contiene espacios):
    - `msbuild "C:\ruta\a\Imagine Studio.sln" /p:Configuration=Debug /m`
-3) Si la herramienta reporta que no puede encontrar archivos fuente nuevos, confirmar que los ficheros estÃ¡n incluidos en el `.vcxproj` o en el `CMakeLists.txt` de la soluciÃ³n. AÃ±adirlos si es necesario.
+3) Si la herramienta reporta que no puede encontrar archivos fuente nuevos, confirmar que los ficheros están incluidos en el `.vcxproj` o en el `CMakeLists.txt` de la solución. Añadirlos si es necesario.
 4) Si aparece `LNK2019: unresolved external main` o similar:
-   - Causa frecuente: discrepancia entre la entrada esperada por el subsistema (CONSOLE vs WINDOWS) y las funciones `main`/`WinMain` definidas en el cÃ³digo.
-   - SoluciÃ³n: proporcionar entradas portables (por ejemplo, una funciÃ³n `RunApp(HINSTANCE)` y definir tanto `int main()` como `WinMain` que llamen a `RunApp`), o ajustar la configuraciÃ³n del proyecto al subsistema correcto y tener la firma adecuada.
-5) Si la compilaciÃ³n muestra errores/warnings: corregirlos hasta obtener una build limpia antes de proceder al commit (esta regla ya estÃ¡ en el flujo de trabajo).
-6) Alternativa: si no hay `.sln` o se desea portabilidad, crear un `CMakeLists.txt` bÃ¡sico y usar `cmake` + `cmake --build`.
+   - Causa frecuente: discrepancia entre la entrada esperada por el subsistema (CONSOLE vs WINDOWS) y las funciones `main`/`WinMain` definidas en el código.
+   - Solución: proporcionar entradas portables (por ejemplo, una función `RunApp(HINSTANCE)` y definir tanto `int main()` como `WinMain` que llamen a `RunApp`), o ajustar la configuración del proyecto al subsistema correcto y tener la firma adecuada.
+5) Si la compilación muestra errores/warnings: corregirlos hasta obtener una build limpia antes de proceder al commit (esta regla ya está en el flujo de trabajo).
+6) Alternativa: si no hay `.sln` o se desea portabilidad, crear un `CMakeLists.txt` básico y usar `cmake` + `cmake --build`.
 
-Registrar en la bitÃ¡cora (`docs/daily.md`) cualquier incidencia relevante y su resoluciÃ³n para futuras referencias.
+Registrar en la bitácora (`docs/daily.md`) cualquier incidencia relevante y su resolución para futuras referencias.
 
-âš ï¸ REGLA CRÃTICA: Bibliotecas de terceros (external/)
+?? REGLA CRÍTICA: Bibliotecas de terceros (external/)
 --------------------------------------------------------
-**NUNCA MODIFICAR** cÃ³digo en el directorio `external/`. 
+**NUNCA MODIFICAR** código en el directorio `external/`. 
 
 **Razones:**
 1. Imposibilita actualizar la biblioteca en el futuro
-2. Oculta bugs en nuestro cÃ³digo (tapa sÃ­ntomas, no arregla causas)
+2. Oculta bugs en nuestro código (tapa síntomas, no arregla causas)
 3. Rompe la reproducibilidad del proyecto
 4. Dificulta el debugging y mantenimiento
 
-**PolÃ­tica:**
-- TODO el cÃ³digo de bibliotecas externas (Dear ImGui, etc.) debe permanecer **INTACTO**
+**Política:**
+- TODO el código de bibliotecas externas (Dear ImGui, etc.) debe permanecer **INTACTO**
 - Si necesitas personalizar comportamiento: crear **wrappers** en `src/` (ej: `src/editor/ImGuiWrapper.h`)
 - Si encuentras un bug relacionado con una biblioteca externa:
-  1. **NO** aÃ±adirs checks defensivos en la biblioteca
-  2. **SÃ** investigar por quÃ© nuestro cÃ³digo estÃ¡ llamando incorrectamente a la API
-  3. **SÃ** corregir el orden de inicializaciÃ³n o uso en nuestro cÃ³digo
-  4. **SÃ** consultar `docs/THIRD_PARTY.md` para ver versiones y polÃ­ticas especÃ­ficas
+  1. **NO** añadirs checks defensivos en la biblioteca
+  2. **SÍ** investigar por qué nuestro código está llamando incorrectamente a la API
+  3. **SÍ** corregir el orden de inicialización o uso en nuestro código
+  4. **SÍ** consultar `docs/THIRD_PARTY.md` para ver versiones y políticas específicas
 
-**Ejemplo de error comÃºn:**
+**Ejemplo de error común:**
 ```cpp
-// âŒ NO HACER: AÃ±adir if(builder == NULL) en imgui_draw.cpp para evitar crash
-// âœ… CORRECTO: Arreglar nuestro cÃ³digo para asegurar que builder estÃ© inicializado ANTES de llamar
+// ? NO HACER: Añadir if(builder == NULL) en imgui_draw.cpp para evitar crash
+// ? CORRECTO: Arreglar nuestro código para asegurar que builder esté inicializado ANTES de llamar
 
 // src/main.cpp
 void InitializeRendering()
@@ -120,302 +120,302 @@ void InitializeRendering()
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
     
-    // âœ… CRÃTICO: Build debe llamarse ANTES de usar el atlas
+    // ? CRÍTICO: Build debe llamarse ANTES de usar el atlas
     io.Fonts->Build();
     
-    // Ahora sÃ­ podemos usar backends
+    // Ahora sí podemos usar backends
     ImGui_ImplWin32_Init(g_hwnd);
     ImGui_ImplDX12_Init(...);
 }
 ```
 
-**Consultar siempre:** `docs/THIRD_PARTY.md` para polÃ­ticas detalladas sobre cada biblioteca externa.
+**Consultar siempre:** `docs/THIRD_PARTY.md` para políticas detalladas sobre cada biblioteca externa.
 
-IteraciÃ³n controlada (proceso obligatorio por iteraciÃ³n)
-1) El asistente consultarÃ¡ `docs/daily.md` y propondrÃ¡ el siguiente punto a ejecutar, acompaÃ±ado de una breve explicaciÃ³n (una frase) sobre en quÃ© consiste.
+Iteración controlada (proceso obligatorio por iteración)
+1) El asistente consultará `docs/daily.md` y propondrá el siguiente punto a ejecutar, acompañado de una breve explicación (una frase) sobre en qué consiste.
 
-EjecuciÃ³n automÃ¡tica (sin necesidad de confirmaciÃ³n previa):
-2) Tras proponer el punto, el asistente implementarÃ¡ el cambio, compilarÃ¡ la soluciÃ³n y corregirÃ¡ los errores/warnings hasta lograr una compilaciÃ³n limpia.
-3) Si la compilaciÃ³n queda limpia, el asistente realizarÃ¡ directamente el commit local siguiendo `docs/commits.md` y actualizarÃ¡ los ficheros necesarios (`docs/daily.md`, `docs/commits.md`, `README.md` y `.github/copilot-instructions.md`) sin pedir permiso adicional.
-4) El asistente informarÃ¡ de lo realizado siguiendo el **Formato Obligatorio de ExplicaciÃ³n Final** (ver secciÃ³n mÃ¡s abajo) y del siguiente punto propuesto y continuarÃ¡ el ciclo.
+Ejecución automática (sin necesidad de confirmación previa):
+2) Tras proponer el punto, el asistente implementará el cambio, compilará la solución y corregirá los errores/warnings hasta lograr una compilación limpia.
+3) Si la compilación queda limpia, el asistente realizará directamente el commit local siguiendo `docs/sprint_commits.md` y actualizará los ficheros necesarios (`docs/daily.md`, `docs/sprint_commits.md`, `README.md` y `.github/copilot-instructions.md`) sin pedir permiso adicional.
+4) El asistente informará de lo realizado siguiendo el **Formato Obligatorio de Explicación Final** (ver sección más abajo) y del siguiente punto propuesto y continuará el ciclo.
 
-Excepciones: Si aparece un bloqueo tÃ©cnico, decisiÃ³n arquitectÃ³nica crÃ­tica o dependencia que impida avanzar, el asistente pausarÃ¡ y solicitarÃ¡ instrucciones al propietario.
+Excepciones: Si aparece un bloqueo técnico, decisión arquitectónica crítica o dependencia que impida avanzar, el asistente pausará y solicitará instrucciones al propietario.
 
-## ğŸ“Š Formato Obligatorio de ExplicaciÃ³n Final (IMPORTANTE)
+## ?? Formato Obligatorio de Explicación Final (IMPORTANTE)
 
-Al final de cada iteraciÃ³n (cuando se informa lo realizado y el siguiente punto), la explicaciÃ³n debe contener **obligatoriamente** estas **3 secciones en orden**:
+Al final de cada iteración (cuando se informa lo realizado y el siguiente punto), la explicación debe contener **obligatoriamente** estas **3 secciones en orden**:
 
-### 1. **Dos tÃ­tulos numerados** siguiendo el esquema del Sprint:
-- **"âœ… Hecho: \<nÃºmero\> \<tÃ­tulo\>"** (ej: "âœ… H1.3 - EntityManager implementado") que describe en breve lo completado
-- **"ğŸ“‹ Siguiente: \<nÃºmero\> \<tÃ­tulo\>"** (ej: "ğŸ“‹ H1.4 - Tests unitarios Entity System") que describe el siguiente punto propuesto
+### 1. **Dos títulos numerados** siguiendo el esquema del Sprint:
+- **"? Hecho: \<número\> \<título\>"** (ej: "? H1.3 - EntityManager implementado") que describe en breve lo completado
+- **"?? Siguiente: \<número\> \<título\>"** (ej: "?? H1.4 - Tests unitarios Entity System") que describe el siguiente punto propuesto
 
-### 2. **ğŸ¨ VisualizaciÃ³n** - Â¿QuÃ© cambia visualmente al ejecutar? (OBLIGATORIO)
+### 2. **?? Visualización** - ¿Qué cambia visualmente al ejecutar? (OBLIGATORIO)
 
-**âš ï¸ ESTA SECCIÃ“N ES OBLIGATORIA Y DEBE APARECER ANTES DE LA BARRA DE PROGRESO**
+**?? ESTA SECCIÓN ES OBLIGATORIA Y DEBE APARECER ANTES DE LA BARRA DE PROGRESO**
 
 **Formato estricto**:
 ```markdown
-### ğŸ¨ VisualizaciÃ³n:
+### ?? Visualización:
 
-**Â¿Algo nuevo que cambie la vista tras ejecuciÃ³n?**: **SÃ** âœ… / **NO** âŒ
+**¿Algo nuevo que cambie la vista tras ejecución?**: **SÍ** ? / **NO** ?
 
-[SI ES "SÃ âœ…"]
-**QuÃ© deberÃ­as ver al ejecutar** (F5 en Visual Studio):
-1. âœ… [Cambio visual especÃ­fico 1]
-2. âœ… [Cambio visual especÃ­fico 2]
-3. ğŸ†• [Nuevo componente UI visible]
+[SI ES "SÍ ?"]
+**Qué deberías ver al ejecutar** (F5 en Visual Studio):
+1. ? [Cambio visual específico 1]
+2. ? [Cambio visual específico 2]
+3. ?? [Nuevo componente UI visible]
 
-**QuÃ© ha cambiado** (si aplica):
-- ğŸ”„ [Componente modificado]
-- ğŸ”„ [Comportamiento actualizado]
+**Qué ha cambiado** (si aplica):
+- ?? [Componente modificado]
+- ?? [Comportamiento actualizado]
 
 **Ausente** (si aplica):
-- âŒ [Elemento que ya no se muestra]
-- âŒ [Feature deshabilitada temporalmente]
+- ? [Elemento que ya no se muestra]
+- ? [Feature deshabilitada temporalmente]
 
-[SI ES "NO âŒ"]
-**RazÃ³n**: [ExplicaciÃ³n breve de por quÃ© no hay cambios visuales]
+[SI ES "NO ?"]
+**Razón**: [Explicación breve de por qué no hay cambios visuales]
 Ejemplo: "Esta tarea implementa clases internas sin efecto en UI"
 ```
 
 **Especificaciones**:
-- **OBLIGATORIO**: La secciÃ³n debe aparecer en TODAS las iteraciones (incluso si la respuesta es "NO âŒ")
-- Indicar claramente con **SÃ** âœ… o **NO** âŒ si hay cambios visuales
-- Si es **SÃ** âœ…: Listar QUÃ‰ se deberÃ­a ver al ejecutar (F5 en Visual Studio, ejecutable, etc.)
-- Si es **NO** âŒ: Explicar brevemente POR QUÃ‰ (ej: "implementaciÃ³n interna", "tests unitarios", "refactorizaciÃ³n sin UI")
+- **OBLIGATORIO**: La sección debe aparecer en TODAS las iteraciones (incluso si la respuesta es "NO ?")
+- Indicar claramente con **SÍ** ? o **NO** ? si hay cambios visuales
+- Si es **SÍ** ?: Listar QUÉ se debería ver al ejecutar (F5 en Visual Studio, ejecutable, etc.)
+- Si es **NO** ?: Explicar brevemente POR QUÉ (ej: "implementación interna", "tests unitarios", "refactorización sin UI")
 - Incluir emojis para claridad:
-  - âœ… = Nuevo/Visible
-  - ğŸ”„ = Modificado/Actualizado
-  - âŒ = Ausente/Deshabilitado
-  - ğŸ†• = Nuevo componente aÃ±adido
-- **POSICIÃ“N**: Esta secciÃ³n DEBE aparecer DESPUÃ‰S de "Hecho/Siguiente" y ANTES de la barra de progreso
+  - ? = Nuevo/Visible
+  - ?? = Modificado/Actualizado
+  - ? = Ausente/Deshabilitado
+  - ?? = Nuevo componente añadido
+- **POSICIÓN**: Esta sección DEBE aparecer DESPUÉS de "Hecho/Siguiente" y ANTES de la barra de progreso
 
-**Ejemplos segÃºn tipo de tarea**:
+**Ejemplos según tipo de tarea**:
 
 **Ejemplo 1 - Tarea CON cambios visuales** (ej: H4.1 - Panel Hierarchy):
 ```markdown
-### ğŸ¨ VisualizaciÃ³n:
+### ?? Visualización:
 
-**Â¿Algo nuevo que cambie la vista tras ejecuciÃ³n?**: **SÃ** âœ…
+**¿Algo nuevo que cambie la vista tras ejecución?**: **SÍ** ?
 
-**QuÃ© deberÃ­as ver al ejecutar** (F5 en Visual Studio):
-1. âœ… Panel "Hierarchy" visible en la parte izquierda de la ventana
-2. âœ… Ãrbol expandible con objetos: Scene Root â†’ Camera, Lights, Geometry
-3. ğŸ†• Posibilidad de hacer dock/undock del panel arrastrÃ¡ndolo
+**Qué deberías ver al ejecutar** (F5 en Visual Studio):
+1. ? Panel "Hierarchy" visible en la parte izquierda de la ventana
+2. ? Árbol expandible con objetos: Scene Root ? Camera, Lights, Geometry
+3. ?? Posibilidad de hacer dock/undock del panel arrastrándolo
 
-**QuÃ© ha cambiado**:
-- ğŸ”„ El layout del editor ahora incluye un panel funcional (no solo ventana vacÃ­a)
+**Qué ha cambiado**:
+- ?? El layout del editor ahora incluye un panel funcional (no solo ventana vacía)
 
 **Ausente**:
-- âŒ Demo Window de ImGui ya no aparece (reemplazado por Hierarchy)
+- ? Demo Window de ImGui ya no aparece (reemplazado por Hierarchy)
 ```
 
 **Ejemplo 2 - Tarea SIN cambios visuales** (ej: H1.3 - EntityManager):
 ```markdown
-### ğŸ¨ VisualizaciÃ³n:
+### ?? Visualización:
 
-**Â¿Algo nuevo que cambie la vista tras ejecuciÃ³n?**: **NO** âŒ
+**¿Algo nuevo que cambie la vista tras ejecución?**: **NO** ?
 
-**RazÃ³n**: Esta tarea implementa clases internas (EntityManager, Entity) que no tienen representaciÃ³n visual directa. Los cambios visuales aparecerÃ¡n en H4 cuando el panel Hierarchy muestre entities reales en lugar de placeholder.
+**Razón**: Esta tarea implementa clases internas (EntityManager, Entity) que no tienen representación visual directa. Los cambios visuales aparecerán en H4 cuando el panel Hierarchy muestre entities reales en lugar de placeholder.
 ```
 
 ### 3. **Barra de progreso visual del sprint** mostrando el avance de tareas completadas:
 
-**Formato**: Barra horizontal con fondo negro (â¬›), progreso verde (ğŸŸ©), bordes blancos (â”‚), y porcentaje centrado
+**Formato**: Barra horizontal con fondo negro (?), progreso verde (??), bordes blancos (¦), y porcentaje centrado
 
 **Ejemplo** con 3 de 16 tareas (18.8%):
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚ğŸŸ©ğŸŸ©ğŸŸ©â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬›â¬› 18.8%â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
++--------------------------------------------------------------------+
+¦????????????????????????????????????????????????? 18.8%¦
++--------------------------------------------------------------------+
 ```
 
 **Especificaciones**:
 - La barra debe ocupar todo el ancho disponible del prompt (aprox. 70-80 caracteres)
-- El porcentaje se calcula como: `(tareas completadas / total tareas sprint) Ã— 100`
+- El porcentaje se calcula como: `(tareas completadas / total tareas sprint) × 100`
 - Usar emojis/caracteres Unicode:
-  - ğŸŸ© (verde) = tarea completada
-  - â¬› (negro) = tarea pendiente
+  - ?? (verde) = tarea completada
+  - ? (negro) = tarea pendiente
 - Incluir el porcentaje en formato `"XX.X%"` al final de la barra
 
-**Datos para el cÃ¡lculo**:
-El asistente rellenarÃ¡ los nÃºmeros y calcularÃ¡ el progreso guiÃ¡ndose por:
+**Datos para el cálculo**:
+El asistente rellenará los números y calculará el progreso guiándose por:
 - `docs/sprint.md`
 - `docs/sprint_tasks.md`
 - `docs/daily.md`
 
-Regla estricta sobre commits y documentaciÃ³n:
-- Requisito: Siempre que el asistente realice un commit local como resultado de una iteraciÃ³n (es decir, la compilaciÃ³n queda limpia), actualizarÃ¡ automÃ¡ticamente `docs/daily.md` y `docs/commits.md` para reflejar el cambio sin pedir confirmaciÃ³n adicional. El push al repositorio remoto no se realizarÃ¡ automÃ¡ticamente salvo instrucciÃ³n explÃ­cita del propietario.
+Regla estricta sobre commits y documentación:
+- Requisito: Siempre que el asistente realice un commit local como resultado de una iteración (es decir, la compilación queda limpia), actualizará automáticamente `docs/daily.md` y `docs/sprint_commits.md` para reflejar el cambio sin pedir confirmación adicional. El push al repositorio remoto no se realizará automáticamente salvo instrucción explícita del propietario.
 
 Versionado de los ficheros del Sprint (snapshots de sprint):
 - Los ficheros activos del sprint actual son:
   - `docs/sprint.md` (sprint de alto nivel con hitos y objetivos)
   - `docs/sprint_histories.md` (historias de usuario para el sprint)
-  - `docs/sprint_tasks.md` (tareas detalladas por historia; unidad mÃ­nima de trabajo e iteraciÃ³n)
-  - `docs/sprint_bugs.md` (tracking de bugs reportados y pendientes de resoluciÃ³n)
+  - `docs/sprint_tasks.md` (tareas detalladas por historia; unidad mínima de trabajo e iteración)
+  - `docs/sprint_bugs.md` (tracking de bugs reportados y pendientes de resolución)
   - `docs/sprint_fix.md` (historial de bugs resueltos durante el sprint)
-  - `docs/sprint_bug_attempts.md` (registro detallado de intentos de soluciÃ³n a bugs)
-  - `docs/sprint_deviations.md` (ajustes arquitectÃ³nicos y desviaciones crÃ­ticas)
+  - `docs/sprint_bug_attempts.md` (registro detallado de intentos de solución a bugs)
+  - `docs/sprint_deviations.md` (ajustes arquitectónicos y desviaciones críticas)
   - `docs/sprint_ia_sessions.md` (registro de sesiones con asistentes IA)
 
-- Al final de un sprint (release), el asistente archivarÃ¡ los ficheros de trabajo renombrÃ¡ndolos con la versiÃ³n, por ejemplo:
+- Al final de un sprint (release), el asistente archivará los ficheros de trabajo renombrándolos con la versión, por ejemplo:
   - `docs/sprint_v<version>.md`
   - `docs/sprint_histories_v<version>.md`
   - `docs/sprint_tasks_v<version>.md`
   - `docs/sprint_bugs_v<version>.md` (bugs que quedaron pendientes al cerrar sprint)
   - `docs/sprint_fix_v<version>.md` (bugs resueltos durante el sprint)
-  - `docs/sprint_bug_attempts_v<version>.md` (intentos de soluciÃ³n a bugs)
+  - `docs/sprint_bug_attempts_v<version>.md` (intentos de solución a bugs)
   - `docs/sprint_deviations_v<version>.md` (ajustes y desviaciones registradas)
   - `docs/sprint_ia_sessions_v<version>.md` (sesiones con IA registradas)
 
-- A continuaciÃ³n el asistente crearÃ¡ ficheros nuevos y vacÃ­os con los nombres activos para el siguiente sprint.
-- Esta polÃ­tica de versionado garantiza trazabilidad de los sprints completados y mantiene los ficheros activos pequeÃ±os y enfocados.
+- A continuación el asistente creará ficheros nuevos y vacíos con los nombres activos para el siguiente sprint.
+- Esta política de versionado garantiza trazabilidad de los sprints completados y mantiene los ficheros activos pequeños y enfocados.
 
 Fichero Backlog (`docs/backlog.md`)
 -----------------------------------
-- PropÃ³sito: `docs/backlog.md` es el repositorio a largo plazo para los Ã­tems que NO forman parte del sprint activo. Ãšsalo como "baÃºl" persistente para ideas, historias diferidas, tareas de baja prioridad y deuda tÃ©cnica que deben conservarse para priorizar en el futuro.
+- Propósito: `docs/backlog.md` es el repositorio a largo plazo para los ítems que NO forman parte del sprint activo. Úsalo como "baúl" persistente para ideas, historias diferidas, tareas de baja prioridad y deuda técnica que deben conservarse para priorizar en el futuro.
 - Flujo y uso:
-  - Cuando se identifique una historia o tarea pero no se seleccione para el sprint actual, aÃ±ade una entrada breve en `docs/backlog.md` con una descripciÃ³n corta, etiqueta de prioridad (Baja/Media/Alta) y, opcionalmente, referencia al ID de historia/tarea en `docs/sprint_histories.md` o `docs/sprint_tasks.md`.
-  - El backlog es la fuente para la planificaciÃ³n del sprint: durante la planificaciÃ³n los Ã­tems pueden moverse de `docs/backlog.md` a `docs/sprint_histories.md` (como historia) y descomponerse en tareas en `docs/sprint_tasks.md` para el sprint activo.
-  - Las entradas en `docs/backlog.md` deben ser concisas y enlazables (incluir una ruta o ancla al cÃ³digo relacionado si procede).
-  - El asistente no implementarÃ¡ Ã­tems directamente desde el backlog a menos que se muevan a los ficheros activos del sprint.
+  - Cuando se identifique una historia o tarea pero no se seleccione para el sprint actual, añade una entrada breve en `docs/backlog.md` con una descripción corta, etiqueta de prioridad (Baja/Media/Alta) y, opcionalmente, referencia al ID de historia/tarea en `docs/sprint_histories.md` o `docs/sprint_tasks.md`.
+  - El backlog es la fuente para la planificación del sprint: durante la planificación los ítems pueden moverse de `docs/backlog.md` a `docs/sprint_histories.md` (como historia) y descomponerse en tareas en `docs/sprint_tasks.md` para el sprint activo.
+  - Las entradas en `docs/backlog.md` deben ser concisas y enlazables (incluir una ruta o ancla al código relacionado si procede).
+  - El asistente no implementará ítems directamente desde el backlog a menos que se muevan a los ficheros activos del sprint.
 
 Fichero Sprint Bugs (`docs/sprint_bugs.md`)
 ----------------------------------------------
-- PropÃ³sito: `docs/sprint_bugs.md` es el **contenedor inicial** de bugs reportados durante el sprint activo. Permite mantener trazabilidad de defectos encontrados y su estado actual.
+- Propósito: `docs/sprint_bugs.md` es el **contenedor inicial** de bugs reportados durante el sprint activo. Permite mantener trazabilidad de defectos encontrados y su estado actual.
 - Contenido: Cada entrada de bug debe incluir:
-  - **ID**: Identificador Ãºnico del bug con prefijo BUG- (ej: BUG-001, BUG-002)
-  - **TÃ­tulo**: DescripciÃ³n breve del error
-  - **DescripciÃ³n**: Detalle del error, pasos para reproducir, comportamiento esperado vs observado
-  - **Prioridad**: CrÃ­tica/Alta/Media/Baja
-  - **Estado**: Reportado/En progreso/Pendiente validaciÃ³n usuario
-  - **Fecha de entrada**: Fecha en que se reportÃ³ el bug
+  - **ID**: Identificador único del bug con prefijo BUG- (ej: BUG-001, BUG-002)
+  - **Título**: Descripción breve del error
+  - **Descripción**: Detalle del error, pasos para reproducir, comportamiento esperado vs observado
+  - **Prioridad**: Crítica/Alta/Media/Baja
+  - **Estado**: Reportado/En progreso/Pendiente validación usuario
+  - **Fecha de entrada**: Fecha en que se reportó el bug
   - **Archivos afectados**: Lista de archivos relacionados con el bug
 - Formato ejemplo:
   ```markdown
   ### BUG-001 - Crash al renderizar quad sin shader
   **ID**: BUG-001
-  **Prioridad**: CrÃ­tica
+  **Prioridad**: Crítica
   **Estado**: Reportado
   **Fecha de entrada**: 2025-01-15
   
-  **DescripciÃ³n**: La aplicaciÃ³n crashea al intentar renderizar el quad si no se compila correctamente el shader HLSL.
+  **Descripción**: La aplicación crashea al intentar renderizar el quad si no se compila correctamente el shader HLSL.
   
   **Archivos afectados**: `src/renderer/DX12Renderer.cpp`, `shaders/quad.hlsl`
   ```
-- **Flujo de trabajo con doble validaciÃ³n Agente-Usuario**:
-  1. **Reporte**: Cuando el usuario reporte un bug, el asistente aÃ±adirÃ¡ entrada en `docs/sprint_bugs.md` con ID **BUG-XXX** y estado "Reportado"
+- **Flujo de trabajo con doble validación Agente-Usuario**:
+  1. **Reporte**: Cuando el usuario reporte un bug, el asistente añadirá entrada en `docs/sprint_bugs.md` con ID **BUG-XXX** y estado "Reportado"
   2. **En progreso**: Al comenzar a trabajar en el bug, actualizar estado a "En progreso"
-  3. **ImplementaciÃ³n**: El asistente implementa el fix, compila (CMake + MSBuild limpias) y crea commit
-  4. **Pendiente validaciÃ³n**: Actualizar estado a "Pendiente validaciÃ³n usuario" y **PAUSAR**
-  5. **ValidaciÃ³n usuario**: El usuario ejecuta la aplicaciÃ³n y verifica que el bug estÃ¡ realmente resuelto
-  6. **ConfirmaciÃ³n**: Si el usuario confirma que el fix funciona â†’ mover a `docs/sprint_fix.md`
-  7. **Rechazado**: Si el usuario reporta que el bug persiste â†’ volver a estado "En progreso" y continuar debugging
-- **CRÃTICO**: El asistente **NO debe mover automÃ¡ticamente** bugs de `sprint_bugs.md` a `sprint_fix.md` solo porque la compilaciÃ³n sea limpia. La validaciÃ³n del usuario es **OBLIGATORIA** para confirmar que el fix es efectivo en ejecuciÃ³n real.
-- **Excepciones**: Solo se permite mover automÃ¡ticamente si:
-  - El fix es trivial (typo, warning cosmÃ©tico)
-  - La prueba es determinista y verificable solo con compilaciÃ³n (ej: error de sintaxis)
-  - El usuario da confirmaciÃ³n explÃ­cita sin necesidad de prueba
-- RazÃ³n: **La doble compilaciÃ³n limpia NO garantiza que el bug estÃ© resuelto en runtime**. Muchos bugs solo se manifiestan durante la ejecuciÃ³n (race conditions, comportamiento de UI, crashes bajo condiciones especÃ­ficas, etc.).
+  3. **Implementación**: El asistente implementa el fix, compila (CMake + MSBuild limpias) y crea commit
+  4. **Pendiente validación**: Actualizar estado a "Pendiente validación usuario" y **PAUSAR**
+  5. **Validación usuario**: El usuario ejecuta la aplicación y verifica que el bug está realmente resuelto
+  6. **Confirmación**: Si el usuario confirma que el fix funciona ? mover a `docs/sprint_fix.md`
+  7. **Rechazado**: Si el usuario reporta que el bug persiste ? volver a estado "En progreso" y continuar debugging
+- **CRÍTICO**: El asistente **NO debe mover automáticamente** bugs de `sprint_bugs.md` a `sprint_fix.md` solo porque la compilación sea limpia. La validación del usuario es **OBLIGATORIA** para confirmar que el fix es efectivo en ejecución real.
+- **Excepciones**: Solo se permite mover automáticamente si:
+  - El fix es trivial (typo, warning cosmético)
+  - La prueba es determinista y verificable solo con compilación (ej: error de sintaxis)
+  - El usuario da confirmación explícita sin necesidad de prueba
+- Razón: **La doble compilación limpia NO garantiza que el bug esté resuelto en runtime**. Muchos bugs solo se manifiestan durante la ejecución (race conditions, comportamiento de UI, crashes bajo condiciones específicas, etc.).
 - Los bugs pendientes se archivan como `docs/sprint_bugs_v<version>.md` al finalizar el sprint
 
 Fichero Sprint Bug Attempts (`docs/sprint_bug_attempts.md`)
 -------------------------------------------------------------
-- **PropÃ³sito**: `docs/sprint_bug_attempts.md` es el registro detallado de TODOS los intentos de soluciÃ³n para cada bug reportado durante el sprint activo. Permite realizar un seguimiento exhaustivo de las acciones realizadas, incluyendo enfoques fallidos, parciales y exitosos.
-- **Contenido**: Cada intento de soluciÃ³n debe incluir:
+- **Propósito**: `docs/sprint_bug_attempts.md` es el registro detallado de TODOS los intentos de solución para cada bug reportado durante el sprint activo. Permite realizar un seguimiento exhaustivo de las acciones realizadas, incluyendo enfoques fallidos, parciales y exitosos.
+- **Contenido**: Cada intento de solución debe incluir:
   - **ID de Bug**: Identificador del bug asociado (ej: BUG-001)
-  - **Intento #**: NÃºmero secuencial del intento de soluciÃ³n
-  - **DescripciÃ³n del intento**: Breve descripciÃ³n de lo que se intentÃ³
-  - **Resultado**: Ã‰xito/Parcial/Fallido
-  - **Detalles del resultado**: ExplicaciÃ³n breve del resultado; incluir mensajes de error si los hubiese
+  - **Intento #**: Número secuencial del intento de solución
+  - **Descripción del intento**: Breve descripción de lo que se intentó
+  - **Resultado**: Éxito/Parcial/Fallido
+  - **Detalles del resultado**: Explicación breve del resultado; incluir mensajes de error si los hubiese
   - **Fecha y hora**: Timestamp del intento
   - **Archivos modificados**: Lista de archivos que fueron cambiados en el intento
 - **Formato ejemplo**:
   ```markdown
   ### BUG-001 - Crash al renderizar quad sin shader
   **Intento #1**
-  - **DescripciÃ³n**: Ajustar configuraciÃ³n de shaders
+  - **Descripción**: Ajustar configuración de shaders
   - **Resultado**: Fallido
-  - **Detalles**: El cambio en la configuraciÃ³n del shader no tuvo efecto. El error persiste.
+  - **Detalles**: El cambio en la configuración del shader no tuvo efecto. El error persiste.
   - **Fecha y hora**: 2025-01-15 10:00
   - **Archivos modificados**: `shaders/quad.hlsl`
   
   **Intento #2**
-  - **DescripciÃ³n**: AÃ±adir comprobaciÃ³n de null en el builder
+  - **Descripción**: Añadir comprobación de null en el builder
   - **Resultado**: Parcial
-  - **Detalles**: Se evita el crash, pero el quad sigue sin renderizarse correctamente. Se muestra artefacto grÃ¡fico.
+  - **Detalles**: Se evita el crash, pero el quad sigue sin renderizarse correctamente. Se muestra artefacto gráfico.
   - **Fecha y hora**: 2025-01-15 10:15
   - **Archivos modificados**: `src/renderer/DX12Renderer.cpp`
   
   **Intento #3**
-  - **DescripciÃ³n**: Reinicializar el contexto de ImGui en cada render
-  - **Resultado**: Ã‰xito
-  - **Detalles**: El problema se resolviÃ³ al asegurar que el contexto de ImGui se reinicializara correctamente. Se puede renderizar el quad sin crashes.
+  - **Descripción**: Reinicializar el contexto de ImGui en cada render
+  - **Resultado**: Éxito
+  - **Detalles**: El problema se resolvió al asegurar que el contexto de ImGui se reinicializara correctamente. Se puede renderizar el quad sin crashes.
   - **Fecha y hora**: 2025-01-15 10:30
   - **Archivos modificados**: `src/renderer/DX12Renderer.cpp`, `shaders/quad.hlsl`
   ```
 
-**Flujo completo de resoluciÃ³n de bugs (OBLIGATORIO)**:
-Cuando el asistente trabaje en la resoluciÃ³n de un bug, DEBE seguir este proceso:
+**Flujo completo de resolución de bugs (OBLIGATORIO)**:
+Cuando el asistente trabaje en la resolución de un bug, DEBE seguir este proceso:
 
-1. **Contexto inicial**: Antes de comenzar cualquier intento de soluciÃ³n, el asistente DEBE:
+1. **Contexto inicial**: Antes de comenzar cualquier intento de solución, el asistente DEBE:
    - Leer `docs/sprint_bugs.md` para conocer el bug actual
    - Leer `docs/sprint_bug_attempts.md` para revisar intentos previos (si existen)
    - Leer `.github/copilot-instructions.md` para seguir las reglas del proyecto
    - Leer `docs/sprint.md` y `docs/daily.md` para entender el contexto del sprint
 
-2. **Registro de intento**: ANTES de modificar cÃ³digo, el asistente DEBE:
-   - AÃ±adir una nueva entrada en `docs/sprint_bug_attempts.md` con:
+2. **Registro de intento**: ANTES de modificar código, el asistente DEBE:
+   - Añadir una nueva entrada en `docs/sprint_bug_attempts.md` con:
      - Intento # (secuencial)
-     - DescripciÃ³n clara del enfoque que se va a probar
+     - Descripción clara del enfoque que se va a probar
      - Fecha y hora actual
-   - Esta entrada debe crearse ANTES de tocar cÃ³digo
+   - Esta entrada debe crearse ANTES de tocar código
 
-3. **ImplementaciÃ³n**: El asistente implementa el cambio propuesto
+3. **Implementación**: El asistente implementa el cambio propuesto
 
-4. **CompilaciÃ³n**: El asistente ejecuta las DOS compilaciones obligatorias:
+4. **Compilación**: El asistente ejecuta las DOS compilaciones obligatorias:
    - CMake Build (Debug)
    - MSBuild "Imagine Studio.sln" (Debug)
 
-5. **Registro de resultado**: DESPUÃ‰S de compilar, el asistente DEBE:
+5. **Registro de resultado**: DESPUÉS de compilar, el asistente DEBE:
    - Actualizar la entrada en `docs/sprint_bug_attempts.md` con:
-     - Resultado (Ã‰xito/Parcial/Fallido)
-     - Detalles del resultado (errores de compilaciÃ³n, comportamiento observado, etc.)
+     - Resultado (Éxito/Parcial/Fallido)
+     - Detalles del resultado (errores de compilación, comportamiento observado, etc.)
      - Archivos modificados en este intento
 
-6. **ValidaciÃ³n usuario**: Si compilaciÃ³n es limpia:
-   - Actualizar estado en `docs/sprint_bugs.md` a "Pendiente validaciÃ³n usuario"
-   - **PAUSAR** y esperar confirmaciÃ³n del usuario
-   - El asistente NO debe marcar el bug como resuelto automÃ¡ticamente
+6. **Validación usuario**: Si compilación es limpia:
+   - Actualizar estado en `docs/sprint_bugs.md` a "Pendiente validación usuario"
+   - **PAUSAR** y esperar confirmación del usuario
+   - El asistente NO debe marcar el bug como resuelto automáticamente
 
-7. **IteraciÃ³n**: Si el intento falla o es parcial:
+7. **Iteración**: Si el intento falla o es parcial:
    - Volver al paso 2 con un nuevo intento
    - **IMPORTANTE**: NO repetir intentos ya probados (consultar `sprint_bug_attempts.md`)
 
-8. **ResoluciÃ³n confirmada**: Solo cuando el usuario confirme que el fix funciona:
+8. **Resolución confirmada**: Solo cuando el usuario confirme que el fix funciona:
    - Mover bug de `docs/sprint_bugs.md` a `docs/sprint_fix.md`
    - Copiar el resumen de intentos exitosos en `docs/sprint_fix.md`
    - Archivar `docs/sprint_bug_attempts.md` para ese bug (mantener historial)
 
-**REGLA CRÃTICA**: El asistente NO debe:
-- Modificar cÃ³digo sin antes registrar el intento en `sprint_bug_attempts.md`
-- Marcar un bug como resuelto solo porque la compilaciÃ³n sea limpia
-- Repetir intentos de soluciÃ³n ya probados y registrados en `sprint_bug_attempts.md`
-- Olvidar actualizar el resultado del intento despuÃ©s de compilar
+**REGLA CRÍTICA**: El asistente NO debe:
+- Modificar código sin antes registrar el intento en `sprint_bug_attempts.md`
+- Marcar un bug como resuelto solo porque la compilación sea limpia
+- Repetir intentos de solución ya probados y registrados en `sprint_bug_attempts.md`
+- Olvidar actualizar el resultado del intento después de compilar
 
 **Beneficios de este flujo**:
 - Evita repetir soluciones fallidas
-- Proporciona contexto histÃ³rico invaluable para futuros bugs similares
-- Facilita la colaboraciÃ³n (otro desarrollador puede ver quÃ© se ha intentado)
-- Permite anÃ¡lisis post-mortem de bugs complejos
+- Proporciona contexto histórico invaluable para futuros bugs similares
+- Facilita la colaboración (otro desarrollador puede ver qué se ha intentado)
+- Permite análisis post-mortem de bugs complejos
 - Detecta patrones en errores recurrentes
 
 ---
 
-**IMPORTANTE**: Siempre revisar `docs/sprint_bugs.md`, `docs/sprint_bug_attempts.md` y el cÃ³digo relacionado **ANTES** de comenzar a implementar cualquier soluciÃ³n para un bug. Esto asegura que se comprende completamente el problema y se evita repetir intentos fallidos.
+**IMPORTANTE**: Siempre revisar `docs/sprint_bugs.md`, `docs/sprint_bug_attempts.md` y el código relacionado **ANTES** de comenzar a implementar cualquier solución para un bug. Esto asegura que se comprende completamente el problema y se evita repetir intentos fallidos.
 
 **Ejemplo de flujo de trabajo con un bug**:
-1. Se reporta un bug y se aÃ±ade a `sprint_bugs.md` como BUG-003.
+1. Se reporta un bug y se añade a `sprint_bugs.md` como BUG-003.
 2. El asistente revisa `sprint_bugs.md` y ve que es un problema de renderizado en el `DX12Renderer`.
 3. Se consulta el historial de intentos en `sprint_bug_attempts.md` y se ve que ya hubo 2 intentos fallidos relacionados.
 4. Se registra un nuevo intento:
@@ -424,9 +424,9 @@ Cuando el asistente trabaje en la resoluciÃ³n de un bug, DEBE seguir este proces
    ```markdown
    ### BUG-003 - Error de renderizado en DX12Renderer
    **Intento #3**
-   - **DescripciÃ³n**: Reinstalar contexto de ImGui y verificar dependencias de DX12Renderer
+   - **Descripción**: Reinstalar contexto de ImGui y verificar dependencias de DX12Renderer
    - **Resultado**: En Progreso
-   - **Detalles**: Se estÃ¡ implementando una soluciÃ³n mÃ¡s robusta para la inicializaciÃ³n de ImGui y DX12.
+   - **Detalles**: Se está implementando una solución más robusta para la inicialización de ImGui y DX12.
    - **Fecha y hora**: 2025-01-15 11:00
    ```
 6. Se espera a que el asistente complete el intento y valide con el usuario.
@@ -435,148 +435,148 @@ Cuando el asistente trabaje en la resoluciÃ³n de un bug, DEBE seguir este proces
 
 ---
 
-## GestiÃ³n de Sesiones IA (`sprint_ia_sessions.md`)
+## Gestión de Sesiones IA (`sprint_ia_sessions.md`)
 
-### PropÃ³sito:
-`docs/sprint_ia_sessions.md` registra todas las sesiones de trabajo con asistentes IA (GitHub Copilot, ChatGPT, Claude) que superan el **85% de consumo de la ventana de contexto de la sesiÃ³n actual**.
+### Propósito:
+`docs/sprint_ia_sessions.md` registra todas las sesiones de trabajo con asistentes IA (GitHub Copilot, ChatGPT, Claude) que superan el **85% de consumo de la ventana de contexto de la sesión actual**.
 
-**âš ï¸ ACLARACIÃ“N IMPORTANTE**: El umbral del 85% se refiere a la **ventana de contexto activa de la sesiÃ³n de chat actual** (tÃ­picamente ~128k-200k tokens), **NO** al lÃ­mite total del modelo LLM (1M tokens).
+**?? ACLARACIÓN IMPORTANTE**: El umbral del 85% se refiere a la **ventana de contexto activa de la sesión de chat actual** (típicamente ~128k-200k tokens), **NO** al límite total del modelo LLM (1M tokens).
 
-**Â¿Por quÃ© este umbral?**
-- âš ï¸ **Evitar pÃ©rdida de contexto**: Al alcanzar el 85% de la ventana de contexto, el LLM empieza a "olvidar" mensajes antiguos
-- âš ï¸ **Prevenir estado 'busy'**: La sesiÃ³n se vuelve lenta y menos efectiva
-- âš ï¸ **Garantizar coherencia**: Evita contradicciones con decisiones tomadas al inicio de la sesiÃ³n
-- âœ… **Trazabilidad completa** de prompts usados en el desarrollo
-- âœ… **AuditorÃ­a de sesiones** para anÃ¡lisis posterior
+**¿Por qué este umbral?**
+- ?? **Evitar pérdida de contexto**: Al alcanzar el 85% de la ventana de contexto, el LLM empieza a "olvidar" mensajes antiguos
+- ?? **Prevenir estado 'busy'**: La sesión se vuelve lenta y menos efectiva
+- ?? **Garantizar coherencia**: Evita contradicciones con decisiones tomadas al inicio de la sesión
+- ? **Trazabilidad completa** de prompts usados en el desarrollo
+- ? **Auditoría de sesiones** para análisis posterior
 
 **Beneficios de cerrar al 85%**:
-- ğŸ”„ Abrir nuevo chat con contexto fresco (100% de ventana disponible)
-- ğŸ“‹ Leer recomendaciones de la sesiÃ³n anterior
-- ğŸ¯ Continuar con claridad desde donde se dejÃ³
-- âœ… Evitar errores por contexto truncado
+- ?? Abrir nuevo chat con contexto fresco (100% de ventana disponible)
+- ?? Leer recomendaciones de la sesión anterior
+- ?? Continuar con claridad desde donde se dejó
+- ? Evitar errores por contexto truncado
 
 ### Formato de Registro:
 
 ```markdown
-## SesiÃ³n IA #001 - Sprint vX.Y.Z
+## Sesión IA #001 - Sprint vX.Y.Z
 
-**LLM**: [PLACEHOLDER: Nombre del LLM] ([PLACEHOLDER: VersiÃ³n])
+**LLM**: [PLACEHOLDER: Nombre del LLM] ([PLACEHOLDER: Versión])
 **Fecha/Hora**: [YYYY-MM-DD HH:MM:SS UTC]
 **Usuario (Orquestador)**: [PLACEHOLDER: username]
-**Ventana de Contexto**: [actual] / [lÃ­mite_ventana] ([porcentaje]%)
-**Estado**: âš ï¸ LÃMITE 85% ALCANZADO - SesiÃ³n cerrada
+**Ventana de Contexto**: [actual] / [límite_ventana] ([porcentaje]%)
+**Estado**: ?? LÍMITE 85% ALCANZADO - Sesión cerrada
 
-### Resumen de la SesiÃ³n:
+### Resumen de la Sesión:
 
-Esta sesiÃ³n ha sido muy productiva:
+Esta sesión ha sido muy productiva:
 
-1. âœ… **[PLACEHOLDER: Logro principal 1]**
+1. ? **[PLACEHOLDER: Logro principal 1]**
    - [Sub-logro 1]
    - [Sub-logro 2]
 
-2. âœ… **[PLACEHOLDER: Logro principal 2]**
+2. ? **[PLACEHOLDER: Logro principal 2]**
    - [Sub-logro 1]
    - [Sub-logro 2]
 
-3. âœ… **ValidaciÃ³n completa**
-   - CompilaciÃ³n limpia (CMake + MSBuild)
-   - ValidaciÃ³n usuario: [resultado]
+3. ? **Validación completa**
+   - Compilación limpia (CMake + MSBuild)
+   - Validación usuario: [resultado]
 
 ### Prompt Ejecutado:
 
 ```
-[PLACEHOLDER: Prompt completo usado en la sesiÃ³n]
+[PLACEHOLDER: Prompt completo usado en la sesión]
 Ejemplo:
 "Implementa el sistema X siguiendo TEMPLATE.md.
 Debe incluir docs/Y con formato AAA..."
 ```
 
-### Contexto de la SesiÃ³n:
+### Contexto de la Sesión:
 
 - **Sprint activo**: vX.Y.Z ([PLACEHOLDER: nombre sprint])
-- **Tareas completadas en sesiÃ³n**:
+- **Tareas completadas en sesión**:
   - [PLACEHOLDER: Lista de tareas]
   
 - **Tareas pendientes al cierre**:
   - [PLACEHOLDER: Lista de tareas]
 
-### PrÃ³xima SesiÃ³n (Recomendaciones):
+### Próxima Sesión (Recomendaciones):
 
-- Continuar desde: [PLACEHOLDER: referencia a daily.md o tarea especÃ­fica]
+- Continuar desde: [PLACEHOLDER: referencia a daily.md o tarea específica]
 - Leer: [PLACEHOLDER: archivos de contexto necesarios]
 - Validar: [PLACEHOLDER: aspectos a verificar]
 ```
 
-### Flujo de Trabajo AutomÃ¡tico:
+### Flujo de Trabajo Automático:
 
-**El asistente DEBE seguir este proceso al alcanzar 85% de la ventana de contexto de la sesiÃ³n actual**:
+**El asistente DEBE seguir este proceso al alcanzar 85% de la ventana de contexto de la sesión actual**:
 
-1. **Detectar umbral**: Cuando consumo de **ventana de contexto de la sesiÃ³n** > 85%
-   - **NOTA**: NO se refiere al lÃ­mite total del LLM (1M tokens)
-   - Se refiere a la ventana activa del chat actual (~128k-200k tokens tÃ­picamente)
+1. **Detectar umbral**: Cuando consumo de **ventana de contexto de la sesión** > 85%
+   - **NOTA**: NO se refiere al límite total del LLM (1M tokens)
+   - Se refiere a la ventana activa del chat actual (~128k-200k tokens típicamente)
 
 2. **Completar tarea actual**: 
-   - Terminar implementaciÃ³n en progreso
+   - Terminar implementación en progreso
    - Compilar (CMake + MSBuild)
    - Crear commit si build limpio
    - Actualizar `docs/daily.md`
 
-3. **Registrar sesiÃ³n en `sprint_ia_sessions.md`**:
-   - Generar ID secuencial (SesiÃ³n #XXX)
+3. **Registrar sesión en `sprint_ia_sessions.md`**:
+   - Generar ID secuencial (Sesión #XXX)
    - Incluir prompt completo
-   - Nombre y versiÃ³n del LLM
+   - Nombre y versión del LLM
    - Timestamp + usuario orquestador
-   - Consumo de ventana de contexto (actual/lÃ­mite/porcentaje)
-   - Contexto de sesiÃ³n (sprint, tareas completadas, pendientes)
-   - Recomendaciones para prÃ³xima sesiÃ³n
+   - Consumo de ventana de contexto (actual/límite/porcentaje)
+   - Contexto de sesión (sprint, tareas completadas, pendientes)
+   - Recomendaciones para próxima sesión
 
 4. **Notificar al usuario**:
    ```
-   âš ï¸ LÃMITE DE VENTANA DE CONTEXTO ALCANZADO (>85%)
+   ?? LÍMITE DE VENTANA DE CONTEXTO ALCANZADO (>85%)
    
-   âœ… Tarea actual completada: [nombre tarea]
-   âœ… Commit creado: [hash]
-   âœ… SesiÃ³n registrada en docs/sprint_ia_sessions.md
+   ? Tarea actual completada: [nombre tarea]
+   ? Commit creado: [hash]
+   ? Sesión registrada en docs/sprint_ia_sessions.md
    
-   ğŸ“Š Ventana de contexto: XXX,XXX / YYY,YYY tokens (ZZ.Z%)
+   ?? Ventana de contexto: XXX,XXX / YYY,YYY tokens (ZZ.Z%)
    
-   ğŸ”„ RECOMENDACIÃ“N: Cerrar esta sesiÃ³n y abrir nuevo prompt
+   ?? RECOMENDACIÓN: Cerrar esta sesión y abrir nuevo prompt
    
-   **RazÃ³n**: Al superar el 85% de la ventana de contexto, el LLM
-   empieza a perder informaciÃ³n de mensajes antiguos, lo que puede
+   **Razón**: Al superar el 85% de la ventana de contexto, el LLM
+   empieza a perder información de mensajes antiguos, lo que puede
    causar inconsistencias o contradicciones.
    
-   PrÃ³xima tarea sugerida: [leer docs/daily.md]
+   Próxima tarea sugerida: [leer docs/daily.md]
    ```
 
-5. **PAUSAR** y esperar que el usuario cierre la sesiÃ³n
+5. **PAUSAR** y esperar que el usuario cierre la sesión
 
 ### Plantilla para Nuevas Sesiones:
 
 ```markdown
-## SesiÃ³n IA #XXX - Sprint vX.Y.Z
+## Sesión IA #XXX - Sprint vX.Y.Z
 
-**LLM**: [Nombre del LLM] ([VersiÃ³n])
+**LLM**: [Nombre del LLM] ([Versión])
 **Fecha/Hora**: [YYYY-MM-DD HH:MM:SS UTC]
 **Usuario (Orquestador)**: [username]
-**Ventana de Contexto**: [actual] / [lÃ­mite_ventana] ([porcentaje]%)
-**Estado**: âš ï¸ LÃMITE 85% ALCANZADO - SesiÃ³n cerrada
+**Ventana de Contexto**: [actual] / [límite_ventana] ([porcentaje]%)
+**Estado**: ?? LÍMITE 85% ALCANZADO - Sesión cerrada
 
-### Resumen de la SesiÃ³n:
+### Resumen de la Sesión:
 
-Esta sesiÃ³n ha sido muy productiva:
+Esta sesión ha sido muy productiva:
 
-1. âœ… **[Logro principal 1]**
+1. ? **[Logro principal 1]**
    - [Sub-logro 1]
    - [Sub-logro 2]
 
-2. âœ… **[Logro principal 2]**
+2. ? **[Logro principal 2]**
    - [Sub-logro 1]
    - [Sub-logro 2]
 
-3. âœ… **ValidaciÃ³n completa**
-   - CompilaciÃ³n limpia (CMake + MSBuild)
-   - ValidaciÃ³n usuario: [resultado]
+3. ? **Validación completa**
+   - Compilación limpia (CMake + MSBuild)
+   - Validación usuario: [resultado]
 
 ### Prompt Ejecutado:
 
@@ -584,18 +584,18 @@ Esta sesiÃ³n ha sido muy productiva:
 [Prompt completo]
 ```
 
-### Contexto de la SesiÃ³n:
+### Contexto de la Sesión:
 
 - **Sprint activo**: vX.Y.Z ([nombre sprint])
-- **Tareas completadas en sesiÃ³n**:
+- **Tareas completadas en sesión**:
   - [Lista de tareas]
   
 - **Tareas pendientes al cierre**:
   - [Lista de tareas]
 
-### PrÃ³xima SesiÃ³n (Recomendaciones):
+### Próxima Sesión (Recomendaciones):
 
-- Continuar desde: [referencia a daily.md o tarea especÃ­fica]
+- Continuar desde: [referencia a daily.md o tarea específica]
 - Leer: [archivos de contexto necesarios]
 - Validar: [aspectos a verificar]
 ```
@@ -603,119 +603,119 @@ Esta sesiÃ³n ha sido muy productiva:
 ### Versionado:
 
 - `sprint_ia_sessions.md` se archiva como `docs/sprints/sprint_ia_sessions_vX.Y.Z.md` al finalizar sprint
-- **Nuevo**: Los histÃ³ricos de sprint se mueven a `docs/sprints/` para mejor organizaciÃ³n
+- **Nuevo**: Los históricos de sprint se mueven a `docs/sprints/` para mejor organización
 
 ---
 
-## GestiÃ³n de Desviaciones del Sprint (`sprint_deviations.md`)
+## Gestión de Desviaciones del Sprint (`sprint_deviations.md`)
 
-### Â¿CuÃ¡ndo usar `sprint_deviations.md`?
+### ¿Cuándo usar `sprint_deviations.md`?
 
-Usa este archivo cuando durante la **ejecuciÃ³n** del sprint surja:
+Usa este archivo cuando durante la **ejecución** del sprint surja:
 
-1. **Ajuste ArquitectÃ³nico**: Cambio en diseÃ±o que afecta tareas futuras del sprint
-2. **Tarea Emergente Bloqueante**: Descubierta durante implementaciÃ³n, bloquea progreso
-3. **Deuda TÃ©cnica CrÃ­tica**: No puede diferirse al siguiente sprint
-4. **RefactorizaciÃ³n AAA**: CÃ³digo no cumple estÃ¡ndares (`docs/AAA_STANDARDS.md` o `docs/MAIN.md`)
+1. **Ajuste Arquitectónico**: Cambio en diseño que afecta tareas futuras del sprint
+2. **Tarea Emergente Bloqueante**: Descubierta durante implementación, bloquea progreso
+3. **Deuda Técnica Crítica**: No puede diferirse al siguiente sprint
+4. **Refactorización AAA**: Código no cumple estándares (`docs/AAA_STANDARDS.md` o `docs/MAIN.md`)
 
 ### Criterios para NO usar backlog:
 
-- âœ… **Bloqueante**: Impide completar tareas del sprint actual
-- âœ… **CrÃ­tico para pilares**: Viola `docs/MAIN.md` o `docs/AAA_STANDARDS.md`
-- âœ… **Impacto inmediato**: Afecta a tareas en progreso o prÃ³ximas inmediatas
+- ? **Bloqueante**: Impide completar tareas del sprint actual
+- ? **Crítico para pilares**: Viola `docs/MAIN.md` o `docs/AAA_STANDARDS.md`
+- ? **Impacto inmediato**: Afecta a tareas en progreso o próximas inmediatas
 
 ### Diferencia con otros archivos:
 
-| Archivo | PropÃ³sito | CuÃ¡ndo usar |
+| Archivo | Propósito | Cuándo usar |
 |---------|-----------|-------------|
 | `sprint_tasks.md` | Tareas **planificadas** del sprint | Al inicio del sprint |
-| `sprint_deviations.md` | Tareas **emergentes/ajustes** durante sprint | Durante ejecuciÃ³n |
-| `backlog.md` | Ãtems **fuera** del sprint actual | PlanificaciÃ³n futura |
+| `sprint_deviations.md` | Tareas **emergentes/ajustes** durante sprint | Durante ejecución |
+| `backlog.md` | Ítems **fuera** del sprint actual | Planificación futura |
 | `sprint_bugs.md` | Bugs **reportados** durante sprint | Al detectar defecto |
 
 ### Flujo de Trabajo:
 
-1. **Detectar desviaciÃ³n**: Durante implementaciÃ³n de HX.Y
-2. **Evaluar criticidad**: Â¿Bloquea sprint? Â¿Viola pilares?
+1. **Detectar desviación**: Durante implementación de HX.Y
+2. **Evaluar criticidad**: ¿Bloquea sprint? ¿Viola pilares?
 3. **Decidir**: 
-   - Si **CRÃTICA** â†’ `sprint_deviations.md` + pausar tarea actual
-   - Si **NO CRÃTICA** â†’ `backlog.md` + continuar sprint
+   - Si **CRÍTICA** ? `sprint_deviations.md` + pausar tarea actual
+   - Si **NO CRÍTICA** ? `backlog.md` + continuar sprint
 4. **Documentar**: Crear entrada DEV-XXX en `sprint_deviations.md`
-5. **Implementar**: Resolver desviaciÃ³n antes de continuar sprint
+5. **Implementar**: Resolver desviación antes de continuar sprint
 6. **Actualizar daily.md**: Reflejar trabajo realizado
 
 ### Formato de ID:
 
-- **DEV-XXX**: DesviaciÃ³n general
-- **DEV-XXX.Y**: Subtarea de desviaciÃ³n
+- **DEV-XXX**: Desviación general
+- **DEV-XXX.Y**: Subtarea de desviación
 
-### Ejemplo Real (DEV-001 - RefactorizaciÃ³n AAA Sprint v1.3.0):
+### Ejemplo Real (DEV-001 - Refactorización AAA Sprint v1.3.0):
 
 ```markdown
-## DEV-001: RefactorizaciÃ³n AAA - Condicional de visibilidad UI
+## DEV-001: Refactorización AAA - Condicional de visibilidad UI
 
-**Tipo**: Ajuste ArquitectÃ³nico
-**Detectado en**: H2.3 (integraciÃ³n DX12 backend)
+**Tipo**: Ajuste Arquitectónico
+**Detectado en**: H2.3 (integración DX12 backend)
 **Fecha**: 2025-01-18
-**Prioridad**: CRÃTICA
+**Prioridad**: CRÍTICA
 
 ### Contexto:
-ImGui se procesaba SIEMPRE sin respetar m_uiVisible, violando estÃ¡ndares AAA.
+ImGui se procesaba SIEMPRE sin respetar m_uiVisible, violando estándares AAA.
 
-### Â¿Por quÃ© NO backlog?
+### ¿Por qué NO backlog?
 - Bloqueante para H4 (Editor Panels)
 - Viola pilares AAA (docs/MAIN.md - "Hacer bien desde el principio")
 - Impacto inmediato en arquitectura de 3 capas
 
-### DecisiÃ³n:
+### Decisión:
 Pausar H4, implementar arquitectura AAA inmediatamente
 
 ### Tareas Derivadas:
-- DEV-001.1: âœ… Condicional IsUIVisible() en main.cpp
-- DEV-001.2: âœ… DockSpaceOverViewport()
-- DEV-001.3: âœ… #ifdef _DEBUG para ShowDemoWindow()
-- DEV-001.4: âœ… Crear docs/AAA_STANDARDS.md
+- DEV-001.1: ? Condicional IsUIVisible() en main.cpp
+- DEV-001.2: ? DockSpaceOverViewport()
+- DEV-001.3: ? #ifdef _DEBUG para ShowDemoWindow()
+- DEV-001.4: ? Crear docs/AAA_STANDARDS.md
 
 ### Resultado:
-âœ… Completado (commit: 011270b)
-- CompilaciÃ³n limpia (CMake + MSBuild)
-- ValidaciÃ³n usuario: OK 100%
+? Completado (commit: 011270b)
+- Compilación limpia (CMake + MSBuild)
+- Validación usuario: OK 100%
 
 ### Impacto en Sprint:
-- Progreso: 62.5% â†’ 75% (+12.5%)
-- H4.1-H4.5 pueden continuar sobre base sÃ³lida
+- Progreso: 62.5% ? 75% (+12.5%)
+- H4.1-H4.5 pueden continuar sobre base sólida
 
 ### Lecciones Aprendidas:
-- AuditorÃ­a post-tarea crÃ­tica obligatoria
-- No esperar a H4 para detectar problemas arquitectÃ³nicos
+- Auditoría post-tarea crítica obligatoria
+- No esperar a H4 para detectar problemas arquitectónicos
 ```
 
 ### Contenido de `sprint_deviations.md`:
 
 Cada entrada debe incluir:
 - **ID**: DEV-XXX
-- **Tipo**: Ajuste ArquitectÃ³nico | Tarea Emergente | Deuda TÃ©cnica | Bloqueador
+- **Tipo**: Ajuste Arquitectónico | Tarea Emergente | Deuda Técnica | Bloqueador
 - **Detectado en**: HX.Y - nombre de tarea
 - **Fecha**: YYYY-MM-DD
-- **Prioridad**: CRÃTICA | ALTA | MEDIA | BAJA
-- **Contexto**: DescripciÃ³n del problema
-- **Â¿Por quÃ© NO backlog?**: JustificaciÃ³n de criticidad
-- **DecisiÃ³n**: AcciÃ³n tomada
+- **Prioridad**: CRÍTICA | ALTA | MEDIA | BAJA
+- **Contexto**: Descripción del problema
+- **¿Por qué NO backlog?**: Justificación de criticidad
+- **Decisión**: Acción tomada
 - **Tareas Derivadas**: DEV-XXX.1, DEV-XXX.2, etc.
-- **Resultado**: Estado actual y validaciÃ³n
+- **Resultado**: Estado actual y validación
 - **Impacto en Sprint**: Tareas afectadas y progreso
-- **Lecciones Aprendidas**: ReflexiÃ³n para futuros sprints
+- **Lecciones Aprendidas**: Reflexión para futuros sprints
 
 ### Versionado:
 
 - `sprint_deviations.md` se archiva como `docs/sprints/sprint_deviations_vX.Y.Z.md` al finalizar sprint
-- Permite trazabilidad de decisiones arquitectÃ³nicas en sprints pasados
-- Nuevo fichero vacÃ­o para prÃ³ximo sprint
+- Permite trazabilidad de decisiones arquitectónicas en sprints pasados
+- Nuevo fichero vacío para próximo sprint
 
 ### Plantilla:
 
 ```markdown
-## DEV-XXX: [TÃ­tulo de la desviaciÃ³n]
+## DEV-XXX: [Título de la desviación]
 
 **Tipo**: [Tipo]
 **Detectado en**: [HX.Y]
@@ -723,26 +723,26 @@ Cada entrada debe incluir:
 **Prioridad**: [PRIORIDAD]
 
 ### Contexto:
-[DescripciÃ³n del problema]
+[Descripción del problema]
 
-### Â¿Por quÃ© NO backlog?
-- RazÃ³n 1
-- RazÃ³n 2
+### ¿Por qué NO backlog?
+- Razón 1
+- Razón 2
 
-### DecisiÃ³n:
-[AcciÃ³n tomada]
+### Decisión:
+[Acción tomada]
 
 ### Tareas Derivadas:
 - DEV-XXX.1: [Subtarea]
 
 ### Resultado:
-[Estado y validaciÃ³n]
+[Estado y validación]
 
 ### Impacto en Sprint:
 [Tareas afectadas]
 
 ### Lecciones Aprendidas:
-[ReflexiÃ³n]
+[Reflexión]
 ```
 
 ---
@@ -757,9 +757,9 @@ Los ficheros activos del sprint actual son:
 - `docs/sprint_bug_attempts.md`
 - `docs/sprint_fix.md`
 - `docs/sprint_deviations.md`
-- **`docs/sprint_ia_sessions.md`** â† **NUEVO**
+- **`docs/sprint_ia_sessions.md`** ? **NUEVO**
 
-Al final de un sprint (release), el asistente archivarÃ¡ **TODOS** los ficheros a `docs/sprints/`:
+Al final de un sprint (release), el asistente archivará **TODOS** los ficheros a `docs/sprints/`:
 
 ```powershell
 # Crear carpeta si no existe
@@ -780,83 +780,83 @@ Move-Item "docs/sprint_ia_sessions_v<version>.md" "docs/sprints/"
 
 ```
 docs/
-â”œâ”€â”€ sprints/
-â”‚   â”œâ”€â”€ sprint_v1.0.0.md
-â”‚   â”œâ”€â”€ sprint_histories_v1.0.0.md
-â”‚   â”œâ”€â”€ sprint_tasks_v1.0.0.md
-â”‚   â”œâ”€â”€ sprint_bugs_v1.0.0.md
-â”‚   â”œâ”€â”€ sprint_bug_attempts_v1.0.0.md
-â”‚   â”œâ”€â”€ sprint_fix_v1.0.0.md
-â”‚   â”œâ”€â”€ sprint_deviations_v1.0.0.md (si aplica)
-â”‚   â”œâ”€â”€ sprint_ia_sessions_v1.0.0.md (si aplica)
-â”‚   â”œâ”€â”€ sprint_v1.1.0.md
-â”‚   â”œâ”€â”€ ...
-â”‚   â””â”€â”€ sprint_ia_sessions_v1.3.0.md
++-- sprints/
+¦   +-- sprint_v1.0.0.md
+¦   +-- sprint_histories_v1.0.0.md
+¦   +-- sprint_tasks_v1.0.0.md
+¦   +-- sprint_bugs_v1.0.0.md
+¦   +-- sprint_bug_attempts_v1.0.0.md
+¦   +-- sprint_fix_v1.0.0.md
+¦   +-- sprint_deviations_v1.0.0.md (si aplica)
+¦   +-- sprint_ia_sessions_v1.0.0.md (si aplica)
+¦   +-- sprint_v1.1.0.md
+¦   +-- ...
+¦   +-- sprint_ia_sessions_v1.3.0.md
 ```
 
-**Regla**: Los histÃ³ricos de sprints se mantienen en `docs/sprints/` para mejor organizaciÃ³n y facilitar bÃºsqueda de decisiones pasadas.
+**Regla**: Los históricos de sprints se mantienen en `docs/sprints/` para mejor organización y facilitar búsqueda de decisiones pasadas.
 
 ---
 
-## âš ï¸ **OBLIGATORIO AL FINALIZAR SPRINT: Registrar SesiÃ³n IA**
+## ?? **OBLIGATORIO AL FINALIZAR SPRINT: Registrar Sesión IA**
 
-**CRÃTICO**: Al finalizar un sprint (ejecutar `close-sprint.ps1`), el asistente **DEBE**:
+**CRÍTICO**: Al finalizar un sprint (ejecutar `close-sprint.ps1`), el asistente **DEBE**:
 
-1. **Registrar la sesiÃ³n IA** en `docs/sprint_ia_sessions.md` **ANTES** de archivar
-2. **Incluir TODA la informaciÃ³n** de la sesiÃ³n:
+1. **Registrar la sesión IA** en `docs/sprint_ia_sessions.md` **ANTES** de archivar
+2. **Incluir TODA la información** de la sesión:
    - Prompts ejecutados (lista completa)
-   - Tareas completadas durante la sesiÃ³n
+   - Tareas completadas durante la sesión
    - Commits creados
    - Archivos creados/modificados
-   - MÃ©tricas finales del sprint
-   - DuraciÃ³n de la sesiÃ³n
+   - Métricas finales del sprint
+   - Duración de la sesión
    - Consumo de tokens
 3. **Archivar** el fichero con el script: `sprint_ia_sessions_v<version>.md`
 
-**Â¿Por quÃ© es OBLIGATORIO?**
-- âœ… **Trazabilidad completa** del desarrollo asistido por IA
-- âœ… **AnÃ¡lisis retrospectivo** de metodologÃ­a y prompts efectivos
-- âœ… **DocumentaciÃ³n valiosa** para futuros sprints
-- âœ… **AuditorÃ­a** de decisiones tomadas durante el desarrollo
-- âœ… **Continuidad** entre sesiones y sprints
+**¿Por qué es OBLIGATORIO?**
+- ? **Trazabilidad completa** del desarrollo asistido por IA
+- ? **Análisis retrospectivo** de metodología y prompts efectivos
+- ? **Documentación valiosa** para futuros sprints
+- ? **Auditoría** de decisiones tomadas durante el desarrollo
+- ? **Continuidad** entre sesiones y sprints
 
 **Proceso al cerrar sprint**:
 ```powershell
-# 1. Actualizar docs/sprint_ia_sessions.md con resumen de sesiÃ³n
-# 2. Ejecutar script de cierre (archiva automÃ¡ticamente)
+# 1. Actualizar docs/sprint_ia_sessions.md con resumen de sesión
+# 2. Ejecutar script de cierre (archiva automáticamente)
 .\scripts\close-sprint.ps1 -Version "X.Y.Z"
 # 3. Commit final de cierre
 git add -A
 git commit -m "chore: Cerrar Sprint vX.Y.Z - 100% completado"
 ```
 
-**Plantilla mÃ­nima obligatoria** (ver secciÃ³n "GestiÃ³n de Sesiones IA" para template completo):
+**Plantilla mínima obligatoria** (ver sección "Gestión de Sesiones IA" para template completo):
 ```markdown
-## SesiÃ³n IA #001 - Sprint vX.Y.Z
+## Sesión IA #001 - Sprint vX.Y.Z
 
 **LLM**: GitHub Copilot (Claude 3.5 Sonnet)
 **Fecha/Hora**: [YYYY-MM-DD HH:MM-HH:MM UTC]
 **Usuario (Orquestador)**: [username]
 **Consumo de Tokens**: [~XXX,000] / 1,000,000 ([XX.X]%
-**Estado**: âš ï¸ SPRINT COMPLETADO
+**Estado**: ?? SPRINT COMPLETADO
 
-### Resumen de la SesiÃ³n:
+### Resumen de la Sesión:
 [Lista de logros principales]
 
 ### Prompt Ejecutado:
 [Lista de prompts usados]
 
-### Tareas completadas en sesiÃ³n:
+### Tareas completadas en sesión:
 [Lista de todas las tareas HX.Y]
 
 ### Commits Creados:
 [Lista de commits con hash]
 
-### MÃ©tricas del Sprint (Final):
+### Métricas del Sprint (Final):
 [Tareas, tests, performance, bugs, etc.]
 ```
 
-**Excepciones**: Si el sprint NO tuvo sesiones IA (desarrollo manual), dejar `sprint_ia_sessions.md` vacÃ­o con nota:
+**Excepciones**: Si el sprint NO tuvo sesiones IA (desarrollo manual), dejar `sprint_ia_sessions.md` vacío con nota:
 ```markdown
 # Sprint IA Sessions - vX.Y.Z
 
