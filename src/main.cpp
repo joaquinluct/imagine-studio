@@ -122,6 +122,13 @@ static int RunApp(HINSTANCE hInstance)
     // Setup Dear ImGui style (dark theme)
     ImGui::StyleColorsDark();
     
+    // ✅ CRÍTICO: Añadir font por defecto ANTES de inicializar backends
+    // Esto inicializa el Builder del atlas (soluciona BUG-002)
+    io.Fonts->AddFontDefault();
+    
+    // Initialize Win32 backend (REQUERIDO - debe estar ANTES de DX12 backend)
+    ImGui_ImplWin32_Init(hwnd);
+    
     CORE_LOG_INFO("ImGui context created and initialized (v1.3.0 - docking enabled)");
 
     // Simple message loop
@@ -221,6 +228,8 @@ static int RunApp(HINSTANCE hInstance)
         }
 
         // Start ImGui frame (H2.3 - ImGui DX12 NewFrame integration)
+        // IMPORTANTE: Win32 NewFrame DEBE ir PRIMERO
+        ImGui_ImplWin32_NewFrame();
         ImGui_ImplDX12_NewFrame();
         ImGui::NewFrame();
         
@@ -249,6 +258,8 @@ static int RunApp(HINSTANCE hInstance)
     ImGui_ImplDX12_Shutdown();
     CORE_LOG_INFO("ImGui DX12 backend shutdown");
 #endif
+    ImGui_ImplWin32_Shutdown();
+    CORE_LOG_INFO("ImGui Win32 backend shutdown");
     ImGui::DestroyContext();
     CORE_LOG_INFO("ImGui context destroyed");
 
@@ -307,3 +318,4 @@ int main()
     HINSTANCE hInstance = GetModuleHandle(NULL);
     return RunApp(hInstance);
 }
+
