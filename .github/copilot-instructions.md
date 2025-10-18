@@ -63,7 +63,7 @@ Flujo de trabajo por sesión:
 Nota: Los archivos anteriores son la fuente de la verdad para la organización del proyecto y la comunicación con el asistente.
 
 Preferencias del propietario del repositorio:
-- Prefiero hacer bien las cosas desde el principio: evitar partes intermedias, temporales, incompletas o no funcionales. Cada módulo debe diseñarse para cumplir los estándares AAA desde su concepción.
+- Prefiero hacer bien las cosas desde el principio: evitar partes intermedias, temporales, incompletes o no funcionales. Cada módulo debe diseñarse para cumplir los estándares AAA desde su concepción.
 - En cada iteración, antes del commit, siempre se debe compilar y corregir errores/warnings para asegurar commits limpios y funcionales.
 - Estilo de includes: las directivas `#include` deben ordenarse siempre con las cabeceras del proyecto (entre comillas `"..."`) primero y después las cabeceras del sistema (`<...>`), y dentro de cada grupo deben aparecer en orden alfabético. Esta regla será verificada por el asistente y aplicada o reportada como warning al preparar commits.
 - **Codificación de archivos**: TODOS los archivos de texto (`.md`, `.cpp`, `.h`, `.hlsl`, etc.) DEBEN usar **UTF-8 con BOM** y **line endings CRLF** (Windows). Esto es CRÍTICO para evitar problemas de codificación con caracteres especiales (emojis, caracteres no-ASCII). El asistente DEBE:
@@ -88,6 +88,47 @@ Si en algún momento la herramienta no puede compilar la solución o no encuentr
 6) Alternativa: si no hay `.sln` o se desea portabilidad, crear un `CMakeLists.txt` básico y usar `cmake` + `cmake --build`.
 
 Registrar en la bitácora (`docs/daily.md`) cualquier incidencia relevante y su resolución para futuras referencias.
+
+⚠️ REGLA CRÍTICA: Bibliotecas de terceros (external/)
+--------------------------------------------------------
+**NUNCA MODIFICAR** código en el directorio `external/`. 
+
+**Razones:**
+1. Imposibilita actualizar la biblioteca en el futuro
+2. Oculta bugs en nuestro código (tapa síntomas, no arregla causas)
+3. Rompe la reproducibilidad del proyecto
+4. Dificulta el debugging y mantenimiento
+
+**Política:**
+- TODO el código de bibliotecas externas (Dear ImGui, etc.) debe permanecer **INTACTO**
+- Si necesitas personalizar comportamiento: crear **wrappers** en `src/` (ej: `src/editor/ImGuiWrapper.h`)
+- Si encuentras un bug relacionado con una biblioteca externa:
+  1. **NO** añadir checks defensivos en la biblioteca
+  2. **SÍ** investigar por qué nuestro código está llamando incorrectamente a la API
+  3. **SÍ** corregir el orden de inicialización o uso en nuestro código
+  4. **SÍ** consultar `docs/THIRD_PARTY.md` para ver versiones y políticas específicas
+
+**Ejemplo de error común:**
+```cpp
+// ❌ NO HACER: Añadir if(builder == NULL) en imgui_draw.cpp para evitar crash
+// ✅ CORRECTO: Arreglar nuestro código para asegurar que builder esté inicializado ANTES de llamar
+
+// src/main.cpp
+void InitializeRendering()
+{
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    
+    // ✅ CRÍTICO: Build debe llamarse ANTES de usar el atlas
+    io.Fonts->Build();
+    
+    // Ahora sí podemos usar backends
+    ImGui_ImplWin32_Init(g_hwnd);
+    ImGui_ImplDX12_Init(...);
+}
+```
+
+**Consultar siempre:** `docs/THIRD_PARTY.md` para políticas detalladas sobre cada biblioteca externa.
 
 Iteración controlada (proceso obligatorio por iteración)
 1) El asistente consultará `docs/daily.md` y propondrá el siguiente punto a ejecutar, acompañado de una breve explicación (una frase) sobre en qué consiste.
@@ -303,4 +344,4 @@ $proj.Save("Imagine Studio.vcxproj")
   3. **Solo si CMake no se usa o hay conflictos**, modificar directamente el `.vcxproj` con PowerShell XML
 
 Nota sobre estándar C++:
-- Este repositorio usa C++14 como estándar de compilación en `CMakeLists.txt`. Asegúrate de que tu entorno local/CI tenga toolchains compatibles (MSVC/Clang/GCC) antes de compilar.
+- Este repositorio usa C++14 como estándar de compilación en `CMakeLists.txt`. Asegúrate de que tu entorno local/CI tenga toolchains compatibles (MSVC/Clang/GCC) antes de compilar
