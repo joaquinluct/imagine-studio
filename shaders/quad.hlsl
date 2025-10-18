@@ -4,7 +4,7 @@
 // Root constants (16 floats = 64 bytes) bound to register b0
 cbuffer Constants : register(b0)
 {
-    float4x4 mvp; // Model-View-Projection matrix
+    float4x4 mvp; // Model-View-Projection matrix (row-major)
 };
 
 // Input structure for vertex shader
@@ -27,6 +27,7 @@ PSInput VSMain(VSInput input)
     PSInput output;
     
     // Transform vertex position to clip space using MVP matrix
+    // Row-major: row vector × matrix
     output.pos = mul(float4(input.pos, 1.0), mvp);
     
     // Pass vertex color through for interpolation

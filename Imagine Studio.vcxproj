@@ -178,6 +178,7 @@
     <ClCompile Include="src\platform\InputManager.cpp" />
     <ClCompile Include="src\platform\Window.cpp" />
     <ClCompile Include="src\renderer\AdapterFactory.cpp" />
+    <ClCompile Include="src\renderer\Camera.cpp" />
     <ClCompile Include="src\renderer\CommandBuffer.cpp" />
     <ClCompile Include="src\renderer\DX12Device.cpp" />
     <ClCompile Include="src\renderer\DX12Renderer.cpp" />
@@ -199,7 +200,6 @@
     <ClCompile Include="external\imgui\backends\imgui_impl_dx12.cpp" />
     <ClCompile Include="external\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="external\imgui\imgui_demo.cpp" />
-    <ClCompile Include="src\renderer\Camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\assets\AssetManager.h" />
@@ -213,6 +213,7 @@
     <ClInclude Include="src\platform\Input.h" />
     <ClInclude Include="src\platform\Window.h" />
     <ClInclude Include="src\renderer\AdapterFactory.h" />
+    <ClInclude Include="src\renderer\Camera.h" />
     <ClInclude Include="src\renderer\CommandAllocator.h" />
     <ClInclude Include="src\renderer\CommandBuffer.h" />
     <ClInclude Include="src\renderer\DX12Device.h" />

@@ -793,19 +793,32 @@ void DX12Renderer::TransitionResource(
     m_commandList->ResourceBarrier(1, &barrier);
 }
 
-// v1.5.0 H2.2 - Helper for matrix multiplication (4x4 column-major)
+// v1.5.0 H2.2 - Helper for matrix multiplication (4x4 row-major)
 namespace {
+    // Multiply two 4x4 row-major matrices: result = a * b
     inline void MultiplyMatrix4x4(const float* a, const float* b, float* result)
     {
         for (int row = 0; row < 4; ++row)
         {
             for (int col = 0; col < 4; ++col)
             {
-                result[col * 4 + row] = 0.0f;
+                result[row * 4 + col] = 0.0f;
                 for (int k = 0; k < 4; ++k)
                 {
-                    result[col * 4 + row] += a[k * 4 + row] * b[col * 4 + k];
+                    result[row * 4 + col] += a[row * 4 + k] * b[k * 4 + col];
                 }
+            }
+        }
+    }
+    
+    // Transpose 4x4 matrix (convert column-major to row-major or vice versa)
+    inline void Transpose4x4(const float* src, float* dst)
+    {
+        for (int row = 0; row < 4; ++row)
+        {
+            for (int col = 0; col < 4; ++col)
+            {
+                dst[row * 4 + col] = src[col * 4 + row];
             }
         }
     }
@@ -938,23 +951,23 @@ void DX12Renderer::OpaquePass()
     // v1.5.0 H2.2 - Calculate MVP matrix: Model * View * Projection
     if (m_camera)
     {
-        // Model matrix (identity for now - quad at origin)
+        // Model matrix (identity for now - quad at origin, row-major)
         float modelMatrix[16] = {
-            1.0f, 0.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 0.0f, 1.0f
+            1.0f, 0.0f, 0.0f, 0.0f,  // Row 0
+            0.0f, 1.0f, 0.0f, 0.0f,  // Row 1
+            0.0f, 0.0f, 1.0f, 0.0f,  // Row 2
+            0.0f, 0.0f, 0.0f, 1.0f   // Row 3
         };
         
-        // Get View and Projection from camera
+        // Get View and Projection from camera (row-major)
         const float* viewMatrix = m_camera->GetViewMatrix();
         const float* projectionMatrix = m_camera->GetProjectionMatrix();
         
-        // Calculate ModelView = Model * View
+        // Calculate ModelView = Model * View (row-major multiplication)
         float modelView[16];
         MultiplyMatrix4x4(modelMatrix, viewMatrix, modelView);
         
-        // Calculate MVP = ModelView * Projection
+        // Calculate MVP = ModelView * Projection (row-major multiplication)
         MultiplyMatrix4x4(modelView, projectionMatrix, m_mvpMatrix);
     }
     

@@ -3,6 +3,12 @@
 
 #include <cmath>
 
+// Use DirectXMath for matrix operations (standard Microsoft library)
+#if defined(_WIN32) && defined(_MSC_VER)
+#include <DirectXMath.h>
+using namespace DirectX;
+#endif
+
 namespace Renderer {
 
 // v1.5.0 H2.1 - Camera implementation with View and Projection matrices
@@ -94,71 +100,45 @@ namespace {
 
 void Camera::UpdateViewMatrix()
 {
-    // Compute forward vector (from position to target)
-    float forward[3] = {
-        m_target[0] - m_position[0],
-        m_target[1] - m_position[1],
-        m_target[2] - m_position[2]
-    };
-    Normalize(forward);
+#if defined(_WIN32) && defined(_MSC_VER)
+    // Use DirectXMath standard look-at matrix (left-handed, row-major)
+    XMVECTOR eye = XMVectorSet(m_position[0], m_position[1], m_position[2], 1.0f);
+    XMVECTOR target = XMVectorSet(m_target[0], m_target[1], m_target[2], 1.0f);
+    XMVECTOR up = XMVectorSet(m_up[0], m_up[1], m_up[2], 0.0f);
     
-    // Compute right vector (cross product of forward and up)
-    float right[3];
-    Cross(forward, m_up, right);
-    Normalize(right);
+    XMMATRIX view = XMMatrixLookAtLH(eye, target, up);
     
-    // Recompute up vector (cross product of right and forward)
-    float up[3];
-    Cross(right, forward, up);
-    Normalize(up);
-    
-    // Build view matrix (column-major)
-    // Column 0 (right)
-    m_viewMatrix[0] = right[0];
-    m_viewMatrix[1] = up[0];
-    m_viewMatrix[2] = -forward[0];
-    m_viewMatrix[3] = 0.0f;
-    
-    // Column 1 (up)
-    m_viewMatrix[4] = right[1];
-    m_viewMatrix[5] = up[1];
-    m_viewMatrix[6] = -forward[1];
-    m_viewMatrix[7] = 0.0f;
-    
-    // Column 2 (forward)
-    m_viewMatrix[8] = right[2];
-    m_viewMatrix[9] = up[2];
-    m_viewMatrix[10] = -forward[2];
-    m_viewMatrix[11] = 0.0f;
-    
-    // Column 3 (translation)
-    m_viewMatrix[12] = -Dot(right, m_position);
-    m_viewMatrix[13] = -Dot(up, m_position);
-    m_viewMatrix[14] = Dot(forward, m_position);
-    m_viewMatrix[15] = 1.0f;
+    // Store the matrix (DirectXMath uses row-major by default)
+    XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(m_viewMatrix), view);
+#else
+    // Fallback: identity matrix
+    for (int i = 0; i < 16; ++i)
+        m_viewMatrix[i] = 0.0f;
+    m_viewMatrix[0] = m_viewMatrix[5] = m_viewMatrix[10] = m_viewMatrix[15] = 1.0f;
+#endif
 }
 
 void Camera::UpdateProjectionMatrix()
 {
-    // Perspective projection matrix (column-major for DX12)
-    // Based on DirectX left-handed coordinate system (Z forward, Y up)
-    
+#if defined(_WIN32) && defined(_MSC_VER)
+    // Use DirectXMath standard perspective matrix (left-handed, row-major)
     const float fovRadians = m_fovDegrees * 3.14159265359f / 180.0f;
-    const float tanHalfFov = std::tan(fovRadians / 2.0f);
     
-    const float f = 1.0f / tanHalfFov;
-    const float nf = 1.0f / (m_nearPlane - m_farPlane);
+    XMMATRIX proj = XMMatrixPerspectiveFovLH(
+        fovRadians,
+        m_aspectRatio,
+        m_nearPlane,
+        m_farPlane
+    );
     
-    // Initialize to zero
+    // Store the matrix (DirectXMath uses row-major by default)
+    XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(m_projectionMatrix), proj);
+#else
+    // Fallback: identity matrix
     for (int i = 0; i < 16; ++i)
         m_projectionMatrix[i] = 0.0f;
-    
-    // Column-major perspective matrix (DX12 left-handed)
-    m_projectionMatrix[0] = f / m_aspectRatio;  // [0,0]
-    m_projectionMatrix[5] = f;                   // [1,1]
-    m_projectionMatrix[10] = (m_farPlane + m_nearPlane) * nf;  // [2,2]
-    m_projectionMatrix[11] = -1.0f;              // [2,3]
-    m_projectionMatrix[14] = (2.0f * m_farPlane * m_nearPlane) * nf;  // [3,2]
+    m_projectionMatrix[0] = m_projectionMatrix[5] = m_projectionMatrix[10] = m_projectionMatrix[15] = 1.0f;
+#endif
 }
 
 } // namespace Renderer

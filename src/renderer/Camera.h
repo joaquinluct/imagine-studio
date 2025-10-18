@@ -17,7 +17,7 @@ public:
     // Projection configuration
     void SetPerspective(float fovDegrees, float aspectRatio, float nearPlane, float farPlane);
     
-    // Matrix getters (column-major for DX12)
+    // Matrix getters (row-major for DX12 shader compatibility)
     const float* GetViewMatrix() const { return m_viewMatrix; }
     const float* GetProjectionMatrix() const { return m_projectionMatrix; }
     
@@ -37,7 +37,7 @@ private:
     float m_nearPlane = 0.1f;
     float m_farPlane = 1000.0f;
     
-    // Matrices (column-major for DX12)
+    // Matrices (row-major for DX12 shader compatibility)
     float m_viewMatrix[16] = {};
     float m_projectionMatrix[16] = {};
     
