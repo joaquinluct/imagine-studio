@@ -1,0 +1,65 @@
+feat(editor): Implementar panel Hierarchy con arbol de objetos placeholder
+
+Historia H4.1 - Primer panel del Editor UI
+
+Implementacion:
+- Crear src/editor/EditorUI.h con interfaz de panels
+- Crear src/editor/EditorUI.cpp con RenderHierarchy()
+- Arbol de objetos placeholder (hardcoded scene structure):
+  - Scene Root
+    - Camera (Main Camera)
+    - Lights (Directional Light, Point Light 1, Point Light 2)
+    - Geometry (Quad, Cube, Sphere)
+- Stubs para panels futuros (Inspector, Console, Viewport)
+
+Integracion en main.cpp:
+- Incluir editor/EditorUI.h
+- Reemplazar ShowDemoWindow() con RenderHierarchy()
+- Mantener dockspace principal para permitir docking
+
+Configuracion build:
+- Anadir EDITOR_SRC a CMakeLists.txt
+- Anadir EditorUI.cpp a Imagine Studio.vcxproj con PowerShell XML
+
+Estructura EditorUI:
+```cpp
+class EditorUI {
+public:
+    static void RenderHierarchy();   // H4.1 - IMPLEMENTADO
+    static void RenderInspector();   // H4.2 - TODO
+    static void RenderConsole();     // H4.3 - TODO
+    static void RenderViewport();    // H4.4 - TODO
+    static void RenderAllPanels();   // H4.5 - TODO
+};
+```
+
+Panel Hierarchy features:
+- ImGui::Begin("Hierarchy") con ventana dockeable
+- ImGui::TreeNode() para jerarquia expandible
+- ImGui::Selectable() para objetos clickeables
+- Simula estructura tipica de escena 3D
+- Placeholder para integracion futura con Scene Graph
+
+Beneficios:
+- Primer panel funcional del editor AAA
+- Base para H4.2-H4.5 (resto de panels)
+- Docking funcional (permite arrastrar/redimensionar)
+- UI semitransparente deja ver render 3D debajo
+
+Testing visual pendiente:
+- Verificar panel Hierarchy visible con F1
+- Verificar arbol expandible/colapsable
+- Verificar docking funcional
+
+Archivos creados:
+- src/editor/EditorUI.h (interfaz panels)
+- src/editor/EditorUI.cpp (implementacion)
+
+Archivos modificados:
+- src/main.cpp (llamar RenderHierarchy)
+- CMakeLists.txt (EDITOR_SRC)
+- Imagine Studio.vcxproj (EditorUI.cpp)
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Referencia: H4.1 - Panel Hierarchy v1.3.0
