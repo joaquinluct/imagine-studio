@@ -63,7 +63,7 @@ El usuario debe:
 
 **ID**: BUG-002
 **Prioridad**: Crítica
-**Estado**: Pendiente validación usuario (Intento #5)
+**Estado**: Pendiente validación usuario (Intento #6)
 **Fecha de entrada**: 2025-01-18
 
 **Descripción**: 
@@ -73,38 +73,30 @@ Los clics de ratón no tienen efecto en la UI de ImGui:
 - No abre/cierra desplegables
 - No responde a interacción con controles
 
-**Síntomas confirmados por logs usuario (Intento #4)**:
+**Síntomas confirmados por logs usuario**:
 - ? Ejecución sin errores
 - ? Ventana se muestra correctamente
-- ? Error 1400 en CreateWindowExW ? Fallback a clase STATIC
+- ? Error 1400 en CreateWindowExW ? **Intento #5: Eliminado fallback, muestra error y aborta**
 - ? Sin logs `[WndProc]` ? Eventos de mouse NO llegan a WndProc
 - ? `WantCaptureMouse=1` cuando mouse sobre UI ? ImGui detecta hover
 - ? `io.MouseDown[0]=0` siempre ? ImGui nunca recibe clicks
 
 **Causa raíz identificada**:
-La ventana se crea con clase fallback `STATIC` debido a error 1400 en `CreateWindowExW`. La clase STATIC no tiene nuestro `WndProc` correctamente asociado, por lo que los eventos de mouse (WM_LBUTTONDOWN, WM_LBUTTONUP) **no llegan a WndProc**.
+Error 1400 (`ERROR_INVALID_WINDOW_HANDLE`) en `CreateWindowExW`. Hipótesis del **Intento #6**: el uso de `SetWindowLongPtr(GWLP_USERDATA)` en `WM_NCCREATE` puede causar que Windows rechace la creación de ventana al intentar modificar datos de una ventana que aún no está completamente inicializada.
 
-**Archivos afectados**: `src/platform/Window.cpp`, `src/main.cpp`
+**Archivos afectados**: `src/platform/Window.h`, `src/platform/Window.cpp`, `src/main.cpp`
 
 **Fixes implementados**:
 
-1. **Fix v1 (Intento #2)** - Construir atlas explícitamente:
-   - Añadir `io.Fonts->AddFontDefault()` + `io.Fonts->Build()`
-   - Resultado: ? PARCIAL - Atlas correcto pero clicks siguen sin funcionar
-
-2. **Fix v2 (Intento #3)** - Respetar valor de retorno de handler ImGui:
-   - Verificar retorno de `ImGui_ImplWin32_WndProcHandler()` antes de procesar
-   - Resultado: ?? HIPOTÉTICO - No validado porque eventos no llegan a WndProc
-
-3. **Fix v3 (Intento #4)** - Debugging con logs detallados:
-   - Añadir logs exhaustivos para diagnosticar pérdida de eventos
-   - Resultado: ? DIAGNÓSTICO EXITOSO - Identificó causa raíz (clase STATIC)
-
-4. **Fix v4 (Intento #5)** - Corregir registro de clase y eliminar fallback:
-   - Usar `GetModuleHandle(NULL)` consistentemente
-   - Verificar si clase ya existe antes de registrar
-   - **ELIMINAR** fallback a clase STATIC
-   - Abortar con error claro si creación falla
+1. **Fix v1 (Intento #2)** - Construir atlas explícitamente ?
+2. **Fix v2 (Intento #3)** - Respetar valor de retorno de handler ImGui ??
+3. **Fix v3 (Intento #4)** - Debugging con logs detallados ? (diagnóstico exitoso)
+4. **Fix v4 (Intento #5)** - Corregir registro de clase y eliminar fallback ?? (error 1400 persiste)
+5. **Fix v5 (Intento #6)** - Eliminar `GWLP_USERDATA`, usar map estático:
+   - **NO** pasar `this` en `lpCreateParams` de `CreateWindowExW`
+   - Usar `std::map<HWND, Window*>` estático para asociar HWND con instancia
+   - Registrar asociación DESPUÉS de creación exitosa de ventana
+   - Simplificar `WndProcStatic` para buscar en map en lugar de `GetWindowLongPtr`
    - Compilación limpia: CMake + MSBuild (0 errores, 0 warnings)
 
 **? ESTADO ACTUAL: PENDIENTE VALIDACIÓN USUARIO**
@@ -117,8 +109,8 @@ El usuario debe:
    - ? Clicks funcionan en UI de ImGui
 
 **Expectativa**:
-- Si el mismatch de `hInstance` era el problema ? ventana se creará correctamente
-- Si persiste error 1400 ? investigar permisos o conflictos de sistema operativo
+- Si el uso de `GWLP_USERDATA` en `WM_NCCREATE` era el problema ? ventana se creará correctamente
+- Si persiste error 1400 ? puede ser restricción de Windows o permisos de sistema (investigar más)
 
 ---
 

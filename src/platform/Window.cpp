@@ -3,6 +3,7 @@
 
 #include <sstream>
 #include <string>
+#include <map>
 
 // Forward declaration de ImGui Win32 handler (v1.3.0 - H2.3)
 // Esta función está implementada en la biblioteca ImGui que linkamos
@@ -10,13 +11,15 @@ extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam
 
 namespace Platform {
 
+// ?? BUG-002 Intento #6: Definir map estático fuera de la clase
+std::map<HWND, Window*> Window::s_windowMap;
+
 Window::Window(HINSTANCE hInstance, const wchar_t* title, int width, int height)
     : hInstance_(hInstance)
 {
     const wchar_t CLASS_NAME[] = L"ImagineStudioWindowClass";
 
-    // ?? BUG-002 Intento #5: Usar SIEMPRE GetModuleHandle(NULL) para consistencia
-    // Esto asegura que usamos el mismo HINSTANCE en registro y creación
+    // ?? BUG-002 Intento #6: Usar SIEMPRE GetModuleHandle(NULL) para consistencia
     HINSTANCE moduleInstance = GetModuleHandle(NULL);
 
     // ? Verificar si la clase ya está registrada
@@ -62,7 +65,8 @@ Window::Window(HINSTANCE hInstance, const wchar_t* title, int width, int height)
         CORE_LOG_INFO(ss.str());
     }
 
-    // ?? Crear ventana usando el mismo HINSTANCE que usamos para registro
+    // ?? BUG-002 Intento #6: Crear ventana SIN pasar 'this' en lpCreateParams
+    // Registraremos la asociación HWND ? Window* manualmente después de creación
     hwnd_ = CreateWindowExW(
         0,
         CLASS_NAME,  // ?? Usar nombre de clase directamente (no atom)
@@ -72,7 +76,7 @@ Window::Window(HINSTANCE hInstance, const wchar_t* title, int width, int height)
         NULL,
         NULL,
         moduleInstance,  // ? Mismo HINSTANCE que registro
-        this
+        nullptr  // ?? NO pasar 'this' aquí (evitar problemas con WM_NCCREATE)
     );
     
     if (!hwnd_)
@@ -82,9 +86,6 @@ Window::Window(HINSTANCE hInstance, const wchar_t* title, int width, int height)
         ss << "Window::Window - CreateWindowExW FAILED, GetLastError=" << err;
         CORE_LOG_ERROR(ss.str());
 
-        // ?? BUG-002 Intento #5: ELIMINAR fallback a clase STATIC
-        // El fallback enmascara el problema real y crea ventanas no-interactivas
-        
         // ? Mostrar error detallado y abortar
         LPWSTR msgBuf = nullptr;
         FormatMessageW(
@@ -113,28 +114,34 @@ Window::Window(HINSTANCE hInstance, const wchar_t* title, int width, int height)
     ss << "Window::Window - CreateWindowExW succeeded, HWND=" << reinterpret_cast<void*>(hwnd_);
     CORE_LOG_INFO(ss.str());
     
+    // ?? BUG-002 Intento #6: Registrar asociación HWND ? Window* en map estático
+    s_windowMap[hwnd_] = this;
+    CORE_LOG_INFO("Window::Window - Registered HWND in static map");
+    
     ShowWindow(hwnd_, SW_SHOW);
 }
 
 Window::~Window()
 {
+    // ?? BUG-002 Intento #6: Eliminar asociación del map estático
     if (hwnd_)
+    {
+        s_windowMap.erase(hwnd_);
         DestroyWindow(hwnd_);
+    }
 }
 
 LRESULT CALLBACK Window::WndProcStatic(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    if (message == WM_NCCREATE)
+    // ?? BUG-002 Intento #6: Buscar Window* en map estático en lugar de GWLP_USERDATA
+    auto it = s_windowMap.find(hWnd);
+    if (it != s_windowMap.end())
     {
-        CREATESTRUCT* cs = reinterpret_cast<CREATESTRUCT*>(lParam);
-        Window* win = reinterpret_cast<Window*>(cs->lpCreateParams);
-        SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(win));
+        Window* win = it->second;
+        return win->WndProc(message, wParam, lParam);
     }
 
-    Window* win = reinterpret_cast<Window*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
-    if (win)
-        return win->WndProc(message, wParam, lParam);
-
+    // Si no encontramos la ventana en el map, usar DefWindowProc
     return DefWindowProc(hWnd, message, wParam, lParam);
 }
 

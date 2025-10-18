@@ -147,7 +147,78 @@ El usuario debe:
 **Expectativa**: 
 - Si el problema era el mismatch de `hInstance`, la ventana debería crearse correctamente ahora
 - Si persiste error 1400, necesitamos investigar más (posible conflicto con sistema operativo o permisos)
- 
+
+### Intento 6: Eliminar uso de GWLP_USERDATA y usar map estático
+**Fecha**: 2025-01-18
+**Commit**: [completado]
+**Enfoque**:
+El error 1400 persiste en Intento #5 a pesar de usar `GetModuleHandle(NULL)` consistente y eliminar fallback. Nueva hipótesis: el problema puede estar en el uso de `SetWindowLongPtr(GWLP_USERDATA)` en `WM_NCCREATE`, que intenta modificar datos de una ventana que aún no está completamente creada.
+
+Solución implementada:
+1. **Eliminar** uso de `GWLP_USERDATA` en `WM_NCCREATE` completamente
+2. **Usar** un `std::map<HWND, Window*>` estático para asociar `HWND` con instancia `Window*`
+3. **No pasar** `this` en `lpCreateParams` de `CreateWindowExW`
+4. **Registrar** la asociación HWND ? Window* DESPUÉS de creación exitosa de ventana
+5. **Simplificar** `WndProcStatic` para buscar en el map en lugar de `GetWindowLongPtr`
+
+**Cambios en código**:
+```cpp
+// Window.h - Añadir map estático
+class Window {
+    // ...existing code...
+private:
+    static std::map<HWND, Window*> s_windowMap;  // ??
+};
+
+// Window.cpp - Definir map fuera de clase
+std::map<HWND, Window*> Window::s_windowMap;
+
+// Window.cpp - Constructor: NO pasar 'this' en lpCreateParams
+hwnd_ = CreateWindowExW(
+    0, CLASS_NAME, title, WS_OVERLAPPEDWINDOW,
+    CW_USEDEFAULT, CW_USEDEFAULT, width, height,
+    NULL, NULL, moduleInstance,
+    nullptr  // ?? NO pasar 'this' (evita problemas con WM_NCCREATE)
+);
+
+// Registrar asociación DESPUÉS de creación exitosa
+if (hwnd_) {
+    s_windowMap[hwnd_] = this;  // ??
+}
+
+// WndProcStatic - Buscar en map en lugar de GWLP_USERDATA
+LRESULT CALLBACK Window::WndProcStatic(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    auto it = s_windowMap.find(hWnd);  // ??
+    if (it != s_windowMap.end())
+    {
+        return it->second->WndProc(message, wParam, lParam);
+    }
+    return DefWindowProc(hWnd, message, wParam, lParam);
+}
+```
+
+**Archivos modificados**:
+- `src/platform/Window.h`: Añadir `s_windowMap` estático
+- `src/platform/Window.cpp`: Implementar map, eliminar `GWLP_USERDATA`, simplificar `WndProcStatic`
+
+**Resultado**: ? **COMPILACIÓN LIMPIA**
+- CMake Build (Debug): 0 errores, 0 warnings
+- MSBuild "Imagine Studio.sln" (Debug): 0 errores, 0 warnings
+
+**Estado**: ? **PENDIENTE VALIDACIÓN USUARIO**
+
+El usuario debe:
+1. Ejecutar la aplicación (`x64\Debug\Imagine Studio.exe`)
+2. Verificar que:
+   - ? Ventana se crea sin error 1400
+   - ? Logs muestran `[WndProc] Mouse button DOWN/UP` al hacer click
+   - ? Clicks funcionan en UI de ImGui
+
+**Expectativa**:
+- Si el problema era el uso de `GWLP_USERDATA` en `WM_NCCREATE` ? ventana debería crearse correctamente
+- Si persiste error 1400 ? investigar restricciones de Windows o permisos de sistema
+
 ---
 
 ## BUG-001 - [Ejemplo de formato para futuros bugs]

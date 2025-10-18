@@ -228,6 +228,7 @@
     <Text Include="commit_imgui_h23.txt" />
     <Text Include="commit_msg.txt" />
     <Text Include="commit_msg2.txt" />
+    <Text Include="commit_msg_bug002_intento5.txt" />
     <Text Include="commit_msg_h4_1.txt" />
     <Text Include="commit_sprint_complete.txt" />
     <Text Include="commit_sprint_v120_close.txt" />

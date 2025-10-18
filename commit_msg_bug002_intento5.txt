@@ -1,0 +1,24 @@
+fix(Window): Corregir registro de clase y eliminar fallback STATIC - BUG-002 Intento 5
+
+Problema identificado en Intento 4:
+- CreateWindowExW falla con error 1400 (ERROR_INVALID_WINDOW_HANDLE)
+- Fallback a clase STATIC permite arranque pero sin eventos de mouse
+- WndProc nunca recibe WM_LBUTTONDOWN/WM_LBUTTONUP
+- ImGui detecta hover pero no clicks (io.MouseDown[0]=0 siempre)
+
+Solucion implementada:
+- Usar GetModuleHandle(NULL) consistentemente en registro y creacion
+- Verificar si clase ya existe antes de intentar registro
+- Usar nombre de clase directamente (no atom) en CreateWindowExW
+- ELIMINAR fallback a clase STATIC (enmascara problema real)
+- Abortar con error claro si creacion falla
+
+Archivos modificados:
+- src/platform/Window.cpp: Corregir registro de clase, eliminar fallback
+- docs/sprint_bug_attempts.md: Añadir Intento 5 completado
+- docs/sprint_bugs.md: Actualizar estado a Pendiente validacion usuario
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Estado: PENDIENTE VALIDACION USUARIO
+Usuario debe ejecutar y verificar creacion de ventana correcta y funcionamiento de clicks
