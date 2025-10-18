@@ -44,6 +44,46 @@ Refs: H1.1
 
 ### 2025-01-18
 
+#### `8563934` - feat renderer H2.1 Crear clase Camera con matrices View y Projection
+
+**Tipo**: Feature (Renderer)  
+**Ámbito**: Sprint v1.5.0 - H2.1  
+**Descripción**: Crear clase `Camera` con soporte para matrices View (LookAt) y Projection (Perspective)
+
+**Implementación**:
+- Crear `src/renderer/Camera.h` y `Camera.cpp`
+- Soporte para vectores de posición, target y up
+- Matriz View: LookAt transformation (column-major DX12)
+  - Forward vector: normalized(target - position)
+  - Right vector: cross(forward, up)
+  - Recomputed up: cross(right, forward)
+- Matriz Projection: Perspective (column-major DX12)
+  - FOV en grados (default: 45°)
+  - Aspect ratio (default: 16:9)
+  - Near/far planes (default: 0.1 - 1000)
+- Helper functions inline para math vectorial:
+  - `Normalize()`, `Cross()`, `Dot()`
+- Getters para matrices y posición/target
+- Métodos `UpdateViewMatrix()` y `UpdateProjectionMatrix()`
+
+**Valores por defecto**:
+- Posición: (0, 0, -5) - cámara alejada 5 unidades en -Z
+- Target: (0, 0, 0) - mirando al origen
+- Up: (0, 1, 0) - vector arriba en +Y
+- FOV: 45°, Aspect: 16:9, Near: 0.1, Far: 1000
+
+**Archivos creados**:
+- `src/renderer/Camera.h` (clase con matrices 4x4 column-major)
+- `src/renderer/Camera.cpp` (implementación LookAt + Perspective)
+
+**Compilación**: ✅ Limpia (CMake + MSBuild: 0 errores, 0 warnings)
+
+**Próxima tarea**: H2.2 - Integrar Camera en DX12Renderer
+
+**Referencia**: Sprint v1.5.0 - H2.1
+
+---
+
 #### `5dfedd1` - feat renderer H1.3+H1.4 Implementar TransitionResource helper y validación SRV
 
 **Tipo**: Feature (Renderer)  

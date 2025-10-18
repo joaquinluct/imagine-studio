@@ -1,6 +1,6 @@
 ﻿# Daily Log
 
-Hecho: H1.4 - Validación Visual SRV
-Siguiente: H2.1 - Crear clase Camera
+Hecho: H2.1 - Crear clase Camera
+Siguiente: H2.2 - Integrar Camera en DX12Renderer
 
 
