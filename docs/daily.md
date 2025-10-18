@@ -1,6 +1,6 @@
 ﻿# Daily Log
 
-Hecho: Sistema Sprint Deviations + Sistema tracking sesiones IA (limite 85%) implementados
+Hecho: Mejoras administrativas (Resumen sesiones IA + carpeta docs/sprints/) completadas
 Siguiente: H4.1 - Implementar Panel Hierarchy (Editor UI)
 
 
