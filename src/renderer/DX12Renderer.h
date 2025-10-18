@@ -66,6 +66,11 @@ public:
         }
         return m_renderTargetSRV_GPU; 
     }
+    
+    // v1.6.0 H1.1 - Scene RT SRV accessor (for Viewport panel)
+    D3D12_GPU_DESCRIPTOR_HANDLE GetSceneRenderTargetSRV() const {
+        return m_sceneSRV_GPU;
+    }
 #else
     void* GetImGuiSrvHeap() const { return nullptr; }
     void* GetDevice() const { return nullptr; }
@@ -100,6 +105,13 @@ private:
     // Render Target SRV handles (v1.5.0 - H1.1)
     D3D12_CPU_DESCRIPTOR_HANDLE m_renderTargetSRV_CPU = {};
     D3D12_GPU_DESCRIPTOR_HANDLE m_renderTargetSRV_GPU = {};
+    
+    // v1.6.0 H1.1 - Scene render target offscreen (AAA standard)
+    // Separates 3D scene rendering from UI rendering to eliminate viewport recursion
+    ID3D12Resource* m_sceneRenderTarget = nullptr;
+    D3D12_CPU_DESCRIPTOR_HANDLE m_sceneRTV = {};
+    D3D12_GPU_DESCRIPTOR_HANDLE m_sceneSRV_GPU = {};
+    D3D12_CPU_DESCRIPTOR_HANDLE m_sceneSRV_CPU = {};
     
     // Command recording and synchronization
     ID3D12CommandAllocator* m_commandAllocator = nullptr;
