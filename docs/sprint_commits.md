@@ -44,6 +44,40 @@ Refs: H1.1
 
 ### 2025-01-18
 
+#### `49a39db` - feat renderer H1.1 Expandir descriptor heap ImGui SRV para viewport texture
+
+**Tipo**: Feature (Renderer)  
+**Ámbito**: Sprint v1.5.0 - H1.1  
+**Descripción**: Expandir descriptor heap ImGui SRV de 1 a 2 descriptors para soportar render target texture del viewport
+
+**Implementación**:
+- Expandir `m_imguiSrvHeap` de 1 a 2 descriptors
+  - Slot 0: ImGui font atlas SRV (existente)
+  - Slot 1: Render target SRV (nuevo - v1.5.0)
+- Implementar método `CreateRenderTargetSRV()`:
+  - Generar SRV descriptor del back buffer actual
+  - Handles CPU/GPU apuntando a slot 1
+  - Formato: `DXGI_FORMAT_R8G8B8A8_UNORM` (coincide con swap chain)
+  - ViewDimension: `D3D12_SRV_DIMENSION_TEXTURE2D`
+- Añadir `m_imguiSrvDescriptorSize` para calcular offsets dentro del heap
+- Añadir getter `GetRenderTargetSRV()` para acceso externo
+- Llamar a `CreateRenderTargetSRV()` al final de `Initialize(HWND)`
+
+**Fix adicional**:
+- Corregir typo: `D3D_PRIMITIVE_TOPOLOGY_TRIANGLE` → `D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST`
+
+**Archivos creados/modificados**:
+- `src/renderer/DX12Renderer.h` (declaraciones + miembros nuevos)
+- `src/renderer/DX12Renderer.cpp` (implementación + fix typo)
+
+**Compilación**: ✅ Limpia (CMake + MSBuild: 0 errores, 0 warnings)
+
+**Próxima tarea**: H1.2 - Crear SRV Descriptor para Render Target
+
+**Referencia**: Sprint v1.5.0 - H1.1
+
+---
+
 #### `77d7473` - docs: Planificación Sprint v1.5.0 - Viewport Real
 
 **Tipo**: Docs (Planificación)  
