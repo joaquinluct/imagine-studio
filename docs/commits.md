@@ -984,6 +984,53 @@ ALL TESTS PASSED! (15 asserts)
 
 ## 2025-01-18
 
+### `8dbe3b5` - feat(scene): Implementar parent-child hierarchy en Transform (H2.3)
+
+**Tipo**: Feature (Sprint v1.4.0)  
+**Ámbito**: Scene  
+**Descripción**: Añadir soporte para jerarquía padre-hijo en Transform con propagación de transformaciones
+
+**Historia H2.3** - Parent-child hierarchy completado
+
+**Implementación**:
+- Añadir miembro `Entity* m_parent` a Transform (inicializado a `nullptr`)
+- Añadir métodos `SetParent(Entity*)` y `GetParent() const`
+- Actualizar `GetWorldMatrix()` para propagar transformación del parent
+- Lógica: `worldMatrix = localMatrix * parent->GetWorldMatrix()` (recursivo)
+- Si `parent == nullptr`, `worldMatrix == localMatrix` (entity raíz)
+
+**Características**:
+- ✅ Forward declaration de `Entity` en `Transform.h`
+- ✅ Include `Entity.h` en `Transform.cpp` (para `GetComponent`)
+- ✅ Propagación recursiva de transformaciones (cascada completa)
+- ✅ `GetWorldMatrix()` verifica `parent != nullptr` antes de propagación
+- ✅ Verifica parent tiene Transform component antes de usar
+- ✅ Si parent sin Transform, usa solo local matrix (fallback seguro)
+
+**Orden de multiplicación**:
+- `localMatrix * parentWorldMatrix` (correcto para transformaciones jerárquicas)
+- Child hereda transformación acumulada de todos los ancestors
+
+**Validación**:
+- ✅ Tests anteriores (`transform_test.exe`) siguen pasando (15/15)
+- ✅ `TestTransformWorldMatrix` valida `parent == nullptr` correctamente
+
+**Archivos modificados**:
+- `src/scene/Transform.h` (Entity* m_parent, SetParent/GetParent)
+- `src/scene/Transform.cpp` (GetWorldMatrix con propagación recursiva)
+
+**Compilación**: ✅ Limpia
+- CMake Build (Debug): 0 errores, 0 warnings
+- MSBuild "Imagine Studio.sln" (Debug): 0 errores, 0 warnings
+
+**Próxima tarea**: H2.4 - Tests parent-child hierarchy
+
+**Referencia**: H2.3 - Parent hierarchy v1.4.0
+
+---
+
+## 2025-01-18
+
 
 
 

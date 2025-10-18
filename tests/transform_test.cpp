@@ -1,4 +1,6 @@
 #include "../src/scene/Transform.h"
+#include "../src/scene/Entity.h"
+#include "../src/scene/EntityManager.h"
 #include <cassert>
 #include <iostream>
 #include <cmath>
@@ -196,6 +198,87 @@ void TestTransformWorldMatrix()
     std::cout << "[TEST] TestTransformWorldMatrix - PASSED" << std::endl;
 }
 
+void TestParentChildHierarchy()
+{
+    std::cout << "[TEST] TestParentChildHierarchy - START" << std::endl;
+    
+    // Create EntityManager and entities
+    Scene::EntityManager mgr;
+    Scene::Entity* parentEntity = mgr.CreateEntity("Parent");
+    Scene::Entity* childEntity = mgr.CreateEntity("Child");
+    
+    // Add Transform components
+    Scene::Transform* parentTransform = parentEntity->AddComponent<Scene::Transform>();
+    Scene::Transform* childTransform = childEntity->AddComponent<Scene::Transform>();
+    
+    // Test 1: SetParent and GetParent
+    {
+        childTransform->SetParent(parentEntity);
+        assert(childTransform->GetParent() == parentEntity);
+        std::cout << "  [PASS] SetParent() and GetParent() work correctly" << std::endl;
+    }
+    
+    // Test 2: Child inherits parent position (simple case)
+    {
+        parentTransform->SetPosition(10.0f, 0.0f, 0.0f);
+        childTransform->SetPosition(5.0f, 0.0f, 0.0f);
+        
+        DirectX::XMMATRIX childWorld = childTransform->GetWorldMatrix();
+        DirectX::XMFLOAT3 childWorldPos = ExtractTranslation(childWorld);
+        
+        // Child world position should be parent(10,0,0) + child_local(5,0,0) = (15,0,0)
+        assert(Float3Equal(childWorldPos, DirectX::XMFLOAT3(15.0f, 0.0f, 0.0f)));
+        std::cout << "  [PASS] Child inherits parent position correctly" << std::endl;
+    }
+    
+    // Test 3: Move parent ? child moves automatically
+    {
+        parentTransform->SetPosition(20.0f, 0.0f, 0.0f);
+        
+        DirectX::XMMATRIX childWorld = childTransform->GetWorldMatrix();
+        DirectX::XMFLOAT3 childWorldPos = ExtractTranslation(childWorld);
+        
+        // Child world position should be parent(20,0,0) + child_local(5,0,0) = (25,0,0)
+        assert(Float3Equal(childWorldPos, DirectX::XMFLOAT3(25.0f, 0.0f, 0.0f)));
+        std::cout << "  [PASS] Moving parent moves child automatically" << std::endl;
+    }
+    
+    // Test 4: Remove parent (SetParent(nullptr))
+    {
+        childTransform->SetParent(nullptr);
+        assert(childTransform->GetParent() == nullptr);
+        
+        DirectX::XMMATRIX childWorld = childTransform->GetWorldMatrix();
+        DirectX::XMFLOAT3 childWorldPos = ExtractTranslation(childWorld);
+        
+        // Child world position should be child_local(5,0,0) only
+        assert(Float3Equal(childWorldPos, DirectX::XMFLOAT3(5.0f, 0.0f, 0.0f)));
+        std::cout << "  [PASS] Removing parent (SetParent(nullptr)) works correctly" << std::endl;
+    }
+    
+    // Test 5: Multi-level hierarchy (grandparent ? parent ? child)
+    {
+        Scene::Entity* grandparentEntity = mgr.CreateEntity("Grandparent");
+        Scene::Transform* grandparentTransform = grandparentEntity->AddComponent<Scene::Transform>();
+        
+        grandparentTransform->SetPosition(100.0f, 0.0f, 0.0f);
+        parentTransform->SetPosition(10.0f, 0.0f, 0.0f);
+        childTransform->SetPosition(1.0f, 0.0f, 0.0f);
+        
+        parentTransform->SetParent(grandparentEntity);
+        childTransform->SetParent(parentEntity);
+        
+        DirectX::XMMATRIX childWorld = childTransform->GetWorldMatrix();
+        DirectX::XMFLOAT3 childWorldPos = ExtractTranslation(childWorld);
+        
+        // Child world position should be grandparent(100) + parent(10) + child(1) = (111,0,0)
+        assert(Float3Equal(childWorldPos, DirectX::XMFLOAT3(111.0f, 0.0f, 0.0f)));
+        std::cout << "  [PASS] Multi-level hierarchy (3 levels) works correctly" << std::endl;
+    }
+    
+    std::cout << "[TEST] TestParentChildHierarchy - PASSED" << std::endl;
+}
+
 int main()
 {
     std::cout << "========================================" << std::endl;
@@ -207,6 +290,7 @@ int main()
         TestTransformSettersGetters();
         TestTransformLocalMatrix();
         TestTransformWorldMatrix();
+        TestParentChildHierarchy();
         
         std::cout << "========================================" << std::endl;
         std::cout << "ALL TESTS PASSED!" << std::endl;

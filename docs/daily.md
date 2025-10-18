@@ -1,6 +1,6 @@
 ﻿# Daily Log
 
-Hecho: H2.2 - Tests Transform Component completados (15 tests, default values/setters/getters/TRS matrix/world matrix validados)
-Siguiente: H2.3 - Parent-child hierarchy (añadir parent Entity a Transform, GetWorldMatrix con propagacion)
+Hecho: H2.3 - Parent-child hierarchy implementado (Entity* parent en Transform, GetWorldMatrix con propagacion recursiva, cascada completa)
+Siguiente: H2.4 - Tests parent-child hierarchy (validar propagacion, mover parent mueve hijos, worldMatrix correcta)
 
 

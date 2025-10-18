@@ -1,0 +1,36 @@
+feat(scene): Implementar parent-child hierarchy en Transform (H2.3)
+
+Historia H2.3 - Parent-child hierarchy completado
+
+Implementacion:
+- Anadir miembro Entity* m_parent a Transform (inicializado a nullptr)
+- Anadir metodos SetParent(Entity*) y GetParent() const
+- Actualizar GetWorldMatrix() para propagar transformacion del parent
+- Logica: worldMatrix = localMatrix * parent->GetWorldMatrix() (recursivo)
+- Si parent == nullptr, worldMatrix == localMatrix (entity raiz)
+
+Caracteristicas:
+- Forward declaration de Entity en Transform.h
+- Include Entity.h en Transform.cpp (para GetComponent)
+- Propagacion recursiva de transformaciones (cascada completa)
+- GetWorldMatrix() verifica parent != nullptr antes de propagacion
+- Verifica parent tiene Transform component antes de usar
+- Si parent sin Transform, usa solo local matrix (fallback seguro)
+
+Orden de multiplicacion:
+- localMatrix * parentWorldMatrix (correcto para transformaciones jerarquicas)
+- Child hereda transformacion acumulada de todos los ancestors
+
+Validacion:
+- Tests anteriores (transform_test.exe) siguen pasando (15/15)
+- TestTransformWorldMatrix valida parent == nullptr correctamente
+
+Archivos modificados:
+- src/scene/Transform.h (Entity* m_parent, SetParent/GetParent)
+- src/scene/Transform.cpp (GetWorldMatrix con propagacion recursiva)
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Proxima tarea: H2.4 - Tests parent-child hierarchy
+
+Referencia: H2.3 - Parent hierarchy v1.4.0
