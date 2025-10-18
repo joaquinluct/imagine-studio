@@ -1,0 +1,29 @@
+docs: BUG-002 RESUELTO - Actualizar documentacion de bugs y fixes
+
+BUG-002 resuelto exitosamente con Intento 6 (eliminar GWLP_USERDATA y usar map estatico)
+
+Validacion del usuario exitosa:
+1. Ejecucion sin errores
+2. F1/Toggle UI perfecta
+3. Uso del raton sobre la UI perfecto (hover, click)
+4. Todos los menus y submenus funcionan correctamente
+5. Click en todas las opciones funciona
+6. Cajas de texto funcionan (teclado tambien funciona)
+7. Salida del programa (ESC) limpia y sin errores
+
+Puntuacion del usuario: 10 de 10
+
+Archivos actualizados:
+- docs/sprint_bug_attempts.md: Añadir validacion exitosa de Intento 6
+- docs/sprint_bugs.md: Limpiar bugs pendientes (sin bugs activos)
+- docs/sprint_fix.md: Añadir FIX-002 completo con causa raiz y solucion
+- docs/daily.md: Actualizar estado a BUG-002 RESUELTO
+
+Causa raiz confirmada:
+El uso de SetWindowLongPtr(GWLP_USERDATA) en WM_NCCREATE causaba error 1400 porque
+intentaba modificar datos de una ventana que aun no estaba completamente inicializada.
+
+Leccion aprendida critica:
+- NUNCA usar SetWindowLongPtr(GWLP_USERDATA) en WM_NCCREATE
+- SIEMPRE usar map/diccionario estatico para asociar HWND con instancias de clase
+- Registrar asociacion DESPUES de que CreateWindowExW retorne exitosamente

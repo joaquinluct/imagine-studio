@@ -26,6 +26,7 @@
 
 // For DPI helper functions
 #include <VersionHelpers.h>
+
 static int RunApp(HINSTANCE hInstance)
 {
     // Make the process DPI aware so window coordinates and monitor bounds
@@ -99,16 +100,11 @@ static int RunApp(HINSTANCE hInstance)
         }
     }
 
-    // (Removed diagnostic repositioning � the window was intentionally set
-    // to borderless fullscreen above and repositioning here reverted it.)
-
     // Log HWND for diagnosis
     {
         std::ostringstream ss; ss << "Main window HWND=" << reinterpret_cast<void*>(window.GetHWND()); CORE_LOG_INFO(ss.str());
     }
 
-    // Debug: window visibility logged above. No MessageBox so the main loop
-    // remains responsive and the window is interactive during debugging.
     CORE_LOG_INFO(std::string("Render window should be visible (HWND=)") + std::to_string(reinterpret_cast<uintptr_t>(window.GetHWND())));
 
     // Setup Dear ImGui context (v1.3.0 - Editor UI Framework)
@@ -116,7 +112,7 @@ static int RunApp(HINSTANCE hInstance)
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     
-    // Enable docking (preparar para H4 - Editor Panels & Docking)
+    // Enable docking (H4 - Editor Panels & Docking)
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     
     // Setup Dear ImGui style (dark theme)
@@ -234,32 +230,36 @@ static int RunApp(HINSTANCE hInstance)
             renderer.OnAssetLoaded(loadedPath);
         }
 
-        // Start ImGui frame (H2.3 - ImGui DX12 NewFrame integration)
-        // IMPORTANTE: Win32 NewFrame DEBE ir PRIMERO
-        ImGui_ImplWin32_NewFrame();
-        ImGui_ImplDX12_NewFrame();
-        ImGui::NewFrame();
-        
-        // 🐛 DEBUG: Log mouse state after NewFrame (BUG-001 Intento #4)
+        // ✅ AAA STANDARD: Solo procesar ImGui si UI está visible (Unity/Unreal style)
+        // Esto ahorra CPU/GPU cuando UI está oculta con F1
+        if (renderer.IsUIVisible())
         {
-            std::ostringstream ss;
-            ss << "[NewFrame] io.MouseDown[0]=" << io.MouseDown[0] 
-               << ", io.MouseDown[1]=" << io.MouseDown[1]
-               << ", WantCaptureMouse=" << io.WantCaptureMouse
-               << ", MousePos=(" << io.MousePos.x << "," << io.MousePos.y << ")";
-            CORE_LOG_INFO(ss.str());
+            // Start ImGui frame
+            ImGui_ImplWin32_NewFrame();
+            ImGui_ImplDX12_NewFrame();
+            ImGui::NewFrame();
+            
+            // ✅ AAA STANDARD: Dockspace principal ANTES de panels (Unity/Unreal style)
+            // Permite docking flexible de todos los panels del editor
+            ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
+            
+            // ✅ AAA STANDARD: Demo window solo en debug builds
+            #ifdef _DEBUG
+                ImGui::ShowDemoWindow();  // Testing ImGui integration
+            #else
+                // TODO H4.1-H4.4: Implementar Editor::EditorUI::RenderAllPanels()
+                // Editor panels (Hierarchy, Inspector, Console, Viewport)
+            #endif
+            
+            // Render ImGui
+            ImGui::Render();
         }
-        
-        // ImGui demo window (placeholder - remover en H4)
-        ImGui::ShowDemoWindow();
-        
-        // Render ImGui
-        ImGui::Render();
 
-        // Renderer renderiza frame (incluye UIPass con ImGui draw data)
+        // Renderer renderiza frame (incluye UIPass con ImGui draw data si m_uiVisible)
         renderer.RenderFrame();
         ui.Draw();
         ui.DrawOverlay();
+        
         auto frameEnd = std::chrono::high_resolution_clock::now();
         double ms = std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(frameEnd - frameStart).count();
         Tools::Profiler::Instance().RecordFrame(ms);
