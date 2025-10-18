@@ -1,6 +1,6 @@
 ﻿# Daily Log
 
-Hecho: H2.4 - Validar controles de cámara (orbit/pan/zoom)
-Siguiente: H3.1 - Crear clase Viewport para integración con editor
+Hecho: H3.1 - Crear clase Viewport para integración con editor
+Siguiente: H3.2 - Cambiar transición PRESENT → PIXEL_SHADER_RESOURCE
 
 
