@@ -44,6 +44,37 @@ Refs: H1.1
 
 ### 2025-01-18
 
+#### `7afbbf8` - feat renderer H1.2 Actualizar SRV descriptor para render target dinámico
+
+**Tipo**: Feature (Renderer)  
+**Ámbito**: Sprint v1.5.0 - H1.2  
+**Descripción**: Actualizar SRV descriptor dinámicamente cuando cambia el back buffer actual (m_frameIndex)
+
+**Implementación**:
+- Modificar `CreateRenderTargetSRV()` para regenerar SRV con `m_renderTargets[m_frameIndex]` actual
+- Llamar a `CreateRenderTargetSRV()` después de `Present()` en `RenderForwardPass()`
+- Asegurar que `GetRenderTargetSRV()` siempre retorna handle válido apuntando al back buffer correcto
+- Añadir logging con número de frame index para debugging
+
+**Razón**:
+- El swap chain alterna entre 2 back buffers (double buffering)
+- `m_frameIndex` cambia después de cada `Present()`
+- El SRV debe actualizarse para apuntar al back buffer correcto
+
+**Fix adicional**:
+- Corregir typo (otra instancia): `D3D_PRIMITIVE_TOPOLOGY_TRIANGLE` → `D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST`
+
+**Archivos modificados**:
+- `src/renderer/DX12Renderer.cpp` (actualizar CreateRenderTargetSRV + llamada en RenderForwardPass)
+
+**Compilación**: ✅ Limpia (CMake + MSBuild: 0 errores, 0 warnings)
+
+**Próxima tarea**: H1.3 - Implementar Resource State Transitions
+
+**Referencia**: Sprint v1.5.0 - H1.2
+
+---
+
 #### `49a39db` - feat renderer H1.1 Expandir descriptor heap ImGui SRV para viewport texture
 
 **Tipo**: Feature (Renderer)  
