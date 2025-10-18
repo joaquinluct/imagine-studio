@@ -65,9 +65,6 @@ void DX12OpaquePass::Execute(DX12CommandContext& ctx)
     // Set viewport and scissor rect (1920x1080 Full HD)
     SetViewportAndScissor(ctx, 1920, 1080);
 
-    // Transition render target: RENDER_TARGET (already in this state from Initialize)
-    // No transition needed if already in RENDER_TARGET state
-
     // Set render target with dark blue clear color
     const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
     DX12RenderPass::SetRenderTarget(ctx, m_rtv, clearColor);
@@ -76,6 +73,12 @@ void DX12OpaquePass::Execute(DX12CommandContext& ctx)
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     // Set vertex buffer
+    if (m_vertexBufferView.BufferLocation == 0)
+    {
+        CORE_LOG_ERROR("DX12OpaquePass::Execute: Vertex buffer view not set");
+        return;
+    }
+    
     commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
 
     // Set root constants (MVP matrix)
@@ -83,6 +86,8 @@ void DX12OpaquePass::Execute(DX12CommandContext& ctx)
 
     // DRAW CALL - 6 vertices (2 triangles forming a quad)
     commandList->DrawInstanced(6, 1, 0, 0);
+    
+    CORE_LOG_INFO("DX12OpaquePass: Draw call executed (6 vertices)");
 #endif
 }
 

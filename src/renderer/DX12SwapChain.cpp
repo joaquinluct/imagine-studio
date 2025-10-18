@@ -211,17 +211,7 @@ bool DX12SwapChain::Resize(unsigned int width, unsigned int height)
 void DX12SwapChain::Shutdown()
 {
 #if defined(_WIN32) && defined(_MSC_VER)
-    // Release back buffers
-    for (unsigned int i = 0; i < m_bufferCount; ++i)
-    {
-        if (m_backBuffers[i])
-        {
-            m_backBuffers[i]->Release();
-            m_backBuffers[i] = nullptr;
-        }
-    }
-
-    // Release swap chain
+    // Release swap chain (but NOT back buffers - they're owned by swap chain)
     if (m_swapChain)
     {
         m_swapChain->Release();
@@ -229,6 +219,12 @@ void DX12SwapChain::Shutdown()
         CORE_LOG_INFO("DX12SwapChain shutdown");
     }
 #endif
+
+    // Clear back buffer pointers (don't release - swap chain owns them)
+    for (unsigned int i = 0; i < 3; ++i)
+    {
+        m_backBuffers[i] = nullptr;
+    }
 
     m_bufferCount = 0;
     m_width = 0;

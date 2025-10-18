@@ -475,40 +475,33 @@ void DX12Renderer::RenderForwardPass()
     CalculateMVPMatrix();
     m_opaquePass->SetMVPMatrix(m_mvpMatrix);
     
-    // Begin frame
-    m_commandContext->BeginFrame(nullptr);
-    
-    // Execute OpaquePass (renders to scene RT)
+    // === PASS 1: OPAQUE PASS (render 3D scene to scene RT) ===
+    m_commandContext->BeginFrame(m_pipelineState);
     m_opaquePass->Execute(*m_commandContext);
-    
-    // End frame and execute
     m_commandContext->EndFrame();
     m_commandContext->Execute();
     m_commandContext->WaitForGPU();
     
-    // Execute UIPass (renders to back buffer) if visible
-    if (m_uiVisible)
-    {
-        // Get current back buffer
-        unsigned int backBufferIndex = m_swapChain->GetCurrentBackBufferIndex();
-        ID3D12Resource* backBuffer = m_swapChain->GetBackBuffer(backBufferIndex);
-        
-        // Get RTV for back buffer
-        D3D12_CPU_DESCRIPTOR_HANDLE backBufferRTV = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
-        backBufferRTV.ptr += backBufferIndex * m_rtvDescriptorSize;
-        
-        // Configure UIPass
-        m_uiPass->SetRenderTarget(backBuffer, backBufferRTV);
-        m_uiPass->SetImGuiSrvHeap(m_imguiSrvHeap);
-        m_uiPass->SetUIVisible(m_uiVisible);
-        
-        // Execute UIPass
-        m_commandContext->BeginFrame(nullptr);
-        m_uiPass->Execute(*m_commandContext);
-        m_commandContext->EndFrame();
-        m_commandContext->Execute();
-        m_commandContext->WaitForGPU();
-    }
+    // === PASS 2: UI PASS (render ImGui to back buffer) ===
+    // IMPORTANT: Always execute UI pass, visibility is handled inside UIPass::Execute
+    unsigned int backBufferIndex = m_swapChain->GetCurrentBackBufferIndex();
+    ID3D12Resource* backBuffer = m_swapChain->GetBackBuffer(backBufferIndex);
+    
+    // Get RTV for back buffer
+    D3D12_CPU_DESCRIPTOR_HANDLE backBufferRTV = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
+    backBufferRTV.ptr += backBufferIndex * m_rtvDescriptorSize;
+    
+    // Configure UIPass
+    m_uiPass->SetRenderTarget(backBuffer, backBufferRTV);
+    m_uiPass->SetImGuiSrvHeap(m_imguiSrvHeap);
+    m_uiPass->SetUIVisible(m_uiVisible);
+    
+    // Execute UIPass
+    m_commandContext->BeginFrame(nullptr);
+    m_uiPass->Execute(*m_commandContext);
+    m_commandContext->EndFrame();
+    m_commandContext->Execute();
+    m_commandContext->WaitForGPU();
     
     // Present
     m_swapChain->Present(true); // VSync on

@@ -55,12 +55,24 @@ void DX12UIPass::Execute(DX12CommandContext& ctx)
     ImDrawData* draw_data = ImGui::GetDrawData();
     if (draw_data == nullptr || draw_data->TotalVtxCount == 0)
     {
-        return; // Nothing to render
+        // No ImGui data to render, but we still need to clear the back buffer
+        // Set render target
+        commandList->OMSetRenderTargets(1, &m_rtv, FALSE, nullptr);
+        
+        // Clear back buffer with dark gray (editor background)
+        const float clearColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+        commandList->ClearRenderTargetView(m_rtv, clearColor, 0, nullptr);
+        
+        return;
     }
-
-    // Set render target (no clear - render on top of opaque pass)
+    
+    // Set render target (clear with editor background)
     commandList->OMSetRenderTargets(1, &m_rtv, FALSE, nullptr);
-
+    
+    // Clear back buffer with dark gray
+    const float clearColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+    commandList->ClearRenderTargetView(m_rtv, clearColor, 0, nullptr);
+    
     // Set ImGui SRV descriptor heap (CRITICAL for ImGui to access textures)
     if (m_imguiSrvHeap)
     {
