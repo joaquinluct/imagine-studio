@@ -248,8 +248,11 @@ static int RunApp(HINSTANCE hInstance)
         }
         
         // v1.5.0 H2.3: Camera controls (orbit/pan/zoom)
+        // v1.5.0 H4.1: Restringir controles solo cuando Viewport tiene hover
         Renderer::Camera* camera = renderer.GetCamera();
-        if (camera)
+        Editor::Viewport* viewport = Editor::EditorUI::GetViewport();
+        
+        if (camera && viewport && viewport->IsHovered())
         {
             // Orbit: Right mouse button
             if (input.IsMouseButtonDown(1)) // Right button
