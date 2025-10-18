@@ -9,6 +9,7 @@
 #include "renderer/DX12Renderer.h"
 #include "tools/Profiler.h"
 #include "ui/SimpleUI.h"
+#include "scene/Scene.h"
 
 #include <chrono>
 #include <fstream>
@@ -151,6 +152,17 @@ static int RunApp(HINSTANCE hInstance)
 
     renderer.Initialize(hwnd);
     
+    // Create Scene (H4 - Editor Integration with Scene Graph)
+    Scene::Scene scene("Main Scene");
+    CORE_LOG_INFO("Scene created: Main Scene");
+    
+    // Create default entities for demo
+    Scene::Entity* camera = scene.CreateEntity("Main Camera");
+    Scene::Entity* light = scene.CreateEntity("Directional Light");
+    Scene::Entity* geometry = scene.CreateEntity("Quad");
+    
+    CORE_LOG_INFO("Default entities created: Main Camera, Directional Light, Quad");
+
     // Setup Platform/Renderer backends (H2.2 - ImGui DX12 Backend)
 #if defined(_WIN32) && defined(_MSC_VER)
     // Get ImGui SRV descriptor heap and device from renderer
@@ -253,17 +265,8 @@ static int RunApp(HINSTANCE hInstance)
             // Permite docking flexible de todos los panels del editor
             ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
             
-            // ✅ H4.1: Panel Hierarchy (árbol de objetos de escena)
-            Editor::EditorUI::RenderHierarchy();
-            
-            // ✅ H4.2: Panel Inspector (propiedades del objeto seleccionado)
-            Editor::EditorUI::RenderInspector();
-            
-            // ✅ H4.3: Panel Console (logs del sistema)
-            Editor::EditorUI::RenderConsole();
-            
-            // ✅ H4.4: Panel Viewport (render target 3D placeholder)
-            Editor::EditorUI::RenderViewport();
+            // ✅ H4: Render all editor panels with Scene integration
+            Editor::EditorUI::RenderAllPanels(&scene);
             
             // ✅ AAA STANDARD: Demo window solo en debug builds
             #ifdef _DEBUG

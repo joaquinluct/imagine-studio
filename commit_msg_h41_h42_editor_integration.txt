@@ -1,0 +1,49 @@
+feat(editor): Conectar Hierarchy e Inspector con Scene (H4.1, H4.2)
+
+Historias H4.1-H4.2 - Editor Integration con Scene Graph
+
+Implementacion:
+- Actualizar EditorUI.h para recibir Scene* como parametro
+- RenderHierarchy(Scene*): reemplaza placeholder con entities reales
+- RenderInspector(Scene*): muestra/edita Transform de entity seleccionada
+- Crear Scene global en main.cpp con entities por defecto
+- Pasar Scene a EditorUI::RenderAllPanels()
+
+Hierarchy panel (H4.1):
+- Botones: "Create Entity" y "Delete Entity"
+- Lista de root entities desde scene->GetRootEntities()
+- TreeNode para cada entity con nombre
+- Click en entity -> scene->SetSelectedEntity(id)
+- Highlight entity seleccionada (ImGuiTreeNodeFlags_Selected)
+- Mensaje "Scene is empty" si no hay entities
+
+Inspector panel (H4.2):
+- Muestra entity seleccionada (nombre + ID)
+- Transform component editable:
+  - Position: ImGui::DragFloat3 (0.1f step)
+  - Rotation: Euler angles en grados (convertido desde/hacia radianes)
+  - Scale: ImGui::DragFloat3 (0.01f step, min 0.01, max 10.0)
+- Mensaje "No entity selected" si no hay seleccion
+
+Scene global (main.cpp):
+- Crear Scene("Main Scene") al inicio
+- CreateEntity: "Main Camera", "Directional Light", "Quad"
+- Pasar &scene a RenderAllPanels()
+
+Caracteristicas:
+- Reemplaza completamente placeholder con sistema real
+- Create/Delete entities funcionales desde UI
+- Selection system funciona (click en Hierarchy ? Inspector actualizado)
+- Transform editable en tiempo real desde Inspector
+- Rotation en grados para UI (internamente radianes)
+
+Archivos modificados:
+- src/editor/EditorUI.h (Scene* parametro)
+- src/editor/EditorUI.cpp (Hierarchy + Inspector con Scene)
+- src/main.cpp (crear Scene, entities default, pasar a EditorUI)
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Proxima tarea: H4.3 - Validacion visual de Hierarchy/Inspector funcionando
+
+Referencia: H4.1-H4.2 - Editor Integration v1.4.0

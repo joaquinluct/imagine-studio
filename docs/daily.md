@@ -1,6 +1,6 @@
 ﻿# Daily Log
 
-Hecho: H3.1 - Scene class implementada (EntityManager integrado, CreateEntity/DestroyEntity, selection, rootEntities para Hierarchy)
-Siguiente: H3.2 - Scene::Update() con propagacion deltaTime (implementacion ya incluida en H3.1, validar con tests)
+Hecho: H4.1-H4.2 - Editor Integration completado (Hierarchy con entities reales, Inspector con Transform editable, Create/Delete buttons)
+Siguiente: H4.3-H4.4 - Validacion visual Editor completo (testing manual F5, verificar Hierarchy/Inspector/Console/Viewport funcionan)
 
 

@@ -1,81 +1,124 @@
 #include "EditorUI.h"
+#include "../scene/Scene.h"
+#include "../scene/Entity.h"
+#include "../scene/Transform.h"
 
 #include "imgui.h"
 
 namespace Editor {
 
-void EditorUI::RenderHierarchy()
+void EditorUI::RenderHierarchy(Scene::Scene* scene)
 {
     ImGui::Begin("Hierarchy");
     
-    // Placeholder: Árbol de objetos hardcoded (placeholder scene structure)
-    // Este árbol simula una estructura típica de escena 3D
-    if (ImGui::TreeNode("Scene Root"))
-    {
-        // Camera node
-        if (ImGui::TreeNode("Camera"))
-        {
-            ImGui::Selectable("Main Camera");
-            ImGui::TreePop();
+    if (!scene) {
+        ImGui::Text("No active scene");
+        ImGui::End();
+        return;
+    }
+    
+    // Buttons: Create Entity and Delete Entity
+    if (ImGui::Button("Create Entity")) {
+        scene->CreateEntity("New Entity");
+    }
+    
+    ImGui::SameLine();
+    
+    if (ImGui::Button("Delete Entity")) {
+        Scene::Entity* selected = scene->GetSelectedEntity();
+        if (selected) {
+            scene->DestroyEntity(selected->GetID());
         }
-        
-        // Lights group
-        if (ImGui::TreeNode("Lights"))
-        {
-            ImGui::Selectable("Directional Light");
-            ImGui::Selectable("Point Light 1");
-            ImGui::Selectable("Point Light 2");
-            ImGui::TreePop();
+    }
+    
+    ImGui::Separator();
+    
+    // Render tree of root entities
+    const std::vector<Scene::Entity*>& rootEntities = scene->GetRootEntities();
+    
+    if (rootEntities.empty()) {
+        ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "Scene is empty");
+        ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "Click 'Create Entity' to add objects");
+    } else {
+        for (Scene::Entity* entity : rootEntities) {
+            ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+            
+            // Highlight if selected
+            if (entity == scene->GetSelectedEntity()) {
+                flags |= ImGuiTreeNodeFlags_Selected;
+            }
+            
+            // Leaf node (no children for now - TODO: H4 future task)
+            flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+            
+            ImGui::TreeNodeEx(entity->GetName().c_str(), flags);
+            
+            // Click to select
+            if (ImGui::IsItemClicked()) {
+                scene->SetSelectedEntity(entity->GetID());
+            }
         }
-        
-        // Geometry group
-        if (ImGui::TreeNode("Geometry"))
-        {
-            ImGui::Selectable("Quad");
-            ImGui::Selectable("Cube");
-            ImGui::Selectable("Sphere");
-            ImGui::TreePop();
-        }
-        
-        ImGui::TreePop();
     }
     
     ImGui::End();
 }
 
-void EditorUI::RenderInspector()
+void EditorUI::RenderInspector(Scene::Scene* scene)
 {
     ImGui::Begin("Inspector");
     
-    // Placeholder: Propiedades del objeto seleccionado
-    // En el futuro, esto se sincronizará con la selección del Hierarchy
-    ImGui::Text("Selected: Main Camera");
-    ImGui::Separator();
-    
-    // Transform properties
-    if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
-    {
-        static float position[3] = { 0.0f, 0.0f, -5.0f };
-        static float rotation[3] = { 0.0f, 0.0f, 0.0f };
-        static float scale[3] = { 1.0f, 1.0f, 1.0f };
-        
-        ImGui::DragFloat3("Position", position, 0.1f);
-        ImGui::DragFloat3("Rotation", rotation, 1.0f, -360.0f, 360.0f);
-        ImGui::DragFloat3("Scale", scale, 0.01f, 0.01f, 10.0f);
+    if (!scene) {
+        ImGui::Text("No active scene");
+        ImGui::End();
+        return;
     }
     
-    // Camera properties
-    if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
-    {
-        static float fov = 60.0f;
-        static float nearPlane = 0.1f;
-        static float farPlane = 1000.0f;
-        static bool orthographic = false;
-        
-        ImGui::SliderFloat("FOV", &fov, 30.0f, 120.0f);
-        ImGui::DragFloat("Near Plane", &nearPlane, 0.01f, 0.01f, 10.0f);
-        ImGui::DragFloat("Far Plane", &farPlane, 10.0f, 10.0f, 10000.0f);
-        ImGui::Checkbox("Orthographic", &orthographic);
+    Scene::Entity* selected = scene->GetSelectedEntity();
+    
+    if (!selected) {
+        ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "No entity selected");
+        ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "Select an entity in Hierarchy panel");
+        ImGui::End();
+        return;
+    }
+    
+    // Entity name
+    ImGui::Text("Entity: %s", selected->GetName().c_str());
+    ImGui::Text("ID: %llu", selected->GetID());
+    ImGui::Separator();
+    
+    // Transform component
+    Scene::Transform* transform = selected->GetComponent<Scene::Transform>();
+    if (transform) {
+        if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
+            // Position
+            DirectX::XMFLOAT3 pos = transform->GetPosition();
+            if (ImGui::DragFloat3("Position", &pos.x, 0.1f)) {
+                transform->SetPosition(pos);
+            }
+            
+            // Rotation (Euler angles in degrees for UI)
+            DirectX::XMFLOAT3 rot = transform->GetRotation();
+            float rotDegrees[3] = {
+                DirectX::XMConvertToDegrees(rot.x),
+                DirectX::XMConvertToDegrees(rot.y),
+                DirectX::XMConvertToDegrees(rot.z)
+            };
+            
+            if (ImGui::DragFloat3("Rotation", rotDegrees, 1.0f, -180.0f, 180.0f)) {
+                transform->SetRotation(
+                    DirectX::XMConvertToRadians(rotDegrees[0]),
+                    DirectX::XMConvertToRadians(rotDegrees[1]),
+                    DirectX::XMConvertToRadians(rotDegrees[2])
+                );
+            }
+            
+            // Scale
+            DirectX::XMFLOAT3 scale = transform->GetScale();
+            if (ImGui::DragFloat3("Scale", &scale.x, 0.01f, 0.01f, 10.0f)) {
+                transform->SetScale(scale);
+            }
+        }
     }
     
     ImGui::End();
@@ -184,11 +227,11 @@ void EditorUI::RenderViewport()
     ImGui::End();
 }
 
-void EditorUI::RenderAllPanels()
+void EditorUI::RenderAllPanels(Scene::Scene* scene)
 {
     // Render all editor panels in order (H4.5)
-    RenderHierarchy();
-    RenderInspector();
+    RenderHierarchy(scene);
+    RenderInspector(scene);
     RenderConsole();
     RenderViewport();
 }

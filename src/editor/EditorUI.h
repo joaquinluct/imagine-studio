@@ -1,24 +1,25 @@
 #pragma once
 
-// Editor UI - AAA Editor Panels (Hierarchy, Inspector, Console, Viewport)
-// v1.3.0 H4 - Editor Panels & Docking
+// Forward declaration
+namespace Scene { class Scene; }
 
 namespace Editor {
 
 /// <summary>
-/// EditorUI class - Manages all editor panels (Unity/Unreal style)
+/// EditorUI - Renders all editor panels (Hierarchy, Inspector, Console, Viewport)
+/// Integrated with Scene for real entity management
 /// </summary>
 class EditorUI {
 public:
     /// <summary>
     /// Render Hierarchy panel - Shows scene tree with objects (H4.1)
     /// </summary>
-    static void RenderHierarchy();
+    static void RenderHierarchy(Scene::Scene* scene);
     
     /// <summary>
     /// Render Inspector panel - Shows properties of selected object (H4.2)
     /// </summary>
-    static void RenderInspector();
+    static void RenderInspector(Scene::Scene* scene);
     
     /// <summary>
     /// Render Console panel - Shows log messages (H4.3)
@@ -33,7 +34,7 @@ public:
     /// <summary>
     /// Render all editor panels at once (convenience method for H4.5)
     /// </summary>
-    static void RenderAllPanels();
+    static void RenderAllPanels(Scene::Scene* scene);
 };
 
 } // namespace Editor

@@ -22,13 +22,13 @@ Ver [`docs/sprint_histories.md`](sprint_histories.md) para historias detalladas.
 |----|----------|-----------|--------|
 | H1 | Entity System Core | CRÍTICA | ✅ Completada |
 | H2 | Transform Component | CRÍTICA | ✅ Completada |
-| H3 | Scene Graph Integration | ALTA | 🔴 Pendiente |
+| H3 | Scene Graph Integration | ALTA | ✅ Completada |
 | H4 | Editor Integration | ALTA | 🔴 Pendiente |
 
 ## 📊 Progreso
 
-**Historias completadas**: 2/4 (50%)  
-**Tareas completadas**: 8/16 (50%)
+**Historias completadas**: 3/4 (75%)  
+**Tareas completadas**: 12/16 (75%)
 
 ### Desglose por Historia:
 - **H1 - Entity System Core**: ✅ 4/4 tareas completadas
@@ -43,7 +43,12 @@ Ver [`docs/sprint_histories.md`](sprint_histories.md) para historias detalladas.
   - H2.3 ✅ Parent-child hierarchy (GetWorldMatrix recursivo)
   - H2.4 ✅ Tests hierarchy (5 tests, 100% PASSED)
 
-- **H3 - Scene Graph Integration**: 🔴 0/4 tareas
+- **H3 - Scene Graph Integration**: ✅ 4/4 tareas completadas
+  - H3.1 ✅ Scene class (EntityManager, CreateEntity/DestroyEntity, selection)
+  - H3.2 ✅ Scene::Update() implementado (propaga deltaTime)
+  - H3.3 ✅ Scene::UpdateTransforms() implementado (recalcula matrices)
+  - H3.4 ✅ Tests Scene (18 tests, 100% PASSED)
+
 - **H4 - Editor Integration**: 🔴 0/4 tareas
 
 ## 🎯 Criterios de Aceptación del Sprint

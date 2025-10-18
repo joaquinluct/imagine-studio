@@ -187,10 +187,8 @@
     <ClCompile Include="src\renderer\RenderTarget.cpp" />
     <ClCompile Include="src\scene\Entity.cpp" />
     <ClCompile Include="src\scene\EntityManager.cpp" />
-    <ClCompile Include="src\tests\adapter_test.cpp" />
-    <ClCompile Include="src\tests\material_test.cpp" />
-    <ClCompile Include="src\tests\taskgraph_test.cpp" />
-    <ClCompile Include="src\tests\threadpool_bench.cpp" />
+    <ClCompile Include="src\scene\Scene.cpp" />
+    <ClCompile Include="src\scene\Transform.cpp" />
     <ClCompile Include="src\tools\Profiler.cpp" />
     <ClCompile Include="src\ui\DirectWriteTextRenderer.cpp" />
     <ClCompile Include="src\ui\SimpleUI.cpp" />
@@ -202,8 +200,6 @@
     <ClCompile Include="external\imgui\backends\imgui_impl_dx12.cpp" />
     <ClCompile Include="external\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="external\imgui\imgui_demo.cpp" />
-    <ClCompile Include="src\scene\Transform.cpp" />
-    <ClCompile Include="src\scene\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\assets\AssetManager.h" />
@@ -228,14 +224,14 @@
     <ClInclude Include="src\scene\Component.h" />
     <ClInclude Include="src\scene\Entity.h" />
     <ClInclude Include="src\scene\EntityManager.h" />
+    <ClInclude Include="src\scene\Scene.h" />
+    <ClInclude Include="src\scene\Transform.h" />
     <ClInclude Include="src\tools\Profiler.h" />
     <ClInclude Include="src\ui\DirectWriteTextRenderer.h" />
     <ClInclude Include="src\ui\IUI.h" />
     <ClInclude Include="src\ui\SimpleUI.h" />
     <ClInclude Include="src\ui\TextRenderer.h" />
     <ClInclude Include="src\ui\Win32TextRenderer.h" />
-    <ClInclude Include="src\scene\Transform.h" />
-    <ClInclude Include="src\scene\Scene.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt" />
@@ -256,6 +252,14 @@
     <Text Include="commit_msg_close_verification.txt" />
     <Text Include="commit_msg_h11_h12_entity.txt" />
     <Text Include="commit_msg_h13_entity_manager.txt" />
+    <Text Include="commit_msg_h14_entity_tests.txt" />
+    <Text Include="commit_msg_h21_transform.txt" />
+    <Text Include="commit_msg_h22_transform_tests.txt" />
+    <Text Include="commit_msg_h23_parent_hierarchy.txt" />
+    <Text Include="commit_msg_h24_hierarchy_tests.txt" />
+    <Text Include="commit_msg_h31_scene.txt" />
+    <Text Include="commit_msg_h32_h33_h34_scene_tests.txt" />
+    <Text Include="commit_msg_h41_h42_editor_integration.txt" />
     <Text Include="commit_msg_h41_hierarchy.txt" />
     <Text Include="commit_msg_h42_inspector.txt" />
     <Text Include="commit_msg_h43_console.txt" />
@@ -270,6 +274,7 @@
     <Text Include="commit_msg_template_visualizacion.txt" />
     <Text Include="commit_msg_ui_transparent.txt" />
     <Text Include="commit_msg_ventana_contexto.txt" />
+    <Text Include="commit_msg_visualizacion_obligatoria.txt" />
     <Text Include="commit_sprint_complete.txt" />
     <Text Include="commit_sprint_v120_close.txt" />
     <Text Include="commit_sprint_v130_plan.txt" />
