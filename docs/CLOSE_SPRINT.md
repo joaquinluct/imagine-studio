@@ -32,6 +32,90 @@ Script automatizado para cerrar un sprint y archivar sus ficheros en `docs/sprin
 5. ? Crea ficheros vacíos para el siguiente sprint con templates correctos
 6. ? Proporciona feedback visual con colores (Verde=OK, Rojo=Error, Gris=Skip)
 
+## ?? VERIFICACIÓN POST-CIERRE (OBLIGATORIA)
+
+**Después de ejecutar el script, SIEMPRE verificar**:
+
+### 1. Verificar archivos en `docs/sprints/`:
+
+```powershell
+ls docs/sprints/*v1.3.0* | Select-Object Name
+```
+
+**Debe mostrar 8 archivos**:
+- `sprint_v1.3.0.md`
+- `sprint_histories_v1.3.0.md`
+- `sprint_tasks_v1.3.0.md`
+- `sprint_bugs_v1.3.0.md`
+- `sprint_bug_attempts_v1.3.0.md`
+- `sprint_fix_v1.3.0.md`
+- `sprint_deviations_v1.3.0.md`
+- `sprint_ia_sessions_v1.3.0.md`
+
+### 2. Verificar archivos en `docs/`:
+
+```powershell
+ls docs/sprint*.md | Select-Object Name
+```
+
+**Debe mostrar 8 archivos (templates vacíos)**:
+- `sprint.md`
+- `sprint_histories.md`
+- `sprint_tasks.md`
+- `sprint_bugs.md`
+- `sprint_bug_attempts.md`
+- `sprint_fix.md`
+- `sprint_deviations.md`
+- `sprint_ia_sessions.md`
+
+### 3. Verificar contenido de `docs/sprint.md`:
+
+```powershell
+Get-Content docs/sprint.md -Head 5
+```
+
+**Debe mostrar**:
+```markdown
+# Sprint vX.Y.Z - [NOMBRE DEL SPRINT]
+
+> **Estado**: ?? En progreso  
+> **Fecha inicio**: [FECHA]  
+> **Fecha fin estimada**: [FECHA]
+
+## ?? Objetivo del Sprint
+
+[Descripción del objetivo principal del sprint]
+
+## ?? Historias de Usuario
+
+Ver [`docs/sprint_histories.md`](sprint_histories.md) para historias detalladas.
+
+| ID | Historia | Prioridad | Estado |
+|----|----------|-----------|--------|
+| H1 | [Título] | Alta | ?? Pendiente |
+
+## ?? Progreso
+
+**Historias completadas**: 0/X (0%)
+**Tareas completadas**: 0/X (0%)
+
+---
+
+*Última actualización*: [FECHA]
+```
+
+**Si el contenido es diferente** (por ejemplo, tiene datos del sprint v1.3.0), **el cierre NO se completó correctamente**.
+
+### 4. Checklist de verificación:
+
+- [ ] 8 archivos copiados a `docs/sprints/` con sufijo `_v1.3.0`
+- [ ] 8 archivos vacíos creados en `docs/` con templates correctos
+- [ ] `docs/sprint.md` contiene template vacío (no datos v1.3.0)
+- [ ] `docs/daily.md` actualizado con "Sprint v1.3.0 cerrado"
+- [ ] Commit creado con todos los cambios
+
+**Si alguno falla**, ejecutar nuevamente el script.
+
 ## Ficheros que archiva
 
 ### Obligatorios (deben existir):
@@ -132,6 +216,21 @@ Error: Versión debe tener formato X.Y.Z (ejemplo: 1.3.0)
 
 **Solución**: Verificar que todos los ficheros obligatorios existan en `docs/` antes de cerrar el sprint.
 
+### Error: Templates no se crearon correctamente
+
+**Síntoma**: `docs/sprint.md` contiene datos del sprint anterior en lugar de template vacío.
+
+**Causa**: El script se ejecutó pero los templates no se sobreescribieron correctamente.
+
+**Solución**:
+```powershell
+# Ejecutar nuevamente el script
+.\scripts\close-sprint.ps1 -Version "1.3.0"
+
+# Verificar que los templates se crearon
+Get-Content docs/sprint.md -Head 10
+```
+
 ## Templates de ficheros vacíos
 
 El script crea ficheros vacíos con templates correctos para el siguiente sprint:
@@ -175,9 +274,13 @@ Cada fichero tiene un template apropiado con formato correcto y placeholders par
 1. **Completar sprint actual**: Todas las tareas finalizadas
 2. **Ejecutar script**: `.\scripts\close-sprint.ps1 -Version "X.Y.Z"`
 3. **Verificar output**: Comprobar que todos los ficheros se archivaron correctamente
-4. **Actualizar daily.md**: Indicar que el sprint está cerrado
-5. **Crear commit**: Archivar cambios en Git
-6. **Planificar siguiente sprint**: Usar templates vacíos para documentar nuevo sprint
+4. **Verificar archivos** (OBLIGATORIO):
+   - `ls docs/sprints/*vX.Y.Z*` ? Debe mostrar 8 archivos
+   - `ls docs/sprint*.md` ? Debe mostrar 8 templates vacíos
+   - `Get-Content docs/sprint.md -Head 5` ? Debe mostrar template vacío
+5. **Actualizar daily.md**: Indicar que el sprint está cerrado
+6. **Crear commit**: Archivar cambios en Git
+7. **Planificar siguiente sprint**: Usar templates vacíos para documentar nuevo sprint
 
 ## Ventajas del script
 
@@ -186,7 +289,8 @@ Cada fichero tiene un template apropiado con formato correcto y placeholders par
 ? **Visual**: Feedback claro con colores (Verde/Rojo/Gris)  
 ? **Seguro**: No sobreescribe archivos existentes (usa `-Force` solo cuando es necesario)  
 ? **Completo**: Crea templates vacíos para el siguiente sprint  
-? **Documentado**: Output detallado de cada paso
+? **Documentado**: Output detallado de cada paso  
+? **Verificable**: Checklist de verificación post-cierre
 
 ## Comandos a EVITAR
 
