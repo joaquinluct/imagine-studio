@@ -335,12 +335,22 @@ Cuando el asistente trabaje en la resolución de un bug, DEBE seguir este proces
 ## Gestión de Sesiones IA (`sprint_ia_sessions.md`)
 
 ### Propósito:
-`docs/sprint_ia_sessions.md` registra todas las sesiones de trabajo con asistentes IA (GitHub Copilot, ChatGPT, Claude) que superan el **85% de consumo de tokens**.
+`docs/sprint_ia_sessions.md` registra todas las sesiones de trabajo con asistentes IA (GitHub Copilot, ChatGPT, Claude) que superan el **85% de consumo de la ventana de contexto de la sesión actual**.
 
-Este límite asegura:
-- ✅ **Evitar pérdida de contexto** por agotamiento de tokens
+**⚠️ ACLARACIÓN IMPORTANTE**: El umbral del 85% se refiere a la **ventana de contexto activa de la sesión de chat actual** (típicamente ~128k-200k tokens), **NO** al límite total del modelo LLM (1M tokens).
+
+**¿Por qué este umbral?**
+- ⚠️ **Evitar pérdida de contexto**: Al alcanzar el 85% de la ventana de contexto, el LLM empieza a "olvidar" mensajes antiguos
+- ⚠️ **Prevenir estado 'busy'**: La sesión se vuelve lenta y menos efectiva
+- ⚠️ **Garantizar coherencia**: Evita contradicciones con decisiones tomadas al inicio de la sesión
 - ✅ **Trazabilidad completa** de prompts usados en el desarrollo
 - ✅ **Auditoría de sesiones** para análisis posterior
+
+**Beneficios de cerrar al 85%**:
+- 🔄 Abrir nuevo chat con contexto fresco (100% de ventana disponible)
+- 📋 Leer recomendaciones de la sesión anterior
+- 🎯 Continuar con claridad desde donde se dejó
+- ✅ Evitar errores por contexto truncado
 
 ### Formato de Registro:
 
@@ -350,7 +360,7 @@ Este límite asegura:
 **LLM**: [PLACEHOLDER: Nombre del LLM] ([PLACEHOLDER: Versión])
 **Fecha/Hora**: [YYYY-MM-DD HH:MM:SS UTC]
 **Usuario (Orquestador)**: [PLACEHOLDER: username]
-**Consumo de Tokens/Contexto**: [actual] / [límite] ([porcentaje]%)
+**Ventana de Contexto**: [actual] / [límite_ventana] ([porcentaje]%)
 **Estado**: ⚠️ LÍMITE 85% ALCANZADO - Sesión cerrada
 
 ### Resumen de la Sesión:
@@ -396,9 +406,11 @@ Debe incluir docs/Y con formato AAA..."
 
 ### Flujo de Trabajo Automático:
 
-**El asistente DEBE seguir este proceso al alcanzar 85% de tokens**:
+**El asistente DEBE seguir este proceso al alcanzar 85% de la ventana de contexto de la sesión actual**:
 
-1. **Detectar umbral**: Cuando consumo > 85% del límite de sesión
+1. **Detectar umbral**: Cuando consumo de **ventana de contexto de la sesión** > 85%
+   - **NOTA**: NO se refiere al límite total del LLM (1M tokens)
+   - Se refiere a la ventana activa del chat actual (~128k-200k tokens típicamente)
 
 2. **Completar tarea actual**: 
    - Terminar implementación en progreso
@@ -411,21 +423,25 @@ Debe incluir docs/Y con formato AAA..."
    - Incluir prompt completo
    - Nombre y versión del LLM
    - Timestamp + usuario orquestador
-   - Consumo de tokens (actual/límite)
+   - Consumo de ventana de contexto (actual/límite/porcentaje)
    - Contexto de sesión (sprint, tareas completadas, pendientes)
    - Recomendaciones para próxima sesión
 
 4. **Notificar al usuario**:
    ```
-   ⚠️ LÍMITE DE SESIÓN ALCANZADO (>85%)
+   ⚠️ LÍMITE DE VENTANA DE CONTEXTO ALCANZADO (>85%)
    
    ✅ Tarea actual completada: [nombre tarea]
    ✅ Commit creado: [hash]
    ✅ Sesión registrada en docs/sprint_ia_sessions.md
    
-   📊 Consumo: XXX,XXX / 1,000,000 tokens (XX.X%)
+   📊 Ventana de contexto: XXX,XXX / YYY,YYY tokens (ZZ.Z%)
    
    🔄 RECOMENDACIÓN: Cerrar esta sesión y abrir nuevo prompt
+   
+   **Razón**: Al superar el 85% de la ventana de contexto, el LLM
+   empieza a perder información de mensajes antiguos, lo que puede
+   causar inconsistencias o contradicciones.
    
    Próxima tarea sugerida: [leer docs/daily.md]
    ```
@@ -440,7 +456,7 @@ Debe incluir docs/Y con formato AAA..."
 **LLM**: [Nombre del LLM] ([Versión])
 **Fecha/Hora**: [YYYY-MM-DD HH:MM:SS UTC]
 **Usuario (Orquestador)**: [username]
-**Consumo de Tokens**: [actual] / [límite] ([porcentaje]%)
+**Ventana de Contexto**: [actual] / [límite_ventana] ([porcentaje]%)
 **Estado**: ⚠️ LÍMITE 85% ALCANZADO - Sesión cerrada
 
 ### Resumen de la Sesión:
