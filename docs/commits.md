@@ -1222,8 +1222,6 @@ ALL TESTS PASSED! (18 asserts)
 ========================================
 ```
 
-**Historia H3 completada**: ✅ Scene Graph Integration validado
-
 **Próxima tarea**: H4.1 - Conectar Hierarchy con Scene
 
 **Referencia**: H3.2-H3.4 - Tests Scene v1.4.0
@@ -1231,6 +1229,44 @@ ALL TESTS PASSED! (18 asserts)
 ---
 
 ## 2025-01-18
+
+### `3d7d00b` - feat(editor): Conectar Hierarchy e Inspector con Scene (H4.1, H4.2)
+
+**Tipo**: Feature (Sprint v1.4.0)  
+**Ámbito**: Editor  
+**Descripción**: Integrar Hierarchy e Inspector con Scene real (reemplazar placeholder con entities)
+
+**Historias H4.1-H4.2** - Editor Integration con Scene Graph
+
+**Implementación**:
+- Actualizar `EditorUI.h` para recibir `Scene*` como parámetro
+- `RenderHierarchy(Scene*)`: reemplaza placeholder con entities reales
+- `RenderInspector(Scene*)`: muestra/edita Transform de entity seleccionada
+- Crear Scene global en `main.cpp` con entities por defecto
+- Pasar `&scene` a `EditorUI::RenderAllPanels()`
+
+**Hierarchy panel (H4.1)**:
+- ✅ Botones: "Create Entity" y "Delete Entity" funcionales
+- ✅ Lista de root entities desde `scene->GetRootEntities()`
+- ✅ TreeNode para cada entity con nombre
+- ✅ Click en entity → `scene->SetSelectedEntity(id)`
+- ✅ Highlight entity seleccionada (ImGuiTreeNodeFlags_Selected)
+- ✅ Mensaje "Scene is empty" si no hay entities
+
+**Inspector panel (H4.2)**:
+- ✅ Muestra entity seleccionada (nombre + ID)
+- ✅ Transform component editable:
+  - Position: `ImGui::DragFloat3` (0.1f step)
+  - Rotation: Euler angles en grados (convertido desde/hacia radianes)
+  - Scale: `ImGui::DragFloat3` (0.01f step, min 0.01, max 10.0)
+- ✅ Mensaje "No entity selected" si no hay selección
+
+**Scene global (main.cpp)**:
+- Crear `Scene("Main Scene")` al inicio
+- CreateEntity: "Main Camera", "Directional Light", "Quad"
+- Pasar `&scene` a `RenderAllPanels()`
+
+This file has been truncated. (remaining 1121 lines are not shown)
 
 
 
