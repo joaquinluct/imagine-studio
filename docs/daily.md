@@ -1,5 +1,5 @@
 ﻿# Daily Log
 
-Hecho: FIX-001 v2 - Eliminar bloqueo prematuro del font atlas (GetTexDataAsRGBA32)
-Siguiente: Validación usuario BUG-001 - Probar clics de ratón en UI de ImGui
+Hecho: BUG-001 Intento #4 - Añadir logs detallados para diagnosticar eventos de mouse
+Siguiente: BUG-001 Validación logs - Usuario ejecuta y reporta logs de eventos de mouse
 

@@ -122,9 +122,16 @@ static int RunApp(HINSTANCE hInstance)
     // Setup Dear ImGui style (dark theme)
     ImGui::StyleColorsDark();
     
-    // ✅ CRÍTICO: Añadir font por defecto ANTES de inicializar backends
-    // Esto inicializa el Builder del atlas (soluciona BUG-002)
+    // ✅ CRÍTICO: Añadir font por defecto ANTES de Build()
     io.Fonts->AddFontDefault();
+    
+    // ✅ CRÍTICO: Build font atlas ANTES de inicializar backends
+    // Esto es necesario cuando el backend no soporta texturas dinámicas automáticamente
+    io.Fonts->Build();
+    
+    // ✅ CRÍTICO: Configurar flag RendererHasTextures DESPUÉS de Build
+    // (El flag indica que el backend puede manejar texturas, pero el atlas ya debe estar construido)
+    io.BackendFlags |= ImGuiBackendFlags_RendererHasTextures;
     
     // Initialize Win32 backend (REQUERIDO - debe estar ANTES de DX12 backend)
     ImGui_ImplWin32_Init(hwnd);
@@ -232,6 +239,16 @@ static int RunApp(HINSTANCE hInstance)
         ImGui_ImplWin32_NewFrame();
         ImGui_ImplDX12_NewFrame();
         ImGui::NewFrame();
+        
+        // 🐛 DEBUG: Log mouse state after NewFrame (BUG-001 Intento #4)
+        {
+            std::ostringstream ss;
+            ss << "[NewFrame] io.MouseDown[0]=" << io.MouseDown[0] 
+               << ", io.MouseDown[1]=" << io.MouseDown[1]
+               << ", WantCaptureMouse=" << io.WantCaptureMouse
+               << ", MousePos=(" << io.MousePos.x << "," << io.MousePos.y << ")";
+            CORE_LOG_INFO(ss.str());
+        }
         
         // ImGui demo window (placeholder - remover en H4)
         ImGui::ShowDemoWindow();

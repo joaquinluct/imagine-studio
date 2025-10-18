@@ -26,6 +26,7 @@ Archivos principales que el asistente debe consultar en cada sesión:
 - **`docs/commits.md`** - Convenciones de commits y mensajes
 - **`docs/backlog.md`** - Repositorio de ítems no incluidos en el sprint actual
 - **`docs/sprint_bugs.md`** - Tracking de bugs reportados (pendientes de resolución)
+- **`docs/sprint_bug_attempts.md`** - **[DEBUGGING]** Log detallado de TODOS los intentos de solución para cada bug (fallidos, parciales, exitosos)
 - **`docs/sprint_fix.md`** - Historial de bugs resueltos durante el sprint
 
 ---
@@ -148,6 +149,7 @@ Si aparece un **bloqueo técnico**, **decisión arquitectónica crítica** o **d
 - `docs/sprint_histories.md` - Historias de usuario para el sprint
 - `docs/sprint_tasks.md` - Tareas detalladas por historia (unidad mínima de trabajo e iteración)
 - `docs/sprint_bugs.md` - Tracking de bugs reportados (pendientes de resolución)
+- `docs/sprint_bug_attempts.md` - **[DEBUGGING]** Log detallado de TODOS los intentos de solución para cada bug (fallidos, parciales, exitosos)
 - `docs/sprint_fix.md` - Historial de bugs resueltos durante el sprint
 
 ### Al final de un sprint (release):
@@ -254,6 +256,124 @@ Muchos bugs solo se manifiestan durante la ejecución:
 - Solo tras confirmación → mover a `sprint_fix.md`
 
 Los bugs pendientes se **archivan** como `docs/sprint_bugs_v<version>.md` al finalizar el sprint.
+
+---
+
+## 🔍 Fichero Sprint Bug Attempts (`docs/sprint_bug_attempts.md`)
+
+### Propósito:
+`docs/sprint_bug_attempts.md` es el registro detallado de **TODOS los intentos de solución** para cada bug reportado durante el sprint activo.
+
+Permite realizar un seguimiento exhaustivo de las acciones realizadas, incluyendo:
+- Enfoques fallidos
+- Soluciones parciales
+- Intentos exitosos
+
+### Contenido:
+Cada intento de solución debe incluir:
+- **ID de Bug**: Identificador del bug asociado (ej: BUG-001)
+- **Intento #**: Número secuencial del intento de solución
+- **Descripción del intento**: Breve descripción de lo que se intentó
+- **Resultado**: Éxito/Parcial/Fallido
+- **Detalles del resultado**: Explicación breve del resultado; incluir mensajes de error si los hubiese
+- **Fecha y hora**: Timestamp del intento
+- **Archivos modificados**: Lista de archivos que fueron cambiados en el intento
+
+### Formato ejemplo:
+```markdown
+### BUG-001 - [PLACEHOLDER: Título del bug]
+
+**Intento #1**
+- **Descripción**: [PLACEHOLDER: Qué se intentó]
+- **Resultado**: Fallido
+- **Detalles**: [PLACEHOLDER: Por qué falló, mensajes de error]
+- **Fecha y hora**: 2025-01-15 10:00
+- **Archivos modificados**: `[PLACEHOLDER: lista de archivos]`
+
+**Intento #2**
+- **Descripción**: [PLACEHOLDER: Segundo enfoque]
+- **Resultado**: Parcial
+- **Detalles**: [PLACEHOLDER: Qué funcionó y qué no]
+- **Fecha y hora**: 2025-01-15 10:15
+- **Archivos modificados**: `[PLACEHOLDER: lista de archivos]`
+
+**Intento #3**
+- **Descripción**: [PLACEHOLDER: Solución final]
+- **Resultado**: Éxito
+- **Detalles**: [PLACEHOLDER: Explicación de la solución exitosa]
+- **Fecha y hora**: 2025-01-15 10:30
+- **Archivos modificados**: `[PLACEHOLDER: lista de archivos]`
+```
+
+### **Flujo completo de resolución de bugs (OBLIGATORIO)**:
+
+Cuando el asistente trabaje en la resolución de un bug, DEBE seguir este proceso:
+
+#### 1. **Contexto inicial**
+Antes de comenzar cualquier intento de solución, el asistente DEBE:
+- Leer `docs/sprint_bugs.md` para conocer el bug actual
+- Leer `docs/sprint_bug_attempts.md` para revisar intentos previos (si existen)
+- Leer `.github/copilot-instructions.md` (o documento de instrucciones del proyecto)
+- Leer `docs/sprint.md` y `docs/daily.md` para entender el contexto del sprint
+
+#### 2. **Registro de intento**
+ANTES de modificar código, el asistente DEBE:
+- Añadir una nueva entrada en `docs/sprint_bug_attempts.md` con:
+  - Intento # (secuencial)
+  - Descripción clara del enfoque que se va a probar
+  - Fecha y hora actual
+- Esta entrada debe crearse **ANTES** de tocar código
+
+#### 3. **Implementación**
+El asistente implementa el cambio propuesto
+
+#### 4. **Validación**
+El asistente ejecuta la validación obligatoria del proyecto:
+- **[PLACEHOLDER: Sistema de validación específico]**
+  - Ejemplos: compilación, tests, linter, ejecución manual
+
+#### 5. **Registro de resultado**
+DESPUÉS de validar, el asistente DEBE:
+- Actualizar la entrada en `docs/sprint_bug_attempts.md` con:
+  - Resultado (Éxito/Parcial/Fallido)
+  - Detalles del resultado (errores de compilación, comportamiento observado, etc.)
+  - Archivos modificados en este intento
+
+#### 6. **Validación usuario**
+Si validación automática es limpia:
+- Actualizar estado en `docs/sprint_bugs.md` a "Pendiente validación usuario"
+- **PAUSAR** y esperar confirmación del usuario
+- El asistente NO debe marcar el bug como resuelto automáticamente
+
+#### 7. **Iteración**
+Si el intento falla o es parcial:
+- Volver al paso 2 con un nuevo intento
+- **IMPORTANTE**: NO repetir intentos ya probados (consultar `sprint_bug_attempts.md`)
+
+#### 8. **Resolución confirmada**
+Solo cuando el usuario confirme que el fix funciona:
+- Mover bug de `docs/sprint_bugs.md` a `docs/sprint_fix.md`
+- Copiar el resumen de intentos exitosos en `docs/sprint_fix.md`
+- Archivar la entrada de `docs/sprint_bug_attempts.md` para ese bug (mantener historial)
+
+### **REGLA CRÍTICA**:
+El asistente NO debe:
+- ❌ Modificar código sin antes registrar el intento en `sprint_bug_attempts.md`
+- ❌ Marcar un bug como resuelto solo porque la validación automática sea limpia
+- ❌ Repetir intentos de solución ya probados y registrados en `sprint_bug_attempts.md`
+- ❌ Olvidar actualizar el resultado del intento después de validar
+
+### **Beneficios de este flujo**:
+- ✅ Evita repetir soluciones fallidas
+- ✅ Proporciona contexto histórico invaluable para futuros bugs similares
+- ✅ Facilita la colaboración (otro desarrollador puede ver qué se ha intentado)
+- ✅ Permite análisis post-mortem de bugs complejos
+- ✅ Detecta patrones en errores recurrentes
+
+### **IMPORTANTE**:
+Siempre revisar `docs/sprint_bugs.md`, `docs/sprint_bug_attempts.md` y el código relacionado **ANTES** de comenzar a implementar cualquier solución para un bug.
+
+Esto asegura que se comprende completamente el problema y se evita repetir intentos fallidos.
 
 ---
 

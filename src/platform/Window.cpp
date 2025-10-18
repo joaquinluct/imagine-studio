@@ -15,93 +15,105 @@ Window::Window(HINSTANCE hInstance, const wchar_t* title, int width, int height)
 {
     const wchar_t CLASS_NAME[] = L"ImagineStudioWindowClass";
 
-    // Use the module HINSTANCE for registration/creation to avoid mismatches
-    HINSTANCE regInstance = hInstance_ ? hInstance_ : GetModuleHandle(NULL);
+    // ?? BUG-002 Intento #5: Usar SIEMPRE GetModuleHandle(NULL) para consistencia
+    // Esto asegura que usamos el mismo HINSTANCE en registro y creación
+    HINSTANCE moduleInstance = GetModuleHandle(NULL);
 
-    WNDCLASSEXW wc = {};
-    wc.cbSize = sizeof(WNDCLASSEXW);
-    wc.lpfnWndProc   = WndProcStatic;
-    wc.hInstance     = regInstance;
-    wc.lpszClassName = CLASS_NAME;
-    wc.hCursor = LoadCursorW(NULL, IDC_ARROW);
-    wc.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1);
-
-    // Register class and report errors if any (Unicode)
-    ATOM a = RegisterClassExW(&wc);
-    if (a == 0)
+    // ? Verificar si la clase ya está registrada
+    WNDCLASSEXW existingClass = {};
+    existingClass.cbSize = sizeof(existingClass);
+    BOOL classExists = GetClassInfoExW(moduleInstance, CLASS_NAME, &existingClass);
+    
+    if (classExists)
     {
-        DWORD err = GetLastError();
-        std::ostringstream ss; ss << "Window::Window - RegisterClassExW failed, GetLastError=" << err; CORE_LOG_ERROR(ss.str());
+        std::ostringstream ss; 
+        ss << "Window::Window - Class already registered with HINSTANCE=" 
+           << reinterpret_cast<void*>(existingClass.hInstance);
+        CORE_LOG_INFO(ss.str());
     }
     else
     {
-        std::ostringstream ss; ss << "Window::Window - RegisterClassExW succeeded, atom=" << a << " regInstance=" << reinterpret_cast<void*>(regInstance); CORE_LOG_INFO(ss.str());
-        // Verify class info
-        WNDCLASSEXW existing = {};
-        existing.cbSize = sizeof(existing);
-        if (GetClassInfoExW(regInstance, CLASS_NAME, &existing) || GetClassInfoExW(NULL, CLASS_NAME, &existing))
+        // ?? Registrar clase solo si no existe
+        WNDCLASSEXW wc = {};
+        wc.cbSize = sizeof(WNDCLASSEXW);
+        wc.lpfnWndProc   = WndProcStatic;
+        wc.hInstance     = moduleInstance;
+        wc.lpszClassName = CLASS_NAME;
+        wc.hCursor = LoadCursorW(NULL, IDC_ARROW);
+        wc.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1);
+
+        ATOM atom = RegisterClassExW(&wc);
+        if (atom == 0)
         {
-            CORE_LOG_INFO("Window::Window - GetClassInfoExW succeeded for registered class");
+            DWORD err = GetLastError();
+            std::ostringstream ss; 
+            ss << "Window::Window - RegisterClassExW FAILED, GetLastError=" << err;
+            CORE_LOG_ERROR(ss.str());
+            
+            // ? CRÍTICO: Abortar si no podemos registrar la clase
+            MessageBoxW(NULL, L"Failed to register window class. Cannot continue.", 
+                       L"Imagine Studio - Fatal Error", MB_OK | MB_ICONERROR);
+            return;
         }
-        else
-        {
-            std::ostringstream ss2; ss2 << "Window::Window - GetClassInfoExW failed, GetLastError=" << GetLastError(); CORE_LOG_ERROR(ss2.str());
-        }
+        
+        std::ostringstream ss; 
+        ss << "Window::Window - RegisterClassExW succeeded, atom=" << atom 
+           << " HINSTANCE=" << reinterpret_cast<void*>(moduleInstance);
+        CORE_LOG_INFO(ss.str());
     }
 
-    LPCWSTR classParam = CLASS_NAME;
-    if (a != 0) classParam = MAKEINTATOM(a);
-
+    // ?? Crear ventana usando el mismo HINSTANCE que usamos para registro
     hwnd_ = CreateWindowExW(
         0,
-        classParam,
+        CLASS_NAME,  // ?? Usar nombre de clase directamente (no atom)
         title,
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, CW_USEDEFAULT, width, height,
         NULL,
         NULL,
-        regInstance,
+        moduleInstance,  // ? Mismo HINSTANCE que registro
         this
     );
+    
     if (!hwnd_)
     {
         DWORD err = GetLastError();
-        std::ostringstream ss; ss << "Window::Window - CreateWindowEx failed, GetLastError=" << err; CORE_LOG_ERROR(ss.str());
+        std::ostringstream ss; 
+        ss << "Window::Window - CreateWindowExW FAILED, GetLastError=" << err;
+        CORE_LOG_ERROR(ss.str());
 
-        // Fallback test: try creating a simple window using a built-in class
-        // (STATIC) to determine whether custom class registration is the issue.
-        hwnd_ = CreateWindowExW(0, L"STATIC", title, WS_OVERLAPPEDWINDOW,
-                                CW_USEDEFAULT, CW_USEDEFAULT, width, height,
-                                NULL, NULL, regInstance, this);
-        if (hwnd_)
+        // ?? BUG-002 Intento #5: ELIMINAR fallback a clase STATIC
+        // El fallback enmascara el problema real y crea ventanas no-interactivas
+        
+        // ? Mostrar error detallado y abortar
+        LPWSTR msgBuf = nullptr;
+        FormatMessageW(
+            FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+            NULL, err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), 
+            reinterpret_cast<LPWSTR>(&msgBuf), 0, NULL
+        );
+        
+        std::wstring errorMsg = L"CreateWindowExW failed with error " + std::to_wstring(err) + L":\n";
+        if (msgBuf)
         {
-            std::ostringstream ss2; ss2 << "Window::Window - fallback using WC_OVERLAPPEDWINDOW succeeded, HWND=" << reinterpret_cast<void*>(hwnd_); CORE_LOG_INFO(ss2.str());
-            ShowWindow(hwnd_, SW_SHOW);
+            errorMsg += msgBuf;
+            LocalFree(msgBuf);
         }
         else
         {
-            DWORD err2 = GetLastError();
-            std::ostringstream ss3; ss3 << "Window::Window - fallback CreateWindowEx failed, GetLastError=" << err2; CORE_LOG_ERROR(ss3.str());
-            // Show an explicit message to aid debugging with readable text
-            LPWSTR msgBuf = nullptr;
-            FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                           NULL, err2, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), reinterpret_cast<LPWSTR>(&msgBuf), 0, NULL);
-            if (msgBuf)
-            {
-                MessageBoxW(NULL, msgBuf, L"Imagine Studio - CreateWindowEx Error", MB_OK | MB_ICONERROR);
-                LocalFree(msgBuf);
-            }
-            else
-            {
-                MessageBoxW(NULL, L"CreateWindowEx failed (unknown error)", L"Imagine Studio - CreateWindowEx Error", MB_OK | MB_ICONERROR);
-            }
+            errorMsg += L"(Unknown error)";
         }
+        
+        MessageBoxW(NULL, errorMsg.c_str(), 
+                   L"Imagine Studio - Fatal Error", MB_OK | MB_ICONERROR);
+        return;
     }
-    else
-    {
-        std::ostringstream ss; ss << "Window::Window - created HWND=" << reinterpret_cast<void*>(hwnd_); CORE_LOG_INFO(ss.str());
-        ShowWindow(hwnd_, SW_SHOW);
-    }
+    
+    std::ostringstream ss; 
+    ss << "Window::Window - CreateWindowExW succeeded, HWND=" << reinterpret_cast<void*>(hwnd_);
+    CORE_LOG_INFO(ss.str());
+    
+    ShowWindow(hwnd_, SW_SHOW);
 }
 
 Window::~Window()
@@ -128,11 +140,52 @@ LRESULT CALLBACK Window::WndProcStatic(HWND hWnd, UINT message, WPARAM wParam, L
 
 LRESULT Window::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
-    // ? CRÍTICO: Pasar eventos a ImGui PRIMERO (v1.3.0 - H2.3)
-    // Llamar SIEMPRE al handler de ImGui para que capture eventos internamente
-    // NO retornar inmediatamente - ImGui procesa eventos pero retorna 0 en mayoría de casos
-    // El handler actualiza io.WantCaptureMouse, io.WantCaptureKeyboard internamente
-    ImGui_ImplWin32_WndProcHandler(hwnd_, message, wParam, lParam);
+    // ?? DEBUG: Log mouse button events (BUG-002 Intento #4)
+    if (message == WM_LBUTTONDOWN || message == WM_RBUTTONDOWN || message == WM_MBUTTONDOWN)
+    {
+        std::ostringstream ss;
+        ss << "[WndProc] Mouse button DOWN message received: msg=" << message 
+           << " (WM_LBUTTONDOWN=" << WM_LBUTTONDOWN 
+           << "), wParam=" << wParam 
+           << ", lParam=" << lParam;
+        CORE_LOG_INFO(ss.str());
+    }
+    
+    if (message == WM_LBUTTONUP || message == WM_RBUTTONUP || message == WM_MBUTTONUP)
+    {
+        std::ostringstream ss;
+        ss << "[WndProc] Mouse button UP message received: msg=" << message 
+           << " (WM_LBUTTONUP=" << WM_LBUTTONUP 
+           << "), wParam=" << wParam 
+           << ", lParam=" << lParam;
+        CORE_LOG_INFO(ss.str());
+    }
+    
+    // ? CRÍTICO: Pasar eventos a ImGui PRIMERO y respetar su retorno (v1.3.0 - H2.3)
+    // Si ImGui captura el evento (retorna != 0), NO debemos procesarlo nosotros
+    // Esto es ESENCIAL para que los clicks de ratón funcionen en la UI
+    LRESULT imgui_result = ImGui_ImplWin32_WndProcHandler(hwnd_, message, wParam, lParam);
+    
+    // ?? DEBUG: Log handler result (BUG-002 Intento #4)
+    if (message == WM_LBUTTONDOWN || message == WM_RBUTTONDOWN || message == WM_MBUTTONDOWN ||
+        message == WM_LBUTTONUP || message == WM_RBUTTONUP || message == WM_MBUTTONUP)
+    {
+        std::ostringstream ss;
+        ss << "[WndProc] ImGui_ImplWin32_WndProcHandler returned: " << imgui_result;
+        CORE_LOG_INFO(ss.str());
+        
+        if (imgui_result)
+        {
+            CORE_LOG_INFO("[WndProc] ImGui captured event, returning early");
+        }
+        else
+        {
+            CORE_LOG_INFO("[WndProc] ImGui did NOT capture event, continuing to DefWindowProc");
+        }
+    }
+    
+    if (imgui_result)
+        return true;
     
     switch (message)
     {

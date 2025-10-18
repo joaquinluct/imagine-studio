@@ -16,6 +16,7 @@ Archivos principales de trabajo:
 - `docs/daily.md` - Última tarea completada y tarea actual en progreso (o "Sprint vX.Y.Z cerrado. Sin sprint activo." si no hay sprint activo).
 - `docs/commits.md` - Convenciones de commits y mensajes.
 - `docs/sprint_bugs.md` - Tracking de bugs reportados (pendientes de resolución).
+- `docs/sprint_bug_attempts.md` - **[DEBUGGING]** Log detallado de TODOS los intentos de solución para cada bug (fallidos, parciales, exitosos).
 - `docs/sprint_fix.md` - Historial de bugs resueltos durante el sprint.
 
 Flujo de trabajo por sesión:
@@ -207,144 +208,116 @@ Fichero Sprint Bugs (`docs/sprint_bugs.md`)
 - Razón: **La doble compilación limpia NO garantiza que el bug esté resuelto en runtime**. Muchos bugs solo se manifiestan durante la ejecución (race conditions, comportamiento de UI, crashes bajo condiciones específicas, etc.).
 - Los bugs pendientes se archivan como `docs/sprint_bugs_v<version>.md` al finalizar el sprint
 
-Fichero Sprint Fix (`docs/sprint_fix.md`)
-------------------------------------------
-- Propósito: `docs/sprint_fix.md` es el **historial de bugs resueltos** durante el sprint activo. Contiene bugs que fueron reportados en `docs/sprint_bugs.md` y posteriormente solucionados.
-- Contenido: Cada entrada de bug resuelto debe incluir:
-  - **ID Original**: Identificador original del bug (BUG-XXX del sprint_bugs.md)
-  - **ID Resolución**: Identificador con prefijo FIX- (ej: FIX-001, FIX-002)
-  - **Título**: Descripción breve del error
-  - **Descripción del problema**: Detalle original del error
-  - **Solución implementada**: Descripción de cómo se resolvió el bug
-  - **Prioridad**: Crítica/Alta/Media/Baja
-  - **Fecha de entrada**: Fecha en que se reportó originalmente
-  - **Fecha de resolución**: Fecha en que se resolvió
-  - **Archivos afectados**: Lista de archivos relacionados con el bug y su resolución
-  - **Commit de resolución**: Hash del commit que resolvió el bug
-- Formato ejemplo:
+Fichero Sprint Bug Attempts (`docs/sprint_bug_attempts.md`)
+-------------------------------------------------------------
+- **Propósito**: `docs/sprint_bug_attempts.md` es el registro detallado de TODOS los intentos de solución para cada bug reportado durante el sprint activo. Permite realizar un seguimiento exhaustivo de las acciones realizadas, incluyendo enfoques fallidos, parciales y exitosos.
+- **Contenido**: Cada intento de solución debe incluir:
+  - **ID de Bug**: Identificador del bug asociado (ej: BUG-001)
+  - **Intento #**: Número secuencial del intento de solución
+  - **Descripción del intento**: Breve descripción de lo que se intentó
+  - **Resultado**: Éxito/Parcial/Fallido
+  - **Detalles del resultado**: Explicación breve del resultado; incluir mensajes de error si los hubiese
+  - **Fecha y hora**: Timestamp del intento
+  - **Archivos modificados**: Lista de archivos que fueron cambiados en el intento
+- **Formato ejemplo**:
   ```markdown
-  ### FIX-001 - Crash al renderizar quad sin shader
-  **ID Original**: BUG-001
-  **Prioridad**: Crítica
-  **Fecha de entrada**: 2025-01-15
-  **Fecha de resolución**: 2025-01-15
+  ### BUG-001 - Crash al renderizar quad sin shader
+  **Intento #1**
+  - **Descripción**: Ajustar configuración de shaders
+  - **Resultado**: Fallido
+  - **Detalles**: El cambio en la configuración del shader no tuvo efecto. El error persiste.
+  - **Fecha y hora**: 2025-01-15 10:00
+  - **Archivos modificados**: `shaders/quad.hlsl`
   
-  **Descripción del problema**: La aplicación crasheaba al intentar renderizar el quad si no se compilaba correctamente el shader HLSL.
+  **Intento #2**
+  - **Descripción**: Añadir comprobación de null en el builder
+  - **Resultado**: Parcial
+  - **Detalles**: Se evita el crash, pero el quad sigue sin renderizarse correctamente. Se muestra artefacto gráfico.
+  - **Fecha y hora**: 2025-01-15 10:15
+  - **Archivos modificados**: `src/renderer/DX12Renderer.cpp`
   
-  **Solución implementada**: Se añadió validación del shader compilado antes de crear el PSO y mensaje de error descriptivo.
-  
-  **Archivos afectados**: `src/renderer/DX12Renderer.cpp`, `shaders/quad.hlsl`
-  
-  **Commit de resolución**: abc123def
+  **Intento #3**
+  - **Descripción**: Reinicializar el contexto de ImGui en cada render
+  - **Resultado**: Éxito
+  - **Detalles**: El problema se resolvió al asegurar que el contexto de ImGui se reinicializara correctamente. Se puede renderizar el quad sin crashes.
+  - **Fecha y hora**: 2025-01-15 10:30
+  - **Archivos modificados**: `src/renderer/DX12Renderer.cpp`, `shaders/quad.hlsl`
   ```
-- Flujo de trabajo:
-  - Los bugs resueltos se mueven automáticamente desde `docs/sprint_bugs.md`
-  - El asistente actualiza el ID (BUG-XXX → FIX-XXX), añade fecha de resolución, commit hash y descripción de la solución
-  - Los bugs resueltos se archivan como `docs/sprint_fix_v<version>.md` al finalizar el sprint
 
-Sincronización con TEMPLATE.md (`docs/TEMPLATE.md`)
-----------------------------------------------------
-- Propósito: `docs/TEMPLATE.md` es el documento maestro que define la metodología genérica de trabajo con asistentes IA, aplicable a cualquier proyecto.
-- Regla de sincronización: **Siempre que se modifique la metodología en `.github/copilot-instructions.md`** (añadir/eliminar secciones, cambiar flujo de trabajo, actualizar proceso de versionado, etc.), el asistente debe actualizar también `docs/TEMPLATE.md` para reflejar los cambios de forma genérica.
-- Ejemplo: Si se añade una nueva sección como "Fichero Sprint Fix", debe añadirse también a `TEMPLATE.md` con placeholders genéricos `[PLACEHOLDER]` para que sea aplicable a otros proyectos.
-- El asistente ejecutará esta sincronización automáticamente antes de crear commits que afecten a la metodología.
-- Esta regla asegura que `TEMPLATE.md` esté siempre actualizado y pueda ser reutilizado en otros proyectos.
+**Flujo completo de resolución de bugs (OBLIGATORIO)**:
+Cuando el asistente trabaje en la resolución de un bug, DEBE seguir este proceso:
 
+1. **Contexto inicial**: Antes de comenzar cualquier intento de solución, el asistente DEBE:
+   - Leer `docs/sprint_bugs.md` para conocer el bug actual
+   - Leer `docs/sprint_bug_attempts.md` para revisar intentos previos (si existen)
+   - Leer `.github/copilot-instructions.md` para seguir las reglas del proyecto
+   - Leer `docs/sprint.md` y `docs/daily.md` para entender el contexto del sprint
 
-Formato de la explicación final de cada iteración:
-- Requisito: Al final de cada iteración (cuando se informa lo realizado y el siguiente punto), la explicación debe contener obligatoriamente:
-  
-  1. **Dos títulos numerados** siguiendo el esquema del Sprint:
-     - "Hecho: <número> <título>" (por ejemplo, "Hecho: 9.18 Shading/material...") que describe en breve lo completado.
-     - "Siguiente: <número> <título>" que describe el siguiente punto propuesto.
-  
-  2. **Barra de progreso visual del sprint** mostrando el avance de tareas completadas:
-     - Formato: Barra horizontal con fondo negro (█), progreso verde (🟩), bordes blancos (┃), y porcentaje centrado
-     - Ejemplo con 2 de 15 tareas (13.3%):
-       ```
-       ┌────────────────────────────────────────────────────────────────────┐
-       │🟩🟩⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛ 13.3%│
-       └────────────────────────────────────────────────────────────────────┘
-       ```
-     - La barra debe ocupar todo el ancho disponible del prompt (aprox. 70-80 caracteres)
-     - El porcentaje se calcula como: (tareas completadas / total tareas sprint) × 100
-     - Usar emojis/caracteres Unicode: 🟩 (verde completado), ⬛ (negro pendiente)
-     - Incluir el porcentaje en formato "XX.X%" al final de la barra
-  
-  Estos elementos deben estar presentes en la explicación final que acompaña al commit/documentación. El asistente rellenará los números y calculará el progreso guiándose por `docs/sprint.md`, `docs/sprint_tasks.md` y `docs/daily.md`.
+2. **Registro de intento**: ANTES de modificar código, el asistente DEBE:
+   - Añadir una nueva entrada en `docs/sprint_bug_attempts.md` con:
+     - Intento # (secuencial)
+     - Descripción clara del enfoque que se va a probar
+     - Fecha y hora actual
+   - Esta entrada debe crearse ANTES de tocar código
 
-Fichero Daily (`docs/daily.md`)
---------------------------------
-- Propósito: `docs/daily.md` es el fichero simplificado de seguimiento diario.
-- Contenido: El fichero solo contiene DOS cosas:
-  1. **Última tarea realizada**: Número y descripción de la tarea completada (formato: "Hecho: <n> <descripción>")
-  2. **Tarea actual**: Número y descripción de la siguiente tarea a realizar (formato: "Siguiente: <n> <descripción>")
-- Formato ejemplo (con sprint activo):
-  ```
-  # Daily Log
+3. **Implementación**: El asistente implementa el cambio propuesto
 
-  Hecho: 3.01 Plataforma - robustez en creación de ventana y prueba WM_PAINT
-  Siguiente: 4.00 Backend de render inicial - DirectX12 minimal
-  ```
-- Formato ejemplo (sin sprint activo):
-  ```
-  # Daily Log
+4. **Compilación**: El asistente ejecuta las DOS compilaciones obligatorias:
+   - CMake Build (Debug)
+   - MSBuild "Imagine Studio.sln" (Debug)
 
-  Sprint v1.1.0 cerrado. Sin sprint activo.
-  ```
-- El asistente actualiza este fichero automáticamente tras cada commit exitoso.
-- Al finalizar un sprint (release), el contenido de `daily.md` se actualiza a "Sprint vX.Y.Z cerrado. Sin sprint activo." y se archiva en los ficheros versionados del sprint. Se crea un nuevo `daily.md` para el siguiente sprint cuando este comienza.
+5. **Registro de resultado**: DESPUÉS de compilar, el asistente DEBE:
+   - Actualizar la entrada en `docs/sprint_bug_attempts.md` con:
+     - Resultado (Éxito/Parcial/Fallido)
+     - Detalles del resultado (errores de compilación, comportamiento observado, etc.)
+     - Archivos modificados en este intento
 
-Modificación de archivos `.vcxproj` (Visual Studio Project Files)
--------------------------------------------------------------------
-- **Problema**: Los archivos `.vcxproj` están bloqueados por Visual Studio cuando la solución está abierta. Intentar modificarlos directamente con `replace_string_in_file` fallará con error "El documento ya está abierto como proyecto o solución".
-- **Solución**: Usar comandos PowerShell con manipulación XML para modificar el `.vcxproj` sin necesidad de cerrarlo:
+6. **Validación usuario**: Si compilación es limpia:
+   - Actualizar estado en `docs/sprint_bugs.md` a "Pendiente validación usuario"
+   - **PAUSAR** y esperar confirmación del usuario
+   - El asistente NO debe marcar el bug como resuelto automáticamente
 
-**Método 1: Añadir archivo fuente al proyecto (.cpp)**
-```powershell
-# Cargar XML del proyecto
-[xml]$proj = Get-Content "Imagine Studio.vcxproj"
+7. **Iteración**: Si el intento falla o es parcial:
+   - Volver al paso 2 con un nuevo intento
+   - **IMPORTANTE**: NO repetir intentos ya probados (consultar `sprint_bug_attempts.md`)
 
-# Encontrar el ItemGroup que contiene archivos .cpp
-$compileGroup = $proj.Project.ItemGroup | Where-Object { $_.ClCompile -ne $null } | Select-Object -First 1
+8. **Resolución confirmada**: Solo cuando el usuario confirme que el fix funciona:
+   - Mover bug de `docs/sprint_bugs.md` a `docs/sprint_fix.md`
+   - Copiar el resumen de intentos exitosos en `docs/sprint_fix.md`
+   - Archivar `docs/sprint_bug_attempts.md` para ese bug (mantener historial)
 
-# Crear nuevo elemento ClCompile
-$newCompile = $proj.CreateElement("ClCompile", $proj.Project.NamespaceURI)
-$newCompile.SetAttribute("Include", "external\imgui\imgui_demo.cpp")
+**REGLA CRÍTICA**: El asistente NO debe:
+- Modificar código sin antes registrar el intento en `sprint_bug_attempts.md`
+- Marcar un bug como resuelto solo porque la compilación sea limpia
+- Repetir intentos de solución ya probados y registrados en `sprint_bug_attempts.md`
+- Olvidar actualizar el resultado del intento después de compilar
 
-# Añadir al grupo
-$compileGroup.AppendChild($newCompile) | Out-Null
+**Beneficios de este flujo**:
+- Evita repetir soluciones fallidas
+- Proporciona contexto histórico invaluable para futuros bugs similares
+- Facilita la colaboración (otro desarrollador puede ver qué se ha intentado)
+- Permite análisis post-mortem de bugs complejos
+- Detecta patrones en errores recurrentes
 
-# Guardar cambios
-$proj.Save("Imagine Studio.vcxproj")
-```
+---
 
-**Método 2: Añadir archivo header al proyecto (.h)**
-```powershell
-[xml]$proj = Get-Content "Imagine Studio.vcxproj"
-$includeGroup = $proj.Project.ItemGroup | Where-Object { $_.ClInclude -ne $null } | Select-Object -First 1
-$newInclude = $proj.CreateElement("ClInclude", $proj.Project.NamespaceURI)
-$newInclude.SetAttribute("Include", "src\editor\EditorUI.h")
-$includeGroup.AppendChild($newInclude) | Out-Null
-$proj.Save("Imagine Studio.vcxproj")
-```
+**IMPORTANTE**: Siempre revisar `docs/sprint_bugs.md`, `docs/sprint_bug_attempts.md` y el código relacionado **ANTES** de comenzar a implementar cualquier solución para un bug. Esto asegura que se comprende completamente el problema y se evita repetir intentos fallidos.
 
-**Método 3: Modificar configuración del proyecto (ejemplo: cambiar standard C++)**
-```powershell
-[xml]$proj = Get-Content "Imagine Studio.vcxproj"
-$propertyGroups = $proj.Project.PropertyGroup | Where-Object { $_.LanguageStandard -ne $null }
-foreach ($pg in $propertyGroups) {
-    $pg.LanguageStandard = "stdcpp14"
-}
-$proj.Save("Imagine Studio.vcxproj")
-```
+**Ejemplo de flujo de trabajo con un bug**:
+1. Se reporta un bug y se añade a `sprint_bugs.md` como BUG-003.
+2. El asistente revisa `sprint_bugs.md` y ve que es un problema de renderizado en el `DX12Renderer`.
+3. Se consulta el historial de intentos en `sprint_bug_attempts.md` y se ve que ya hubo 2 intentos fallidos relacionados.
+4. Se registra un nuevo intento:
+   - **Intento #3**: Probar reinstalar el contexto de `ImGui` y verificar todas las dependencias de `DX12Renderer`.
+5. Se implementa y registra el intento en `sprint_bug_attempts.md`:
+   ```markdown
+   ### BUG-003 - Error de renderizado en DX12Renderer
+   **Intento #3**
+   - **Descripción**: Reinstalar contexto de ImGui y verificar dependencias de DX12Renderer
+   - **Resultado**: En Progreso
+   - **Detalles**: Se está implementando una solución más robusta para la inicialización de ImGui y DX12.
+   - **Fecha y hora**: 2025-01-15 11:00
+   ```
+6. Se espera a que el asistente complete el intento y valide con el usuario.
 
-- **IMPORTANTE**: Después de modificar el `.vcxproj` con PowerShell, Visual Studio detectará el cambio y mostrará un diálogo de recarga. El usuario debe hacer clic en "Reload" para que los cambios se reflejen.
-- **Alternativa CMake**: Si el proyecto usa CMake como sistema principal (como este proyecto), es preferible modificar `CMakeLists.txt` y regenerar el proyecto con `cmake -S . -B build` en lugar de modificar manualmente el `.vcxproj`. El `.vcxproj` se regenerará automáticamente desde CMake.
-- **Regla del asistente**: Cuando se necesite añadir archivos al proyecto:
-  1. **Primero** añadirlos a `CMakeLists.txt` (si existe)
-  2. **Después** regenerar con `cmake -S . -B build`
-  3. **Solo si CMake no se usa o hay conflictos**, modificar directamente el `.vcxproj` con PowerShell XML
-
-Nota sobre estándar C++:
-- Este repositorio usa C++14 como estándar de compilación en `CMakeLists.txt`. Asegúrate de que tu entorno local/CI tenga toolchains compatibles (MSVC/Clang/GCC) antes de compilar
+**NOTA**: Este fiche
