@@ -144,11 +144,14 @@
     <None Include="docs\roadmap_tasks_v1.0.0.md" />
     <None Include="docs\roadmap_v1.0.0.md" />
     <None Include="docs\sprint.md" />
+    <None Include="docs\sprints\README.md" />
     <None Include="docs\sprint_bugs.md" />
     <None Include="docs\sprint_bug_attempts.md" />
+    <None Include="docs\sprint_deviations.md" />
     <None Include="docs\sprint_fix.md" />
     <None Include="docs\sprint_histories.md" />
     <None Include="docs\sprint_histories_v1.0.0.md" />
+    <None Include="docs\sprint_ia_sessions.md" />
     <None Include="docs\sprint_tasks.md" />
     <None Include="docs\sprint_tasks_v1.0.0.md" />
     <None Include="docs\sprint_v1.0.0.md" />
@@ -234,6 +237,9 @@
     <Text Include="commit_msg_bug002_intento6.txt" />
     <Text Include="commit_msg_bug002_resuelto.txt" />
     <Text Include="commit_msg_h4_1.txt" />
+    <Text Include="commit_msg_ia_sessions.txt" />
+    <Text Include="commit_msg_sprints_folder.txt" />
+    <Text Include="commit_msg_sprint_deviations.txt" />
     <Text Include="commit_sprint_complete.txt" />
     <Text Include="commit_sprint_v120_close.txt" />
     <Text Include="commit_sprint_v130_plan.txt" />

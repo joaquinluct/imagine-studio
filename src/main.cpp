@@ -118,6 +118,15 @@ static int RunApp(HINSTANCE hInstance)
     // Setup Dear ImGui style (dark theme)
     ImGui::StyleColorsDark();
     
+    // ✅ AAA STANDARD: Fondo semitransparente para ver el render 3D debajo
+    // Esto permite que la UI del editor no tape completamente la escena renderizada
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.Colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.06f, 0.06f, 0.70f);  // Fondo ventanas (70% opacidad)
+    style.Colors[ImGuiCol_ChildBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);   // Fondo child windows (transparente)
+    style.Colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.20f, 0.20f, 0.20f, 0.50f);  // Fondo dockspace vacío (50% opacidad)
+    
+    CORE_LOG_INFO("ImGui style configured: semi-transparent background (Unity/Unreal style)");
+    
     // ✅ CRÍTICO: Añadir font por defecto ANTES de Build()
     io.Fonts->AddFontDefault();
     
