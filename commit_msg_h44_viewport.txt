@@ -1,0 +1,96 @@
+feat(editor): Implementar panel Viewport con placeholder informativo
+
+Historia H4.4 - Panel Viewport del Editor UI
+
+Implementacion:
+- Actualizar EditorUI::RenderViewport() con placeholder informativo
+- Informacion tecnica del render target (resolucion, formato, samples)
+- TODO claramente marcado: exponer back buffer como SRV texture
+- Pasos futuros documentados (crear SRV, transicion de estado, ImGui::Image)
+- Estadisticas de rendering actuales (draw calls, vertices, triangles)
+- Nota sobre render semitransparente actual
+
+Integracion en main.cpp:
+- Anadir llamada a RenderViewport() despues de RenderConsole()
+- Orden logico completo: Hierarchy -> Inspector -> Console -> Viewport
+
+Contenido del Viewport placeholder:
+```cpp
+// Titulo principal
+"3D Viewport"
+
+// Informacion tecnica
+Render Target:
+  Resolution: 1920x1080 (Full HD)
+  Format: DXGI_FORMAT_R8G8B8A8_UNORM
+  Samples: 1 (no MSAA)
+
+// TODO futuro (amarillo)
+TODO: Expose back buffer as SRV texture and render with ImGui::Image()
+
+Future implementation:
+  - Create SRV for render target
+  - Transition render target to SHADER_RESOURCE state
+  - Render with ImGui::Image(srvGpuHandle, size)
+  - Handle viewport resizing
+
+// Stats de rendering (verde)
+Rendering Stats:
+  Draw Calls: 1
+  Vertices: 6
+  Triangles: 2
+  Primitives: Quad
+
+// Nota explicativa (azul claro)
+Note: Currently, the 3D scene is rendered behind editor panels
+with semi-transparent background (70% opacity).
+```
+
+Features implementadas:
+- Texto con colores para diferentes secciones (gris, amarillo, verde, azul)
+- TextWrapped para texto largo que se ajusta al panel
+- BulletText para listas de pasos futuros
+- Separadores visuales entre secciones
+- Informacion tecnica precisa del render target actual
+
+Colores utilizados:
+- Gris (0.5, 0.5, 0.5) para labels tecnicos
+- Amarillo (1.0, 1.0, 0.0) para TODO
+- Verde (0.0, 1.0, 0.0) para stats exitosos
+- Azul claro (0.5, 0.5, 1.0) para notas informativas
+
+Beneficios:
+- Viewport funcional como placeholder
+- Documentacion clara de trabajo futuro
+- Base para integracion real de render target
+- Informacion tecnica util para debugging
+- Stats de rendering visible en editor
+
+Testing visual pendiente:
+- Verificar panel Viewport visible junto a otros 3 panels
+- Verificar colores correctos en diferentes secciones
+- Verificar texto wrapping funcional
+- Verificar panel dockeable
+
+TODO futuro (trabajo complejo, diferido):
+- Crear SRV descriptor para render target
+- Transicionar render target a SHADER_RESOURCE state
+- Copiar render target a texture intermedia
+- Renderizar texture como ImGui::Image()
+- Manejar resizing del viewport
+- Sincronizar resolucion viewport con render target
+- Implementar controles de camara en viewport (orbit, pan, zoom)
+
+Nota importante:
+- Por ahora el render 3D se ve detras de los panels con opacidad 70%
+- Esto es suficiente para el sprint v1.3.0 (ImGui Integration)
+- La implementacion real de viewport como textura se hara en sprint futuro
+- Requiere trabajo significativo con DX12 SRVs y resource transitions
+
+Archivos modificados:
+- src/editor/EditorUI.cpp (RenderViewport implementado con placeholder)
+- src/main.cpp (llamada a RenderViewport)
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Referencia: H4.4 - Panel Viewport v1.3.0
