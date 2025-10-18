@@ -44,6 +44,52 @@ Refs: H1.1
 
 ### 2025-01-18
 
+#### `34b8d30` - feat renderer H1.3 Implementar helper TransitionResource para gestión de estados
+
+**Tipo**: Feature (Renderer)  
+**Ámbito**: Sprint v1.5.0 - H1.3  
+**Descripción**: Implementar método helper `TransitionResource()` para simplificar gestión de transiciones de estado de recursos DX12
+
+**Implementación**:
+- Crear método `TransitionResource(resource, stateBefore, stateAfter)`:
+  - Valida resource y command list antes de crear barrier
+  - Optimización: Skip transition si estados son iguales
+  - Simplifica código eliminando repetición de barriers
+- Refactorizar `OpaquePass()` para usar helper method:
+  - Transición `PRESENT` → `RENDER_TARGET` antes de renderizar
+  - Transición `RENDER_TARGET` → `PRESENT` después de renderizar
+  - Añadir comentario: En H3.1 cambiará a `PIXEL_SHADER_RESOURCE` para Viewport
+- Refactorizar `UIPass()` para usar helper method:
+  - Transición `PRESENT` → `RENDER_TARGET` antes de UI
+  - Transición `RENDER_TARGET` → `PRESENT` después de UI
+
+**Beneficios**:
+- ✅ Código más limpio y mantenible (DRY)
+- ✅ Consistencia en manejo de barriers
+- ✅ Facilita futuras transiciones para SRV (H3.1)
+- ✅ Optimización: evita transiciones innecesarias
+
+**Preparación para H3.1**:
+Cuando se implemente Viewport con `ImGui::Image()`, solo se necesitará cambiar:
+```cpp
+// En OpaquePass(), cambiar:
+TransitionResource(rt, RENDER_TARGET, PRESENT);
+// Por:
+TransitionResource(rt, RENDER_TARGET, PIXEL_SHADER_RESOURCE);
+```
+
+**Archivos modificados**:
+- `src/renderer/DX12Renderer.h` (declaración TransitionResource)
+- `src/renderer/DX12Renderer.cpp` (implementación + refactor OpaquePass/UIPass)
+
+**Compilación**: ✅ Limpia (CMake + MSBuild: 0 errores, 0 warnings)
+
+**Próxima tarea**: H1.4 - Validación Visual SRV
+
+**Referencia**: Sprint v1.5.0 - H1.3
+
+---
+
 #### `7afbbf8` - feat renderer H1.2 Actualizar SRV descriptor para render target dinámico
 
 **Tipo**: Feature (Renderer)  
