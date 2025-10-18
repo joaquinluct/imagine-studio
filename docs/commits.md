@@ -715,7 +715,7 @@ Refs: #BUG-001 #FIX-001
 
 # Historial de Commits
 
-Este archivo registra todos los commits realizados durante el desarrollo del proyecto Imagine Studio, organizados cronológicamente.
+Este archivo registra todos los commits realizados durante el desarrollo del proyecto Imagine Studio, organizizados cronológicamente.
 
 ---
 
@@ -822,6 +822,91 @@ if (!hwnd_) { /* Abortar con error - SIN FALLBACK */ }
 - Si persiste error 1400 → investigar permisos o conflictos de sistema operativo
 
 ---
+
+## 2025-01-18
+
+### `f3ae796` - test(scene): Implementar tests unitarios Entity System (H1.4)
+
+**Tipo**: Test (Solicitud de cambio)  
+**Ámbito**: Scene  
+**Descripción**: Implementar pruebas unitarias para Entity System usando Google Test
+
+**Historia H1.4** - Tests unitarios Entity System añadidos
+
+**Implementación**:
+- Crear `tests/scene/EntityManagerTests.cpp` con pruebas para EntityManager
+- Probar creación, destrucción, y límites de EntityManager
+- Verificar recuento de entidades y condiciones de carrera
+
+**Configuración**:
+- Adaptar CMake para incluir directorio de pruebas y enlazar con Google Test
+- Agregar `gtest_main` a los objetivos de enlace
+
+**Archivos modificados**:
+- `CMakeLists.txt`: Incluir directorio de pruebas, enlazar con Google Test
+- `Imagine Studio.vcxproj`: Agregar tests como nuevo proyecto
+- `Imagine Studio.vcxproj.filters`: Incluir archivos de prueba en Source Files
+
+**Compilación**: ✅ Limpia
+- CMake Build (Debug): 0 errores, 0 warnings
+- MSBuild "Imagine Studio.sln" (Debug): 0 errores, 0 warnings
+
+**Próxima tarea**: H2.1 - Crear Transform Component
+
+**Referencia**: H1.4 - Tests unitarios Entity System v1.4.0
+
+---
+
+## 2025-01-18
+
+### `c4c5421` - feat(scene): Implementar Transform Component con DirectXMath (H2.1)
+
+**Tipo**: Feature (Sprint v1.4.0)  
+**Ámbito**: Scene  
+**Descripción**: Crear Transform Component con posición, rotación y escala usando DirectXMath
+
+**Historia H2.1** - Transform Component creado
+
+**Implementación**:
+- Crear `src/scene/Transform.h` con clase `Transform` (hereda de `Component`)
+- Crear `src/scene/Transform.cpp` con implementación
+- Miembros: `XMFLOAT3 position`, `rotation` (Euler angles), `scale`
+- Constructor: inicializa position=(0,0,0), rotation=(0,0,0), scale=(1,1,1)
+
+**Métodos implementados**:
+- `GetPosition()/SetPosition()` (XMFLOAT3 y x,y,z overloads)
+- `GetRotation()/SetRotation()` (Euler angles en radianes)
+- `GetScale()/SetScale()` + `SetUniformScale()`
+- `GetLocalMatrix()`: computa TRS matrix (Scale → Rotate → Translate)
+- `GetWorldMatrix()`: retorna local matrix (parent=null por ahora, TODO: H3)
+
+**Características**:
+- ✅ Usa DirectXMath para optimización SIMD
+- ✅ Orden TRS correcto (Scale * Rotation * Translation)
+- ✅ Rotation con `XMMatrixRotationRollPitchYaw` (pitch, yaw, roll)
+- ✅ Scale, rotation y translation independientes
+- ✅ API limpia con getters/setters inline
+
+**Archivos creados**:
+- `src/scene/Transform.h` (interfaz)
+- `src/scene/Transform.cpp` (implementación)
+
+**Archivos modificados**:
+- `CMakeLists.txt` (SCENE_SRC glob pattern captura Transform.cpp)
+- `Imagine Studio.vcxproj` (Transform.cpp + Transform.h)
+- `Imagine Studio.vcxproj.filters` (Source Files\scene + Header Files\scene)
+
+**Compilación**: ✅ Limpia
+- CMake Build (Debug): 0 errores, 0 warnings
+- MSBuild "Imagine Studio.sln" (Debug): 0 errores, 0 warnings
+
+**Próxima tarea**: H2.2 - Tests Transform Component
+
+**Referencia**: H2.1 - Transform Component v1.4.0
+
+---
+
+## 2025-01-18
 
 
 
