@@ -252,38 +252,52 @@ static int RunApp(HINSTANCE hInstance)
         Renderer::Camera* camera = renderer.GetCamera();
         Editor::Viewport* viewport = Editor::EditorUI::GetViewport();
         
-        if (camera && viewport && viewport->IsHovered())
+        if (camera && viewport)
         {
-            // Orbit: Right mouse button
-            if (input.IsMouseButtonDown(1)) // Right button
+            // v1.5.0 H4.3: Actualizar aspect ratio de cámara según tamaño de Viewport
+            float viewportWidth, viewportHeight;
+            viewport->GetSize(viewportWidth, viewportHeight);
+            
+            if (viewportWidth > 0.0f && viewportHeight > 0.0f)
             {
-                int deltaX, deltaY;
-                input.GetMouseDelta(deltaX, deltaY);
-                
-                // Convert pixel delta to radians (sensitivity)
-                float yaw = deltaX * 0.005f;   // Horizontal rotation
-                float pitch = -deltaY * 0.005f; // Vertical rotation (inverted Y)
-                
-                camera->Orbit(yaw, pitch);
+                float aspectRatio = viewportWidth / viewportHeight;
+                camera->SetPerspective(45.0f, aspectRatio, 0.1f, 1000.0f);
             }
             
-            // Pan: Middle mouse button
-            if (input.IsMouseButtonDown(2)) // Middle button
+            // Controles solo si Viewport tiene hover
+            if (viewport->IsHovered())
             {
-                int deltaX, deltaY;
-                input.GetMouseDelta(deltaX, deltaY);
+                // Orbit: Right mouse button
+                if (input.IsMouseButtonDown(1)) // Right button
+                {
+                    int deltaX, deltaY;
+                    input.GetMouseDelta(deltaX, deltaY);
+                    
+                    // Convert pixel delta to radians (sensitivity)
+                    float yaw = deltaX * 0.005f;   // Horizontal rotation
+                    float pitch = -deltaY * 0.005f; // Vertical rotation (inverted Y)
+                    
+                    camera->Orbit(yaw, pitch);
+                }
                 
-                camera->Pan(static_cast<float>(deltaX), static_cast<float>(-deltaY)); // Inverted Y
-            }
-            
-            // Zoom: +/- keys (alternative to mouse wheel)
-            if (input.IsKeyDown(VK_ADD) || input.IsKeyDown(VK_OEM_PLUS)) // + or =
-            {
-                camera->Zoom(1.0f); // Zoom in
-            }
-            if (input.IsKeyDown(VK_SUBTRACT) || input.IsKeyDown(VK_OEM_MINUS)) // - or _
-            {
-                camera->Zoom(-1.0f); // Zoom out
+                // Pan: Middle mouse button
+                if (input.IsMouseButtonDown(2)) // Middle button
+                {
+                    int deltaX, deltaY;
+                    input.GetMouseDelta(deltaX, deltaY);
+                    
+                    camera->Pan(static_cast<float>(deltaX), static_cast<float>(-deltaY)); // Inverted Y
+                }
+                
+                // Zoom: +/- keys (alternative to mouse wheel)
+                if (input.IsKeyDown(VK_ADD) || input.IsKeyDown(VK_OEM_PLUS)) // + or =
+                {
+                    camera->Zoom(1.0f); // Zoom in
+                }
+                if (input.IsKeyDown(VK_SUBTRACT) || input.IsKeyDown(VK_OEM_MINUS)) // - or _
+                {
+                    camera->Zoom(-1.0f); // Zoom out
+                }
             }
         }
 
