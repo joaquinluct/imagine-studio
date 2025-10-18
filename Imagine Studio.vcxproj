@@ -202,6 +202,7 @@
     <ClCompile Include="external\imgui\backends\imgui_impl_dx12.cpp" />
     <ClCompile Include="external\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="external\imgui\imgui_demo.cpp" />
+    <ClCompile Include="src\scene\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\assets\AssetManager.h" />
@@ -232,6 +233,7 @@
     <ClInclude Include="src\ui\SimpleUI.h" />
     <ClInclude Include="src\ui\TextRenderer.h" />
     <ClInclude Include="src\ui\Win32TextRenderer.h" />
+    <ClInclude Include="src\scene\Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt" />

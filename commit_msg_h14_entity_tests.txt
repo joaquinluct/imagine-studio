@@ -1,0 +1,50 @@
+test(scene): Implementar tests unitarios Entity System (H1.4)
+
+Historia H1.4 - Tests unitarios Entity System completados
+
+Implementacion:
+- Crear tests/entity_test.cpp con 2 funciones de test
+- TestEntityCreation(): 8 tests para validar Entity y EntityManager
+- TestEntityManager(): 3 tests para validar comportamiento avanzado
+- Total: 11 asserts con validacion completa
+
+Tests implementados:
+1. Create entity ? verificar ID=1, Name="Player"
+2. Create multiple entities ? verificar IDs incrementales (1,2,3)
+3. GetEntity(id) ? verificar lookup correcto
+4. GetEntityCount() ? verificar contador de entities
+5. DestroyEntity(id) ? verificar entity eliminada
+6. GetEntity(999) ? verificar nullptr para ID inexistente
+7. Clear() ? verificar todas eliminadas
+8. IDs incrementales tras multiples creates
+9. Destroy middle entity ? preservar otras entities
+10. Create after destroy ? ID continua secuencia (no reutiliza)
+11. Validacion de punteros nulos
+
+Caracteristicas:
+- Output detallado con [TEST], [PASS], [ERROR]
+- Manejo de excepciones con try/catch
+- Return 0 si todos pasan, 1 si falla
+- Compilacion limpia (CMake + MSBuild)
+
+Archivos creados:
+- tests/entity_test.cpp (tests unitarios completos)
+
+Archivos modificados:
+- CMakeLists.txt (entity_test executable)
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Ejecucion de tests:
+========================================
+Entity System Unit Tests
+========================================
+[TEST] TestEntityCreation - PASSED (8 tests)
+[TEST] TestEntityManager - PASSED (3 tests)
+========================================
+ALL TESTS PASSED! (11 asserts)
+========================================
+
+Proxima tarea: H2.1 - Transform Component (pos/rot/scale)
+
+Referencia: H1.4 - Tests unitarios v1.4.0
