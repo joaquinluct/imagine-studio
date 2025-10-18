@@ -693,6 +693,7 @@ void DX12Renderer::Initialize(HWND hwnd)
 
 #if defined(_WIN32) && defined(_MSC_VER)
 // v1.5.0 H1.1 - Create SRV descriptor for render target (viewport texture)
+// v1.5.0 H1.2 - Updated to regenerate SRV for current back buffer (m_frameIndex)
 void DX12Renderer::CreateRenderTargetSRV()
 {
     if (!device_ || !device_->HasNativeDevice())
@@ -711,7 +712,8 @@ void DX12Renderer::CreateRenderTargetSRV()
     m_renderTargetSRV_GPU = m_imguiSrvHeap->GetGPUDescriptorHandleForHeapStart();
     m_renderTargetSRV_GPU.ptr += m_imguiSrvDescriptorSize; // Offset to slot 1
     
-    // Create SRV descriptor for current render target (back buffer)
+    // Create SRV descriptor for CURRENT render target (back buffer at m_frameIndex)
+    // This will be called after Present() when m_frameIndex changes (H1.2)
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
     srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // Match swap chain format
     srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
@@ -719,14 +721,14 @@ void DX12Renderer::CreateRenderTargetSRV()
     srvDesc.Texture2D.MipLevels = 1;
     srvDesc.Texture2D.MostDetailedMip = 0;
     
-    // Create SRV for current back buffer
+    // Create SRV for current back buffer (m_frameIndex may have changed after Present)
     d3dDevice->CreateShaderResourceView(
-        m_renderTargets[m_frameIndex], // Current back buffer
+        m_renderTargets[m_frameIndex], // Use CURRENT frame index
         &srvDesc,
         m_renderTargetSRV_CPU
     );
     
-    CORE_LOG_INFO("DX12Renderer: Render Target SRV created (slot 1 in ImGui SRV heap)");
+    CORE_LOG_INFO("DX12Renderer: Render Target SRV updated for frame index " + std::to_string(m_frameIndex));
 }
 #endif
 
@@ -762,6 +764,10 @@ void DX12Renderer::RenderForwardPass()
         
         // Update frame index for next frame
         m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
+        
+        // v1.5.0 H1.2 - Update SRV descriptor to point to new back buffer
+        // This ensures GetRenderTargetSRV() always returns the correct texture
+        CreateRenderTargetSRV();
     }
 #endif
 }

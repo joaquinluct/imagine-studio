@@ -135,7 +135,6 @@
     <None Include="docs\backlog.md" />
     <None Include="docs\CLOSE_SPRINT.md" />
     <None Include="docs\CLOSE_SPRINT_REFERENCE.md" />
-    <None Include="docs\commits.md" />
     <None Include="docs\daily.md" />
     <None Include="docs\IMGUI_INSTALL.md" />
     <None Include="docs\MAIN.md" />
@@ -249,6 +248,7 @@
     <Text Include="commit_msg_bug002_intento6.txt" />
     <Text Include="commit_msg_bug002_resuelto.txt" />
     <Text Include="commit_msg_close_v130.txt" />
+    <Text Include="commit_msg_close_v140.txt" />
     <Text Include="commit_msg_close_verification.txt" />
     <Text Include="commit_msg_h11_h12_entity.txt" />
     <Text Include="commit_msg_h13_entity_manager.txt" />
@@ -268,6 +268,7 @@
     <Text Include="commit_msg_h4_1.txt" />
     <Text Include="commit_msg_ia_sessions.txt" />
     <Text Include="commit_msg_ia_session_001.txt" />
+    <Text Include="commit_msg_ia_session_v140.txt" />
     <Text Include="commit_msg_sprints_folder.txt" />
     <Text Include="commit_msg_sprint_deviations.txt" />
     <Text Include="commit_msg_sprint_v140_inauguracion.txt" />
