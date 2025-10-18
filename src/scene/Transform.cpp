@@ -1,4 +1,5 @@
 #include "Transform.h"
+#include "Entity.h"
 
 namespace Scene {
 
@@ -6,6 +7,7 @@ Transform::Transform()
     : m_position(0.0f, 0.0f, 0.0f)
     , m_rotation(0.0f, 0.0f, 0.0f)
     , m_scale(1.0f, 1.0f, 1.0f)
+    , m_parent(nullptr)
 {
 }
 
@@ -28,9 +30,25 @@ DirectX::XMMATRIX Transform::GetLocalMatrix() const
 
 DirectX::XMMATRIX Transform::GetWorldMatrix() const
 {
-    // For now, local == world (no parent transform)
-    // TODO: Implement parent-child hierarchy in H3
-    return GetLocalMatrix();
+    using namespace DirectX;
+
+    XMMATRIX localMatrix = GetLocalMatrix();
+
+    // If no parent, local == world
+    if (m_parent == nullptr) {
+        return localMatrix;
+    }
+
+    // Get parent's transform component
+    Transform* parentTransform = m_parent->GetComponent<Transform>();
+    if (parentTransform == nullptr) {
+        // Parent has no transform, use local only
+        return localMatrix;
+    }
+
+    // Compute world matrix: parent's world matrix * local matrix
+    XMMATRIX parentWorldMatrix = parentTransform->GetWorldMatrix();
+    return localMatrix * parentWorldMatrix;
 }
 
 } // namespace Scene

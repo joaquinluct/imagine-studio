@@ -3,11 +3,15 @@
 #include "Component.h"
 #include <DirectXMath.h>
 
+// Forward declaration
+namespace Scene { class Entity; }
+
 namespace Scene {
 
 /// <summary>
 /// Transform Component - Position, Rotation, Scale (AAA standard)
 /// Uses DirectXMath for SIMD optimization
+/// Supports parent-child hierarchy for scene graph
 /// </summary>
 class Transform : public Component {
 public:
@@ -30,14 +34,19 @@ public:
     void SetScale(float x, float y, float z) { m_scale = DirectX::XMFLOAT3(x, y, z); }
     void SetUniformScale(float scale) { m_scale = DirectX::XMFLOAT3(scale, scale, scale); }
 
+    // Parent-child hierarchy
+    Entity* GetParent() const { return m_parent; }
+    void SetParent(Entity* parent) { m_parent = parent; }
+
     // Matrix computation
     DirectX::XMMATRIX GetLocalMatrix() const;
     DirectX::XMMATRIX GetWorldMatrix() const;
 
 private:
-    DirectX::XMFLOAT3 m_position;  // Position in world space
+    DirectX::XMFLOAT3 m_position;  // Position in local space
     DirectX::XMFLOAT3 m_rotation;  // Rotation in Euler angles (radians)
     DirectX::XMFLOAT3 m_scale;     // Scale factors (1.0 = no scale)
+    Entity* m_parent;              // Parent entity (nullptr = root)
 };
 
 } // namespace Scene
