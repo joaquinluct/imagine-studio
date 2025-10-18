@@ -308,15 +308,16 @@ static int RunApp(HINSTANCE hInstance)
             renderer.OnAssetLoaded(loadedPath);
         }
 
-        // ✅ AAA STANDARD: Solo procesar ImGui si UI está visible (Unity/Unreal style)
-        // Esto ahorra CPU/GPU cuando UI está oculta con F1
+        // ✅ CRITICAL FIX: Always call ImGui::NewFrame/Render (even when UI hidden)
+        // This ensures ImGui::GetDrawData() returns empty data when UI is hidden
+        // Start ImGui frame
+        ImGui_ImplWin32_NewFrame();
+        ImGui_ImplDX12_NewFrame();
+        ImGui::NewFrame();
+        
+        // ✅ Only render UI panels if visible (AAA standard - Unity/Unreal style)
         if (renderer.IsUIVisible())
         {
-            // Start ImGui frame
-            ImGui_ImplWin32_NewFrame();
-            ImGui_ImplDX12_NewFrame();
-            ImGui::NewFrame();
-            
             // ✅ AAA STANDARD: Dockspace principal ANTES de panels (Unity/Unreal style)
             // Permite docking flexible de todos los panels del editor
             ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
@@ -339,10 +340,10 @@ static int RunApp(HINSTANCE hInstance)
             #ifdef _DEBUG
                 // ImGui::ShowDemoWindow();  // Deshabilitado, ahora usamos EditorUI
             #endif
-            
-            // Render ImGui
-            ImGui::Render();
         }
+        
+        // ✅ CRITICAL: Always call Render() to finalize draw data (even if empty)
+        ImGui::Render();
 
         // Renderer renderiza frame (incluye UIPass con ImGui draw data si m_uiVisible)
         renderer.RenderFrame();

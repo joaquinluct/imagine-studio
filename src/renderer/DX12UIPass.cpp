@@ -37,12 +37,6 @@ void DX12UIPass::Shutdown()
 
 void DX12UIPass::Execute(DX12CommandContext& ctx)
 {
-    // Early exit if UI is not visible
-    if (!m_uiVisible)
-    {
-        return;
-    }
-
 #if defined(_WIN32) && defined(_MSC_VER)
     ID3D12GraphicsCommandList* commandList = ctx.GetCommandList();
     if (!commandList)
@@ -51,27 +45,27 @@ void DX12UIPass::Execute(DX12CommandContext& ctx)
         return;
     }
 
+    // Set render target
+    commandList->OMSetRenderTargets(1, &m_rtv, FALSE, nullptr);
+    
+    // Clear back buffer with dark gray (editor background)
+    const float clearColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+    commandList->ClearRenderTargetView(m_rtv, clearColor, 0, nullptr);
+    
+    // Only render ImGui if UI is visible
+    if (!m_uiVisible)
+    {
+        // UI hidden - back buffer cleared, no ImGui rendering
+        return;
+    }
+
     // Get ImGui draw data
     ImDrawData* draw_data = ImGui::GetDrawData();
     if (draw_data == nullptr || draw_data->TotalVtxCount == 0)
     {
-        // No ImGui data to render, but we still need to clear the back buffer
-        // Set render target
-        commandList->OMSetRenderTargets(1, &m_rtv, FALSE, nullptr);
-        
-        // Clear back buffer with dark gray (editor background)
-        const float clearColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
-        commandList->ClearRenderTargetView(m_rtv, clearColor, 0, nullptr);
-        
+        // No ImGui data to render (empty frame)
         return;
     }
-    
-    // Set render target (clear with editor background)
-    commandList->OMSetRenderTargets(1, &m_rtv, FALSE, nullptr);
-    
-    // Clear back buffer with dark gray
-    const float clearColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
-    commandList->ClearRenderTargetView(m_rtv, clearColor, 0, nullptr);
     
     // Set ImGui SRV descriptor heap (CRITICAL for ImGui to access textures)
     if (m_imguiSrvHeap)
