@@ -730,6 +730,37 @@ void DX12Renderer::CreateRenderTargetSRV()
     
     CORE_LOG_INFO("DX12Renderer: Render Target SRV updated for frame index " + std::to_string(m_frameIndex));
 }
+
+// v1.5.0 H1.3 - Helper method for resource state transitions
+// Simplifies barrier creation and ensures correct transition handling
+void DX12Renderer::TransitionResource(
+    ID3D12Resource* resource,
+    D3D12_RESOURCE_STATES stateBefore,
+    D3D12_RESOURCE_STATES stateAfter
+)
+{
+    if (!resource || !m_commandList)
+    {
+        CORE_LOG_ERROR("DX12Renderer::TransitionResource: Invalid resource or command list");
+        return;
+    }
+    
+    // Skip transition if states are the same (optimization)
+    if (stateBefore == stateAfter)
+    {
+        return;
+    }
+    
+    D3D12_RESOURCE_BARRIER barrier = {};
+    barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    barrier.Transition.pResource = resource;
+    barrier.Transition.StateBefore = stateBefore;
+    barrier.Transition.StateAfter = stateAfter;
+    barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    
+    m_commandList->ResourceBarrier(1, &barrier);
+}
 #endif
 
 // Rest of the implementation...
@@ -833,15 +864,12 @@ void DX12Renderer::OpaquePass()
     scissorRect.bottom = 1080;
     m_commandList->RSSetScissorRects(1, &scissorRect);
     
-    // Transition render target from PRESENT to RENDER_TARGET state
-    D3D12_RESOURCE_BARRIER barrierToRT = {};
-    barrierToRT.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    barrierToRT.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    barrierToRT.Transition.pResource = m_renderTargets[m_frameIndex];
-    barrierToRT.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-    barrierToRT.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-    barrierToRT.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-    m_commandList->ResourceBarrier(1, &barrierToRT);
+    // v1.5.0 H1.3 - Transition render target: PRESENT -> RENDER_TARGET
+    TransitionResource(
+        m_renderTargets[m_frameIndex],
+        D3D12_RESOURCE_STATE_PRESENT,
+        D3D12_RESOURCE_STATE_RENDER_TARGET
+    );
     
     // Get RTV handle for current back buffer
     D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
@@ -866,15 +894,14 @@ void DX12Renderer::OpaquePass()
     // DRAW CALL - 6 vertices (2 triangles forming a quad)
     m_commandList->DrawInstanced(6, 1, 0, 0);
     
-    // Transition render target from RENDER_TARGET back to PRESENT state
-    D3D12_RESOURCE_BARRIER barrierToPresent = {};
-    barrierToPresent.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    barrierToPresent.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    barrierToPresent.Transition.pResource = m_renderTargets[m_frameIndex];
-    barrierToPresent.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-    barrierToPresent.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-    barrierToPresent.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-    m_commandList->ResourceBarrier(1, &barrierToPresent);
+    // v1.5.0 H1.3 - Transition render target: RENDER_TARGET -> PRESENT
+    // NOTE: En H3.1, esta transición cambiará a RENDER_TARGET -> PIXEL_SHADER_RESOURCE
+    // para permitir que ImGui::Image() use el render target como textura en el Viewport
+    TransitionResource(
+        m_renderTargets[m_frameIndex],
+        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        D3D12_RESOURCE_STATE_PRESENT
+    );
     
     // Close command list (finish recording)
     hr = m_commandList->Close();
@@ -972,15 +999,12 @@ void DX12Renderer::UIPass()
         return;
     }
     
-    // Transition render target from PRESENT to RENDER_TARGET state
-    D3D12_RESOURCE_BARRIER barrierToRT = {};
-    barrierToRT.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    barrierToRT.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    barrierToRT.Transition.pResource = m_renderTargets[m_frameIndex];
-    barrierToRT.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-    barrierToRT.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-    barrierToRT.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-    m_commandList->ResourceBarrier(1, &barrierToRT);
+    // v1.5.0 H1.3 - Transition render target: PRESENT -> RENDER_TARGET
+    TransitionResource(
+        m_renderTargets[m_frameIndex],
+        D3D12_RESOURCE_STATE_PRESENT,
+        D3D12_RESOURCE_STATE_RENDER_TARGET
+    );
     
     // Get RTV handle for current back buffer
     D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
@@ -997,15 +1021,12 @@ void DX12Renderer::UIPass()
     // El backend ImGui_ImplDX12 se encarga de configurar pipeline, vertex buffers, etc.
     ImGui_ImplDX12_RenderDrawData(draw_data, m_commandList);
     
-    // Transition render target back to PRESENT state
-    D3D12_RESOURCE_BARRIER barrierToPresent = {};
-    barrierToPresent.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    barrierToPresent.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    barrierToPresent.Transition.pResource = m_renderTargets[m_frameIndex];
-    barrierToPresent.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-    barrierToPresent.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-    barrierToPresent.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-    m_commandList->ResourceBarrier(1, &barrierToPresent);
+    // v1.5.0 H1.3 - Transition render target: RENDER_TARGET -> PRESENT
+    TransitionResource(
+        m_renderTargets[m_frameIndex],
+        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        D3D12_RESOURCE_STATE_PRESENT
+    );
     
     // Close command list
     hr = m_commandList->Close();

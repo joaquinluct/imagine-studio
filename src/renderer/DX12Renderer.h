@@ -130,6 +130,13 @@ private:
     // Helper methods (v1.5.0 - H1.1)
 #if defined(_WIN32) && defined(_MSC_VER)
     void CreateRenderTargetSRV(); // Create SRV descriptor for render target
+    
+    // v1.5.0 H1.3 - Helper for resource state transitions
+    void TransitionResource(
+        ID3D12Resource* resource,
+        D3D12_RESOURCE_STATES stateBefore,
+        D3D12_RESOURCE_STATES stateAfter
+    );
 #endif
 };
 
