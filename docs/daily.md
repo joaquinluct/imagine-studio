@@ -1,6 +1,6 @@
 ﻿# Daily Log
 
-Hecho: H4.1 - Panel Hierarchy con arbol objetos placeholder completado
+Hecho: Seccion Visualizacion anadida a TEMPLATE.md (formato resumen final)
 Siguiente: H4.2 - Implementar Panel Inspector (propiedades objeto seleccionado)
 
 
