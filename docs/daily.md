@@ -1,6 +1,6 @@
 ﻿# Daily Log
 
-Hecho: Sprint v1.3.0 cerrado y archivado. Documentación mejorada con verificación post-cierre y concepto 85% ventana contexto.
-Siguiente: H1.1 - Crear Entity class básica (src/scene/Entity.h/cpp con ID, nombre, lista components)
+Hecho: H1.1 y H1.2 - Entity class y Component interface implementadas (src/scene/Entity.h/cpp, Component.h con ID, nombre, components, lifecycle)
+Siguiente: H1.3 - Implementar EntityManager (factory pattern con CreateEntity, DestroyEntity, storage unordered_map)
 
 
