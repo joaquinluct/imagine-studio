@@ -18,14 +18,25 @@ Los clics de ratón no tenían efecto en la UI de ImGui:
 - No abre/cierra desplegables
 - No responde a interacción con controles
 
-La tecla F1 (toggle UI) sí funcionaba correctamente, indicando que el problema era específico de eventos de ratón.
+**Síntomas confirmados**:
+- ? Hover de ratón SÍ funciona (cambio de color enter/exit)
+- ? F1 toggle SÍ funciona
+- ? Clics de ratón NO tienen efecto
 
-**Archivos afectados**: `src/platform/Window.cpp`, `CMakeLists.txt`
+**Archivos afectados**: `src/platform/Window.cpp`, `src/main.cpp`, `CMakeLists.txt`
 
-**Fix implementado** (commit 80b7b7e):
-- Eliminada verificación del retorno de `ImGui_ImplWin32_WndProcHandler()`
-- Handler ahora se llama SIEMPRE sin bloquear procesamiento de mensajes
-- Compilación limpia: CMake + MSBuild (0 errores, 0 warnings)
+**Fixes implementados**:
+
+1. **Fix v1** (commit 80b7b7e):
+   - Eliminada verificación del retorno de `ImGui_ImplWin32_WndProcHandler()`
+   - Handler ahora se llama SIEMPRE sin bloquear procesamiento de mensajes
+   - Resultado: **Fix parcial** (el handler se llama, pero atlas bloqueado impide procesamiento de clics)
+
+2. **Fix v2** (commit pendiente):
+   - Eliminada llamada prematura a `io.Fonts->GetTexDataAsRGBA32()` en `main.cpp`
+   - Causa raíz: atlas bloqueado impedía procesamiento de eventos de botones
+   - ImGui ahora maneja el atlas automáticamente durante `NewFrame()`
+   - Compilación limpia: MSBuild (0 errores, 0 warnings)
 
 **Pendiente**: Validación del usuario ejecutando la aplicación para confirmar que los clics de ratón ahora funcionan correctamente.
 
