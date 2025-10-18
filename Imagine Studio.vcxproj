@@ -133,6 +133,8 @@
     <None Include="assets\example_asset.dat" />
     <None Include="docs\AAA_STANDARDS.md" />
     <None Include="docs\backlog.md" />
+    <None Include="docs\CLOSE_SPRINT.md" />
+    <None Include="docs\CLOSE_SPRINT_REFERENCE.md" />
     <None Include="docs\commits.md" />
     <None Include="docs\daily.md" />
     <None Include="docs\IMGUI_INSTALL.md" />
@@ -162,6 +164,7 @@
     <None Include="examples\scene1\scene.json" />
     <None Include="README.md" />
     <None Include="scripts\check-encoding.ps1" />
+    <None Include="scripts\close-sprint.ps1" />
     <None Include="scripts\install-imgui.ps1" />
     <None Include="tools\reorder_includes.py" />
   </ItemGroup>
@@ -182,6 +185,7 @@
     <ClCompile Include="src\renderer\Fence.cpp" />
     <ClCompile Include="src\renderer\Material.cpp" />
     <ClCompile Include="src\renderer\RenderTarget.cpp" />
+    <ClCompile Include="src\scene\Entity.cpp" />
     <ClCompile Include="src\tests\adapter_test.cpp" />
     <ClCompile Include="src\tests\material_test.cpp" />
     <ClCompile Include="src\tests\taskgraph_test.cpp" />
@@ -197,7 +201,7 @@
     <ClCompile Include="external\imgui\backends\imgui_impl_dx12.cpp" />
     <ClCompile Include="external\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="external\imgui\imgui_demo.cpp" />
-    <ClCompile Include="src\scene\Entity.cpp" />
+    <ClCompile Include="src\scene\EntityManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\assets\AssetManager.h" />
@@ -219,6 +223,8 @@
     <ClInclude Include="src\renderer\IRenderer.h" />
     <ClInclude Include="src\renderer\Material.h" />
     <ClInclude Include="src\renderer\RenderTarget.h" />
+    <ClInclude Include="src\scene\Component.h" />
+    <ClInclude Include="src\scene\Entity.h" />
     <ClInclude Include="src\tools\Profiler.h" />
     <ClInclude Include="src\ui\DirectWriteTextRenderer.h" />
     <ClInclude Include="src\ui\IUI.h" />
@@ -227,6 +233,7 @@
     <ClInclude Include="src\ui\Win32TextRenderer.h" />
     <ClInclude Include="src\scene\Entity.h" />
     <ClInclude Include="src\scene\Component.h" />
+    <ClInclude Include="src\scene\EntityManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt" />
@@ -239,9 +246,13 @@
     <Text Include="commit_msg.txt" />
     <Text Include="commit_msg2.txt" />
     <Text Include="commit_msg_aaa_refactor.txt" />
+    <Text Include="commit_msg_backlog_reorg.txt" />
     <Text Include="commit_msg_bug002_intento5.txt" />
     <Text Include="commit_msg_bug002_intento6.txt" />
     <Text Include="commit_msg_bug002_resuelto.txt" />
+    <Text Include="commit_msg_close_v130.txt" />
+    <Text Include="commit_msg_close_verification.txt" />
+    <Text Include="commit_msg_h11_h12_entity.txt" />
     <Text Include="commit_msg_h41_hierarchy.txt" />
     <Text Include="commit_msg_h42_inspector.txt" />
     <Text Include="commit_msg_h43_console.txt" />
@@ -249,10 +260,13 @@
     <Text Include="commit_msg_h45_final.txt" />
     <Text Include="commit_msg_h4_1.txt" />
     <Text Include="commit_msg_ia_sessions.txt" />
+    <Text Include="commit_msg_ia_session_001.txt" />
     <Text Include="commit_msg_sprints_folder.txt" />
     <Text Include="commit_msg_sprint_deviations.txt" />
+    <Text Include="commit_msg_sprint_v140_inauguracion.txt" />
     <Text Include="commit_msg_template_visualizacion.txt" />
     <Text Include="commit_msg_ui_transparent.txt" />
+    <Text Include="commit_msg_ventana_contexto.txt" />
     <Text Include="commit_sprint_complete.txt" />
     <Text Include="commit_sprint_v120_close.txt" />
     <Text Include="commit_sprint_v130_plan.txt" />

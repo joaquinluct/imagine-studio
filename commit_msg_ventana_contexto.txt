@@ -1,0 +1,39 @@
+docs: Aclarar que umbral 85 por ciento se refiere a ventana contexto sesion actual no limite LLM
+
+Actualizacion metodologia sprint_ia_sessions.md para evitar confusion
+
+Contexto:
+Usuario reporto confusion sobre umbral 85 por ciento (creia que era del limite total 1M tokens)
+El umbral es de la ventana de contexto de la sesion actual (128k-200k tokens tipicos)
+
+Cambios en .github/copilot-instructions.md:
+Seccion Gestion Sesiones IA actualizada
+Aclaracion IMPORTANTE: 85 por ciento de ventana contexto sesion NO de limite LLM
+Explicacion beneficios cerrar al 85 por ciento
+Actualizacion paso 1 flujo automatico con nota explicativa
+Cambio notificacion usuario (Ventana de Contexto en lugar de Consumo tokens)
+Template actualizado con Ventana de Contexto
+
+Razon del umbral 85 por ciento ventana contexto:
+Evitar perdida contexto (LLM olvida mensajes antiguos)
+Prevenir estado busy (sesion lenta)
+Garantizar coherencia (evitar contradicciones)
+Permitir abrir nuevo chat con contexto fresco
+
+Diferencia clave documentada:
+Limite total LLM: 1M tokens (capacidad maxima modelo)
+Ventana contexto sesion: 128k-200k tokens (contexto activo cargado memoria)
+Umbral 85 por ciento: 109k-170k tokens (cerrar antes de perder contexto)
+
+Beneficios cerrar al 85 por ciento:
+Abrir nuevo chat contexto fresco (100 por ciento ventana disponible)
+Leer recomendaciones sesion anterior
+Continuar claridad desde donde se dejo
+Evitar errores contexto truncado
+
+Archivos modificados:
+.github/copilot-instructions.md (seccion Gestion Sesiones IA)
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Referencia: Correccion concepto umbral 85 por ciento ventana contexto

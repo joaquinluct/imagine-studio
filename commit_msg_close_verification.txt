@@ -1,0 +1,56 @@
+docs: Anadir seccion de verificacion post-cierre obligatoria en CLOSE_SPRINT.md
+
+Mejora documentacion del script close-sprint.ps1 con checklist de verificacion
+
+Cambios principales:
+- Anadir seccion VERIFICACION POST-CIERRE (OBLIGATORIA)
+- 4 pasos de verificacion con comandos PowerShell
+- Checklist de verificacion con items marcables
+- Comandos para verificar archivos en docs/sprints/ y docs/
+- Verificacion de contenido de templates vacios
+- Documentacion de error comun: templates no creados correctamente
+
+Verificaciones anadidas:
+1. Verificar 8 archivos en docs/sprints/ con sufijo _vX.Y.Z
+2. Verificar 8 templates vacios en docs/
+3. Verificar contenido de docs/sprint.md (debe ser template vacio)
+4. Checklist de 5 items para validar cierre completo
+
+Comandos de verificacion:
+ls docs/sprints/*v1.3.0* | Select-Object Name
+ls docs/sprint*.md | Select-Object Name
+Get-Content docs/sprint.md -Head 5
+
+Checklist de verificacion:
+check 8 archivos copiados a docs/sprints/
+check 8 templates vacios en docs/
+check docs/sprint.md contiene template vacio
+check docs/daily.md actualizado
+check Commit creado
+
+Nuevo error documentado:
+Error: Templates no se crearon correctamente
+Sintoma: docs/sprint.md contiene datos del sprint anterior
+Solucion: Ejecutar script nuevamente y verificar
+
+Flujo de trabajo actualizado:
+1. Completar sprint
+2. Ejecutar script
+3. Verificar output
+4. Verificar archivos (NUEVO - OBLIGATORIO)
+5. Actualizar daily.md
+6. Crear commit
+7. Planificar siguiente sprint
+
+Beneficios:
+Asegura que el cierre se completo correctamente
+Detecta errores silenciosos del script
+Proporciona checklist clara para el asistente/usuario
+Evita sprints mal cerrados (archivos en lugar incorrecto)
+
+Archivos modificados:
+docs/CLOSE_SPRINT.md (seccion verificacion anadida)
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Referencia: Mejora documentacion close-sprint.ps1 con verificacion obligatoria

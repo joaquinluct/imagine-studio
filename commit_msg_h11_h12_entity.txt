@@ -1,0 +1,66 @@
+feat(scene): Implementar Entity class y Component interface (H1.1, H1.2)
+
+Historia H1 - Entity System Core (tareas H1.1 y H1.2 completadas)
+
+Implementacion:
+Crear Entity class con ID unico, nombre y lista de components
+Crear Component interface base con metodos virtuales OnUpdate/OnDestroy
+
+Entity class (src/scene/Entity.h/cpp):
+- EntityID tipo uint64_t para IDs unicos
+- Constructor Entity(EntityID, string name)
+- Getters: GetID(), GetName()
+- Setters: SetName()
+- Component management:
+  - AddComponent<T>() template para anadir components
+  - GetComponent<T>() template para obtener component
+  - HasComponent<T>() template para verificar existencia
+  - Lookup O(1) con unordered_map<type_index, Component*>
+- Lifecycle:
+  - Update(deltaTime) llama OnUpdate() de todos components
+  - Destroy() llama OnDestroy() y libera memoria de components
+
+Component interface (src/scene/Component.h):
+- Interfaz base abstracta para todos los components
+- Metodos virtuales:
+  - OnUpdate(deltaTime) llamado cada frame
+  - OnDestroy() llamado al eliminar entity
+- GetEntity() devuelve Entity* propietaria del component
+- m_entity puntero privado (friend class Entity)
+
+Features implementadas:
+- Template methods con static_assert para verificar herencia Component
+- Component lookup O(1) con type_index map
+- Documentacion Doxygen completa (brief, details, param, return)
+- Memory management correcto (delete en Destroy, clear vectors/maps)
+- Destructor Entity llama Destroy() automaticamente
+
+Arquitectura ECS:
+Entity = contenedor de components (ID + nombre + lista)
+Component = comportamiento modular (Transform, MeshRenderer, etc)
+Patron composition over inheritance para maxima flexibilidad
+
+Ejemplo uso futuro:
+```cpp
+Entity* player = entityManager.CreateEntity("Player");
+Transform* t = player->AddComponent<Transform>();
+t->SetPosition({0, 0, 0});
+MeshRenderer* mr = player->AddComponent<MeshRenderer>();
+mr->SetMesh(cubeMesh);
+```
+
+Archivos creados:
+src/scene/Entity.h (interfaz Entity class)
+src/scene/Entity.cpp (implementacion lifecycle)
+src/scene/Component.h (interfaz base Component)
+
+Archivos modificados:
+Imagine Studio.vcxproj (anadir Entity.cpp, Entity.h, Component.h)
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Proxima tarea: H1.3 - Implementar EntityManager (factory pattern para crear/eliminar entities)
+
+Progreso Sprint v1.4.0: 2/16 tareas (12.5 por ciento)
+
+Referencia: H1.1 Entity class + H1.2 Component interface

@@ -1,0 +1,88 @@
+feat(sprint): Inaugurar Sprint v1.4.0 - Scene Graph & Entity System
+
+Planificacion completa del siguiente sprint con 4 historias y 16 tareas
+
+Objetivo Sprint v1.4.0:
+Implementar Entity-Component System (ECS) basico con jerarquia de transformaciones (Scene Graph)
+para conectar panels del Editor (Hierarchy/Inspector) con objetos reales (no placeholder)
+
+Historias de usuario:
+H1: Entity System Core (Entity class, Component base, EntityManager, Testing)
+H2: Transform Component (Position/Rotation/Scale, matrices local to world, jerarquia padre-hijo)
+H3: Scene Graph Integration (Scene class, Add/Remove entities, Update hierarchy, Renderizado)
+H4: Editor Integration (Conectar Hierarchy, Sistema seleccion, Inspector real, Create/Delete entities)
+
+Tareas totales: 16 tareas (similar a v1.3.0)
+Duracion estimada: 7 dias (2025-01-19 a 2025-01-26)
+
+Criterios aceptacion:
+1. Sistema entities permite crear/eliminar objetos en runtime
+2. Transform component calcula matrices local to world correctamente
+3. Jerarquia padre-hijo funciona (mover padre mueve hijos)
+4. Hierarchy panel muestra entities reales (no placeholder)
+5. Inspector muestra/edita transform de entity seleccionada
+6. Usuario puede crear/eliminar entities desde Hierarchy
+7. Compilacion limpia (0 errores, 0 warnings)
+8. Performance mayor 200 FPS con 100 plus entities
+
+Entregables:
+src/scene/Entity.h/cpp (Entity class con ID, nombre, components)
+src/scene/Component.h (Component base interface)
+src/scene/EntityManager.h/cpp (Entity factory y storage)
+src/scene/Transform.h/cpp (Transform component con pos/rot/scale)
+src/scene/Scene.h/cpp (Scene graph manager)
+tests/entity_test.cpp (Tests unitarios ECS)
+docs/ENTITY_SYSTEM.md (Documentacion arquitectura ECS)
+
+Flujo trabajo resultante:
+Usuario click Create Entity en Hierarchy entonces
+  Aparece nueva entity en lista
+Usuario selecciona entity en Hierarchy entonces
+  Inspector muestra transform (position, rotation, scale)
+Usuario edita transform.position en Inspector entonces
+  Entity se mueve en escena
+Usuario crea entity Parent y Child entonces
+  Drag Child bajo Parent en Hierarchy
+  Child.transform hereda Parent.transform
+Usuario mueve Parent entonces
+  Child se mueve automaticamente (transform world propagado)
+Usuario click Delete Entity en Hierarchy entonces
+  Entity desaparece de lista y libera memoria
+
+Comparacion con Sprint v1.3.0:
+Aspecto: Objetivo
+  v1.3.0: Integrar Editor UI framework
+  v1.4.0: Implementar sistema de escena
+Aspecto: Tareas
+  v1.3.0: 16
+  v1.4.0: 16
+Aspecto: Complejidad
+  v1.3.0: Media
+  v1.4.0: Media-Alta
+Aspecto: Dependencias externas
+  v1.3.0: Dear ImGui (external/)
+  v1.4.0: Ninguna (100 por ciento codigo propio)
+Aspecto: Impacto en Editor
+  v1.3.0: Panels basicos funcionales
+  v1.4.0: Panels 100 por ciento funcionales (no placeholder)
+Aspecto: Performance critica
+  v1.3.0: No
+  v1.4.0: Si (actualizar 100 plus entities/frame)
+
+Proximo Sprint (v1.5.0):
+Candidato: Viewport Real (Render Target Texture)
+Justificacion: Con Scene Graph funcional, siguiente paso natural es ver escena 3D renderizada
+dentro del panel Viewport (actualmente placeholder con texto). Esto permitira visualizar
+entities y transformaciones creadas en v1.4.0.
+
+Archivos creados:
+docs/sprint.md (planificacion alto nivel)
+docs/sprint_histories.md (4 historias detalladas)
+docs/sprint_tasks.md (16 tareas con codigo ejemplo)
+
+Archivos modificados:
+docs/daily.md (primera tarea H1.1)
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Referencia: Inauguracion Sprint v1.4.0 - Scene Graph & Entity System
