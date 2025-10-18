@@ -1,0 +1,73 @@
+feat(editor): Implementar panel Console con logs coloreados
+
+Historia H4.3 - Panel Console del Editor UI
+
+Implementacion:
+- Actualizar EditorUI::RenderConsole() con logs placeholder
+- Logs coloreados por nivel: INFO (verde), WARNING (amarillo), ERROR (rojo)
+- Auto-scroll automatico al final para mantener logs recientes visibles
+- Formato profesional: [NIVEL] Mensaje
+
+Integracion en main.cpp:
+- Anadir llamada a RenderConsole() despues de RenderInspector()
+- Orden logico completo: Hierarchy -> Inspector -> Console
+
+Logs placeholder implementados:
+```cpp
+// INFO (verde - 0.0f, 1.0f, 0.0f, 1.0f)
+[INFO] Application started successfully
+[INFO] DX12Renderer initialized
+[INFO] ImGui context created (v1.3.0)
+[INFO] Editor UI panels loaded
+[INFO] Frame rendering at 220 FPS
+
+// WARNING (amarillo - 1.0f, 1.0f, 0.0f, 1.0f)
+[WARNING] Asset streaming: Low priority task cancelled
+[WARNING] Shader cache not found, compiling from source
+
+// ERROR (rojo - 1.0f, 0.0f, 0.0f, 1.0f)
+[ERROR] Failed to load texture: missing_file.png
+[ERROR] Network connection timeout (retrying...)
+```
+
+Features implementadas:
+- TextColored para nivel del log (bracket [NIVEL])
+- SameLine() para mensaje en misma linea que nivel
+- Auto-scroll con GetScrollY() >= GetScrollMaxY()
+- SetScrollHereY(1.0f) para scroll al final
+- Logs variados para demostrar diferentes tipos
+
+Colores profesionales:
+- Verde puro (0, 255, 0) para INFO (exitoso/informativo)
+- Amarillo puro (255, 255, 0) para WARNING (atencion)
+- Rojo puro (255, 0, 0) para ERROR (critico)
+- Alpha 1.0 (100% opaco) para maxima visibilidad
+
+Beneficios:
+- Console funcional para debugging visual
+- Logs faciles de distinguir por color
+- Auto-scroll mantiene logs recientes visibles
+- Formato profesional estilo Unity/Unreal Console
+- Base para integracion futura con CORE_LOG_* (Log.h)
+
+Testing visual pendiente:
+- Verificar panel Console visible junto a Hierarchy e Inspector
+- Verificar colores correctos (verde/amarillo/rojo)
+- Verificar auto-scroll al final funcional
+- Verificar panel dockeable
+
+TODO futuro:
+- Integrar con sistema de logging real (Log.h)
+- Anadir filtros por nivel (show/hide INFO/WARNING/ERROR)
+- Anadir timestamps a cada log
+- Anadir boton Clear para limpiar console
+- Anadir busqueda de texto en logs
+- Anadir limite de logs (ej: max 1000 lineas)
+
+Archivos modificados:
+- src/editor/EditorUI.cpp (RenderConsole implementado)
+- src/main.cpp (llamada a RenderConsole)
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Referencia: H4.3 - Panel Console v1.3.0

@@ -241,6 +241,7 @@
     <Text Include="commit_msg_bug002_resuelto.txt" />
     <Text Include="commit_msg_h41_hierarchy.txt" />
     <Text Include="commit_msg_h42_inspector.txt" />
+    <Text Include="commit_msg_h43_console.txt" />
     <Text Include="commit_msg_h4_1.txt" />
     <Text Include="commit_msg_ia_sessions.txt" />
     <Text Include="commit_msg_sprints_folder.txt" />
