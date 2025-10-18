@@ -88,8 +88,9 @@ void DX12Renderer::Initialize(HWND hwnd)
     }
     
     // Create descriptor heap for render target views (RTVs)
+    // v1.6.0 H1.4 - Expanded from 2 to 3 descriptors (2 back buffers + 1 scene RT)
     D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
-    rtvHeapDesc.NumDescriptors = BACK_BUFFER_COUNT;
+    rtvHeapDesc.NumDescriptors = BACK_BUFFER_COUNT + 1; // 2 back buffers + 1 scene RT
     rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
     rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
     
@@ -696,6 +697,9 @@ void DX12Renderer::Initialize(HWND hwnd)
     m_camera->SetTarget(0.0f, 0.0f, 0.0f);     // Looking at origin
     m_camera->SetPerspective(45.0f, 1920.0f / 1080.0f, 0.1f, 1000.0f);  // Match viewport aspect ratio
     CORE_LOG_INFO("DX12Renderer: Camera initialized at position (0, 2, -5)");
+    
+    // v1.6.0 H1.2 - Create scene render target offscreen (AAA standard)
+    CreateSceneRenderTarget();
 #endif // defined(_WIN32) && defined(_MSC_VER) - END OF Initialize(HWND) DX12 CODE BLOCK
     
     allocator_ = new CommandAllocator();
@@ -760,6 +764,95 @@ void DX12Renderer::CreateRenderTargetSRV()
     CORE_LOG_INFO("DX12Renderer: SRV GPU handle ptr: " + std::to_string(m_renderTargetSRV_GPU.ptr));
     CORE_LOG_INFO("DX12Renderer: SRV format: DXGI_FORMAT_R8G8B8A8_UNORM (28)");
     CORE_LOG_INFO("DX12Renderer: SRV ready for ImGui::Image() usage in H3.1");
+}
+
+// v1.6.0 H1.2-H1.5 - Create scene render target offscreen (AAA standard)
+// Separates 3D scene rendering from UI rendering to eliminate viewport recursion
+void DX12Renderer::CreateSceneRenderTarget()
+{
+    if (!device_ || !device_->HasNativeDevice())
+    {
+        CORE_LOG_WARN("DX12Renderer::CreateSceneRenderTarget: No native device available");
+        return;
+    }
+    
+    ID3D12Device* d3dDevice = static_cast<ID3D12Device*>(device_->NativeDevice());
+    
+    // H1.3 - Create scene RT resource (1920x1080, RGBA8, render target)
+    D3D12_RESOURCE_DESC rtDesc = {};
+    rtDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+    rtDesc.Width = 1920;  // Full HD width (configurable in future)
+    rtDesc.Height = 1080; // Full HD height
+    rtDesc.DepthOrArraySize = 1;
+    rtDesc.MipLevels = 1;
+    rtDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // Match swap chain format
+    rtDesc.SampleDesc.Count = 1;
+    rtDesc.SampleDesc.Quality = 0;
+    rtDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+    rtDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET; // CRITICAL: Allow RT usage
+    
+    // Heap properties (default heap = GPU only, optimal performance)
+    D3D12_HEAP_PROPERTIES heapProps = {};
+    heapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
+    heapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+    heapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+    heapProps.CreationNodeMask = 1;
+    heapProps.VisibleNodeMask = 1;
+    
+    // Clear value optimized (dark blue for scene background)
+    D3D12_CLEAR_VALUE clearValue = {};
+    clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    clearValue.Color[0] = 0.0f;  // R
+    clearValue.Color[1] = 0.2f;  // G (slight blue tint)
+    clearValue.Color[2] = 0.4f;  // B (dark blue)
+    clearValue.Color[3] = 1.0f;  // A
+    
+    // Create committed resource (allocate + create in one step)
+    HRESULT hr = d3dDevice->CreateCommittedResource(
+        &heapProps,
+        D3D12_HEAP_FLAG_NONE,
+        &rtDesc,
+        D3D12_RESOURCE_STATE_RENDER_TARGET, // Initial state (ready to render)
+        &clearValue,
+        IID_PPV_ARGS(&m_sceneRenderTarget)
+    );
+    
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer::CreateSceneRenderTarget: Failed to create scene RT resource");
+        return;
+    }
+    
+    CORE_LOG_INFO("DX12Renderer: Scene render target created (1920x1080, RGBA8, offscreen)");
+    
+    // H1.4 - Create RTV descriptor (slot 2 in RTV heap, after back buffers)
+    m_sceneRTV = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
+    m_sceneRTV.ptr += BACK_BUFFER_COUNT * m_rtvDescriptorSize; // Offset to slot 2
+    
+    d3dDevice->CreateRenderTargetView(m_sceneRenderTarget, nullptr, m_sceneRTV);
+    
+    CORE_LOG_INFO("DX12Renderer: Scene RTV created (slot 2 in RTV heap)");
+    
+    // H1.5 - Create SRV descriptor (slot 1 in ImGui SRV heap, replaces swap chain SRV)
+    m_sceneSRV_CPU = m_imguiSrvHeap->GetCPUDescriptorHandleForHeapStart();
+    m_sceneSRV_CPU.ptr += m_imguiSrvDescriptorSize; // Offset to slot 1
+    
+    m_sceneSRV_GPU = m_imguiSrvHeap->GetGPUDescriptorHandleForHeapStart();
+    m_sceneSRV_GPU.ptr += m_imguiSrvDescriptorSize;
+    
+    // Create SRV descriptor for scene RT (shader resource view for ImGui::Image)
+    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+    srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    srvDesc.Texture2D.MipLevels = 1;
+    srvDesc.Texture2D.MostDetailedMip = 0;
+    
+    d3dDevice->CreateShaderResourceView(m_sceneRenderTarget, &srvDesc, m_sceneSRV_CPU);
+    
+    CORE_LOG_INFO("DX12Renderer: Scene SRV created (slot 1 in ImGui SRV heap)");
+    CORE_LOG_INFO("DX12Renderer: Scene SRV GPU handle ptr: " + std::to_string(m_sceneSRV_GPU.ptr));
+    CORE_LOG_INFO("DX12Renderer: Scene RT ready for offscreen rendering (v1.6.0 AAA)");
 }
 
 // v1.5.0 H1.3 - Helper method for resource state transitions

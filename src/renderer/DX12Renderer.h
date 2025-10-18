@@ -156,6 +156,9 @@ private:
 #if defined(_WIN32) && defined(_MSC_VER)
     void CreateRenderTargetSRV(); // Create SRV descriptor for render target
     
+    // v1.6.0 H1.2 - Create scene render target offscreen
+    void CreateSceneRenderTarget();
+    
     // v1.5.0 H1.3 - Helper for resource state transitions
     void TransitionResource(
         ID3D12Resource* resource,
