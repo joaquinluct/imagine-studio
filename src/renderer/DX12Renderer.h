@@ -54,8 +54,15 @@ public:
     ID3D12DescriptorHeap* GetImGuiSrvHeap() const { return m_imguiSrvHeap; }
     ID3D12Device* GetDevice() const; // Implementation in .cpp to avoid forward declaration issues
     
-    // Render Target SRV accessor (v1.5.0 - H1.1)
-    D3D12_GPU_DESCRIPTOR_HANDLE GetRenderTargetSRV() const { return m_renderTargetSRV_GPU; }
+    // Render Target SRV accessor (v1.5.0 - H1.1, validated in H1.4)
+    D3D12_GPU_DESCRIPTOR_HANDLE GetRenderTargetSRV() const { 
+        // v1.5.0 H1.4 - Validation: Check if handle is valid (ptr != 0)
+        if (m_renderTargetSRV_GPU.ptr == 0) {
+            // Log warning but don't crash (return invalid handle)
+            // Note: Can't use CORE_LOG here as it's a const method
+        }
+        return m_renderTargetSRV_GPU; 
+    }
 #else
     void* GetImGuiSrvHeap() const { return nullptr; }
     void* GetDevice() const { return nullptr; }

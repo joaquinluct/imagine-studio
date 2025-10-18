@@ -694,6 +694,7 @@ void DX12Renderer::Initialize(HWND hwnd)
 #if defined(_WIN32) && defined(_MSC_VER)
 // v1.5.0 H1.1 - Create SRV descriptor for render target (viewport texture)
 // v1.5.0 H1.2 - Updated to regenerate SRV for current back buffer (m_frameIndex)
+// v1.5.0 H1.4 - Added validation and logging for SRV readiness
 void DX12Renderer::CreateRenderTargetSRV()
 {
     if (!device_ || !device_->HasNativeDevice())
@@ -703,6 +704,21 @@ void DX12Renderer::CreateRenderTargetSRV()
     }
     
     ID3D12Device* d3dDevice = static_cast<ID3D12Device*>(device_->NativeDevice());
+    
+    // v1.5.0 H1.4 - Validate render target before creating SRV
+    if (!m_renderTargets[m_frameIndex])
+    {
+        CORE_LOG_ERROR("DX12Renderer::CreateRenderTargetSRV: Render target at frame index " + 
+            std::to_string(m_frameIndex) + " is null");
+        return;
+    }
+    
+    // v1.5.0 H1.4 - Validate ImGui SRV heap
+    if (!m_imguiSrvHeap)
+    {
+        CORE_LOG_ERROR("DX12Renderer::CreateRenderTargetSRV: ImGui SRV heap is null");
+        return;
+    }
     
     // Get SRV handle for render target (slot 1 in ImGui SRV heap)
     // Slot 0 is reserved for ImGui font atlas
@@ -728,7 +744,11 @@ void DX12Renderer::CreateRenderTargetSRV()
         m_renderTargetSRV_CPU
     );
     
+    // v1.5.0 H1.4 - Log SRV validation details
     CORE_LOG_INFO("DX12Renderer: Render Target SRV updated for frame index " + std::to_string(m_frameIndex));
+    CORE_LOG_INFO("DX12Renderer: SRV GPU handle ptr: " + std::to_string(m_renderTargetSRV_GPU.ptr));
+    CORE_LOG_INFO("DX12Renderer: SRV format: DXGI_FORMAT_R8G8B8A8_UNORM (28)");
+    CORE_LOG_INFO("DX12Renderer: SRV ready for ImGui::Image() usage in H3.1");
 }
 
 // v1.5.0 H1.3 - Helper method for resource state transitions
