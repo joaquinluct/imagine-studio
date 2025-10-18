@@ -1,5 +1,5 @@
 ﻿# Daily Log
 
-Hecho: BUG-002 RESUELTO - Clicks de ratón funcionan perfectamente en UI ImGui
-Siguiente: Revisar estado del sprint v1.3.0 y planificar próximos pasos
+Hecho: Refactorización AAA - Condicional de visibilidad UI y DockSpace (Unity/Unreal style)
+Siguiente: Validar ejecución con usuario - verificar F1 toggle y docking funcional
 
