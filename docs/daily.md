@@ -1,5 +1,5 @@
 ﻿# Daily Log
 
-Hecho: Refactorización AAA - Condicional de visibilidad UI y DockSpace (Unity/Unreal style)
-Siguiente: Validar ejecución con usuario - verificar F1 toggle y docking funcional
+Hecho: DEV-001 - Refactorización AAA (Condicional visibilidad UI + DockSpace) + Sistema Sprint Deviations implementado
+Siguiente: H4.1 - Implementar Panel Hierarchy (Editor UI)
 
