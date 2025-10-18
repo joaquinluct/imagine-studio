@@ -1,0 +1,32 @@
+feat(ui): Configurar fondo semitransparente en ImGui para ver render 3D
+
+Mejora visual del editor siguiendo estandares AAA
+
+Cambio:
+- Configurar estilo ImGui con fondos semitransparentes
+- WindowBg: 70% opacidad (permite ver render 3D debajo)
+- ChildBg: 100% transparente
+- DockingEmptyBg: 50% opacidad
+
+Implementacion:
+- Aplicar despues de StyleColorsDark()
+- Configurar ImGuiStyle Colors array
+- Usar ImVec4 con componente alpha < 1.0
+
+Valores configurados:
+- ImGuiCol_WindowBg: (0.06, 0.06, 0.06, 0.70)
+- ImGuiCol_ChildBg: (0.00, 0.00, 0.00, 0.00)
+- ImGuiCol_DockingEmptyBg: (0.20, 0.20, 0.20, 0.50)
+
+Beneficios:
+- Editor no tapa completamente la escena 3D
+- Mejor feedback visual durante desarrollo
+- Estilo Unity/Unreal (UI semitransparente sobre viewport)
+- Facilita debugging de rendering
+
+Archivos modificados:
+- src/main.cpp (estilo ImGui configurado)
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Referencia: Mejora UX editor AAA v1.3.0

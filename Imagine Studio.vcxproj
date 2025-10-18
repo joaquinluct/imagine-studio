@@ -195,6 +195,7 @@
     <ClCompile Include="external\imgui\backends\imgui_impl_dx12.cpp" />
     <ClCompile Include="external\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="external\imgui\imgui_demo.cpp" />
+    <ClCompile Include="src\editor\EditorUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\assets\AssetManager.h" />
@@ -240,6 +241,7 @@
     <Text Include="commit_msg_ia_sessions.txt" />
     <Text Include="commit_msg_sprints_folder.txt" />
     <Text Include="commit_msg_sprint_deviations.txt" />
+    <Text Include="commit_msg_ui_transparent.txt" />
     <Text Include="commit_sprint_complete.txt" />
     <Text Include="commit_sprint_v120_close.txt" />
     <Text Include="commit_sprint_v130_plan.txt" />

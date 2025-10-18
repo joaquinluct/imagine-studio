@@ -1,6 +1,7 @@
 ﻿// Application entry using Platform::Window
 #include "assets/AssetManager.h"
 #include "core/Log.h"
+#include "editor/EditorUI.h"
 #include "jobs/TaskGraph.h"
 #include "jobs/ThreadPool.h"
 #include "platform/InputManager.h"
@@ -252,12 +253,15 @@ static int RunApp(HINSTANCE hInstance)
             // Permite docking flexible de todos los panels del editor
             ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
             
+            // ✅ H4.1: Panel Hierarchy (árbol de objetos de escena)
+            Editor::EditorUI::RenderHierarchy();
+            
             // ✅ AAA STANDARD: Demo window solo en debug builds
             #ifdef _DEBUG
-                ImGui::ShowDemoWindow();  // Testing ImGui integration
+                // ImGui::ShowDemoWindow();  // Deshabilitado, ahora usamos EditorUI
             #else
-                // TODO H4.1-H4.4: Implementar Editor::EditorUI::RenderAllPanels()
-                // Editor panels (Hierarchy, Inspector, Console, Viewport)
+                // TODO H4.2-H4.4: Implementar resto de panels (Inspector, Console, Viewport)
+                // Editor::EditorUI::RenderAllPanels();
             #endif
             
             // Render ImGui

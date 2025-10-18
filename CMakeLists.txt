@@ -71,6 +71,10 @@ list(APPEND SRC_FILES "${CMAKE_SOURCE_DIR}/src/assets/VFS.cpp")
 file(GLOB_RECURSE UI_SRC "${CMAKE_SOURCE_DIR}/src/ui/*.cpp")
 list(APPEND SRC_FILES ${UI_SRC})
 
+# Ensure Editor UI sources are included (H4.1 - Editor Panels)
+file(GLOB_RECURSE EDITOR_SRC "${CMAKE_SOURCE_DIR}/src/editor/*.cpp")
+list(APPEND SRC_FILES ${EDITOR_SRC})
+
 # Explicitly ensure renderer stubs added by recent iterations are included
 list(APPEND SRC_FILES "${CMAKE_SOURCE_DIR}/src/renderer/Fence.cpp")
 # Ensure TaskGraph is included
