@@ -49,10 +49,13 @@ public:
     bool IsUIVisible() const { return m_uiVisible; }
     void ToggleUI() { m_uiVisible = !m_uiVisible; }
     
-    // ImGui SRV heap accessor (v1.3.0 - H2.2)
+    // ImGui SRV heap accessor (v1.3.0 - H2.2, expanded in v1.5.0 - H1.1)
 #if defined(_WIN32) && defined(_MSC_VER)
     ID3D12DescriptorHeap* GetImGuiSrvHeap() const { return m_imguiSrvHeap; }
     ID3D12Device* GetDevice() const; // Implementation in .cpp to avoid forward declaration issues
+    
+    // Render Target SRV accessor (v1.5.0 - H1.1)
+    D3D12_GPU_DESCRIPTOR_HANDLE GetRenderTargetSRV() const { return m_renderTargetSRV_GPU; }
 #else
     void* GetImGuiSrvHeap() const { return nullptr; }
     void* GetDevice() const { return nullptr; }
@@ -78,8 +81,15 @@ private:
     ID3D12DescriptorHeap* m_cbvSrvUavHeap = nullptr;
     UINT m_cbvSrvUavDescriptorSize = 0;
     
-    // ImGui SRV descriptor heap (for font atlas texture - v1.3.0)
+    // ImGui SRV descriptor heap (for font atlas texture - v1.3.0, expanded v1.5.0 H1.1)
+    // Slot 0: ImGui font atlas SRV
+    // Slot 1: Render target SRV (for viewport texture - v1.5.0)
     ID3D12DescriptorHeap* m_imguiSrvHeap = nullptr;
+    UINT m_imguiSrvDescriptorSize = 0; // NEW: descriptor size increment (v1.5.0 H1.1)
+    
+    // Render Target SRV handles (v1.5.0 - H1.1)
+    D3D12_CPU_DESCRIPTOR_HANDLE m_renderTargetSRV_CPU = {};
+    D3D12_GPU_DESCRIPTOR_HANDLE m_renderTargetSRV_GPU = {};
     
     // Command recording and synchronization
     ID3D12CommandAllocator* m_commandAllocator = nullptr;
@@ -116,6 +126,11 @@ private:
     
     // UI visibility state (H2.3 - Toggle UI with F1)
     bool m_uiVisible = true; // UI visible by default
+    
+    // Helper methods (v1.5.0 - H1.1)
+#if defined(_WIN32) && defined(_MSC_VER)
+    void CreateRenderTargetSRV(); // Create SRV descriptor for render target
+#endif
 };
 
 } // namespace Renderer

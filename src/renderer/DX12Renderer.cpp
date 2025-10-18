@@ -116,10 +116,12 @@ void DX12Renderer::Initialize(HWND hwnd)
     m_cbvSrvUavDescriptorSize = d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     CORE_LOG_INFO("DX12Renderer: CBV/SRV/UAV descriptor heap created (shader visible)");
     
-    // Create descriptor heap for ImGui (SRV for font atlas - v1.3.0)
+    // Create descriptor heap for ImGui (SRV for font atlas - v1.3.0, expanded v1.5.0 H1.1)
+    // Slot 0: ImGui font atlas SRV
+    // Slot 1: Render target SRV (for viewport texture - v1.5.0)
     D3D12_DESCRIPTOR_HEAP_DESC imguiSrvHeapDesc = {};
     imguiSrvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-    imguiSrvHeapDesc.NumDescriptors = 1;  // Solo 1 descriptor para font atlas
+    imguiSrvHeapDesc.NumDescriptors = 2;  // Expanded from 1 to 2 (font atlas + render target SRV - v1.5.0 H1.1)
     imguiSrvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
     hr = d3dDevice->CreateDescriptorHeap(&imguiSrvHeapDesc, IID_PPV_ARGS(&m_imguiSrvHeap));
     if (FAILED(hr))
@@ -127,7 +129,10 @@ void DX12Renderer::Initialize(HWND hwnd)
         CORE_LOG_ERROR("Failed to create ImGui SRV descriptor heap");
         return;
     }
-    CORE_LOG_INFO("ImGui SRV descriptor heap created");
+    
+    // Store descriptor size for SRV heap (v1.5.0 H1.1)
+    m_imguiSrvDescriptorSize = d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    CORE_LOG_INFO("ImGui SRV descriptor heap created (2 descriptors: font atlas + render target SRV)");
     
     // Create command allocator (one per frame, reused after GPU finishes)
     hr = d3dDevice->CreateCommandAllocator(
@@ -677,11 +682,53 @@ void DX12Renderer::Initialize(HWND hwnd)
     memcpy(m_cbMappedData, m_mvpMatrix, sizeof(m_mvpMatrix));
     
     CORE_LOG_INFO("DX12Renderer: Constant buffer mapped and initialized with identity matrix");
-#endif
+    
+    // v1.5.0 H1.1 - Create Render Target SRV for viewport texture
+    CreateRenderTargetSRV();
+#endif // defined(_WIN32) && defined(_MSC_VER) - END OF Initialize(HWND) DX12 CODE BLOCK
     
     allocator_ = new CommandAllocator();
     fence_ = new Fence();
 }
+
+#if defined(_WIN32) && defined(_MSC_VER)
+// v1.5.0 H1.1 - Create SRV descriptor for render target (viewport texture)
+void DX12Renderer::CreateRenderTargetSRV()
+{
+    if (!device_ || !device_->HasNativeDevice())
+    {
+        CORE_LOG_WARN("DX12Renderer::CreateRenderTargetSRV: No native device available");
+        return;
+    }
+    
+    ID3D12Device* d3dDevice = static_cast<ID3D12Device*>(device_->NativeDevice());
+    
+    // Get SRV handle for render target (slot 1 in ImGui SRV heap)
+    // Slot 0 is reserved for ImGui font atlas
+    m_renderTargetSRV_CPU = m_imguiSrvHeap->GetCPUDescriptorHandleForHeapStart();
+    m_renderTargetSRV_CPU.ptr += m_imguiSrvDescriptorSize; // Offset to slot 1
+    
+    m_renderTargetSRV_GPU = m_imguiSrvHeap->GetGPUDescriptorHandleForHeapStart();
+    m_renderTargetSRV_GPU.ptr += m_imguiSrvDescriptorSize; // Offset to slot 1
+    
+    // Create SRV descriptor for current render target (back buffer)
+    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+    srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // Match swap chain format
+    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    srvDesc.Texture2D.MipLevels = 1;
+    srvDesc.Texture2D.MostDetailedMip = 0;
+    
+    // Create SRV for current back buffer
+    d3dDevice->CreateShaderResourceView(
+        m_renderTargets[m_frameIndex], // Current back buffer
+        &srvDesc,
+        m_renderTargetSRV_CPU
+    );
+    
+    CORE_LOG_INFO("DX12Renderer: Render Target SRV created (slot 1 in ImGui SRV heap)");
+}
+#endif
 
 // Rest of the implementation...
 
