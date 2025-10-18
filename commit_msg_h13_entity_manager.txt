@@ -1,0 +1,31 @@
+feat(scene): Implementar EntityManager con factory pattern (H1.3)
+
+Historia H1.3 - EntityManager implementado
+
+Implementacion:
+- Crear EntityManager class con factory pattern
+- CreateEntity(name): genera ID unico autoincremental (m_nextID)
+- DestroyEntity(id): elimina entity de storage y libera memoria
+- GetEntity(id): lookup O(1) con unordered_map<EntityID, Entity*>
+- Clear(): elimina todas las entities (destructor y explicit)
+
+Caracteristicas:
+- Storage: unordered_map para lookup eficiente O(1)
+- IDs autoincrementales: m_nextID inicia en 1, incrementa en cada CreateEntity
+- Gestion de memoria: new/delete manejado por EntityManager
+- GetEntityCount(): retorna numero de entities activas
+
+Archivos creados:
+- src/scene/EntityManager.h (interfaz)
+- src/scene/EntityManager.cpp (implementacion)
+
+Archivos modificados:
+- CMakeLists.txt (SCENE_SRC glob pattern)
+- Imagine Studio.vcxproj (ClCompile + ClInclude entries)
+- Imagine Studio.vcxproj.filters (Source Files\scene folder)
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Proxima tarea: H1.4 - Tests unitarios Entity System
+
+Referencia: H1.3 - EntityManager v1.4.0

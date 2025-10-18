@@ -711,11 +711,53 @@ Lección aprendida:
 
 Compilación: CMake Debug OK + MSBuild VS Debug OK (0 errores, 0 warnings)
 
-Ref: #BUG-001 #FIX-001
+Refs: #BUG-001 #FIX-001
 
 # Historial de Commits
 
 Este archivo registra todos los commits realizados durante el desarrollo del proyecto Imagine Studio, organizados cronológicamente.
+
+---
+
+## 2025-01-19
+
+### `cc935e4` - feat(scene): Implementar EntityManager con factory pattern (H1.3)
+
+**Tipo**: Feature (Sprint v1.4.0)  
+**Ámbito**: Scene  
+**Descripción**: Implementar EntityManager con factory pattern para crear/eliminar entities
+
+**Historia H1.3** - EntityManager implementado
+
+**Implementación**:
+- Crear EntityManager class con factory pattern
+- `CreateEntity(name)`: genera ID único autoincremental (m_nextID)
+- `DestroyEntity(id)`: elimina entity de storage y libera memoria
+- `GetEntity(id)`: lookup O(1) con `unordered_map<EntityID, Entity*>`
+- `Clear()`: elimina todas las entities (destructor y explicit)
+
+**Características**:
+- Storage: `unordered_map` para lookup eficiente O(1)
+- IDs autoincrementales: m_nextID inicia en 1, incrementa en cada CreateEntity
+- Gestión de memoria: new/delete manejado por EntityManager
+- `GetEntityCount()`: retorna número de entities activas
+
+**Archivos creados**:
+- `src/scene/EntityManager.h` (interfaz)
+- `src/scene/EntityManager.cpp` (implementación)
+
+**Archivos modificados**:
+- `CMakeLists.txt` (SCENE_SRC glob pattern)
+- `Imagine Studio.vcxproj` (ClCompile + ClInclude entries)
+- `Imagine Studio.vcxproj.filters` (Source Files\scene folder)
+
+**Compilación**: ✅ Limpia
+- CMake Build (Debug): 0 errores, 0 warnings
+- MSBuild "Imagine Studio.sln" (Debug): 0 errores, 0 warnings
+
+**Próxima tarea**: H1.4 - Tests unitarios Entity System
+
+**Referencia**: H1.3 - EntityManager v1.4.0
 
 ---
 

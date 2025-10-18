@@ -186,6 +186,7 @@
     <ClCompile Include="src\renderer\Material.cpp" />
     <ClCompile Include="src\renderer\RenderTarget.cpp" />
     <ClCompile Include="src\scene\Entity.cpp" />
+    <ClCompile Include="src\scene\EntityManager.cpp" />
     <ClCompile Include="src\tests\adapter_test.cpp" />
     <ClCompile Include="src\tests\material_test.cpp" />
     <ClCompile Include="src\tests\taskgraph_test.cpp" />
@@ -201,7 +202,6 @@
     <ClCompile Include="external\imgui\backends\imgui_impl_dx12.cpp" />
     <ClCompile Include="external\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="external\imgui\imgui_demo.cpp" />
-    <ClCompile Include="src\scene\EntityManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\assets\AssetManager.h" />
@@ -225,15 +225,13 @@
     <ClInclude Include="src\renderer\RenderTarget.h" />
     <ClInclude Include="src\scene\Component.h" />
     <ClInclude Include="src\scene\Entity.h" />
+    <ClInclude Include="src\scene\EntityManager.h" />
     <ClInclude Include="src\tools\Profiler.h" />
     <ClInclude Include="src\ui\DirectWriteTextRenderer.h" />
     <ClInclude Include="src\ui\IUI.h" />
     <ClInclude Include="src\ui\SimpleUI.h" />
     <ClInclude Include="src\ui\TextRenderer.h" />
     <ClInclude Include="src\ui\Win32TextRenderer.h" />
-    <ClInclude Include="src\scene\Entity.h" />
-    <ClInclude Include="src\scene\Component.h" />
-    <ClInclude Include="src\scene\EntityManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt" />
@@ -253,6 +251,7 @@
     <Text Include="commit_msg_close_v130.txt" />
     <Text Include="commit_msg_close_verification.txt" />
     <Text Include="commit_msg_h11_h12_entity.txt" />
+    <Text Include="commit_msg_h13_entity_manager.txt" />
     <Text Include="commit_msg_h41_hierarchy.txt" />
     <Text Include="commit_msg_h42_inspector.txt" />
     <Text Include="commit_msg_h43_console.txt" />

@@ -1,0 +1,43 @@
+docs: Enfatizar seccion Visualizacion como OBLIGATORIA en formato de explicacion final
+
+Correccion critica en metodologia para asegurar que se siga formato completo
+
+Problema identificado:
+- La seccion Visualizacion existia en TEMPLATE.md desde commit anterior
+- NO existia en .github/copilot-instructions.md
+- El asistente NO seguia el formato en las respuestas (omitiendola)
+
+Cambios en .github/copilot-instructions.md:
+- Anadir seccion completa Formato Obligatorio de Explicacion Final
+- Incluir subseccion 2: Visualizacion (OBLIGATORIO)
+- Advertencia clara: seccion DEBE aparecer ANTES de barra de progreso
+- Formato estricto con ejemplos SI/NO
+- Especificaciones detalladas con emojis
+- Ejemplos practicos (H4.1 CON cambios, H1.3 SIN cambios)
+
+Cambios en docs/TEMPLATE.md:
+- Reforzar con advertencia ?? ESTA SECCION ES OBLIGATORIA
+- Mejorar formato del ejemplo para mayor claridad
+- Especificar posicion exacta (despues Hecho/Siguiente, antes progreso)
+- Anadir mas ejemplos de uso
+
+Beneficios:
+- Clarifica expectativas visuales de cada iteracion
+- Facilita validacion manual por usuario
+- Mejora comunicacion asistente-usuario sobre cambios UI
+- Documenta impacto visual de cada tarea
+- Estandariza formato de resumen final
+- Previene omision de informacion critica
+
+Razon:
+- Usuario detecto que formato no se estaba siguiendo correctamente
+- Seccion existia en TEMPLATE.md pero no en copilot-instructions.md
+- Necesario sincronizar ambos archivos para consistencia
+
+Archivos modificados:
+- .github/copilot-instructions.md (seccion completa anadida)
+- docs/TEMPLATE.md (enfasis y mejoras en formato)
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Referencia: Correccion metodologia v1.1 - Visualizacion obligatoria
