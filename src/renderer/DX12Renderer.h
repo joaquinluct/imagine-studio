@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include "CommandAllocator.h"
-#include "Fence.h"
 #include "IRenderer.h"
 
 #include <string>
@@ -9,14 +7,27 @@
 #include <windows.h>
 
 #if defined(_WIN32) && defined(_MSC_VER)
-#include <d3d12.h> // For D3D12 types and structures
-#include <d3dcommon.h> // For ID3DBlob
-
-struct IDXGISwapChain3;
+#include <d3d12.h>
 #endif
 
 namespace Renderer {
 
+// Forward declarations of AAA subsystems (v1.6.0 DEV-002)
+class DX12Device;
+class DX12SwapChain;
+class DX12CommandContext;
+class DX12ResourceManager;
+class DX12PipelineManager;
+class DX12OpaquePass;
+class DX12UIPass;
+class Camera;
+class RenderTarget;
+class CommandAllocator;
+class Fence;
+
+// v1.6.0 DEV-002.6 - DX12Renderer (AAA Architecture - Orchestrator)
+// Orchestrates render passes and coordinates subsystems
+// Reduced from 1100+ lines to ~300 lines
 class DX12Renderer : public IRenderer {
 public:
     DX12Renderer();
@@ -29,18 +40,12 @@ public:
     void Shutdown() override;
     void RenderFrame() override;
     
-    // Forward rendering (v1.2.0 - IMPLEMENTAR AHORA)
+    // Forward rendering (v1.2.0)
     void RenderForwardPass();
-    void OpaquePass();
-    void UIPass();
     
-    // Deferred rendering (v1.3.0+ - FUTURO, SOLO COMENTARIOS)
-    // void RenderDeferredPass();  // v1.3.0+
-    // void GBufferPass();         // v1.3.0+
-    // void LightingPass();        // v1.3.0+
-    
-    // Prepare render target for UI composition
+    // Prepare render target for UI composition (legacy stub)
     bool ComposeUI();
+    
     // Notify renderer that an asset loaded (path)
     void OnAssetLoaded(const std::string& path);
     
@@ -50,22 +55,12 @@ public:
     void ToggleUI() { m_uiVisible = !m_uiVisible; }
     
     // Camera accessor (v1.5.0 - H2.3)
-    class Camera* GetCamera() { return m_camera; }
+    Camera* GetCamera() { return m_camera; }
     
-    // ImGui SRV heap accessor (v1.3.0 - H2.2, expanded in v1.5.0 - H1.1)
+    // ImGui SRV heap accessor (v1.3.0 - H2.2)
 #if defined(_WIN32) && defined(_MSC_VER)
     ID3D12DescriptorHeap* GetImGuiSrvHeap() const { return m_imguiSrvHeap; }
-    ID3D12Device* GetDevice() const; // Implementation in .cpp to avoid forward declaration issues
-    
-    // Render Target SRV accessor (v1.5.0 - H1.1, validated in H1.4)
-    D3D12_GPU_DESCRIPTOR_HANDLE GetRenderTargetSRV() const { 
-        // v1.5.0 H1.4 - Validation: Check if handle is valid (ptr != 0)
-        if (m_renderTargetSRV_GPU.ptr == 0) {
-            // Log warning but don't crash (return invalid handle)
-            // Note: Can't use CORE_LOG here as it's a const method
-        }
-        return m_renderTargetSRV_GPU; 
-    }
+    ID3D12Device* GetDevice() const;
     
     // v1.6.0 H1.1 - Scene RT SRV accessor (for Viewport panel)
     D3D12_GPU_DESCRIPTOR_HANDLE GetSceneRenderTargetSRV() const {
@@ -77,94 +72,57 @@ public:
 #endif
 
 private:
-    // stubs for device and render target ownership
-    class DX12Device* device_ = nullptr;
-    class RenderTarget* rt_ = nullptr;
-    class CommandAllocator* allocator_ = nullptr;
-    class Fence* fence_ = nullptr;
+    // === AAA SUBSYSTEMS (v1.6.0 DEV-002) ===
+    DX12Device* m_device = nullptr;
+    DX12SwapChain* m_swapChain = nullptr;
+    DX12CommandContext* m_commandContext = nullptr;
+    DX12ResourceManager* m_resourceManager = nullptr;
+    DX12PipelineManager* m_pipelineManager = nullptr;
+    
+    // Render passes
+    DX12OpaquePass* m_opaquePass = nullptr;
+    DX12UIPass* m_uiPass = nullptr;
+    
+    // Camera system
+    Camera* m_camera = nullptr;
+    
+    // Legacy stubs (for non-DX12 platforms)
+    RenderTarget* rt_ = nullptr;
+    CommandAllocator* allocator_ = nullptr;
+    Fence* fence_ = nullptr;
     
 #if defined(_WIN32) && defined(_MSC_VER)
-    // SwapChain and render targets
-    static const UINT BACK_BUFFER_COUNT = 2;
-    IDXGISwapChain3* m_swapChain = nullptr;
-    ID3D12Resource* m_renderTargets[BACK_BUFFER_COUNT] = {};
+    // Back buffer count
+    static const unsigned int BACK_BUFFER_COUNT = 2;
+    
+    // Descriptor heaps
     ID3D12DescriptorHeap* m_rtvHeap = nullptr;
-    UINT m_rtvDescriptorSize = 0;
-    UINT m_frameIndex = 0;
-    
-    // CBV/SRV/UAV descriptor heap (for constant buffers and textures)
-    ID3D12DescriptorHeap* m_cbvSrvUavHeap = nullptr;
-    UINT m_cbvSrvUavDescriptorSize = 0;
-    
-    // ImGui SRV descriptor heap (for font atlas texture - v1.3.0, expanded v1.5.0 H1.1)
-    // Slot 0: ImGui font atlas SRV
-    // Slot 1: Render target SRV (for viewport texture - v1.5.0)
     ID3D12DescriptorHeap* m_imguiSrvHeap = nullptr;
-    UINT m_imguiSrvDescriptorSize = 0; // NEW: descriptor size increment (v1.5.0 H1.1)
+    unsigned int m_rtvDescriptorSize = 0;
     
-    // Render Target SRV handles (v1.5.0 - H1.1)
-    D3D12_CPU_DESCRIPTOR_HANDLE m_renderTargetSRV_CPU = {};
-    D3D12_GPU_DESCRIPTOR_HANDLE m_renderTargetSRV_GPU = {};
-    
-    // v1.6.0 H1.1 - Scene render target offscreen (AAA standard)
-    // Separates 3D scene rendering from UI rendering to eliminate viewport recursion
+    // Scene render target (offscreen - AAA standard)
     ID3D12Resource* m_sceneRenderTarget = nullptr;
     D3D12_CPU_DESCRIPTOR_HANDLE m_sceneRTV = {};
     D3D12_GPU_DESCRIPTOR_HANDLE m_sceneSRV_GPU = {};
     D3D12_CPU_DESCRIPTOR_HANDLE m_sceneSRV_CPU = {};
     
-    // Command recording and synchronization
-    ID3D12CommandAllocator* m_commandAllocator = nullptr;
-    ID3D12GraphicsCommandList* m_commandList = nullptr;
-    ID3D12Fence* m_fence = nullptr;
-    UINT64 m_fenceValue = 0;
-    HANDLE m_fenceEvent = nullptr;
-    
-    // Root signature (defines shader parameter layout)
+    // Render resources (managed by subsystems)
     ID3D12RootSignature* m_rootSignature = nullptr;
-    
-    // Compiled shaders (vertex and pixel shader bytecode)
-    ID3DBlob* m_vertexShaderBlob = nullptr;
-    ID3DBlob* m_pixelShaderBlob = nullptr;
-    
-    // Pipeline State Object (defines complete graphics pipeline state)
     ID3D12PipelineState* m_pipelineState = nullptr;
+    ID3D12Resource* m_vertexBuffer = nullptr;
+    D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView = {};
     
-    // Vertex buffer resources
-    ID3D12Resource* m_vertexBuffer = nullptr;        // GPU default heap (final location)
-    ID3D12Resource* m_vertexBufferUpload = nullptr;  // CPU upload heap (staging)
-    D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView = {}; // View for binding to pipeline
-    
-    // Constant buffer for MVP matrix
-    ID3D12Resource* m_constantBuffer = nullptr;      // Upload heap (persistently mapped)
-    void* m_cbMappedData = nullptr;                  // Mapped pointer for updates
-    float m_mvpMatrix[16] = {};                       // MVP matrix data (identity)
-    
-    // Future G-Buffer textures (v1.3.0+ - Deferred Rendering)
-    // ID3D12Resource* m_gBufferAlbedo = nullptr;   // v1.3.0+ - Albedo (base color) texture
-    // ID3D12Resource* m_gBufferNormal = nullptr;   // v1.3.0+ - World-space normals texture
-    // ID3D12Resource* m_gBufferDepth = nullptr;    // v1.3.0+ - Depth texture
+    // MVP matrix
+    float m_mvpMatrix[16] = {};
 #endif
     
-    // UI visibility state (H2.3 - Toggle UI with F1)
-    bool m_uiVisible = true; // UI visible by default
+    // UI visibility state
+    bool m_uiVisible = true;
     
-    // Camera system (v1.5.0 - H2.2)
-    class Camera* m_camera = nullptr;
-    
-    // Helper methods (v1.5.0 - H1.1)
+    // Helper methods
 #if defined(_WIN32) && defined(_MSC_VER)
-    void CreateRenderTargetSRV(); // Create SRV descriptor for render target
-    
-    // v1.6.0 H1.2 - Create scene render target offscreen
     void CreateSceneRenderTarget();
-    
-    // v1.5.0 H1.3 - Helper for resource state transitions
-    void TransitionResource(
-        ID3D12Resource* resource,
-        D3D12_RESOURCE_STATES stateBefore,
-        D3D12_RESOURCE_STATES stateAfter
-    );
+    void CalculateMVPMatrix();
 #endif
 };
 

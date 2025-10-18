@@ -326,8 +326,8 @@ static int RunApp(HINSTANCE hInstance)
             if (viewport)
             {
 #if defined(_WIN32) && defined(_MSC_VER)
-                // Get render target SRV from renderer
-                D3D12_GPU_DESCRIPTOR_HANDLE srvHandle = renderer.GetRenderTargetSRV();
+                // v1.6.0 DEV-002.6: Get scene render target SRV (AAA architecture)
+                D3D12_GPU_DESCRIPTOR_HANDLE srvHandle = renderer.GetSceneRenderTargetSRV();
                 viewport->SetRenderTargetSRV(reinterpret_cast<void*>(srvHandle.ptr));
 #endif
             }
