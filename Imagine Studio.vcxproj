@@ -171,6 +171,7 @@
     <ClCompile Include="src\assets\AssetManager.cpp" />
     <ClCompile Include="src\assets\VFS.cpp" />
     <ClCompile Include="src\editor\EditorUI.cpp" />
+    <ClCompile Include="src\editor\Viewport.cpp" />
     <ClCompile Include="src\examples\ExampleRunner.cpp" />
     <ClCompile Include="src\jobs\TaskGraph.cpp" />
     <ClCompile Include="src\jobs\ThreadPool.cpp" />
@@ -200,7 +201,6 @@
     <ClCompile Include="external\imgui\backends\imgui_impl_dx12.cpp" />
     <ClCompile Include="external\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="external\imgui\imgui_demo.cpp" />
-    <ClCompile Include="src\editor\Viewport.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\assets\AssetManager.h" />
@@ -209,6 +209,7 @@
     <ClInclude Include="src\core\Log.h" />
     <ClInclude Include="src\core\Types.h" />
     <ClInclude Include="src\editor\EditorUI.h" />
+    <ClInclude Include="src\editor\Viewport.h" />
     <ClInclude Include="src\jobs\TaskGraph.h" />
     <ClInclude Include="src\jobs\ThreadPool.h" />
     <ClInclude Include="src\platform\Input.h" />

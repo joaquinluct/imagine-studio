@@ -977,13 +977,13 @@ void DX12Renderer::OpaquePass()
     // DRAW CALL - 6 vertices (2 triangles forming a quad)
     m_commandList->DrawInstanced(6, 1, 0, 0);
     
-    // v1.5.0 H1.3 - Transition render target: RENDER_TARGET -> PRESENT
-    // NOTE: En H3.1, esta transición cambiará a RENDER_TARGET -> PIXEL_SHADER_RESOURCE
-    // para permitir que ImGui::Image() use el render target como textura en el Viewport
+    // v1.5.0 H3.2 - Transition render target: RENDER_TARGET -> PIXEL_SHADER_RESOURCE
+    // This allows ImGui::Image() in Viewport to read the render target as a texture
+    // NOTE: Previously this was RENDER_TARGET -> PRESENT, but now UIPass reads the RT
     TransitionResource(
         m_renderTargets[m_frameIndex],
         D3D12_RESOURCE_STATE_RENDER_TARGET,
-        D3D12_RESOURCE_STATE_PRESENT
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
     );
     
     // Close command list (finish recording)
@@ -1082,10 +1082,11 @@ void DX12Renderer::UIPass()
         return;
     }
     
-    // v1.5.0 H1.3 - Transition render target: PRESENT -> RENDER_TARGET
+    // v1.5.0 H3.2 - Transition render target: PIXEL_SHADER_RESOURCE -> RENDER_TARGET
+    // OpaquePass left the RT in PSR state so ImGui::Image() could read it
     TransitionResource(
         m_renderTargets[m_frameIndex],
-        D3D12_RESOURCE_STATE_PRESENT,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
         D3D12_RESOURCE_STATE_RENDER_TARGET
     );
     
