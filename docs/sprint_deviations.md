@@ -8,6 +8,108 @@ Este archivo contiene las desviaciones, ajustes arquitectónicos y tareas emerge
 
 ## Desviaciones Registradas
 
+### DEV-003: F1 Toggle - Fullscreen Scene RT cuando UI oculta
+
+**Tipo**: Feature Emergente (Mejora UX)  
+**Detectado en**: DEV-002.7 (validación usuario post-refactorización)  
+**Fecha**: 2025-01-18  
+**Prioridad**: 🟢 BAJA (mejora, no bloqueante)
+
+#### Contexto
+
+Tras la refactorización AAA (DEV-002), el comportamiento de F1 (toggle UI) funciona correctamente:
+- ✅ **UI visible**: Back buffer muestra panels del editor + Viewport panel con scene RT
+- ✅ **UI oculta**: Back buffer muestra **gris oscuro** (clear color del editor)
+
+Sin embargo, el usuario esperaría que al ocultar la UI (F1), el **scene RT se muestre en fullscreen** en el back buffer, similar al comportamiento de **Unity Editor** (Game View maximizado).
+
+**Comportamiento actual**:
+```
+UI visible:  Back buffer = Panels (gris) + Viewport panel (scene RT azul)
+UI oculta:   Back buffer = Gris oscuro (clear)
+```
+
+**Comportamiento esperado (Unity style)**:
+```
+UI visible:  Back buffer = Panels (gris) + Viewport panel (scene RT azul)
+UI oculta:   Back buffer = Scene RT fullscreen (azul + quad) ✅
+```
+
+#### ¿Por qué NO sprint actual?
+
+1. **No bloqueante**: El comportamiento actual es **válido AAA** (Unreal Engine style)
+2. **Feature adicional**: Requiere implementar fullscreen quad blit pass
+3. **Desvío de objetivo**: El sprint v1.6.0 se centra en arquitectura AAA, no en UX polish
+4. **Tiempo estimado**: +1 hora (no crítico para release)
+
+#### Decisión
+
+**DIFERIR a sprint futuro** (v1.7.0+ o backlog). Documentar como mejora UX opcional.
+
+El comportamiento actual (back buffer gris cuando UI oculta) es **correcto AAA** y usado por **Unreal Engine**. La mejora propuesta (fullscreen scene RT) es estilo **Unity** y puede implementarse más adelante.
+
+#### Implementación Propuesta (Futuro)
+
+**Modificar `DX12UIPass::Execute()`** para que cuando `m_uiVisible == false`, copie el scene RT al back buffer usando un fullscreen quad blit:
+
+```cpp
+void DX12UIPass::Execute(DX12CommandContext& ctx)
+{
+    // Set render target
+    commandList->OMSetRenderTargets(1, &m_rtv, FALSE, nullptr);
+    
+    if (!m_uiVisible)
+    {
+        // DEV-003: Copy scene RT to back buffer (fullscreen)
+        // 1. Set fullscreen quad PSO (texture sampling)
+        // 2. Bind scene RT SRV as input texture
+        // 3. Draw fullscreen quad
+        // Result: Back buffer = Scene RT (azul + quad)
+        
+        BlitSceneRTToBackBuffer(ctx, m_sceneRenderTargetSRV);
+        return;
+    }
+    
+    // UI visible - render ImGui panels
+    // ...existing code...
+}
+```
+
+**Archivos afectados**:
+- `src/renderer/DX12UIPass.h/cpp` - Añadir `BlitSceneRTToBackBuffer()`
+- `src/renderer/DX12PipelineManager.h/cpp` - Crear PSO de fullscreen quad blit
+- `shaders/fullscreen_blit.hlsl` - Shader simple para copiar textura
+
+**Estimación**: 1 hora
+
+#### Alternativas Consideradas
+
+1. **Opción A** (implementada): Mantener comportamiento actual (Unreal style)
+   - ✅ Más simple
+   - ✅ Comportamiento AAA válido
+   - ✅ No requiere trabajo adicional
+
+2. **Opción B** (propuesta DEV-003): Fullscreen scene RT cuando UI oculta (Unity style)
+   - ✅ Mejor UX para visualizar render 3D
+   - ❌ Requiere implementar blit pass
+   - ❌ No crítico para funcionamiento
+
+**Decisión**: **Opción A** para sprint actual, **Opción B** para backlog.
+
+#### Impacto en Sprint
+
+- **Progreso**: No afecta (feature opcional)
+- **Tareas**: No añade tareas al sprint actual
+- **Backlog**: Añadir ítem "DEV-003: Fullscreen Scene RT on F1" para v1.7.0+
+
+#### Lecciones Aprendidas
+
+1. **Comportamientos AAA válidos pueden diferir** entre engines (Unreal vs Unity)
+2. **UX polish** es importante pero no siempre crítico para releases
+3. **Documentar decisiones** evita duplicar trabajo en futuros sprints
+
+---
+
 ### DEV-002: Refactorización DX12Renderer - Separación de Responsabilidades AAA
 
 **Tipo**: Ajuste Arquitectónico (Crítico)  

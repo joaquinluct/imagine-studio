@@ -48,39 +48,42 @@ void DX12UIPass::Execute(DX12CommandContext& ctx)
     // Set render target
     commandList->OMSetRenderTargets(1, &m_rtv, FALSE, nullptr);
     
-    // Clear back buffer with dark gray (editor background)
+    // If UI is hidden, we need to show the scene RT in fullscreen
+    // (copy scene RT to back buffer instead of just clearing)
+    if (!m_uiVisible)
+    {
+        // TODO DEV-003: Implement fullscreen scene RT blit
+        // For now, clear with dark gray (editor background)
+        const float clearColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+        commandList->ClearRenderTargetView(m_rtv, clearColor, 0, nullptr);
+        return;
+    }
+    
+    // UI is visible - clear back buffer with editor background
     const float clearColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
     commandList->ClearRenderTargetView(m_rtv, clearColor, 0, nullptr);
     
-    // Only render ImGui if UI is visible
-    if (!m_uiVisible)
-    {
-        // UI hidden - back buffer cleared, no ImGui rendering
-        return;
-    }
-
     // Get ImGui draw data
     ImDrawData* draw_data = ImGui::GetDrawData();
-    if (draw_data == nullptr || draw_data->TotalVtxCount == 0)
-    {
-        // No ImGui data to render (empty frame)
-        return;
-    }
     
-    // Set ImGui SRV descriptor heap (CRITICAL for ImGui to access textures)
-    if (m_imguiSrvHeap)
+    // If we have draw data, render ImGui
+    if (draw_data && draw_data->TotalVtxCount > 0)
     {
-        commandList->SetDescriptorHeaps(1, &m_imguiSrvHeap);
-    }
-    else
-    {
-        CORE_LOG_ERROR("DX12UIPass::Execute: ImGui SRV heap not set");
-        return;
-    }
+        // Set ImGui SRV descriptor heap (CRITICAL for ImGui to access textures)
+        if (m_imguiSrvHeap)
+        {
+            commandList->SetDescriptorHeaps(1, &m_imguiSrvHeap);
+        }
+        else
+        {
+            CORE_LOG_ERROR("DX12UIPass::Execute: ImGui SRV heap not set");
+            return;
+        }
 
-    // Call ImGui DX12 backend to render draw data
-    // The backend handles pipeline, vertex buffers, etc.
-    ImGui_ImplDX12_RenderDrawData(draw_data, commandList);
+        // Call ImGui DX12 backend to render draw data
+        // The backend handles pipeline, vertex buffers, etc.
+        ImGui_ImplDX12_RenderDrawData(draw_data, commandList);
+    }
 #endif
 }
 
