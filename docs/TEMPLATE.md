@@ -576,6 +576,72 @@ Sprint v[PLACEHOLDER: versión] cerrado. Sin sprint activo.
 **Criterio de éxito**: [PLACEHOLDER: condición de éxito]
 ```
 
+### 4. `docs/sprint_deviations.md` - Desviaciones del Sprint (NUEVO)
+
+**Propósito**: Registrar **desviaciones**, **ajustes arquitectónicos** y **tareas emergentes** que surgen **durante** la ejecución del sprint.
+
+**Contenido**:
+- ID de desviación (DEV-XXX)
+- Tipo (Ajuste Arquitectónico | Tarea Emergente | Deuda Técnica | Bloqueador)
+- Punto de detección (en qué tarea se detectó)
+- Prioridad
+- Contexto del problema
+- Justificación de por qué NO pasó a backlog
+- Decisión tomada
+- Tareas derivadas (DEV-XXX.Y)
+- Resultado
+- Impacto en sprint
+- Lecciones aprendidas
+
+**Ejemplo de desviación**:
+```markdown
+## DEV-001: [PLACEHOLDER: Título de la desviación]
+
+**Tipo**: Ajuste Arquitectónico
+**Detectado en**: H2.3 - [PLACEHOLDER: nombre de tarea]
+**Fecha**: 2025-01-18
+**Prioridad**: CRÍTICA
+
+### Contexto:
+[PLACEHOLDER: Descripción del problema arquitectónico/técnico detectado]
+
+### ¿Por qué NO pasó a backlog?
+- ❌ **Bloqueante para H4**: [PLACEHOLDER: razón específica]
+- ❌ **Viola pilares del proyecto**: [PLACEHOLDER: referencia a MAIN.md]
+- ✅ **Impacto inmediato**: [PLACEHOLDER: consecuencias si no se arregla]
+
+### Decisión:
+Pausar H4 temporalmente e implementar [PLACEHOLDER: solución] inmediatamente
+
+### Tareas Derivadas:
+- DEV-001.1: ✅ [PLACEHOLDER: subtarea 1]
+- DEV-001.2: ✅ [PLACEHOLDER: subtarea 2]
+
+### Resultado:
+✅ **Completado** (commit: [PLACEHOLDER: hash])
+
+### Impacto en Sprint:
+- H4.1-H4.5: [PLACEHOLDER: impacto positivo/negativo]
+- Progreso: [PLACEHOLDER: antes/después]
+
+### Lecciones Aprendidas:
+[PLACEHOLDER: reflexión para evitar en futuros sprints]
+```
+
+**Criterios de Uso**:
+- ✅ Bloqueante para sprint actual
+- ✅ Viola pilares del proyecto (docs/MAIN.md o estándares del proyecto)
+- ✅ Impacto inmediato en tareas en progreso o próximas inmediatas
+
+**Diferencia con backlog**:
+| Archivo | Propósito | Cuándo usar |
+|---------|-----------|-------------|
+| `sprint_tasks.md` | Tareas **planificadas** del sprint | Al inicio del sprint |
+| `sprint_deviations.md` | Tareas **emergentes/ajustes** durante sprint | Durante ejecución |
+| `backlog.md` | Ítems **fuera** del sprint actual | Planificación futura |
+
+**Versionado**: Archivado como `sprint_deviations_vX.Y.Z.md` al finalizar sprint
+
 ---
 
 ## ✔️ Proceso de Ejecución de Tareas

@@ -131,6 +131,7 @@
     <None Include="assets\asset_high.dat" />
     <None Include="assets\asset_normal.dat" />
     <None Include="assets\example_asset.dat" />
+    <None Include="docs\AAA_STANDARDS.md" />
     <None Include="docs\backlog.md" />
     <None Include="docs\commits.md" />
     <None Include="docs\daily.md" />
@@ -228,8 +229,10 @@
     <Text Include="commit_imgui_h23.txt" />
     <Text Include="commit_msg.txt" />
     <Text Include="commit_msg2.txt" />
+    <Text Include="commit_msg_aaa_refactor.txt" />
     <Text Include="commit_msg_bug002_intento5.txt" />
     <Text Include="commit_msg_bug002_intento6.txt" />
+    <Text Include="commit_msg_bug002_resuelto.txt" />
     <Text Include="commit_msg_h4_1.txt" />
     <Text Include="commit_sprint_complete.txt" />
     <Text Include="commit_sprint_v120_close.txt" />

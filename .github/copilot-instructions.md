@@ -104,7 +104,7 @@ Registrar en la bitácora (`docs/daily.md`) cualquier incidencia relevante y su 
 - TODO el código de bibliotecas externas (Dear ImGui, etc.) debe permanecer **INTACTO**
 - Si necesitas personalizar comportamiento: crear **wrappers** en `src/` (ej: `src/editor/ImGuiWrapper.h`)
 - Si encuentras un bug relacionado con una biblioteca externa:
-  1. **NO** añadir checks defensivos en la biblioteca
+  1. **NO** añadirs checks defensivos en la biblioteca
   2. **SÍ** investigar por qué nuestro código está llamando incorrectamente a la API
   3. **SÍ** corregir el orden de inicialización o uso en nuestro código
   4. **SÍ** consultar `docs/THIRD_PARTY.md` para ver versiones y políticas específicas
@@ -151,12 +151,14 @@ Versionado de los ficheros del Sprint (snapshots de sprint):
   - `docs/sprint_tasks.md` (tareas detalladas por historia; unidad mínima de trabajo e iteración)
   - `docs/sprint_bugs.md` (tracking de bugs reportados y pendientes de resolución)
   - `docs/sprint_fix.md` (historial de bugs resueltos durante el sprint)
+  - `docs/sprint_bug_attempts.md` (registro detallado de intentos de solución a bugs)
 - Al final de un sprint (release), el asistente archivará los ficheros de trabajo renombrándolos con la versión, por ejemplo:
   - `docs/sprint_v<version>.md`
   - `docs/sprint_histories_v<version>.md`
   - `docs/sprint_tasks_v<version>.md`
   - `docs/sprint_bugs_v<version>.md` (bugs que quedaron pendientes al cerrar sprint)
   - `docs/sprint_fix_v<version>.md` (bugs resueltos durante el sprint)
+  - `docs/sprint_bug_attempts_v<version>.md` (intentos de solución a bugs)
 - A continuación el asistente creará ficheros nuevos y vacíos con los nombres activos para el siguiente sprint.
 - Esta política de versionado garantiza trazabilidad de los sprints completados y mantiene los ficheros activos pequeños y enfocados.
 
@@ -320,4 +322,166 @@ Cuando el asistente trabaje en la resolución de un bug, DEBE seguir este proces
    ```
 6. Se espera a que el asistente complete el intento y valide con el usuario.
 
-**NOTA**: Este fiche
+**NOTA**: Este fichero se archiva como `docs/sprint_bug_attempts_v<version>.md` al final del sprint.
+
+---
+
+## Gestión de Desviaciones del Sprint (`sprint_deviations.md`)
+
+### ¿Cuándo usar `sprint_deviations.md`?
+
+Usa este archivo cuando durante la **ejecución** del sprint surja:
+
+1. **Ajuste Arquitectónico**: Cambio en diseño que afecta tareas futuras del sprint
+2. **Tarea Emergente Bloqueante**: Descubierta durante implementación, bloquea progreso
+3. **Deuda Técnica Crítica**: No puede diferirse al siguiente sprint
+4. **Refactorización AAA**: Código no cumple estándares (`docs/AAA_STANDARDS.md` o `docs/MAIN.md`)
+
+### Criterios para NO usar backlog:
+
+- ✅ **Bloqueante**: Impide completar tareas del sprint actual
+- ✅ **Crítico para pilares**: Viola `docs/MAIN.md` o `docs/AAA_STANDARDS.md`
+- ✅ **Impacto inmediato**: Afecta a tareas en progreso o próximas inmediatas
+
+### Diferencia con otros archivos:
+
+| Archivo | Propósito | Cuándo usar |
+|---------|-----------|-------------|
+| `sprint_tasks.md` | Tareas **planificadas** del sprint | Al inicio del sprint |
+| `sprint_deviations.md` | Tareas **emergentes/ajustes** durante sprint | Durante ejecución |
+| `backlog.md` | Ítems **fuera** del sprint actual | Planificación futura |
+| `sprint_bugs.md` | Bugs **reportados** durante sprint | Al detectar defecto |
+
+### Flujo de Trabajo:
+
+1. **Detectar desviación**: Durante implementación de HX.Y
+2. **Evaluar criticidad**: ¿Bloquea sprint? ¿Viola pilares?
+3. **Decidir**: 
+   - Si **CRÍTICA** → `sprint_deviations.md` + pausar tarea actual
+   - Si **NO CRÍTICA** → `backlog.md` + continuar sprint
+4. **Documentar**: Crear entrada DEV-XXX en `sprint_deviations.md`
+5. **Implementar**: Resolver desviación antes de continuar sprint
+6. **Actualizar daily.md**: Reflejar trabajo realizado
+
+### Formato de ID:
+
+- **DEV-XXX**: Desviación general
+- **DEV-XXX.Y**: Subtarea de desviación
+
+### Ejemplo Real (DEV-001 - Refactorización AAA Sprint v1.3.0):
+
+```markdown
+## DEV-001: Refactorización AAA - Condicional de visibilidad UI
+
+**Tipo**: Ajuste Arquitectónico
+**Detectado en**: H2.3 (integración DX12 backend)
+**Fecha**: 2025-01-18
+**Prioridad**: CRÍTICA
+
+### Contexto:
+ImGui se procesaba SIEMPRE sin respetar m_uiVisible, violando estándares AAA.
+
+### ¿Por qué NO backlog?
+- Bloqueante para H4 (Editor Panels)
+- Viola pilares AAA (docs/MAIN.md - "Hacer bien desde el principio")
+- Impacto inmediato en arquitectura de 3 capas
+
+### Decisión:
+Pausar H4, implementar arquitectura AAA inmediatamente
+
+### Tareas Derivadas:
+- DEV-001.1: ✅ Condicional IsUIVisible() en main.cpp
+- DEV-001.2: ✅ DockSpaceOverViewport()
+- DEV-001.3: ✅ #ifdef _DEBUG para ShowDemoWindow()
+- DEV-001.4: ✅ Crear docs/AAA_STANDARDS.md
+
+### Resultado:
+✅ Completado (commit: 011270b)
+- Compilación limpia (CMake + MSBuild)
+- Validación usuario: OK 100%
+
+### Impacto en Sprint:
+- Progreso: 62.5% → 75% (+12.5%)
+- H4.1-H4.5 pueden continuar sobre base sólida
+
+### Lecciones Aprendidas:
+- Auditoría post-tarea crítica obligatoria
+- No esperar a H4 para detectar problemas arquitectónicos
+```
+
+### Contenido de `sprint_deviations.md`:
+
+Cada entrada debe incluir:
+- **ID**: DEV-XXX
+- **Tipo**: Ajuste Arquitectónico | Tarea Emergente | Deuda Técnica | Bloqueador
+- **Detectado en**: HX.Y - nombre de tarea
+- **Fecha**: YYYY-MM-DD
+- **Prioridad**: CRÍTICA | ALTA | MEDIA | BAJA
+- **Contexto**: Descripción del problema
+- **¿Por qué NO backlog?**: Justificación de criticidad
+- **Decisión**: Acción tomada
+- **Tareas Derivadas**: DEV-XXX.1, DEV-XXX.2, etc.
+- **Resultado**: Estado actual y validación
+- **Impacto en Sprint**: Tareas afectadas y progreso
+- **Lecciones Aprendidas**: Reflexión para futuros sprints
+
+### Versionado:
+
+- `sprint_deviations.md` se archiva como `sprint_deviations_vX.Y.Z.md` al finalizar sprint
+- Permite trazabilidad de decisiones arquitectónicas en sprints pasados
+- Nuevo fichero vacío para próximo sprint
+
+### Plantilla:
+
+```markdown
+## DEV-XXX: [Título de la desviación]
+
+**Tipo**: [Tipo]
+**Detectado en**: [HX.Y]
+**Fecha**: [YYYY-MM-DD]
+**Prioridad**: [PRIORIDAD]
+
+### Contexto:
+[Descripción del problema]
+
+### ¿Por qué NO backlog?
+- Razón 1
+- Razón 2
+
+### Decisión:
+[Acción tomada]
+
+### Tareas Derivadas:
+- DEV-XXX.1: [Subtarea]
+
+### Resultado:
+[Estado y validación]
+
+### Impacto en Sprint:
+[Tareas afectadas]
+
+### Lecciones Aprendidas:
+[Reflexión]
+```
+
+---
+
+## Versionado de Archivos del Sprint (ACTUALIZADO)
+
+Los ficheros activos del sprint actual son:
+- `docs/sprint.md`
+- `docs/sprint_histories.md`
+- `docs/sprint_tasks.md`
+- `docs/sprint_bugs.md`
+- `docs/sprint_bug_attempts.md`
+- `docs/sprint_fix.md`
+- **`docs/sprint_deviations.md`** ← **NUEVO**
+
+Al final de un sprint (release), el asistente archivará **TODOS** los ficheros:
+- `docs/sprint_v<version>.md`
+- `docs/sprint_histories_v<version>.md`
+- `docs/sprint_tasks_v<version>.md`
+- `docs/sprint_bugs_v<version>.md`
+- `docs/sprint_bug_attempts_v<version>.md`
+- `docs/sprint_fix_v<version>.md`
+- **`docs/sprint_deviations_v<version>.md`** ← **NUEVO**

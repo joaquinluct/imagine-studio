@@ -1,0 +1,46 @@
+refactor(main): Refactorizacion AAA - Condicional de visibilidad UI y DockSpace
+
+Implementacion de arquitectura AAA siguiendo estandares Unity/Unreal/Blender
+
+Problema previo:
+- ImGui se procesaba SIEMPRE (NewFrame/Render), incluso con UI invisible
+- No habia dockspace principal para permitir docking de panels
+- Demo window se mostraba sin condicional de compilacion
+- Desperdicio de CPU/GPU procesando UI oculta
+
+Solucion AAA implementada:
+1. Condicional de visibilidad IsUIVisible():
+   - Solo procesar ImGui si renderer.IsUIVisible() == true
+   - Ahorra CPU/GPU cuando UI oculta con F1
+   - Respeta correctamente el toggle F1
+
+2. DockSpace principal (Unity/Unreal style):
+   - ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport())
+   - Permite docking flexible de todos los panels del editor
+   - Preparado para H4.1-H4.4 (Editor panels)
+
+3. Condicional de compilacion para demo window:
+   - #ifdef _DEBUG: ImGui::ShowDemoWindow()
+   - Demo window solo visible en builds debug
+   - TODO: Editor::EditorUI::RenderAllPanels() para produccion
+
+Cambios en codigo (src/main.cpp):
+- Wrap NewFrame/Render en if (renderer.IsUIVisible())
+- Añadir DockSpaceOverViewport() ANTES de panels
+- Condicionalizar ShowDemoWindow() con #ifdef _DEBUG
+- Eliminar logs de debug sin ifdef
+
+Beneficios AAA:
+- Separacion clara de responsabilidades (Application/Renderer/Editor layers)
+- Performance optima (no procesar UI invisible)
+- Docking habilitado y funcional
+- Preparado para H4 (Editor panels)
+- Codigo limpio sin debug logs en produccion
+
+Archivos modificados:
+- src/main.cpp: Refactorizacion completa del render loop
+- docs/AAA_STANDARDS.md: Documento nuevo con estandares AAA del proyecto
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Referencia: docs/AAA_STANDARDS.md (filosofia "Hacer bien desde el principio")
