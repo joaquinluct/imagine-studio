@@ -1,6 +1,6 @@
 ﻿# Daily Log
 
-Hecho: DEV-002.7 - Bugfixes críticos (F1, Quad, Crash)
-Siguiente: Validación usuario - Ejecutar y verificar visualmente
+Hecho: DEV-002 - Refactorización DX12Renderer AAA (7/7 subtareas completadas)
+Siguiente: Cierre Sprint v1.6.0 - Validación final y métricas
 
 
