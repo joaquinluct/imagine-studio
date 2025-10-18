@@ -44,6 +44,48 @@ Refs: H1.1
 
 ### 2025-01-18
 
+#### `2e44685` - feat renderer H2.2 Integrar Camera en DX12Renderer con matriz MVP
+
+**Tipo**: Feature (Renderer)  
+**Ámbito**: Sprint v1.5.0 - H2.2  
+**Descripción**: Integrar instancia `Camera` en `DX12Renderer` y calcular matriz MVP para transformación 3D del quad
+
+**Implementación**:
+- Añadir `Camera* m_camera` a `DX12Renderer.h`
+- Inicializar cámara en `Initialize(HWND)`:
+  - Posición: (0, 2, -5) - ligeramente elevada y alejada
+  - Target: (0, 0, 0) - mirando al origen
+  - FOV: 45°, Aspect: 16:9 (1920/1080)
+- Calcular matriz MVP en `OpaquePass()` antes de draw call:
+  - Model matrix: identidad (quad en origen)
+  - MVP = Model × View × Projection
+  - Usar helper `MultiplyMatrix4x4()` para multiplicación column-major
+- Actualizar root constants con MVP calculada
+- Liberar cámara en `Shutdown()`
+- Añadir `Camera.cpp` al proyecto VS `.vcxproj` para compilación MSBuild
+
+**Helper implementado**:
+- `MultiplyMatrix4x4(a, b, result)` - multiplicación de matrices 4x4 column-major
+- Namespace anónimo para evitar contaminación de símbolo global
+
+**Resultado**:
+- El quad ahora se renderiza con transformación 3D completa
+- Perspectiva correcta aplicada (objetos lejanos más pequeños)
+- Base preparada para controles de cámara interactivos (H2.3)
+
+**Archivos modificados**:
+- `src/renderer/DX12Renderer.h` (añadir Camera* member)
+- `src/renderer/DX12Renderer.cpp` (integración completa + cálculo MVP)
+- `Imagine Studio.vcxproj` (añadir Camera.cpp)
+
+**Compilación**: ✅ Limpia (CMake + MSBuild: 0 errores, 0 warnings)
+
+**Próxima tarea**: H2.3 - Implementar controles básicos de cámara (orbit/pan/zoom)
+
+**Referencia**: Sprint v1.5.0 - H2.2
+
+---
+
 #### `8563934` - feat renderer H2.1 Crear clase Camera con matrices View y Projection
 
 **Tipo**: Feature (Renderer)  
