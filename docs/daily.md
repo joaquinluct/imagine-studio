@@ -1,6 +1,6 @@
 ﻿# Daily Log
 
-Hecho: DEV-002 - Refactorización DX12Renderer AAA (7/7 subtareas completadas)
-Siguiente: Cierre Sprint v1.6.0 - Validación final y métricas
+Hecho: Sprint v1.6.0 cerrado - Refactorización AAA completa
+Siguiente: BUG-4 - Quad no visible en Viewport (scene RT SRV issue)
 
 

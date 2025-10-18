@@ -86,8 +86,6 @@ void DX12OpaquePass::Execute(DX12CommandContext& ctx)
 
     // DRAW CALL - 6 vertices (2 triangles forming a quad)
     commandList->DrawInstanced(6, 1, 0, 0);
-    
-    CORE_LOG_INFO("DX12OpaquePass: Draw call executed (6 vertices)");
 #endif
 }
 
