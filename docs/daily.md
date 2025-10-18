@@ -1,6 +1,6 @@
 ﻿# Daily Log
 
-Hecho: H4.2 - Panel Inspector con propiedades editables completado
-Siguiente: H4.3 - Implementar Panel Console (logs funcionales)
+Hecho: H4.3 - Panel Console con logs coloreados completado
+Siguiente: H4.4 - Implementar Panel Viewport (render target 3D)
 
 
