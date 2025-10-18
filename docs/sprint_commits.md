@@ -44,6 +44,113 @@ Refs: H1.1
 
 ### 2025-01-18
 
+#### `46aa083` - fix H2.3 Corregir controles de cámara
+
+**Tipo**: Fix (Renderer)  
+**Ámbito**: Sprint v1.5.0 - H2.3  
+**Descripción**: Fix para controles de cámara - corregir GetMouseDelta y reemplazar zoom con rueda por teclas
+
+**Problema detectado**:
+- `GetMouseDelta()` devolvía delta casi 0 por actualización duplicada de `m_lastMousePos`
+- Zoom con rueda del mouse no funcionaba (falta captura de `WM_MOUSEWHEEL`)
+
+**Solución aplicada**:
+- Fix `InputManager::Update()`: solo inicializar `m_lastMousePos`, no actualizar cada frame
+- Reemplazar zoom con rueda por teclas `+/-` (`VK_OEM_PLUS`/`VK_OEM_MINUS`)
+- Mantener controles orbit (botón derecho) y pan (botón medio) sin cambios
+
+**Resultado**:
+- ✅ Orbit funciona correctamente (rotación fluida alrededor del target)
+- ✅ Pan funciona correctamente (movimiento lateral)
+- ✅ Zoom funciona correctamente con teclas +/- (zoom in/out)
+
+**Archivos modificados**:
+- `src/platform/InputManager.cpp` (fix GetMouseDelta)
+- `src/main.cpp` (cambiar zoom a teclas +/-)
+
+**Compilación**: ✅ Limpia (CMake + MSBuild: 0 errores, 0 warnings)
+
+**Validación**: ✅ Confirmado por usuario - Todos los controles funcionan correctamente
+
+**Referencia**: Sprint v1.5.0 - H2.3 fix
+
+---
+
+#### `fb14a86` - feat renderer H2.3 Implementar controles básicos de cámara (orbit/pan/zoom)
+
+**Tipo**: Feature (Renderer)  
+**Ámbito**: Sprint v1.5.0 - H2.3  
+**Descripción**: Implementar controles interactivos de cámara con mouse para navegar la escena 3D
+
+**Implementación**:
+- Añadir métodos `Orbit()`, `Pan()`, `Zoom()` en clase `Camera`:
+  - Orbit: coordenadas esféricas (yaw/pitch) con clamp anti-gimbal
+  - Pan: movimiento lateral de cámara + target
+  - Zoom: movimiento along forward vector con distancia mínima
+- Actualizar `InputManager` con captura de mouse:
+  - `GetMouseDelta()` - delta XY desde último frame
+  - `IsMouseButtonDown()` - estado de botones (0=left, 1=right, 2=middle)
+  - `GetMouseWheel()` - delta de rueda (preparado para futura impl.)
+- Integrar controles en `main.cpp` loop:
+  - Botón derecho + mouse drag: Orbit
+  - Botón medio + mouse drag: Pan
+  - Rueda del mouse: Zoom (implementación inicial)
+
+**Características técnicas**:
+- Sensibilidad orbit: 0.005 rad/pixel
+- Sensibilidad pan: 0.01 units/pixel
+- Sensibilidad zoom: 0.1 units/delta
+- Pitch clamp: ±1.5 rad (~85°) para evitar gimbal lock
+- Distancia mínima zoom: 0.5 units
+
+**Archivos modificados**:
+- `src/renderer/Camera.h` (declarar Orbit/Pan/Zoom)
+- `src/renderer/Camera.cpp` (implementar controles)
+- `src/platform/InputManager.h` (añadir métodos mouse)
+- `src/platform/InputManager.cpp` (implementar captura mouse)
+- `src/renderer/DX12Renderer.h` (añadir GetCamera getter)
+- `src/main.cpp` (integrar controles en loop + include Camera.h)
+
+**Compilación**: ✅ Limpia (CMake + MSBuild: 0 errores, 0 warnings)
+
+**Próxima tarea**: H2.4 - Validar controles de cámara
+
+**Referencia**: Sprint v1.5.0 - H2.3
+
+---
+
+#### `0bf9d33` - fix BUG-001 Quad no visible con Camera Projection
+
+**Tipo**: Fix (Bug)  
+**Ámbito**: Sprint v1.5.0 - BUG-001  
+**Descripción**: Reemplazar implementación manual de matrices View/Projection con DirectXMath estándar
+
+**Bug**: El quad desaparecía al usar `Camera::GetProjectionMatrix()` (implementación manual incorrecta)
+
+**Solución**: Usar funciones estándar de DirectXMath:
+- `XMMatrixPerspectiveFovLH()` para matriz Projection
+- `XMMatrixLookAtLH()` para matriz View
+- `XMStoreFloat4x4()` para almacenar matrices row-major
+
+**Intentos de solución**: 6 (documentados en `sprint_bug_attempts.md`)
+- Intentos #1-5: Fallidos (ajustes manuales, transposiciones, cambios layout)
+- Intento #6: ✅ Exitoso (DirectXMath estándar)
+
+**Archivos modificados**:
+- `src/renderer/Camera.cpp` (UpdateViewMatrix + UpdateProjectionMatrix)
+- `src/renderer/Camera.h` (actualizar comentarios row-major)
+- `docs/sprint_bugs.md` (registrar BUG-001)
+- `docs/sprint_bug_attempts.md` (6 intentos)
+- `docs/sprint_fix.md` (mover bug resuelto)
+
+**Compilación**: ✅ Limpia (CMake + MSBuild: 0 errores, 0 warnings)
+
+**Validación**: ✅ Confirmado por usuario - Quad visible con perspectiva 3D correcta
+
+**Referencia**: BUG-001
+
+---
+
 #### `2e44685` - feat renderer H2.2 Integrar Camera en DX12Renderer con matriz MVP
 
 **Tipo**: Feature (Renderer)  
