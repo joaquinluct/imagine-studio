@@ -28,19 +28,16 @@ void InputManager::Update()
         pair.second = (keyState & 0x8000) != 0;
     }
     
-    // v1.5.0 H2.3 - Update mouse state
-    POINT currentPos;
-    if (GetCursorPos(&currentPos))
+    // v1.5.0 H2.3 - Initialize mouse position on first frame
+    if (!m_mouseInitialized)
     {
-        if (!m_mouseInitialized)
+        if (GetCursorPos(&m_lastMousePos))
         {
-            m_lastMousePos = currentPos;
             m_mouseInitialized = true;
         }
-        m_lastMousePos = currentPos;
     }
     
-    // Reset mouse wheel (will be updated by WM_MOUSEWHEEL message)
+    // Reset mouse wheel (will be updated by WM_MOUSEWHEEL message if needed)
     m_mouseWheel = 0;
 }
 

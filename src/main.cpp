@@ -272,11 +272,14 @@ static int RunApp(HINSTANCE hInstance)
                 camera->Pan(static_cast<float>(deltaX), static_cast<float>(-deltaY)); // Inverted Y
             }
             
-            // Zoom: Mouse wheel
-            int wheelDelta = input.GetMouseWheel();
-            if (wheelDelta != 0)
+            // Zoom: +/- keys (alternative to mouse wheel)
+            if (input.IsKeyDown(VK_ADD) || input.IsKeyDown(VK_OEM_PLUS)) // + or =
             {
-                camera->Zoom(static_cast<float>(wheelDelta) * 0.1f);
+                camera->Zoom(1.0f); // Zoom in
+            }
+            if (input.IsKeyDown(VK_SUBTRACT) || input.IsKeyDown(VK_OEM_MINUS)) // - or _
+            {
+                camera->Zoom(-1.0f); // Zoom out
             }
         }
 
