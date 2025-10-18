@@ -134,6 +134,9 @@ private:
     // UI visibility state (H2.3 - Toggle UI with F1)
     bool m_uiVisible = true; // UI visible by default
     
+    // Camera system (v1.5.0 - H2.2)
+    class Camera* m_camera = nullptr;
+    
     // Helper methods (v1.5.0 - H1.1)
 #if defined(_WIN32) && defined(_MSC_VER)
     void CreateRenderTargetSRV(); // Create SRV descriptor for render target

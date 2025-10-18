@@ -6,6 +6,9 @@
 #include "Fence.h"
 #include "RenderTarget.h"
 
+// Camera system (v1.5.0 - H2.2)
+#include "Camera.h"
+
 // ImGui headers (Dear ImGui - v1.3.0 H2.3)
 #include "imgui.h"
 #include "imgui_impl_dx12.h"
@@ -685,6 +688,14 @@ void DX12Renderer::Initialize(HWND hwnd)
     
     // v1.5.0 H1.1 - Create Render Target SRV for viewport texture
     CreateRenderTargetSRV();
+    
+    // v1.5.0 H2.2 - Initialize Camera
+    m_camera = new Camera();
+    // Configure camera for default scene view
+    m_camera->SetPosition(0.0f, 2.0f, -5.0f);  // Slightly above and back
+    m_camera->SetTarget(0.0f, 0.0f, 0.0f);     // Looking at origin
+    m_camera->SetPerspective(45.0f, 1920.0f / 1080.0f, 0.1f, 1000.0f);  // Match viewport aspect ratio
+    CORE_LOG_INFO("DX12Renderer: Camera initialized at position (0, 2, -5)");
 #endif // defined(_WIN32) && defined(_MSC_VER) - END OF Initialize(HWND) DX12 CODE BLOCK
     
     allocator_ = new CommandAllocator();
@@ -781,9 +792,25 @@ void DX12Renderer::TransitionResource(
     
     m_commandList->ResourceBarrier(1, &barrier);
 }
-#endif
 
-// Rest of the implementation...
+// v1.5.0 H2.2 - Helper for matrix multiplication (4x4 column-major)
+namespace {
+    inline void MultiplyMatrix4x4(const float* a, const float* b, float* result)
+    {
+        for (int row = 0; row < 4; ++row)
+        {
+            for (int col = 0; col < 4; ++col)
+            {
+                result[col * 4 + row] = 0.0f;
+                for (int k = 0; k < 4; ++k)
+                {
+                    result[col * 4 + row] += a[k * 4 + row] * b[col * 4 + k];
+                }
+            }
+        }
+    }
+}
+#endif
 
 void DX12Renderer::RenderFrame()
 {
@@ -908,7 +935,30 @@ void DX12Renderer::OpaquePass()
     // Set vertex buffer
     m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
     
-    // Set root constants (MVP matrix) - use identity matrix
+    // v1.5.0 H2.2 - Calculate MVP matrix: Model * View * Projection
+    if (m_camera)
+    {
+        // Model matrix (identity for now - quad at origin)
+        float modelMatrix[16] = {
+            1.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 1.0f
+        };
+        
+        // Get View and Projection from camera
+        const float* viewMatrix = m_camera->GetViewMatrix();
+        const float* projectionMatrix = m_camera->GetProjectionMatrix();
+        
+        // Calculate ModelView = Model * View
+        float modelView[16];
+        MultiplyMatrix4x4(modelMatrix, viewMatrix, modelView);
+        
+        // Calculate MVP = ModelView * Projection
+        MultiplyMatrix4x4(modelView, projectionMatrix, m_mvpMatrix);
+    }
+    
+    // Set root constants (MVP matrix)
     m_commandList->SetGraphicsRoot32BitConstants(0, 16, m_mvpMatrix, 0);
     
     // DRAW CALL - 6 vertices (2 triangles forming a quad)
@@ -1259,6 +1309,14 @@ void DX12Renderer::Shutdown()
         CORE_LOG_INFO("DX12Renderer: SwapChain released");
     }
 #endif
+    
+    // v1.5.0 H2.2 - Release Camera
+    if (m_camera)
+    {
+        delete m_camera;
+        m_camera = nullptr;
+        CORE_LOG_INFO("DX12Renderer: Camera released");
+    }
     
     if (rt_) { rt_->Destroy(); delete rt_; rt_ = nullptr; }
     if (device_) { device_->Shutdown(); delete device_; device_ = nullptr; }
