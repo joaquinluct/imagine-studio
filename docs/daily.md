@@ -1,6 +1,6 @@
 ﻿# Daily Log
 
-Hecho: DEV-002.1 - Crear DX12SwapChain (Swap Chain Management AAA)
-Siguiente: DEV-002.2 - Crear DX12CommandContext (Command Recording)
+Hecho: DEV-002.2 - Crear DX12CommandContext (Command Recording AAA)
+Siguiente: DEV-002.3 - Crear DX12ResourceManager (Resource Creation)
 
 

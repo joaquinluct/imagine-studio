@@ -181,8 +181,10 @@
     <ClCompile Include="src\renderer\AdapterFactory.cpp" />
     <ClCompile Include="src\renderer\Camera.cpp" />
     <ClCompile Include="src\renderer\CommandBuffer.cpp" />
+    <ClCompile Include="src\renderer\DX12CommandContext.cpp" />
     <ClCompile Include="src\renderer\DX12Device.cpp" />
     <ClCompile Include="src\renderer\DX12Renderer.cpp" />
+    <ClCompile Include="src\renderer\DX12SwapChain.cpp" />
     <ClCompile Include="src\renderer\Fence.cpp" />
     <ClCompile Include="src\renderer\Material.cpp" />
     <ClCompile Include="src\renderer\RenderTarget.cpp" />
@@ -218,8 +220,10 @@
     <ClInclude Include="src\renderer\Camera.h" />
     <ClInclude Include="src\renderer\CommandAllocator.h" />
     <ClInclude Include="src\renderer\CommandBuffer.h" />
+    <ClInclude Include="src\renderer\DX12CommandContext.h" />
     <ClInclude Include="src\renderer\DX12Device.h" />
     <ClInclude Include="src\renderer\DX12Renderer.h" />
+    <ClInclude Include="src\renderer\DX12SwapChain.h" />
     <ClInclude Include="src\renderer\Fence.h" />
     <ClInclude Include="src\renderer\IRenderer.h" />
     <ClInclude Include="src\renderer\Material.h" />
