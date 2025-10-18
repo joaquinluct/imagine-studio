@@ -1,6 +1,6 @@
 ﻿# Daily Log
 
-Hecho: H2.3 - Parent-child hierarchy implementado (Entity* parent en Transform, GetWorldMatrix con propagacion recursiva, cascada completa)
-Siguiente: H2.4 - Tests parent-child hierarchy (validar propagacion, mover parent mueve hijos, worldMatrix correcta)
+Hecho: H2.4 - Tests parent-child hierarchy completados (20 tests totales, SetParent/GetParent/cascada/multi-nivel validados)
+Siguiente: H3.1 - Scene class (crear Scene con EntityManager, CreateEntity/DestroyEntity, root entities)
 
 

@@ -21,14 +21,14 @@ Ver [`docs/sprint_histories.md`](sprint_histories.md) para historias detalladas.
 | ID | Historia | Prioridad | Estado |
 |----|----------|-----------|--------|
 | H1 | Entity System Core | CRÍTICA | ✅ Completada |
-| H2 | Transform Component | CRÍTICA | 🟡 En progreso (3/4 tareas) |
+| H2 | Transform Component | CRÍTICA | ✅ Completada |
 | H3 | Scene Graph Integration | ALTA | 🔴 Pendiente |
 | H4 | Editor Integration | ALTA | 🔴 Pendiente |
 
 ## 📊 Progreso
 
-**Historias completadas**: 1/4 (25%)  
-**Tareas completadas**: 7/16 (43.8%)
+**Historias completadas**: 2/4 (50%)  
+**Tareas completadas**: 8/16 (50%)
 
 ### Desglose por Historia:
 - **H1 - Entity System Core**: ✅ 4/4 tareas completadas
@@ -37,11 +37,11 @@ Ver [`docs/sprint_histories.md`](sprint_histories.md) para historias detalladas.
   - H1.3 ✅ EntityManager (factory pattern, O(1) lookup)
   - H1.4 ✅ Tests unitarios (11 tests, 100% PASSED)
 
-- **H2 - Transform Component**: 🟡 3/4 tareas completadas
+- **H2 - Transform Component**: ✅ 4/4 tareas completadas
   - H2.1 ✅ Transform class (pos/rot/scale con DirectXMath)
   - H2.2 ✅ Tests Transform (15 tests, 100% PASSED)
   - H2.3 ✅ Parent-child hierarchy (GetWorldMatrix recursivo)
-  - H2.4 🔴 Tests hierarchy (PENDIENTE)
+  - H2.4 ✅ Tests hierarchy (5 tests, 100% PASSED)
 
 - **H3 - Scene Graph Integration**: 🔴 0/4 tareas
 - **H4 - Editor Integration**: 🔴 0/4 tareas

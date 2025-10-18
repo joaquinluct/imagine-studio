@@ -1031,6 +1031,71 @@ ALL TESTS PASSED! (15 asserts)
 
 ## 2025-01-18
 
+### `b681fc1` - test(scene): Implementar tests parent-child hierarchy (H2.4)
+
+**Tipo**: Test (Sprint v1.4.0)  
+**Ámbito**: Scene  
+**Descripción**: Ampliar tests de Transform con validación completa de jerarquía padre-hijo
+
+**Historia H2.4** - Tests parent-child hierarchy completados
+
+**Implementación**:
+- Ampliar `tests/transform_test.cpp` con función `TestParentChildHierarchy()`
+- 5 tests nuevos para validar jerarquía padre-hijo
+- Total: **20 tests** (15 previos + 5 nuevos de hierarchy)
+
+**Tests implementados**:
+1. ✅ SetParent() y GetParent() funcionan correctamente
+2. ✅ Child hereda posición del parent (world matrix propagado)
+3. ✅ Mover parent mueve child automáticamente (cascada)
+4. ✅ Remover parent con SetParent(nullptr) funciona
+5. ✅ Multi-level hierarchy (grandparent → parent → child)
+
+**Casos de prueba**:
+- Parent(10,0,0) + Child(5,0,0) = Child_world(15,0,0) ✅
+- Parent(20,0,0) + Child(5,0,0) = Child_world(25,0,0) ✅
+- SetParent(nullptr): Child_world = Child_local(5,0,0) ✅
+- Grandparent(100) + Parent(10) + Child(1) = Child_world(111,0,0) ✅
+
+**Características**:
+- Usa EntityManager y Entity real (no mocks)
+- Valida propagación recursiva de transformaciones
+- Verifica cascada completa de parent a child
+- Tests multi-nivel (3 generaciones)
+- Validación de remover parent
+
+**Archivos modificados**:
+- `tests/transform_test.cpp` (TestParentChildHierarchy añadido)
+
+**Compilación**: ✅ Limpia
+- CMake Build (Debug): 0 errores, 0 warnings
+- MSBuild "Imagine Studio.sln" (Debug): 0 errores, 0 warnings
+
+**Ejecución de tests**: ✅ 20/20 PASSED
+```
+========================================
+Transform Component Unit Tests
+========================================
+[TEST] TestTransformDefaultValues - PASSED (3 tests)
+[TEST] TestTransformSettersGetters - PASSED (7 tests)
+[TEST] TestTransformLocalMatrix - PASSED (4 tests)
+[TEST] TestTransformWorldMatrix - PASSED (1 test)
+[TEST] TestParentChildHierarchy - PASSED (5 tests)
+========================================
+ALL TESTS PASSED! (20 asserts)
+========================================
+```
+
+**Historia H2 completada**: ✅ Transform Component con hierarchy validado
+
+**Próxima tarea**: H3.1 - Scene class
+
+**Referencia**: H2.4 - Tests hierarchy v1.4.0
+
+---
+
+## 2025-01-18
+
 
 
 
