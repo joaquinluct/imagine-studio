@@ -137,9 +137,112 @@ Iteración controlada (proceso obligatorio por iteración)
 Ejecución automática (sin necesidad de confirmación previa):
 2) Tras proponer el punto, el asistente implementará el cambio, compilará la solución y corregirá los errores/warnings hasta lograr una compilación limpia.
 3) Si la compilación queda limpia, el asistente realizará directamente el commit local siguiendo `docs/commits.md` y actualizará los ficheros necesarios (`docs/daily.md`, `docs/commits.md`, `README.md` y `.github/copilot-instructions.md`) sin pedir permiso adicional.
-4) El asistente informará de lo realizado y del siguiente punto propuesto y continuará el ciclo.
+4) El asistente informará de lo realizado siguiendo el **Formato Obligatorio de Explicación Final** (ver sección más abajo) y del siguiente punto propuesto y continuará el ciclo.
 
 Excepciones: Si aparece un bloqueo técnico, decisión arquitectónica crítica o dependencia que impida avanzar, el asistente pausará y solicitará instrucciones al propietario.
+
+## 📊 Formato Obligatorio de Explicación Final (IMPORTANTE)
+
+Al final de cada iteración (cuando se informa lo realizado y el siguiente punto), la explicación debe contener **obligatoriamente** estas **3 secciones en orden**:
+
+### 1. **Dos títulos numerados** siguiendo el esquema del Sprint:
+- **"✅ Hecho: \<número\> \<título\>"** (ej: "✅ H1.3 - EntityManager implementado") que describe en breve lo completado
+- **"📋 Siguiente: \<número\> \<título\>"** (ej: "📋 H1.4 - Tests unitarios Entity System") que describe el siguiente punto propuesto
+
+### 2. **🎨 Visualización** - ¿Qué cambia visualmente al ejecutar? (OBLIGATORIO)
+
+**⚠️ ESTA SECCIÓN ES OBLIGATORIA Y DEBE APARECER ANTES DE LA BARRA DE PROGRESO**
+
+**Formato estricto**:
+```markdown
+### 🎨 Visualización:
+
+**¿Algo nuevo que cambie la vista tras ejecución?**: **SÍ** ✅ / **NO** ❌
+
+[SI ES "SÍ ✅"]
+**Qué deberías ver al ejecutar** (F5 en Visual Studio):
+1. ✅ [Cambio visual específico 1]
+2. ✅ [Cambio visual específico 2]
+3. 🆕 [Nuevo componente UI visible]
+
+**Qué ha cambiado** (si aplica):
+- 🔄 [Componente modificado]
+- 🔄 [Comportamiento actualizado]
+
+**Ausente** (si aplica):
+- ❌ [Elemento que ya no se muestra]
+- ❌ [Feature deshabilitada temporalmente]
+
+[SI ES "NO ❌"]
+**Razón**: [Explicación breve de por qué no hay cambios visuales]
+Ejemplo: "Esta tarea implementa clases internas sin efecto en UI"
+```
+
+**Especificaciones**:
+- **OBLIGATORIO**: La sección debe aparecer en TODAS las iteraciones (incluso si la respuesta es "NO ❌")
+- Indicar claramente con **SÍ** ✅ o **NO** ❌ si hay cambios visuales
+- Si es **SÍ** ✅: Listar QUÉ se debería ver al ejecutar (F5 en Visual Studio, ejecutable, etc.)
+- Si es **NO** ❌: Explicar brevemente POR QUÉ (ej: "implementación interna", "tests unitarios", "refactorización sin UI")
+- Incluir emojis para claridad:
+  - ✅ = Nuevo/Visible
+  - 🔄 = Modificado/Actualizado
+  - ❌ = Ausente/Deshabilitado
+  - 🆕 = Nuevo componente añadido
+- **POSICIÓN**: Esta sección DEBE aparecer DESPUÉS de "Hecho/Siguiente" y ANTES de la barra de progreso
+
+**Ejemplos según tipo de tarea**:
+
+**Ejemplo 1 - Tarea CON cambios visuales** (ej: H4.1 - Panel Hierarchy):
+```markdown
+### 🎨 Visualización:
+
+**¿Algo nuevo que cambie la vista tras ejecución?**: **SÍ** ✅
+
+**Qué deberías ver al ejecutar** (F5 en Visual Studio):
+1. ✅ Panel "Hierarchy" visible en la parte izquierda de la ventana
+2. ✅ Árbol expandible con objetos: Scene Root → Camera, Lights, Geometry
+3. 🆕 Posibilidad de hacer dock/undock del panel arrastrándolo
+
+**Qué ha cambiado**:
+- 🔄 El layout del editor ahora incluye un panel funcional (no solo ventana vacía)
+
+**Ausente**:
+- ❌ Demo Window de ImGui ya no aparece (reemplazado por Hierarchy)
+```
+
+**Ejemplo 2 - Tarea SIN cambios visuales** (ej: H1.3 - EntityManager):
+```markdown
+### 🎨 Visualización:
+
+**¿Algo nuevo que cambie la vista tras ejecución?**: **NO** ❌
+
+**Razón**: Esta tarea implementa clases internas (EntityManager, Entity) que no tienen representación visual directa. Los cambios visuales aparecerán en H4 cuando el panel Hierarchy muestre entities reales en lugar de placeholder.
+```
+
+### 3. **Barra de progreso visual del sprint** mostrando el avance de tareas completadas:
+
+**Formato**: Barra horizontal con fondo negro (⬛), progreso verde (🟩), bordes blancos (│), y porcentaje centrado
+
+**Ejemplo** con 3 de 16 tareas (18.8%):
+```
+┌────────────────────────────────────────────────────────────────────┐
+│🟩🟩🟩⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛ 18.8%│
+└────────────────────────────────────────────────────────────────────┘
+```
+
+**Especificaciones**:
+- La barra debe ocupar todo el ancho disponible del prompt (aprox. 70-80 caracteres)
+- El porcentaje se calcula como: `(tareas completadas / total tareas sprint) × 100`
+- Usar emojis/caracteres Unicode:
+  - 🟩 (verde) = tarea completada
+  - ⬛ (negro) = tarea pendiente
+- Incluir el porcentaje en formato `"XX.X%"` al final de la barra
+
+**Datos para el cálculo**:
+El asistente rellenará los números y calculará el progreso guiándose por:
+- `docs/sprint.md`
+- `docs/sprint_tasks.md`
+- `docs/daily.md`
 
 Regla estricta sobre commits y documentación:
 - Requisito: Siempre que el asistente realice un commit local como resultado de una iteración (es decir, la compilación queda limpia), actualizará automáticamente `docs/daily.md` y `docs/commits.md` para reflejar el cambio sin pedir confirmación adicional. El push al repositorio remoto no se realizará automáticamente salvo instrucción explícita del propietario.
