@@ -53,6 +53,59 @@ Usuario edita position → Cube se mueve en 3D
 
 ## 📦 Ítems en Backlog (Post-v1.3.0)
 
+### **BACK-008: Viewport AAA - Offscreen Render Target (Sin Recursión Visual)** 🎯
+**ID**: BACK-008  
+**Prioridad**: Alta  
+**Descripción**: Refactorizar Viewport para usar render target offscreen dedicado en lugar del swap chain back buffer. Actualmente el Viewport muestra recursión visual (UI dentro de UI infinitamente) porque lee y escribe sobre el mismo buffer.
+
+**Problema actual**:
+- OpaquePass renderiza quad 3D al swap chain back buffer
+- UIPass renderiza UI (incluye Viewport) al MISMO back buffer
+- `ImGui::Image()` muestra el back buffer dentro del Viewport
+- Resultado: recursión infinita (frame N muestra frame N-1 que muestra frame N-2...)
+
+**Solución AAA (Unity/Unreal style)**:
+1. Crear **scene render target offscreen** (separado del swap chain)
+2. **OpaquePass** renderiza geometría 3D → scene RT
+3. Transición scene RT: RENDER_TARGET → PIXEL_SHADER_RESOURCE
+4. **UIPass** renderiza UI → swap chain back buffer (clear primero)
+5. `ImGui::Image()` en Viewport lee scene RT (NO swap chain)
+6. Sin recursión: scene RT solo contiene 3D, swap chain solo contiene UI
+
+**Beneficios**:
+- ✅ Sin recursión visual (separación clara 3D vs UI)
+- ✅ Resolución viewport independiente (scene RT puede ser 4K mientras UI es 1080p)
+- ✅ Post-processing solo en scene RT (bloom, tone mapping, etc.)
+- ✅ Multi-viewport (múltiples scene RTs para diferentes cámaras)
+- ✅ Base para deferred rendering (scene RT = GBuffer)
+
+**Componentes principales**:
+- Crear `m_sceneRenderTarget` offscreen (D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET)
+- Crear RTV descriptor para scene RT
+- Crear SRV descriptor para scene RT (lectura por ImGui::Image)
+- Modificar OpaquePass: renderizar a scene RT (no swap chain)
+- Modificar UIPass: clear swap chain + renderizar UI con Viewport(sceneSRV)
+- Actualizar `Viewport::SetRenderTargetSRV()` para usar scene SRV
+
+**Prerequisitos**:
+- Sprint v1.5.0 H3.1-H3.2 completado ✅ (Viewport panel existe, transiciones correctas)
+- Conocimiento DX12: CreateCommittedResource, RTV/SRV descriptors
+
+**Complejidad**: Media (2-3 horas de implementación + testing)
+
+**Archivos afectados estimados**:
+- `src/renderer/DX12Renderer.h` (añadir m_sceneRenderTarget, m_sceneRTV, m_sceneSRV_GPU)
+- `src/renderer/DX12Renderer.cpp` (CreateSceneRenderTarget, modificar OpaquePass/UIPass)
+- `src/main.cpp` (actualizar SetRenderTargetSRV con scene SRV en lugar de swap chain SRV)
+
+**Referencia**: Diferido de Sprint v1.5.0 H3.2 (detectado durante validación de transiciones)
+
+**Estado**: KNOWN ISSUE documentado. Viewport funciona pero muestra recursión visual. Esperando implementación en Sprint v1.6.0 o cuando sea prioritario.
+
+**Memoria VRAM adicional**: ~8MB (1920x1080 RGBA8 = 1920 × 1080 × 4 bytes ≈ 8.3MB)
+
+---
+
 ### **Opción 2: Viewport Real (Render Target como Textura)** 🖼️
 **ID**: BACK-004  
 **Prioridad**: Alta  

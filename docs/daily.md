@@ -1,6 +1,6 @@
 ﻿# Daily Log
 
-Hecho: H3.2 - Cambiar transición PRESENT → PIXEL_SHADER_RESOURCE
-Siguiente: H3.3 - Validar Viewport con render 3D correcto
+Hecho: H3.3 - Validar Viewport (completado con KNOWN ISSUE: recursión visual - ver BACK-008)
+Siguiente: H4.1 - Restringir controles de cámara solo cuando Viewport tiene hover
 
 
