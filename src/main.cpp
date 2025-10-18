@@ -6,6 +6,7 @@
 #include "jobs/ThreadPool.h"
 #include "platform/InputManager.h"
 #include "platform/Window.h"
+#include "renderer/Camera.h"     // v1.5.0 H2.3 - Camera controls
 #include "renderer/DX12Renderer.h"
 #include "tools/Profiler.h"
 #include "ui/SimpleUI.h"
@@ -243,6 +244,40 @@ static int RunApp(HINSTANCE hInstance)
         {
             renderer.ToggleUI();
             CORE_LOG_INFO(std::string("UI visibility toggled: ") + (renderer.IsUIVisible() ? "visible" : "hidden"));
+        }
+        
+        // v1.5.0 H2.3: Camera controls (orbit/pan/zoom)
+        Renderer::Camera* camera = renderer.GetCamera();
+        if (camera)
+        {
+            // Orbit: Right mouse button
+            if (input.IsMouseButtonDown(1)) // Right button
+            {
+                int deltaX, deltaY;
+                input.GetMouseDelta(deltaX, deltaY);
+                
+                // Convert pixel delta to radians (sensitivity)
+                float yaw = deltaX * 0.005f;   // Horizontal rotation
+                float pitch = -deltaY * 0.005f; // Vertical rotation (inverted Y)
+                
+                camera->Orbit(yaw, pitch);
+            }
+            
+            // Pan: Middle mouse button
+            if (input.IsMouseButtonDown(2)) // Middle button
+            {
+                int deltaX, deltaY;
+                input.GetMouseDelta(deltaX, deltaY);
+                
+                camera->Pan(static_cast<float>(deltaX), static_cast<float>(-deltaY)); // Inverted Y
+            }
+            
+            // Zoom: Mouse wheel
+            int wheelDelta = input.GetMouseWheel();
+            if (wheelDelta != 0)
+            {
+                camera->Zoom(static_cast<float>(wheelDelta) * 0.1f);
+            }
         }
 
         // Poll for loaded assets and notify renderer

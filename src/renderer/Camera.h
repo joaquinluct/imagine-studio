@@ -24,6 +24,11 @@ public:
     // Position getters
     void GetPosition(float& x, float& y, float& z) const;
     void GetTarget(float& x, float& y, float& z) const;
+    
+    // Camera controls (v1.5.0 - H2.3)
+    void Orbit(float deltaYaw, float deltaPitch);  // Rotate around target (radians)
+    void Pan(float deltaX, float deltaY);          // Move camera laterally
+    void Zoom(float delta);                        // Move camera closer/farther
 
 private:
     // Camera vectors

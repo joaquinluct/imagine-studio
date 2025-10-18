@@ -141,4 +141,127 @@ void Camera::UpdateProjectionMatrix()
 #endif
 }
 
+// v1.5.0 H2.3 - Camera controls (orbit/pan/zoom)
+void Camera::Orbit(float deltaYaw, float deltaPitch)
+{
+    // Calculate vector from target to camera (radius vector)
+    float radius[3] = {
+        m_position[0] - m_target[0],
+        m_position[1] - m_target[1],
+        m_position[2] - m_target[2]
+    };
+    
+    float distance = std::sqrt(radius[0] * radius[0] + radius[1] * radius[1] + radius[2] * radius[2]);
+    
+    // Current spherical coordinates (yaw, pitch)
+    float currentYaw = std::atan2(radius[0], radius[2]);
+    float currentPitch = std::asin(radius[1] / distance);
+    
+    // Apply delta rotation
+    float newYaw = currentYaw + deltaYaw;
+    float newPitch = currentPitch + deltaPitch;
+    
+    // Clamp pitch to avoid gimbal lock
+    const float maxPitch = 1.5f; // ~85 degrees
+    if (newPitch > maxPitch) newPitch = maxPitch;
+    if (newPitch < -maxPitch) newPitch = -maxPitch;
+    
+    // Convert back to Cartesian coordinates (spherical to Cartesian)
+    m_position[0] = m_target[0] + distance * std::cos(newPitch) * std::sin(newYaw);
+    m_position[1] = m_target[1] + distance * std::sin(newPitch);
+    m_position[2] = m_target[2] + distance * std::cos(newPitch) * std::cos(newYaw);
+    
+    UpdateViewMatrix();
+}
+
+void Camera::Pan(float deltaX, float deltaY)
+{
+    // Get current view matrix vectors
+    float forward[3] = {
+        m_target[0] - m_position[0],
+        m_target[1] - m_position[1],
+        m_target[2] - m_position[2]
+    };
+    
+    // Normalize forward
+    float len = std::sqrt(forward[0] * forward[0] + forward[1] * forward[1] + forward[2] * forward[2]);
+    if (len > 0.0f)
+    {
+        forward[0] /= len;
+        forward[1] /= len;
+        forward[2] /= len;
+    }
+    
+    // Calculate right vector (cross product of forward and up)
+    float right[3];
+    right[0] = forward[1] * m_up[2] - forward[2] * m_up[1];
+    right[1] = forward[2] * m_up[0] - forward[0] * m_up[2];
+    right[2] = forward[0] * m_up[1] - forward[1] * m_up[0];
+    
+    // Normalize right
+    len = std::sqrt(right[0] * right[0] + right[1] * right[1] + right[2] * right[2]);
+    if (len > 0.0f)
+    {
+        right[0] /= len;
+        right[1] /= len;
+        right[2] /= len;
+    }
+    
+    // Move camera and target
+    float panSpeed = 0.01f; // Adjust sensitivity
+    m_position[0] += right[0] * deltaX * panSpeed + m_up[0] * deltaY * panSpeed;
+    m_position[1] += right[1] * deltaX * panSpeed + m_up[1] * deltaY * panSpeed;
+    m_position[2] += right[2] * deltaX * panSpeed + m_up[2] * deltaY * panSpeed;
+    
+    m_target[0] += right[0] * deltaX * panSpeed + m_up[0] * deltaY * panSpeed;
+    m_target[1] += right[1] * deltaX * panSpeed + m_up[1] * deltaY * panSpeed;
+    m_target[2] += right[2] * deltaX * panSpeed + m_up[2] * deltaY * panSpeed;
+    
+    UpdateViewMatrix();
+}
+
+void Camera::Zoom(float delta)
+{
+    // Move camera along forward vector
+    float forward[3] = {
+        m_target[0] - m_position[0],
+        m_target[1] - m_position[1],
+        m_target[2] - m_position[2]
+    };
+    
+    // Normalize forward
+    float len = std::sqrt(forward[0] * forward[0] + forward[1] * forward[1] + forward[2] * forward[2]);
+    if (len > 0.0f)
+    {
+        forward[0] /= len;
+        forward[1] /= len;
+        forward[2] /= len;
+    }
+    
+    // Move camera (zoom)
+    float zoomSpeed = 0.1f; // Adjust sensitivity
+    m_position[0] += forward[0] * delta * zoomSpeed;
+    m_position[1] += forward[1] * delta * zoomSpeed;
+    m_position[2] += forward[2] * delta * zoomSpeed;
+    
+    // Keep minimum distance from target
+    float newDist = std::sqrt(
+        (m_target[0] - m_position[0]) * (m_target[0] - m_position[0]) +
+        (m_target[1] - m_position[1]) * (m_target[1] - m_position[1]) +
+        (m_target[2] - m_position[2]) * (m_target[2] - m_position[2])
+    );
+    
+    const float minDistance = 0.5f;
+    if (newDist < minDistance)
+    {
+        // Move back to minimum distance
+        float scale = minDistance / newDist;
+        m_position[0] = m_target[0] - forward[0] * minDistance;
+        m_position[1] = m_target[1] - forward[1] * minDistance;
+        m_position[2] = m_target[2] - forward[2] * minDistance;
+    }
+    
+    UpdateViewMatrix();
+}
+
 } // namespace Renderer

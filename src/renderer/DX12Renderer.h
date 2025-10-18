@@ -49,6 +49,9 @@ public:
     bool IsUIVisible() const { return m_uiVisible; }
     void ToggleUI() { m_uiVisible = !m_uiVisible; }
     
+    // Camera accessor (v1.5.0 - H2.3)
+    class Camera* GetCamera() { return m_camera; }
+    
     // ImGui SRV heap accessor (v1.3.0 - H2.2, expanded in v1.5.0 - H1.1)
 #if defined(_WIN32) && defined(_MSC_VER)
     ID3D12DescriptorHeap* GetImGuiSrvHeap() const { return m_imguiSrvHeap; }
