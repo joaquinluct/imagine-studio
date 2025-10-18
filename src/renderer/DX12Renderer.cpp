@@ -6,6 +6,10 @@
 #include "Fence.h"
 #include "RenderTarget.h"
 
+// ImGui headers (Dear ImGui - v1.3.0 H2.3)
+#include "imgui.h"
+#include "imgui_impl_dx12.h"
+
 #if defined(_WIN32) && defined(_MSC_VER)
 #include <d3d12.h>
 #include <d3dcommon.h>
@@ -884,6 +888,13 @@ void DX12Renderer::UIPass()
         return;
     }
     
+    // ✅ RENDERIZAR IMGUI DRAW DATA (v1.3.0 - H2.3)
+    ImDrawData* draw_data = ImGui::GetDrawData();
+    if (draw_data == nullptr || draw_data->TotalVtxCount == 0)
+    {
+        return; // Nada que renderizar
+    }
+    
     // Get command queue from device
     ID3D12CommandQueue* commandQueue = static_cast<ID3D12CommandQueue*>(device_->NativeCommandQueue());
     if (!commandQueue)
@@ -900,34 +911,13 @@ void DX12Renderer::UIPass()
         return;
     }
     
-    // Reset command list with PSO for UI rendering
-    hr = m_commandList->Reset(m_commandAllocator, m_pipelineState);
+    // Reset command list WITHOUT PSO (ImGui backend will set its own PSO)
+    hr = m_commandList->Reset(m_commandAllocator, nullptr);
     if (FAILED(hr))
     {
         CORE_LOG_ERROR("DX12Renderer::UIPass: Failed to reset command list");
         return;
     }
-    
-    // Set root signature
-    m_commandList->SetGraphicsRootSignature(m_rootSignature);
-    
-    // Set viewport (1920x1080 Full HD)
-    D3D12_VIEWPORT viewport = {};
-    viewport.TopLeftX = 0.0f;
-    viewport.TopLeftY = 0.0f;
-    viewport.Width = 1920.0f;
-    viewport.Height = 1080.0f;
-    viewport.MinDepth = 0.0f;
-    viewport.MaxDepth = 1.0f;
-    m_commandList->RSSetViewports(1, &viewport);
-    
-    // Set scissor rect (full viewport)
-    D3D12_RECT scissorRect = {};
-    scissorRect.left = 0;
-    scissorRect.top = 0;
-    scissorRect.right = 1920;
-    scissorRect.bottom = 1080;
-    m_commandList->RSSetScissorRects(1, &scissorRect);
     
     // Transition render target from PRESENT to RENDER_TARGET state
     D3D12_RESOURCE_BARRIER barrierToRT = {};
@@ -946,105 +936,13 @@ void DX12Renderer::UIPass()
     // Set render target (no clear, render on top of opaque pass)
     m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
     
-    // Set primitive topology
-    m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    // ✅ CRÍTICO: Configurar descriptor heap ANTES de RenderDrawData
+    // ImGui necesita el SRV heap para acceder a las texturas (font atlas)
+    m_commandList->SetDescriptorHeaps(1, &m_imguiSrvHeap);
     
-    // Create UI overlay quad (small rectangle in top-left corner)
-    // This will be a simple colored quad to indicate UI is active
-    // Position: top-left corner, Size: 20% of screen width/height
-    // Color: Semi-transparent white (to contrast with background)
-    
-    struct Vertex {
-        float pos[3];  // Position (x, y, z)
-        float col[4];  // Color (r, g, b, a)
-    };
-    
-    // UI quad vertices (NDC coordinates: -1.0 to 1.0)
-    // Top-left corner: x=-1.0 to -0.6, y=0.6 to 1.0
-    // Triangle 1: bottom-left, top-left, bottom-right (clockwise)
-    // Triangle 2: bottom-right, top-left, top-right (clockwise)
-    Vertex uiVertices[] = {
-        // Triangle 1 (clockwise winding)
-        {{-1.0f,  0.6f, 0.0f}, {1.0f, 1.0f, 1.0f, 0.7f}}, // Bottom-left, white semi-transparent
-        {{-1.0f,  1.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 0.7f}}, // Top-left, white semi-transparent
-        {{-0.6f,  0.6f, 0.0f}, {1.0f, 1.0f, 1.0f, 0.7f}}, // Bottom-right, white semi-transparent
-        
-        // Triangle 2 (clockwise winding)
-        {{-0.6f,  0.6f, 0.0f}, {1.0f, 1.0f, 1.0f, 0.7f}}, // Bottom-right, white semi-transparent
-        {{-1.0f,  1.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 0.7f}}, // Top-left, white semi-transparent
-        {{-0.6f,  1.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 0.7f}}, // Top-right, white semi-transparent
-    };
-    
-    const UINT uiVertexBufferSize = sizeof(uiVertices);
-    
-    // Create temporary upload heap for UI vertices (CPU -> GPU transfer)
-    ID3D12Resource* uiVertexBufferUpload = nullptr;
-    
-    D3D12_HEAP_PROPERTIES uploadHeapProps = {};
-    uploadHeapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
-    uploadHeapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-    uploadHeapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-    uploadHeapProps.CreationNodeMask = 1;
-    uploadHeapProps.VisibleNodeMask = 1;
-    
-    D3D12_RESOURCE_DESC uploadBufferDesc = {};
-    uploadBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-    uploadBufferDesc.Alignment = 0;
-    uploadBufferDesc.Width = uiVertexBufferSize;
-    uploadBufferDesc.Height = 1;
-    uploadBufferDesc.DepthOrArraySize = 1;
-    uploadBufferDesc.MipLevels = 1;
-    uploadBufferDesc.Format = DXGI_FORMAT_UNKNOWN;
-    uploadBufferDesc.SampleDesc.Count = 1;
-    uploadBufferDesc.SampleDesc.Quality = 0;
-    uploadBufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-    uploadBufferDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
-    
-    ID3D12Device* d3dDevice = static_cast<ID3D12Device*>(device_->NativeDevice());
-    hr = d3dDevice->CreateCommittedResource(
-        &uploadHeapProps,
-        D3D12_HEAP_FLAG_NONE,
-        &uploadBufferDesc,
-        D3D12_RESOURCE_STATE_GENERIC_READ,
-        nullptr,
-        IID_PPV_ARGS(&uiVertexBufferUpload)
-    );
-    
-    if (FAILED(hr))
-    {
-        CORE_LOG_ERROR("DX12Renderer::UIPass: Failed to create UI vertex buffer upload heap");
-        return;
-    }
-    
-    // Map and copy UI vertex data
-    void* pUIVertexDataBegin = nullptr;
-    D3D12_RANGE readRange = { 0, 0 };
-    hr = uiVertexBufferUpload->Map(0, &readRange, &pUIVertexDataBegin);
-    
-    if (FAILED(hr))
-    {
-        CORE_LOG_ERROR("DX12Renderer::UIPass: Failed to map UI vertex buffer");
-        uiVertexBufferUpload->Release();
-        return;
-    }
-    
-    memcpy(pUIVertexDataBegin, uiVertices, uiVertexBufferSize);
-    uiVertexBufferUpload->Unmap(0, nullptr);
-    
-    // Configure vertex buffer view for UI quad
-    D3D12_VERTEX_BUFFER_VIEW uiVertexBufferView = {};
-    uiVertexBufferView.BufferLocation = uiVertexBufferUpload->GetGPUVirtualAddress();
-    uiVertexBufferView.StrideInBytes = sizeof(Vertex); // 28 bytes
-    uiVertexBufferView.SizeInBytes = uiVertexBufferSize; // 6 * 28 = 168 bytes
-    
-    // Set UI vertex buffer
-    m_commandList->IASetVertexBuffers(0, 1, &uiVertexBufferView);
-    
-    // Set root constants (MVP identity matrix)
-    m_commandList->SetGraphicsRoot32BitConstants(0, 16, m_mvpMatrix, 0);
-    
-    // DRAW CALL - 6 vertices (2 triangles forming UI quad)
-    m_commandList->DrawInstanced(6, 1, 0, 0);
+    // ✅ LLAMAR AL BACKEND IMGUI PARA RENDERIZAR
+    // El backend ImGui_ImplDX12 se encarga de configurar pipeline, vertex buffers, etc.
+    ImGui_ImplDX12_RenderDrawData(draw_data, m_commandList);
     
     // Transition render target back to PRESENT state
     D3D12_RESOURCE_BARRIER barrierToPresent = {};
@@ -1061,7 +959,6 @@ void DX12Renderer::UIPass()
     if (FAILED(hr))
     {
         CORE_LOG_ERROR("DX12Renderer::UIPass: Failed to close command list");
-        uiVertexBufferUpload->Release();
         return;
     }
     
@@ -1075,7 +972,6 @@ void DX12Renderer::UIPass()
     if (FAILED(hr))
     {
         CORE_LOG_ERROR("DX12Renderer::UIPass: Failed to signal fence");
-        uiVertexBufferUpload->Release();
         return;
     }
     
@@ -1088,15 +984,11 @@ void DX12Renderer::UIPass()
         if (FAILED(hr))
         {
             CORE_LOG_ERROR("DX12Renderer::UIPass: Failed to set event on fence completion");
-            uiVertexBufferUpload->Release();
             return;
         }
         
         WaitForSingleObject(m_fenceEvent, INFINITE);
     }
-    
-    // Clean up temporary upload buffer
-    uiVertexBufferUpload->Release();
     
     // NOTE: Present() is called once at the end of RenderForwardPass(), not here
 #endif

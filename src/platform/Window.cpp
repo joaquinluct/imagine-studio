@@ -1,7 +1,13 @@
 #include "Window.h"
 #include "../core/Log.h"
+
 #include <sstream>
 #include <string>
+
+// Forward declaration de ImGui Win32 handler (v1.3.0 - H2.3)
+// Esta función está implementada en la biblioteca ImGui que linkamos
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 namespace Platform {
 
 Window::Window(HINSTANCE hInstance, const wchar_t* title, int width, int height)
@@ -122,6 +128,12 @@ LRESULT CALLBACK Window::WndProcStatic(HWND hWnd, UINT message, WPARAM wParam, L
 
 LRESULT Window::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
+    // ? CRÍTICO: Pasar eventos a ImGui PRIMERO (v1.3.0 - H2.3)
+    // Llamar SIEMPRE al handler de ImGui para que capture eventos internamente
+    // NO retornar inmediatamente - ImGui procesa eventos pero retorna 0 en mayoría de casos
+    // El handler actualiza io.WantCaptureMouse, io.WantCaptureKeyboard internamente
+    ImGui_ImplWin32_WndProcHandler(hwnd_, message, wParam, lParam);
+    
     switch (message)
     {
     case WM_PAINT:

@@ -126,13 +126,14 @@ static int RunApp(HINSTANCE hInstance)
     // Esto inicializa el Builder del atlas (soluciona BUG-002)
     io.Fonts->AddFontDefault();
     
+    // ✅ CRÍTICO: Construir el atlas ANTES de inicializar backends
+    // Esto evita que el atlas quede bloqueado cuando NewFrame() se llame después
+    unsigned char* pixels;
+    int width, height;
+    io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
+    
     // Initialize Win32 backend (REQUERIDO - debe estar ANTES de DX12 backend)
     ImGui_ImplWin32_Init(hwnd);
-    
-    // ✅ CRÍTICO: Llamar a NewFrame() + EndFrame() para inicializar g.FontBaked
-    // antes de inicializar el backend DX12 (soluciona crash en ImGui_ImplDX12_Init)
-    ImGui::NewFrame();
-    ImGui::EndFrame();
     
     CORE_LOG_INFO("ImGui context created and initialized (v1.3.0 - docking enabled)");
 
