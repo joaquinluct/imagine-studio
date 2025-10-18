@@ -1,5 +1,5 @@
 ﻿# Daily Log
 
-Hecho: BUG-002 Intento #6 - Eliminar GWLP_USERDATA y usar map estático
-Siguiente: BUG-002 Validación usuario - Ejecutar aplicación y verificar clicks funcionan
+Hecho: BUG-002 RESUELTO - Clicks de ratón funcionan perfectamente en UI ImGui
+Siguiente: Revisar estado del sprint v1.3.0 y planificar próximos pasos
 

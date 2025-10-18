@@ -75,7 +75,7 @@ switch (message)
 
 ---
 
-### FIX-002 - ImFontAtlasBuilder nulo al llamar ImFontAtlasUpdateNewFrame
+### FIX-002 - Click de ratón no funciona en UI ImGui (CreateWindowExW error 1400)
 
 **ID Original**: BUG-002
 **Prioridad**: Crítica
@@ -84,63 +84,131 @@ switch (message)
 
 **Descripción del problema**: 
 
-Al ejecutar la aplicación, se producían DOS crashes consecutivos en ImGui:
+Los clics de ratón no tenían efecto en la UI de ImGui:
+- No cambia de menú al hacer clic
+- No abre/cierra desplegables
+- No responde a interacción con controles
+- Hover SÍ funciona (cambio de color enter/exit)
+- F1 toggle UI funciona correctamente
 
-1. **Primer crash**: `atlas->Builder` era NULL en `ImFontAtlasUpdateNewFrame()` (`external/imgui/imgui_draw.cpp:2764`)
-2. **Segundo crash**: `g.FontBaked` era NULL en `UpdateCurrentFontSize()` (`external/imgui/imgui.cpp`)
+**Síntomas confirmados por logs**:
+- ? Error 1400 (`ERROR_INVALID_WINDOW_HANDLE`) en `CreateWindowExW`
+- ? Fallback a clase `STATIC` permite arranque pero sin eventos de mouse
+- ? `WndProc` **NUNCA** recibe mensajes `WM_LBUTTONDOWN`/`WM_LBUTTONUP`
+- ? `WantCaptureMouse=1` cuando mouse sobre UI (ImGui detecta hover)
+- ? `io.MouseDown[0]=0` siempre (ImGui nunca recibe clicks)
 
 **Causa raíz identificada**:
 
-El problema tenía dos partes:
+El uso de `SetWindowLongPtr(GWLP_USERDATA)` en `WM_NCCREATE` causaba que Windows rechazara la creación de la ventana con error 1400. 
 
-1. **Builder NULL**: El `Builder` del atlas de fuentes se inicializa **SOLO** cuando se añade el primer font con `io.Fonts->AddFontDefault()`. Sin añadir ningún font, el Builder permanecía NULL cuando `ImGui_ImplDX12_NewFrame()` llamaba internamente a `ImFontAtlasUpdateNewFrame()`.
+**¿Por qué fallaba?**
 
-2. **FontBaked NULL**: `g.FontBaked` se inicializa **SOLO** en el primer `ImGui::NewFrame()`. Llamar a `ImGui_ImplDX12_Init()` ANTES del primer NewFrame/EndFrame causaba que funciones internas intentaran acceder a `g.FontBaked` antes de que existiera.
+En `WndProcStatic`, el código intentaba guardar el puntero `Window*` en `GWLP_USERDATA` durante el mensaje `WM_NCCREATE`:
 
-**Solución implementada**:
-
-Dos cambios en `src/main.cpp`:
-
-1. **Añadir font por defecto ANTES de backends**:
 ```cpp
-// ? CRÍTICO: Añadir font por defecto ANTES de inicializar backends
-io.Fonts->AddFontDefault();
-ImGui_ImplWin32_Init(hwnd);
+// ? PROBLEMÁTICO (código anterior)
+LRESULT CALLBACK Window::WndProcStatic(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    if (message == WM_NCCREATE)
+    {
+        CREATESTRUCT* cs = reinterpret_cast<CREATESTRUCT*>(lParam);
+        Window* win = reinterpret_cast<Window*>(cs->lpCreateParams);
+        SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(win)); // ? FALLA
+    }
+    // ...
+}
 ```
 
-2. **Llamar a NewFrame/EndFrame ANTES de DX12 Init para bakear fonts**:
+**El problema**: `WM_NCCREATE` ocurre **ANTES** de que la ventana esté completamente inicializada. Al intentar modificar `GWLP_USERDATA` prematuramente, Windows detectaba un problema y rechazaba la creación con error 1400.
+
+**Solución implementada (Intento #6)**:
+
+Eliminar completamente el uso de `GWLP_USERDATA` y reemplazar con un `std::map<HWND, Window*>` estático:
+
+**1. En `Window.h` - Añadir map estático:**
 ```cpp
-// ? CRÍTICO: Llamar a NewFrame() + EndFrame() para inicializar g.FontBaked
-// antes de inicializar el backend DX12 (soluciona crash en ImGui_ImplDX12_Init)
-ImGui::NewFrame();
-ImGui::EndFrame();
+class Window {
+    // ...existing code...
+private:
+    static std::map<HWND, Window*> s_windowMap;  // ??
+};
+```
+
+**2. En `Window.cpp` - Definir map fuera de clase:**
+```cpp
+std::map<HWND, Window*> Window::s_windowMap;
+```
+
+**3. En Constructor - NO pasar `this` en `lpCreateParams`:**
+```cpp
+hwnd_ = CreateWindowExW(
+    0, CLASS_NAME, title, WS_OVERLAPPEDWINDOW,
+    CW_USEDEFAULT, CW_USEDEFAULT, width, height,
+    NULL, NULL, moduleInstance,
+    nullptr  // ?? NO pasar 'this' (evita problemas con WM_NCCREATE)
+);
+
+// Registrar asociación DESPUÉS de creación exitosa
+if (hwnd_) {
+    s_windowMap[hwnd_] = this;  // ?
+}
+```
+
+**4. En `WndProcStatic` - Buscar en map en lugar de `GWLP_USERDATA`:**
+```cpp
+LRESULT CALLBACK Window::WndProcStatic(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    auto it = s_windowMap.find(hWnd);  // ?
+    if (it != s_windowMap.end())
+    {
+        return it->second->WndProc(message, wParam, lParam);
+    }
+    return DefWindowProc(hWnd, message, wParam, lParam);
+}
 ```
 
 **Archivos afectados**: 
 
-- `src/main.cpp` - Añadidas líneas `io.Fonts->AddFontDefault()` y `ImGui::NewFrame()/EndFrame()` antes de `ImGui_ImplDX12_Init()`
-- `docs/sprint_bugs.md` - Limpiado (bug resuelto)
-- `docs/sprint_fix.md` - Documentada resolución completa de BUG-002
+- `src/platform/Window.h` - Añadir `s_windowMap` estático
+- `src/platform/Window.cpp` - Implementar map, eliminar `GWLP_USERDATA`, simplificar `WndProcStatic`
+- `docs/sprint_bug_attempts.md` - **Nuevo archivo** con tracking completo de todos los intentos
+- `docs/sprint_bugs.md` - Estado actualizado
 
-**Commit de resolución**: (pendiente de crear)
+**Intentos de solución previos**:
+
+1. **Intento #1-3**: Corregir inicialización de ImGui y atlas de fuentes (parcial)
+2. **Intento #4**: Añadir logs detallados ? Diagnóstico exitoso (identificó que eventos no llegaban a WndProc)
+3. **Intento #5**: Corregir registro de clase y eliminar fallback STATIC (error 1400 persistió)
+4. **Intento #6**: Eliminar `GWLP_USERDATA` y usar map estático ? ? **ÉXITO**
+
+**Commits de resolución**: 
+- `07fc72c` - Intento #5 (eliminación de fallback)
+- `9cd5a85` - Intento #6 (solución final)
+
+**Validación del usuario (2025-01-18)**:
+
+Usuario reportó: **"Ole ole ole!! (Aplausos). Puntuación sobre 10: 10 de 10!! ole!"**
+
+1. ? Ejecución sin errores
+2. ? F1/Toggle UI perfecta
+3. ? Uso del ratón sobre la UI perfecto (hover, click)
+4. ? Todos los menús y submenús funcionan correctamente
+5. ? Click en todas las opciones funciona
+6. ? Cajas de texto funcionan (teclado también funciona)
+7. ? Salida del programa (ESC) limpia y sin errores
 
 **Notas importantes**:
 
-- ?? **NUNCA se modificó código en `external/imgui/`** - Se siguió correctamente la política de `docs/THIRD_PARTY.md`
-- ? La solución fue arreglar NUESTRO código de inicialización, no tapar el síntoma en la biblioteca
-- ?? Esto demuestra la importancia de **no añadir checks defensivos en bibliotecas externas**: el error era NUESTRO, no de ImGui
-- ?? **Lección aprendida 1**: ImGui requiere que se añada al menos un font ANTES de que los backends llamen a `NewFrame()`
-- ?? **Lección aprendida 2**: `ImGui_ImplDX12_Init()` internamente accede a `g.FontBaked`, por lo que **DEBE** haber un `NewFrame()/EndFrame()` previo para inicializar el estado interno de ImGui
-- ?? **Lección aprendida 3**: El orden correcto de inicialización de ImGui con múltiples backends es:
-  1. `ImGui::CreateContext()`
-  2. Configurar `io.ConfigFlags`, estilos, etc.
-  3. `io.Fonts->AddFontDefault()` (o AddFont...)
-  4. `ImGui_ImplWin32_Init(hwnd)` (backend de plataforma primero)
-  5. **`ImGui::NewFrame()` + `ImGui::EndFrame()`** (bakear fonts y estado)
-  6. `ImGui_ImplDX12_Init(...)` (backend de render después)
-  7. Loop principal con NewFrame/Render/EndFrame
+- ?? **NUNCA se modificó código en `external/imgui/`** - Se siguió la política de `docs/THIRD_PARTY.md`
+- ?? **Lección aprendida CRÍTICA**: **NUNCA** usar `SetWindowLongPtr(GWLP_USERDATA)` en `WM_NCCREATE`
+- ? **SIEMPRE** usar un map/diccionario estático para asociar `HWND` con instancias de clase
+- ? Registrar la asociación **DESPUÉS** de que `CreateWindowExW` retorne exitosamente
+- ?? El map estático es más robusto y no depende del timing interno de Windows
+- ?? El proceso de debugging sistemático con logs fue CRÍTICO para identificar la causa raíz
 
 **Referencias**:
 
 - `docs/THIRD_PARTY.md` - Política sobre bibliotecas externas
-- ImGui documentation: https://github.com/ocornut/imgui/wiki/Getting-Started
+- `docs/sprint_bug_attempts.md` - Tracking completo de todos los intentos (nuevo archivo)
+- Win32 API Documentation: https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw

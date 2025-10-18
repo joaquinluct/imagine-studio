@@ -1,0 +1,40 @@
+fix(Window): Eliminar GWLP_USERDATA y usar map estatico - BUG-002 Intento 6
+
+Problema persistente en Intento 5:
+- Error 1400 (ERROR_INVALID_WINDOW_HANDLE) persiste en CreateWindowExW
+- Usuario reporta MessageBox mostrando error 1400
+- Hipotesis: SetWindowLongPtr(GWLP_USERDATA) en WM_NCCREATE puede causar rechazo de creacion
+
+Nueva hipotesis:
+- Windows puede rechazar creacion de ventana si intentamos modificar GWLP_USERDATA prematuramente
+- WM_NCCREATE ocurre ANTES de que ventana este completamente inicializada
+- Usar GWLP_USERDATA en ese momento puede ser causa del error 1400
+
+Solucion implementada:
+- Eliminar completamente uso de GWLP_USERDATA
+- NO pasar 'this' en lpCreateParams de CreateWindowExW
+- Usar std::map<HWND, Window*> estatico para asociar HWND con instancia
+- Registrar asociacion DESPUES de creacion exitosa de ventana
+- Simplificar WndProcStatic para buscar en map en lugar de GetWindowLongPtr
+
+Cambios en codigo:
+- src/platform/Window.h:
+  * Añadir static std::map<HWND, Window*> s_windowMap
+- src/platform/Window.cpp:
+  * Definir s_windowMap fuera de clase
+  * NO pasar 'this' en CreateWindowExW (usar nullptr)
+  * Registrar s_windowMap[hwnd_] = this DESPUES de CreateWindowExW exitoso
+  * Eliminar codigo de WM_NCCREATE y SetWindowLongPtr
+  * WndProcStatic busca en s_windowMap en lugar de GetWindowLongPtr
+  * Destructor elimina entrada del map con s_windowMap.erase(hwnd_)
+
+Archivos modificados:
+- src/platform/Window.h: Añadir s_windowMap estatico
+- src/platform/Window.cpp: Implementar map, eliminar GWLP_USERDATA
+- docs/sprint_bug_attempts.md: Añadir Intento 6 completado
+- docs/sprint_bugs.md: Actualizar estado a Pendiente validacion usuario (Intento 6)
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Estado: PENDIENTE VALIDACION USUARIO
+Usuario debe ejecutar y verificar ventana se crea sin error 1400 y clicks funcionan

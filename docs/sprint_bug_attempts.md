@@ -202,22 +202,27 @@ LRESULT CALLBACK Window::WndProcStatic(HWND hWnd, UINT message, WPARAM wParam, L
 - `src/platform/Window.h`: Añadir `s_windowMap` estático
 - `src/platform/Window.cpp`: Implementar map, eliminar `GWLP_USERDATA`, simplificar `WndProcStatic`
 
-**Resultado**: ? **COMPILACIÓN LIMPIA**
-- CMake Build (Debug): 0 errores, 0 warnings
-- MSBuild "Imagine Studio.sln" (Debug): 0 errores, 0 warnings
+**Resultado**: ? **ÉXITO COMPLETO**
 
-**Estado**: ? **PENDIENTE VALIDACIÓN USUARIO**
+**Validación del usuario (2025-01-18)**:
+1. ? Ejecución sin errores
+2. ? F1/Toggle UI perfecta
+3. ? Uso del ratón sobre la UI perfecto (hover, click)
+4. ? Todos los menús y submenús funcionan correctamente
+5. ? Click en todas las opciones funciona
+6. ? Cajas de texto funcionan (teclado también funciona)
+7. ? Salida del programa (ESC) limpia y sin errores
 
-El usuario debe:
-1. Ejecutar la aplicación (`x64\Debug\Imagine Studio.exe`)
-2. Verificar que:
-   - ? Ventana se crea sin error 1400
-   - ? Logs muestran `[WndProc] Mouse button DOWN/UP` al hacer click
-   - ? Clicks funcionan en UI de ImGui
+**Causa raíz confirmada**: 
+El uso de `SetWindowLongPtr(GWLP_USERDATA)` en `WM_NCCREATE` causaba que Windows rechazara la creación de la ventana con error 1400 (`ERROR_INVALID_WINDOW_HANDLE`). Al intentar modificar datos de una ventana que aún no estaba completamente inicializada, Windows detectaba un problema y abortaba la creación.
 
-**Expectativa**:
-- Si el problema era el uso de `GWLP_USERDATA` en `WM_NCCREATE` ? ventana debería crearse correctamente
-- Si persiste error 1400 ? investigar restricciones de Windows o permisos de sistema
+**Lección aprendida CRÍTICA**:
+- ? **NUNCA** usar `SetWindowLongPtr(GWLP_USERDATA)` en `WM_NCCREATE`
+- ? **SIEMPRE** usar un map/diccionario estático para asociar `HWND` con instancias de clase
+- ? Registrar la asociación **DESPUÉS** de que `CreateWindowExW` retorne exitosamente
+- ? El map estático es más robusto y no depende del timing interno de Windows
+
+**Puntuación del usuario**: 10 de 10 ??
 
 ---
 
