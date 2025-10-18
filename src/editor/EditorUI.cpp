@@ -48,8 +48,35 @@ void EditorUI::RenderInspector()
     ImGui::Begin("Inspector");
     
     // Placeholder: Propiedades del objeto seleccionado
-    // TODO H4.2: Implementar panel Inspector con propiedades editables
-    ImGui::Text("(Inspector panel - coming soon in H4.2)");
+    // En el futuro, esto se sincronizará con la selección del Hierarchy
+    ImGui::Text("Selected: Main Camera");
+    ImGui::Separator();
+    
+    // Transform properties
+    if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        static float position[3] = { 0.0f, 0.0f, -5.0f };
+        static float rotation[3] = { 0.0f, 0.0f, 0.0f };
+        static float scale[3] = { 1.0f, 1.0f, 1.0f };
+        
+        ImGui::DragFloat3("Position", position, 0.1f);
+        ImGui::DragFloat3("Rotation", rotation, 1.0f, -360.0f, 360.0f);
+        ImGui::DragFloat3("Scale", scale, 0.01f, 0.01f, 10.0f);
+    }
+    
+    // Camera properties
+    if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        static float fov = 60.0f;
+        static float nearPlane = 0.1f;
+        static float farPlane = 1000.0f;
+        static bool orthographic = false;
+        
+        ImGui::SliderFloat("FOV", &fov, 30.0f, 120.0f);
+        ImGui::DragFloat("Near Plane", &nearPlane, 0.01f, 0.01f, 10.0f);
+        ImGui::DragFloat("Far Plane", &farPlane, 10.0f, 10.0f, 10000.0f);
+        ImGui::Checkbox("Orthographic", &orthographic);
+    }
     
     ImGui::End();
 }

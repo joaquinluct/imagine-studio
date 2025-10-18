@@ -1,0 +1,42 @@
+docs: Anadir seccion Visualizacion a formato de explicacion final en TEMPLATE.md
+
+Mejora en el template de metodologia para clarificar cambios visuales
+
+Cambio:
+- Anadir subseccion Visualizacion (2) antes de barra de progreso (3)
+- Formato estructurado: SI/NO + cambios visuales detallados
+- Emojis para claridad: check Nuevo, cambio Modificado, x Ausente
+
+Contenido nueva subseccion:
+- Pregunta clara: Algo nuevo que cambie la vista tras ejecucion?
+- Si SI: Lista numerada de cambios visuales esperados
+- Que ha cambiado (lista con cambio)
+- Ausente (lista con x)
+- Especificaciones completas con ejemplo de formato
+
+Beneficios:
+- Clarifica expectativas visuales de cada iteracion
+- Facilita validacion manual por usuario
+- Mejora comunicacion asistente-usuario sobre cambios UI
+- Documenta impacto visual de cada tarea
+- Estandariza formato de resumen final
+
+Razon:
+- Usuario solicito anadir esta seccion para saber que esperar visualmente
+- Ayuda a validar que la implementacion tiene efecto visible
+- Especialmente util para tareas de UI/rendering
+
+Estructura actualizada:
+1. Dos titulos numerados (Hecho/Siguiente)
+2. Visualizacion (NUEVO)
+3. Barra de progreso (antes era 2)
+
+Archivos modificados:
+- docs/TEMPLATE.md (seccion Visualizacion anadida)
+
+Archivos temporales:
+- docs/TEMPLATE_SECCION_NUEVA.md (se puede eliminar tras integracion)
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Referencia: Mejora metodologia v1.0 - Visualizacion en resumen final

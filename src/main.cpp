@@ -256,11 +256,14 @@ static int RunApp(HINSTANCE hInstance)
             // ✅ H4.1: Panel Hierarchy (árbol de objetos de escena)
             Editor::EditorUI::RenderHierarchy();
             
+            // ✅ H4.2: Panel Inspector (propiedades del objeto seleccionado)
+            Editor::EditorUI::RenderInspector();
+            
             // ✅ AAA STANDARD: Demo window solo en debug builds
             #ifdef _DEBUG
                 // ImGui::ShowDemoWindow();  // Deshabilitado, ahora usamos EditorUI
             #else
-                // TODO H4.2-H4.4: Implementar resto de panels (Inspector, Console, Viewport)
+                // TODO H4.3-H4.4: Implementar resto de panels (Console, Viewport)
                 // Editor::EditorUI::RenderAllPanels();
             #endif
             
