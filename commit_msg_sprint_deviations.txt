@@ -1,0 +1,72 @@
+docs: Añadir sistema Sprint Deviations para gestionar ajustes arquitectonicos
+
+Implementacion de nuevo sistema de tracking de desviaciones durante sprint
+
+Problema:
+- Durante sprint v1.3.0 se realizo refactorizacion AAA (DEV-001) sin documentacion formal
+- No existia mecanismo para registrar ajustes arquitectonicos emergentes
+- Distincion confusa entre tareas emergentes y backlog
+
+Solucion:
+1. Crear docs/sprint_deviations.md:
+   - Registra desviaciones, ajustes arquitectonicos, tareas emergentes
+   - ID: DEV-XXX para desviaciones, DEV-XXX.Y para subtareas
+   - Incluye contexto, justificacion, impacto, lecciones aprendidas
+   - Documenta DEV-001 (refactorizacion AAA) como caso real
+
+2. Actualizar docs/TEMPLATE.md:
+   - Añadir seccion "Sprint Deviations" con formato generico
+   - Incluir criterios de uso vs backlog
+   - Añadir plantilla con placeholders reutilizables
+
+3. Actualizar .github/copilot-instructions.md:
+   - Añadir seccion completa "Gestion de Desviaciones del Sprint"
+   - Definir criterios: Bloqueante, Viola pilares, Impacto inmediato
+   - Incluir ejemplo real DEV-001 con contexto completo
+   - Actualizar versionado de archivos sprint (incluir sprint_deviations.md)
+
+Criterios de uso sprint_deviations.md:
+- Bloqueante para sprint actual
+- Viola pilares del proyecto (MAIN.md, AAA_STANDARDS.md)
+- Impacto inmediato en tareas en progreso
+
+Diferencia con backlog:
+- sprint_deviations.md: Ajustes DURANTE ejecucion del sprint
+- backlog.md: Items fuera del sprint actual (futura planificacion)
+
+Flujo de trabajo:
+1. Detectar desviacion durante implementacion HX.Y
+2. Evaluar criticidad (bloqueante? viola pilares?)
+3. Decidir: Critica ? sprint_deviations.md, No critica ? backlog.md
+4. Documentar entrada DEV-XXX con contexto completo
+5. Implementar solucion antes de continuar sprint
+6. Actualizar daily.md reflejando trabajo realizado
+
+Versionado:
+- sprint_deviations.md se archiva como sprint_deviations_vX.Y.Z.md al finalizar sprint
+- Permite trazabilidad de decisiones arquitectonicas historicas
+
+Caso real DEV-001 documentado:
+- Refactorizacion AAA - Condicional de visibilidad UI y DockSpace
+- Detectado en H2.3, prioridad critica
+- Bloqueaba H4, violaba pilares AAA
+- 4 subtareas completadas (DEV-001.1 a DEV-001.4)
+- Impacto: progreso 62.5% ? 75% (+12.5%)
+- Validacion usuario: OK 100%
+
+Archivos añadidos:
+- docs/sprint_deviations.md (nuevo - con DEV-001 documentado)
+
+Archivos modificados:
+- docs/TEMPLATE.md (seccion Sprint Deviations añadida)
+- .github/copilot-instructions.md (seccion Gestion Desviaciones añadida)
+
+Beneficios:
+- Trazabilidad de decisiones arquitectonicas emergentes
+- Distincion clara entre sprint_deviations vs backlog
+- Registro de lecciones aprendidas para futuros sprints
+- Mejora planificacion de futuros sprints con datos historicos
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Referencia: Analisis del proceso sprint v1.3.0 y mejora metodologica

@@ -64,7 +64,7 @@ Flujo de trabajo por sesión:
 Nota: Los archivos anteriores son la fuente de la verdad para la organización del proyecto y la comunicación con el asistente.
 
 Preferencias del propietario del repositorio:
-- Prefiero hacer bien las cosas desde el principio: evitar partes intermedias, temporales, incompletes o no funcionales. Cada módulo debe diseñarse para cumplir los estándares AAA desde su concepción.
+- Prefiero hacer bien las cosas desde el principio: evitar partes intermedas, temporales, incompletes o no funcionales. Cada módulo debe diseñarse para cumplir los estándares AAA desde su concepción.
 - En cada iteración, antes del commit, siempre se debe compilar y corregir errores/warnings para asegurar commits limpios y funcionales.
 - Estilo de includes: las directivas `#include` deben ordenarse siempre con las cabeceras del proyecto (entre comillas `"..."`) primero y después las cabeceras del sistema (`<...>`), y dentro de cada grupo deben aparecer en orden alfabético. Esta regla será verificada por el asistente y aplicada o reportada como warning al preparar commits.
 - **Codificación de archivos**: TODOS los archivos de texto (`.md`, `.cpp`, `.h`, `.hlsl`, etc.) DEBEN usar **UTF-8 con BOM** y **line endings CRLF** (Windows). Esto es CRÍTICO para evitar problemas de codificación con caracteres especiales (emojis, caracteres no-ASCII). El asistente DEBE:
@@ -152,6 +152,9 @@ Versionado de los ficheros del Sprint (snapshots de sprint):
   - `docs/sprint_bugs.md` (tracking de bugs reportados y pendientes de resolución)
   - `docs/sprint_fix.md` (historial de bugs resueltos durante el sprint)
   - `docs/sprint_bug_attempts.md` (registro detallado de intentos de solución a bugs)
+  - `docs/sprint_deviations.md` (ajustes arquitectónicos y desviaciones críticas)
+  - `docs/sprint_ia_sessions.md` (registro de sesiones con asistentes IA)
+
 - Al final de un sprint (release), el asistente archivará los ficheros de trabajo renombrándolos con la versión, por ejemplo:
   - `docs/sprint_v<version>.md`
   - `docs/sprint_histories_v<version>.md`
@@ -159,6 +162,9 @@ Versionado de los ficheros del Sprint (snapshots de sprint):
   - `docs/sprint_bugs_v<version>.md` (bugs que quedaron pendientes al cerrar sprint)
   - `docs/sprint_fix_v<version>.md` (bugs resueltos durante el sprint)
   - `docs/sprint_bug_attempts_v<version>.md` (intentos de solución a bugs)
+  - `docs/sprint_deviations_v<version>.md` (ajustes y desviaciones registradas)
+  - `docs/sprint_ia_sessions_v<version>.md` (sesiones con IA registradas)
+
 - A continuación el asistente creará ficheros nuevos y vacíos con los nombres activos para el siguiente sprint.
 - Esta política de versionado garantiza trazabilidad de los sprints completados y mantiene los ficheros activos pequeños y enfocados.
 
@@ -326,6 +332,133 @@ Cuando el asistente trabaje en la resolución de un bug, DEBE seguir este proces
 
 ---
 
+## Gestión de Sesiones IA (`sprint_ia_sessions.md`)
+
+### Propósito:
+`docs/sprint_ia_sessions.md` registra todas las sesiones de trabajo con asistentes IA (GitHub Copilot, ChatGPT, Claude) que superan el **85% de consumo de tokens**.
+
+Este límite asegura:
+- ✅ **Evitar pérdida de contexto** por agotamiento de tokens
+- ✅ **Trazabilidad completa** de prompts usados en el desarrollo
+- ✅ **Auditoría de sesiones** para análisis posterior
+
+### Formato de Registro:
+
+```markdown
+## Sesión IA #001 - Sprint v1.3.0
+
+**LLM**: GitHub Copilot Chat (GPT-4o)
+**Fecha/Hora**: 2025-01-18 15:48:20 UTC
+**Usuario (Orquestador)**: joaquinluct
+**Consumo de Tokens**: 892,000 / 1,000,000 (89.2%)
+**Estado**: ⚠️ LÍMITE 85% ALCANZADO - Sesión cerrada
+
+### Prompt Ejecutado:
+
+```
+[Prompt completo usado en la sesión]
+Ejemplo:
+"Implementa el sistema Sprint Deviations siguiendo TEMPLATE.md.
+Debe incluir docs/sprint_deviations.md con formato AAA..."
+```
+
+### Contexto de la Sesión:
+
+- **Sprint activo**: v1.3.0 (ImGui Integration)
+- **Tareas completadas en sesión**:
+  - DEV-001: Refactorización AAA
+  - Sistema Sprint Deviations implementado
+  - Documentación actualizada (TEMPLATE.md, copilot-instructions.md)
+  
+- **Tareas pendientes al cierre**:
+  - H4.1: Panel Hierarchy
+  - H4.2-H4.5: Resto de editor panels
+
+### Próxima Sesión (Recomendaciones):
+
+- Continuar desde: `docs/daily.md` (H4.1 - Panel Hierarchy)
+- Leer: `docs/sprint_deviations.md` para contexto de DEV-001
+- Validar: Refactorización AAA funcionando correctamente
+```
+
+### Flujo de Trabajo Automático:
+
+**El asistente DEBE seguir este proceso al alcanzar 85% de tokens**:
+
+1. **Detectar umbral**: Cuando consumo > 85% del límite de sesión
+
+2. **Completar tarea actual**: 
+   - Terminar implementación en progreso
+   - Compilar (CMake + MSBuild)
+   - Crear commit si build limpio
+   - Actualizar `docs/daily.md`
+
+3. **Registrar sesión en `sprint_ia_sessions.md`**:
+   - Generar ID secuencial (Sesión #XXX)
+   - Incluir prompt completo
+   - Nombre y versión del LLM
+   - Timestamp + usuario orquestador
+   - Consumo de tokens (actual/límite)
+   - Contexto de sesión (sprint, tareas completadas, pendientes)
+   - Recomendaciones para próxima sesión
+
+4. **Notificar al usuario**:
+   ```
+   ⚠️ LÍMITE DE SESIÓN ALCANZADO (>85%)
+   
+   ✅ Tarea actual completada: [nombre tarea]
+   ✅ Commit creado: [hash]
+   ✅ Sesión registrada en docs/sprint_ia_sessions.md
+   
+   📊 Consumo: XXX,XXX / 1,000,000 tokens (XX.X%)
+   
+   🔄 RECOMENDACIÓN: Cerrar esta sesión y abrir nuevo prompt
+   
+   Próxima tarea sugerida: [leer docs/daily.md]
+   ```
+
+5. **PAUSAR** y esperar que el usuario cierre la sesión
+
+### Plantilla para Nuevas Sesiones:
+
+```markdown
+## Sesión IA #XXX - Sprint vX.Y.Z
+
+**LLM**: [Nombre del LLM] ([Versión])
+**Fecha/Hora**: [YYYY-MM-DD HH:MM:SS UTC]
+**Usuario (Orquestador)**: [username]
+**Consumo de Tokens**: [actual] / [límite] ([porcentaje]%)
+**Estado**: ⚠️ LÍMITE 85% ALCANZADO - Sesión cerrada
+
+### Prompt Ejecutado:
+
+```
+[Prompt completo]
+```
+
+### Contexto de la Sesión:
+
+- **Sprint activo**: vX.Y.Z ([nombre sprint])
+- **Tareas completadas en sesión**:
+  - [Lista de tareas]
+  
+- **Tareas pendientes al cierre**:
+  - [Lista de tareas]
+
+### Próxima Sesión (Recomendaciones):
+
+- Continuar desde: [referencia a daily.md o tarea específica]
+- Leer: [archivos de contexto necesarios]
+- Validar: [aspectos a verificar]
+```
+
+### Versionado:
+
+- `sprint_ia_sessions.md` se archiva como `docs/sprints/sprint_ia_sessions_vX.Y.Z.md` al finalizar sprint
+- **Nuevo**: Los históricos de sprint se mueven a `docs/sprints/` para mejor organización
+
+---
+
 ## Gestión de Desviaciones del Sprint (`sprint_deviations.md`)
 
 ### ¿Cuándo usar `sprint_deviations.md`?
@@ -427,7 +560,7 @@ Cada entrada debe incluir:
 
 ### Versionado:
 
-- `sprint_deviations.md` se archiva como `sprint_deviations_vX.Y.Z.md` al finalizar sprint
+- `sprint_deviations.md` se archiva como `docs/sprints/sprint_deviations_vX.Y.Z.md` al finalizar sprint
 - Permite trazabilidad de decisiones arquitectónicas en sprints pasados
 - Nuevo fichero vacío para próximo sprint
 
@@ -475,13 +608,42 @@ Los ficheros activos del sprint actual son:
 - `docs/sprint_bugs.md`
 - `docs/sprint_bug_attempts.md`
 - `docs/sprint_fix.md`
-- **`docs/sprint_deviations.md`** ← **NUEVO**
+- `docs/sprint_deviations.md`
+- **`docs/sprint_ia_sessions.md`** ← **NUEVO**
 
-Al final de un sprint (release), el asistente archivará **TODOS** los ficheros:
-- `docs/sprint_v<version>.md`
-- `docs/sprint_histories_v<version>.md`
-- `docs/sprint_tasks_v<version>.md`
-- `docs/sprint_bugs_v<version>.md`
-- `docs/sprint_bug_attempts_v<version>.md`
-- `docs/sprint_fix_v<version>.md`
-- **`docs/sprint_deviations_v<version>.md`** ← **NUEVO**
+Al final de un sprint (release), el asistente archivará **TODOS** los ficheros a `docs/sprints/`:
+
+```powershell
+# Crear carpeta si no existe
+New-Item -ItemType Directory -Force -Path "docs/sprints"
+
+# Mover archivos versionados
+Move-Item "docs/sprint_v<version>.md" "docs/sprints/"
+Move-Item "docs/sprint_histories_v<version>.md" "docs/sprints/"
+Move-Item "docs/sprint_tasks_v<version>.md" "docs/sprints/"
+Move-Item "docs/sprint_bugs_v<version>.md" "docs/sprints/"
+Move-Item "docs/sprint_bug_attempts_v<version>.md" "docs/sprints/"
+Move-Item "docs/sprint_fix_v<version>.md" "docs/sprints/"
+Move-Item "docs/sprint_deviations_v<version>.md" "docs/sprints/"
+Move-Item "docs/sprint_ia_sessions_v<version>.md" "docs/sprints/"
+```
+
+**Estructura final de `docs/sprints/`**:
+
+```
+docs/
+├── sprints/
+│   ├── sprint_v1.0.0.md
+│   ├── sprint_histories_v1.0.0.md
+│   ├── sprint_tasks_v1.0.0.md
+│   ├── sprint_bugs_v1.0.0.md
+│   ├── sprint_bug_attempts_v1.0.0.md
+│   ├── sprint_fix_v1.0.0.md
+│   ├── sprint_deviations_v1.0.0.md (si aplica)
+│   ├── sprint_ia_sessions_v1.0.0.md (si aplica)
+│   ├── sprint_v1.1.0.md
+│   ├── ...
+│   └── sprint_ia_sessions_v1.3.0.md
+```
+
+**Regla**: Los históricos de sprints se mantienen en `docs/sprints/` para mejor organización y facilitar búsqueda de decisiones pasadas.

@@ -28,6 +28,8 @@ Archivos principales que el asistente debe consultar en cada sesión:
 - **`docs/sprint_bugs.md`** - Tracking de bugs reportados (pendientes de resolución)
 - **`docs/sprint_bug_attempts.md`** - **[DEBUGGING]** Log detallado de TODOS los intentos de solución para cada bug (fallidos, parciales, exitosos)
 - **`docs/sprint_fix.md`** - Historial de bugs resueltos durante el sprint
+- **`docs/sprint_deviations.md`** - Desviaciones y ajustes arquitectónicos durante sprint
+- **`docs/sprint_ia_sessions.md`** - **[NUEVO]** Sesiones IA que superan 85% de consumo
 
 ---
 
@@ -151,17 +153,41 @@ Si aparece un **bloqueo técnico**, **decisión arquitectónica crítica** o **d
 - `docs/sprint_bugs.md` - Tracking de bugs reportados (pendientes de resolución)
 - `docs/sprint_bug_attempts.md` - **[DEBUGGING]** Log detallado de TODOS los intentos de solución para cada bug (fallidos, parciales, exitosos)
 - `docs/sprint_fix.md` - Historial de bugs resueltos durante el sprint
+- `docs/sprint_deviations.md` - Desviaciones y ajustes arquitectónicos durante sprint
+- **`docs/sprint_ia_sessions.md`** - **[NUEVO]** Sesiones IA que superan 85% de consumo
 
 ### Al final de un sprint (release):
-1. El asistente **archivará** los ficheros de trabajo renombrándolos con la versión:
-   - `docs/sprint_v<version>.md`
-   - `docs/sprint_histories_v<version>.md`
-   - `docs/sprint_tasks_v<version>.md`
-   - `docs/sprint_bugs_v<version>.md` (bugs que quedaron pendientes al cerrar sprint)
-   - `docs/sprint_fix_v<version>.md` (bugs resueltos durante el sprint)
+1. El asistente **archivará** los ficheros a `docs/sprints/` renombrándolos con la versión:
+   ```powershell
+   # Crear carpeta si no existe
+   New-Item -ItemType Directory -Force -Path "docs/sprints"
+   
+   # Mover archivos versionados
+   Move-Item "docs/sprint_v<version>.md" "docs/sprints/"
+   Move-Item "docs/sprint_histories_v<version>.md" "docs/sprints/"
+   Move-Item "docs/sprint_tasks_v<version>.md" "docs/sprints/"
+   Move-Item "docs/sprint_bugs_v<version>.md" "docs/sprints/"
+   Move-Item "docs/sprint_bug_attempts_v<version>.md" "docs/sprints/"
+   Move-Item "docs/sprint_fix_v<version>.md" "docs/sprints/"
+   Move-Item "docs/sprint_deviations_v<version>.md" "docs/sprints/"
+   Move-Item "docs/sprint_ia_sessions_v<version>.md" "docs/sprints/"
+   ```
 
 2. El asistente **creará ficheros nuevos y vacíos** con los nombres activos para el siguiente sprint
 
+**Estructura final**:
+```
+docs/
+├── sprints/
+│   ├── sprint_v1.0.0.md
+│   ├── sprint_histories_v1.0.0.md
+│   ├── sprint_tasks_v1.0.0.md
+│   ├── sprint_bugs_v1.0.0.md
+│   ├── sprint_bug_attempts_v1.0.0.md
+│   ├── sprint_fix_v1.0.0.md
+│   ├── sprint_deviations_v1.0.0.md (si aplica)
+│   └── sprint_ia_sessions_v1.0.0.md (si aplica)
+```
 Esta política garantiza **trazabilidad** de los sprints completados y mantiene los ficheros activos pequeños y enfocados.
 
 ---
@@ -641,6 +667,64 @@ Pausar H4 temporalmente e implementar [PLACEHOLDER: solución] inmediatamente
 | `backlog.md` | Ítems **fuera** del sprint actual | Planificación futura |
 
 **Versionado**: Archivado como `sprint_deviations_vX.Y.Z.md` al finalizar sprint
+
+---
+
+### 5. `docs/sprint_ia_sessions.md` - Sesiones IA (NUEVO)
+
+**Propósito**: Registrar sesiones de trabajo con asistentes IA que superan el **85% de consumo de tokens/contexto**.
+
+**Contenido**:
+- ID de sesión (Sesión #XXX)
+- LLM utilizado (nombre + versión)
+- Fecha/hora y usuario orquestador
+- Consumo de tokens/contexto (actual/límite/porcentaje)
+- Prompt completo ejecutado
+- Contexto de sesión (sprint, tareas completadas, pendientes)
+- Recomendaciones para próxima sesión
+
+**Ejemplo de sesión**:
+```markdown
+## Sesión IA #001 - Sprint vX.Y.Z
+
+**LLM**: [PLACEHOLDER: Nombre LLM] ([PLACEHOLDER: Versión])
+**Fecha/Hora**: [YYYY-MM-DD HH:MM:SS UTC]
+**Usuario (Orquestador)**: [PLACEHOLDER: username]
+**Consumo**: [actual] / [límite] ([porcentaje]%)
+**Estado**: ⚠️ LÍMITE 85% ALCANZADO - Sesión cerrada
+
+### Prompt Ejecutado:
+```
+[PLACEHOLDER: Prompt completo]
+```
+
+### Contexto:
+- **Sprint**: vX.Y.Z ([nombre])
+- **Completadas**: [lista tareas]
+- **Pendientes**: [lista tareas]
+
+### Próxima Sesión:
+- Continuar: [referencia daily.md]
+- Leer: [archivos contexto]
+- Validar: [aspectos verificar]
+```
+
+**Flujo Automático al 85%**:
+
+1. **Detectar umbral**: Consumo > 85%
+2. **Completar tarea**: Implementar + validar + commit
+3. **Registrar**: Crear entrada en `sprint_ia_sessions.md`
+4. **Notificar**:
+   ```
+   ⚠️ LÍMITE DE SESIÓN (>85%)
+   ✅ Tarea completada: [nombre]
+   ✅ Commit: [hash]
+   📊 Consumo: XXX/YYY (ZZ%)
+   🔄 Cerrar sesión y abrir nuevo prompt
+   ```
+5. **PAUSAR**: Esperar cierre usuario
+
+**Versionado**: Archivado como `docs/sprints/sprint_ia_sessions_vX.Y.Z.md` al finalizar sprint
 
 ---
 
