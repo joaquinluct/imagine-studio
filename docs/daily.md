@@ -1,6 +1,6 @@
 ﻿# Daily Log
 
-Hecho: H2.4 - Tests parent-child hierarchy completados (20 tests totales, SetParent/GetParent/cascada/multi-nivel validados)
-Siguiente: H3.1 - Scene class (crear Scene con EntityManager, CreateEntity/DestroyEntity, root entities)
+Hecho: H3.1 - Scene class implementada (EntityManager integrado, CreateEntity/DestroyEntity, selection, rootEntities para Hierarchy)
+Siguiente: H3.2 - Scene::Update() con propagacion deltaTime (implementacion ya incluida en H3.1, validar con tests)
 
 

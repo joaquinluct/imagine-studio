@@ -882,7 +882,7 @@ if (!hwnd_) { /* Abortar con error - SIN FALLBACK */ }
 
 **Características**:
 - ✅ Usa DirectXMath para optimización SIMD
-- ✅ Orden TRS correcto (Scale * Rotation * Translation)
+- ✅ Ordered TRS correcto (Scale * Rotation * Translation)
 - ✅ Rotation con `XMMatrixRotationRollPitchYaw` (pitch, yaw, roll)
 - ✅ Scale, rotation y translation independientes
 - ✅ API limpia con getters/setters inline
@@ -978,7 +978,7 @@ ALL TESTS PASSED! (15 asserts)
 
 **Próxima tarea**: H2.3 - Parent-child hierarchy
 
-**Referencia**: H2.2 - Tests Transform v1.4.0
+**Referencia**: H2.2 - Transform Component con hierarchy v1.4.0
 
 ---
 
@@ -1091,6 +1091,60 @@ ALL TESTS PASSED! (20 asserts)
 **Próxima tarea**: H3.1 - Scene class
 
 **Referencia**: H2.4 - Tests hierarchy v1.4.0
+
+---
+
+## 2025-01-18
+
+### `ee522c2` - feat(scene): Implementar Scene class con EntityManager (H3.1)
+
+**Tipo**: Feature (Sprint v1.4.0)  
+**Ámbito**: Scene  
+**Descripción**: Crear Scene class para gestionar colección de entities
+
+**Historia H3.1** - Scene class creada
+
+**Implementación**:
+- Crear `src/scene/Scene.h` con interfaz Scene
+- Crear `src/scene/Scene.cpp` con implementación
+- Miembros: `EntityManager`, `vector<Entity*> rootEntities`, `selectedEntity`
+- Constructor: inicializa name, selectedEntity=nullptr
+
+**Métodos implementados**:
+- `CreateEntity(name)`: crea entity vía EntityManager, añade Transform por defecto, añade a rootEntities
+- `DestroyEntity(id)`: remueve de rootEntities, limpia selección si aplica, destruye vía EntityManager
+- `GetEntity(id)`: lookup vía EntityManager
+- `GetEntityByName(name)`: búsqueda lineal en rootEntities (TODO: optimizar con map)
+- `Update(deltaTime)`: actualiza todas root entities
+- `UpdateTransforms()`: recalcula world matrices de root entities (propaga a hijos)
+- `SetSelectedEntity(id)`: establece entity seleccionada (para Editor)
+- `GetSelectedEntity()`: retorna entity seleccionada
+- `GetRootEntities()`: retorna lista de root entities (para Hierarchy panel)
+- `GetName/SetName`: nombre de escena
+
+**Características**:
+- ✅ Todas las entities tienen Transform component por defecto
+- ✅ Root entities: entities sin parent (top-level en Hierarchy)
+- ✅ Selection: solo una entity seleccionada a la vez
+- ✅ Update: propaga deltaTime a todas entities
+- ✅ UpdateTransforms: fuerza recalculo de world matrices (propagación recursiva)
+
+**Archivos creados**:
+- `src/scene/Scene.h` (interfaz)
+- `src/scene/Scene.cpp` (implementación)
+
+**Archivos modificados**:
+- `CMakeLists.txt` (SCENE_SRC glob pattern captura Scene.cpp)
+- `Imagine Studio.vcxproj` (Scene.cpp + Scene.h)
+- `Imagine Studio.vcxproj.filters` (Source Files\scene + Header Files\scene)
+
+**Compilación**: ✅ Limpia
+- CMake Build (Debug): 0 errores, 0 warnings
+- MSBuild "Imagine Studio.sln" (Debug): 0 errores, 0 warnings
+
+**Próxima tarea**: H3.2 - Scene::Update() con propagación deltaTime
+
+**Referencia**: H3.1 - Scene class v1.4.0
 
 ---
 

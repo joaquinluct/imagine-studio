@@ -1,0 +1,43 @@
+feat(scene): Implementar Scene class con EntityManager (H3.1)
+
+Historia H3.1 - Scene class creada
+
+Implementacion:
+- Crear src/scene/Scene.h con interfaz Scene
+- Crear src/scene/Scene.cpp con implementacion
+- Miembros: EntityManager, vector<Entity*> rootEntities, selectedEntity
+- Constructor: inicializa name, selectedEntity=nullptr
+
+Metodos implementados:
+- CreateEntity(name): crea entity via EntityManager, anade Transform por defecto, anade a rootEntities
+- DestroyEntity(id): remueve de rootEntities, limpia seleccion si aplica, destruye via EntityManager
+- GetEntity(id): lookup via EntityManager
+- GetEntityByName(name): busqueda lineal en rootEntities (TODO: optimizar con map)
+- Update(deltaTime): actualiza todas root entities
+- UpdateTransforms(): recalcula world matrices de root entities (propaga a hijos)
+- SetSelectedEntity(id): establece entity seleccionada (para Editor)
+- GetSelectedEntity(): retorna entity seleccionada
+- GetRootEntities(): retorna lista de root entities (para Hierarchy panel)
+- GetName/SetName: nombre de escena
+
+Caracteristicas:
+- Todas las entities tienen Transform component por defecto
+- Root entities: entities sin parent (top-level en Hierarchy)
+- Selection: solo una entity seleccionada a la vez
+- Update: propaga deltaTime a todas entities
+- UpdateTransforms: fuerza recalculo de world matrices (propagacion recursiva)
+
+Archivos creados:
+- src/scene/Scene.h (interfaz)
+- src/scene/Scene.cpp (implementacion)
+
+Archivos modificados:
+- CMakeLists.txt (SCENE_SRC glob pattern captura Scene.cpp)
+- Imagine Studio.vcxproj (Scene.cpp + Scene.h)
+- Imagine Studio.vcxproj.filters (Source Files\scene + Header Files\scene)
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Proxima tarea: H3.2 - Scene::Update() con propagacion deltaTime
+
+Referencia: H3.1 - Scene class v1.4.0
