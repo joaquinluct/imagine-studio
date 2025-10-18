@@ -345,40 +345,53 @@ Este límite asegura:
 ### Formato de Registro:
 
 ```markdown
-## Sesión IA #001 - Sprint v1.3.0
+## Sesión IA #001 - Sprint vX.Y.Z
 
-**LLM**: GitHub Copilot Chat (GPT-4o)
-**Fecha/Hora**: 2025-01-18 15:48:20 UTC
-**Usuario (Orquestador)**: joaquinluct
-**Consumo de Tokens**: 892,000 / 1,000,000 (89.2%)
+**LLM**: [PLACEHOLDER: Nombre del LLM] ([PLACEHOLDER: Versión])
+**Fecha/Hora**: [YYYY-MM-DD HH:MM:SS UTC]
+**Usuario (Orquestador)**: [PLACEHOLDER: username]
+**Consumo de Tokens/Contexto**: [actual] / [límite] ([porcentaje]%)
 **Estado**: ⚠️ LÍMITE 85% ALCANZADO - Sesión cerrada
+
+### Resumen de la Sesión:
+
+Esta sesión ha sido muy productiva:
+
+1. ✅ **[PLACEHOLDER: Logro principal 1]**
+   - [Sub-logro 1]
+   - [Sub-logro 2]
+
+2. ✅ **[PLACEHOLDER: Logro principal 2]**
+   - [Sub-logro 1]
+   - [Sub-logro 2]
+
+3. ✅ **Validación completa**
+   - Compilación limpia (CMake + MSBuild)
+   - Validación usuario: [resultado]
 
 ### Prompt Ejecutado:
 
 ```
-[Prompt completo usado en la sesión]
+[PLACEHOLDER: Prompt completo usado en la sesión]
 Ejemplo:
-"Implementa el sistema Sprint Deviations siguiendo TEMPLATE.md.
-Debe incluir docs/sprint_deviations.md con formato AAA..."
+"Implementa el sistema X siguiendo TEMPLATE.md.
+Debe incluir docs/Y con formato AAA..."
 ```
 
 ### Contexto de la Sesión:
 
-- **Sprint activo**: v1.3.0 (ImGui Integration)
+- **Sprint activo**: vX.Y.Z ([PLACEHOLDER: nombre sprint])
 - **Tareas completadas en sesión**:
-  - DEV-001: Refactorización AAA
-  - Sistema Sprint Deviations implementado
-  - Documentación actualizada (TEMPLATE.md, copilot-instructions.md)
+  - [PLACEHOLDER: Lista de tareas]
   
 - **Tareas pendientes al cierre**:
-  - H4.1: Panel Hierarchy
-  - H4.2-H4.5: Resto de editor panels
+  - [PLACEHOLDER: Lista de tareas]
 
 ### Próxima Sesión (Recomendaciones):
 
-- Continuar desde: `docs/daily.md` (H4.1 - Panel Hierarchy)
-- Leer: `docs/sprint_deviations.md` para contexto de DEV-001
-- Validar: Refactorización AAA funcionando correctamente
+- Continuar desde: [PLACEHOLDER: referencia a daily.md o tarea específica]
+- Leer: [PLACEHOLDER: archivos de contexto necesarios]
+- Validar: [PLACEHOLDER: aspectos a verificar]
 ```
 
 ### Flujo de Trabajo Automático:
@@ -429,6 +442,22 @@ Debe incluir docs/sprint_deviations.md con formato AAA..."
 **Usuario (Orquestador)**: [username]
 **Consumo de Tokens**: [actual] / [límite] ([porcentaje]%)
 **Estado**: ⚠️ LÍMITE 85% ALCANZADO - Sesión cerrada
+
+### Resumen de la Sesión:
+
+Esta sesión ha sido muy productiva:
+
+1. ✅ **[Logro principal 1]**
+   - [Sub-logro 1]
+   - [Sub-logro 2]
+
+2. ✅ **[Logro principal 2]**
+   - [Sub-logro 1]
+   - [Sub-logro 2]
+
+3. ✅ **Validación completa**
+   - Compilación limpia (CMake + MSBuild)
+   - Validación usuario: [resultado]
 
 ### Prompt Ejecutado:
 

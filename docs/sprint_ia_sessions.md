@@ -33,6 +33,22 @@ Este archivo registra:
 **Consumo de Tokens**: [actual] / [límite] ([porcentaje]%)
 **Estado**: ?? LÍMITE 85% ALCANZADO - Sesión cerrada
 
+### Resumen de la Sesión:
+
+Esta sesión ha sido muy productiva:
+
+1. ? **[Logro principal 1]**
+   - [Sub-logro 1]
+   - [Sub-logro 2]
+
+2. ? **[Logro principal 2]**
+   - [Sub-logro 1]
+   - [Sub-logro 2]
+
+3. ? **Validación completa**
+   - Compilación limpia (CMake + MSBuild)
+   - Validación usuario: [resultado]
+
 ### Prompt Ejecutado:
 
 ```

@@ -693,6 +693,22 @@ Pausar H4 temporalmente e implementar [PLACEHOLDER: solución] inmediatamente
 **Consumo**: [actual] / [límite] ([porcentaje]%)
 **Estado**: ⚠️ LÍMITE 85% ALCANZADO - Sesión cerrada
 
+### Resumen de la Sesión:
+
+Esta sesión ha sido muy productiva:
+
+1. ✅ **[PLACEHOLDER: Logro principal 1]**
+   - [Sub-logro 1]
+   - [Sub-logro 2]
+
+2. ✅ **[PLACEHOLDER: Logro principal 2]**
+   - [Sub-logro 1]
+   - [Sub-logro 2]
+
+3. ✅ **Validación completa**
+   - Validación automática: [resultado]
+   - Validación usuario: [resultado si aplica]
+
 ### Prompt Ejecutado:
 ```
 [PLACEHOLDER: Prompt completo]

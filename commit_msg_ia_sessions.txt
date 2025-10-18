@@ -1,0 +1,68 @@
+docs: Anadir sistema de tracking de sesiones IA y organizar historicos en docs/sprints/
+
+Implementacion de mejoras al proceso de gestion de sesiones y archivado
+
+Cambios:
+1. Sistema de tracking de sesiones IA:
+   - Crear docs/sprint_ia_sessions.md
+   - Registrar sesiones que superen 85% de consumo tokens
+   - Incluir: LLM usado, timestamp, usuario, prompt completo
+   - Flujo automatico de deteccion y cierre de sesion
+   - Notificacion al usuario con recomendaciones
+
+2. Reorganizacion de historicos:
+   - Mover sprint*_vX.Y.Z.md a docs/sprints/
+   - Mejor organizacion de archivos versionados
+   - Facilita busqueda de decisiones historicas
+
+3. Actualizacion de documentacion:
+   - .github/copilot-instructions.md: Seccion Gestion Sesiones IA
+   - docs/TEMPLATE.md: Seccion sprint_ia_sessions.md
+   - Ambos incluyen flujo automatico al 85%
+
+Flujo automatico al alcanzar 85%:
+1. Detectar umbral de consumo
+2. Completar tarea actual (implementar + validar + commit)
+3. Registrar sesion en sprint_ia_sessions.md
+4. Notificar usuario con consumo y recomendaciones
+5. PAUSAR y esperar cierre de sesion
+
+Formato de registro:
+- ID secuencial (Sesion #XXX)
+- LLM y version
+- Fecha/hora UTC + usuario orquestador
+- Consumo tokens (actual/limite/porcentaje)
+- Prompt completo ejecutado
+- Contexto sesion (sprint, tareas completadas, pendientes)
+- Recomendaciones para proxima sesion
+
+Estructura docs/sprints/:
+docs/
+??? sprints/
+?   ??? sprint_v1.0.0.md
+?   ??? sprint_histories_v1.0.0.md
+?   ??? sprint_tasks_v1.0.0.md
+?   ??? sprint_bugs_v1.0.0.md
+?   ??? sprint_bug_attempts_v1.0.0.md
+?   ??? sprint_fix_v1.0.0.md
+?   ??? sprint_deviations_v1.0.0.md
+?   ??? sprint_ia_sessions_v1.0.0.md
+
+Beneficios:
+- Trazabilidad completa de sesiones IA
+- Evitar perdida de contexto por agotamiento tokens
+- Continuidad entre sesiones (prompt + contexto)
+- Auditoria de prompts usados en desarrollo
+- Historicos organizados por sprint en carpeta dedicada
+- Mejora planificacion futura con datos historicos
+
+Archivos creados:
+- docs/sprint_ia_sessions.md (plantilla inicial)
+
+Archivos modificados:
+- .github/copilot-instructions.md (seccion Gestion Sesiones IA)
+- docs/TEMPLATE.md (seccion sprint_ia_sessions.md + versionado)
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Referencia: Mejora proceso metodologico v1.3.0
