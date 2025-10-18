@@ -76,6 +76,41 @@ Refs: H1.1
 
 ---
 
+#### `65b39e5` - refactor(docs): Renombrar commits.md a sprint_commits.md
+
+**Tipo**: Refactor (Documentación)  
+**Ámbito**: Docs  
+**Descripción**: Renombrar commits.md a sprint_commits.md para versionado por sprint
+
+**Cambios**:
+- Renombrar `commits.md` → `sprint_commits.md`
+- Historizar commits previos (v1.0.0-1.4.0) en `docs/sprints/sprint_commits_v1.0.0-1.4.0.md`
+- Limpiar `sprint_commits.md` para Sprint v1.5.0
+- Actualizar `close-sprint.ps1` para incluir `sprint_commits.md` en archivado
+- Actualizar referencias en `.github/copilot-instructions.md`
+- Actualizar referencias en `docs/TEMPLATE.md`
+
+**Beneficios**:
+- ✅ Commits versionados por sprint (como otros archivos)
+- ✅ `sprint_commits.md` se archiva al cerrar sprint
+- ✅ Historial limpio y organizado en `docs/sprints/`
+- ✅ Coherencia con metodología (`sprint_*.md`)
+
+**Archivos creados**:
+- `docs/sprint_commits.md` (limpio para v1.5.0)
+- `docs/sprints/sprint_commits_v1.0.0-1.4.0.md` (histórico)
+
+**Archivos modificados**:
+- `scripts/close-sprint.ps1` (incluir sprint_commits.md)
+- `.github/copilot-instructions.md` (actualizar referencias)
+- `docs/TEMPLATE.md` (actualizar referencias)
+
+**Compilación**: ✅ Limpia (CMake + MSBuild: 0 errores, 0 warnings)
+
+**Referencia**: Refactor metodología v1.5.0
+
+---
+
 ## Commits por Historia
 
 ### H1 - Render Target como Texture
@@ -94,11 +129,12 @@ Refs: H1.1
 
 ## Estadísticas del Sprint
 
-**Commits totales**: 1  
+**Commits totales**: 2  
 **Features**: 0  
 **Tests**: 0  
 **Fixes**: 0  
 **Docs**: 1  
+**Refactor**: 1
 
 **Progreso**: 0/15 tareas completadas (0.0%)
 
