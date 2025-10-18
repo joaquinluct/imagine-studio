@@ -1,0 +1,64 @@
+feat(editor): Implementar panel Inspector con propiedades editables
+
+Historia H4.2 - Panel Inspector del Editor UI
+
+Implementacion:
+- Actualizar EditorUI::RenderInspector() con propiedades reales
+- Componente Transform: Position, Rotation, Scale (DragFloat3)
+- Componente Camera: FOV, Near/Far Plane, Orthographic (SliderFloat, Checkbox)
+- Headers colapsables con ImGuiTreeNodeFlags_DefaultOpen
+- Valores placeholder estaticos (simulan objeto Main Camera)
+
+Integracion en main.cpp:
+- Anadir llamada a RenderInspector() despues de RenderHierarchy()
+- Mantener orden logico: Hierarchy -> Inspector -> Console -> Viewport
+
+Componente Transform:
+```cpp
+ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)
+- DragFloat3("Position") con step 0.1f
+- DragFloat3("Rotation") con rango -360 a 360 grados
+- DragFloat3("Scale") con step 0.01f, rango 0.01 a 10
+```
+
+Componente Camera:
+```cpp
+ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen)
+- SliderFloat("FOV") rango 30-120 grados
+- DragFloat("Near Plane") step 0.01f, rango 0.01-10
+- DragFloat("Far Plane") step 10f, rango 10-10000
+- Checkbox("Orthographic") toggle proyeccion
+```
+
+Features implementadas:
+- Propiedades editables en tiempo real con ImGui widgets
+- Valores estaticos placeholder (no conectados a scene graph aun)
+- Headers expandibles/colapsables (DefaultOpen)
+- Rangos y steps apropiados para cada propiedad
+- Separador visual entre titulo y propiedades
+
+Beneficios:
+- Panel Inspector funcional para editar propiedades
+- Base para integracion futura con scene graph
+- UI profesional estilo Unity/Unreal
+- Permite ajustar transform y camera visualmente
+
+Testing visual pendiente:
+- Verificar panel Inspector visible junto a Hierarchy
+- Verificar propiedades editables con drag/slider
+- Verificar valores se mantienen entre frames
+- Verificar docking funcional
+
+TODO futuro:
+- Conectar con sistema de seleccion real (actualmente hardcoded "Main Camera")
+- Sincronizar con Hierarchy (seleccionar objeto en arbol)
+- Aplicar cambios a objetos reales de la escena
+- Anadir mas componentes (Light, MeshRenderer, etc)
+
+Archivos modificados:
+- src/editor/EditorUI.cpp (RenderInspector implementado)
+- src/main.cpp (llamada a RenderInspector)
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Referencia: H4.2 - Panel Inspector v1.3.0

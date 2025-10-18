@@ -259,11 +259,14 @@ static int RunApp(HINSTANCE hInstance)
             // ✅ H4.2: Panel Inspector (propiedades del objeto seleccionado)
             Editor::EditorUI::RenderInspector();
             
+            // ✅ H4.3: Panel Console (logs del sistema)
+            Editor::EditorUI::RenderConsole();
+            
             // ✅ AAA STANDARD: Demo window solo en debug builds
             #ifdef _DEBUG
                 // ImGui::ShowDemoWindow();  // Deshabilitado, ahora usamos EditorUI
             #else
-                // TODO H4.3-H4.4: Implementar resto de panels (Console, Viewport)
+                // TODO H4.4: Implementar panel Viewport
                 // Editor::EditorUI::RenderAllPanels();
             #endif
             

@@ -85,9 +85,52 @@ void EditorUI::RenderConsole()
 {
     ImGui::Begin("Console");
     
-    // Placeholder: Logs del sistema
-    // TODO H4.3: Implementar panel Console con logs funcionales
-    ImGui::Text("(Console panel - coming soon in H4.3)");
+    // Placeholder: Logs hardcoded (TODO: integrar con Log.h en futuro)
+    // Formato: [NIVEL] Mensaje
+    
+    // INFO logs (verde)
+    ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "[INFO]");
+    ImGui::SameLine();
+    ImGui::Text("Application started successfully");
+    
+    ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "[INFO]");
+    ImGui::SameLine();
+    ImGui::Text("DX12Renderer initialized");
+    
+    ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "[INFO]");
+    ImGui::SameLine();
+    ImGui::Text("ImGui context created (v1.3.0)");
+    
+    // WARNING logs (amarillo)
+    ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "[WARNING]");
+    ImGui::SameLine();
+    ImGui::Text("Asset streaming: Low priority task cancelled");
+    
+    ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "[WARNING]");
+    ImGui::SameLine();
+    ImGui::Text("Shader cache not found, compiling from source");
+    
+    // ERROR logs (rojo)
+    ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "[ERROR]");
+    ImGui::SameLine();
+    ImGui::Text("Failed to load texture: missing_file.png");
+    
+    ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "[ERROR]");
+    ImGui::SameLine();
+    ImGui::Text("Network connection timeout (retrying...)");
+    
+    // Más INFO logs para demostrar scroll
+    ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "[INFO]");
+    ImGui::SameLine();
+    ImGui::Text("Editor UI panels loaded: Hierarchy, Inspector, Console");
+    
+    ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "[INFO]");
+    ImGui::SameLine();
+    ImGui::Text("Frame rendering at 220 FPS");
+    
+    // Auto-scroll al final (mantiene los logs más recientes visibles)
+    if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
+        ImGui::SetScrollHereY(1.0f);
     
     ImGui::End();
 }
