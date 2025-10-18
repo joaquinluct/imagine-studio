@@ -129,6 +129,11 @@ static int RunApp(HINSTANCE hInstance)
     // Initialize Win32 backend (REQUERIDO - debe estar ANTES de DX12 backend)
     ImGui_ImplWin32_Init(hwnd);
     
+    // ✅ CRÍTICO: Llamar a NewFrame() + EndFrame() para inicializar g.FontBaked
+    // antes de inicializar el backend DX12 (soluciona crash en ImGui_ImplDX12_Init)
+    ImGui::NewFrame();
+    ImGui::EndFrame();
+    
     CORE_LOG_INFO("ImGui context created and initialized (v1.3.0 - docking enabled)");
 
     // Simple message loop

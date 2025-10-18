@@ -13,51 +13,43 @@ Bugs resueltos durante el sprint activo.
 
 **Descripción del problema**: 
 
-Al ejecutar la aplicación, se producía un crash en `external/imgui/imgui_draw.cpp` línea 2764:
+Al ejecutar la aplicación, se producían DOS crashes consecutivos en ImGui:
 
-```cpp
-ImFontAtlasBuilder* builder = atlas->Builder;
-builder->FrameCount = frame_count;  // ? CRASH: builder era 0x0000 (nullptr)
-```
-
-El debugger mostraba que `atlas->Builder` era `nullptr` cuando se llamaba a `ImFontAtlasUpdateNewFrame()`.
+1. **Primer crash**: `atlas->Builder` era NULL en `ImFontAtlasUpdateNewFrame()` (`external/imgui/imgui_draw.cpp:2764`)
+2. **Segundo crash**: `g.FontBaked` era NULL en `UpdateCurrentFontSize()` (`external/imgui/imgui.cpp`)
 
 **Causa raíz identificada**:
 
-El `Builder` del atlas de fuentes de ImGui se inicializa **SOLO** cuando se añade el primer font. En nuestro código:
+El problema tenía dos partes:
 
-1. ? `ImGui::CreateContext()` estaba presente
-2. ? `ImGui_ImplWin32_Init(hwnd)` estaba presente
-3. ? **FALTABA**: `io.Fonts->AddFontDefault()` para inicializar el atlas ANTES de los backends
-4. ? El orden Win32 ? DX12 estaba correcto
+1. **Builder NULL**: El `Builder` del atlas de fuentes se inicializa **SOLO** cuando se añade el primer font con `io.Fonts->AddFontDefault()`. Sin añadir ningún font, el Builder permanecía NULL cuando `ImGui_ImplDX12_NewFrame()` llamaba internamente a `ImFontAtlasUpdateNewFrame()`.
 
-Sin añadir ningún font, el `Builder` permanecía NULL cuando `ImGui_ImplDX12_NewFrame()` llamaba internamente a `ImFontAtlasUpdateNewFrame()`.
+2. **FontBaked NULL**: `g.FontBaked` se inicializa **SOLO** en el primer `ImGui::NewFrame()`. Llamar a `ImGui_ImplDX12_Init()` ANTES del primer NewFrame/EndFrame causaba que funciones internas intentaran acceder a `g.FontBaked` antes de que existiera.
 
 **Solución implementada**:
 
-Añadir `io.Fonts->AddFontDefault()` DESPUÉS de crear el contexto y ANTES de inicializar backends:
+Dos cambios en `src/main.cpp`:
 
+1. **Añadir font por defecto ANTES de backends**:
 ```cpp
-// Setup Dear ImGui context
-IMGUI_CHECKVERSION();
-ImGui::CreateContext();
-ImGuiIO& io = ImGui::GetIO();
-io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-ImGui::StyleColorsDark();
-
 // ? CRÍTICO: Añadir font por defecto ANTES de inicializar backends
-// Esto inicializa el Builder del atlas (soluciona BUG-002)
 io.Fonts->AddFontDefault();
-
-// Initialize Win32 backend (REQUERIDO - debe estar ANTES de DX12 backend)
 ImGui_ImplWin32_Init(hwnd);
+```
+
+2. **Llamar a NewFrame/EndFrame ANTES de DX12 Init para bakear fonts**:
+```cpp
+// ? CRÍTICO: Llamar a NewFrame() + EndFrame() para inicializar g.FontBaked
+// antes de inicializar el backend DX12 (soluciona crash en ImGui_ImplDX12_Init)
+ImGui::NewFrame();
+ImGui::EndFrame();
 ```
 
 **Archivos afectados**: 
 
-- `src/main.cpp` - Añadida línea `io.Fonts->AddFontDefault()`
-- `docs/THIRD_PARTY.md` - Documentada política de NO modificar bibliotecas externas
-- `docs/sprint_bugs.md` - Registrado y movido a sprint_fix.md
+- `src/main.cpp` - Añadidas líneas `io.Fonts->AddFontDefault()` y `ImGui::NewFrame()/EndFrame()` antes de `ImGui_ImplDX12_Init()`
+- `docs/sprint_bugs.md` - Limpiado (bug resuelto)
+- `docs/sprint_fix.md` - Documentada resolución completa de BUG-002
 
 **Commit de resolución**: (pendiente de crear)
 
@@ -66,7 +58,16 @@ ImGui_ImplWin32_Init(hwnd);
 - ?? **NUNCA se modificó código en `external/imgui/`** - Se siguió correctamente la política de `docs/THIRD_PARTY.md`
 - ? La solución fue arreglar NUESTRO código de inicialización, no tapar el síntoma en la biblioteca
 - ?? Esto demuestra la importancia de **no añadir checks defensivos en bibliotecas externas**: el error era NUESTRO, no de ImGui
-- ?? Lección aprendida: ImGui requiere que se añada al menos un font antes de que los backends llamen a `NewFrame()`
+- ?? **Lección aprendida 1**: ImGui requiere que se añada al menos un font ANTES de que los backends llamen a `NewFrame()`
+- ?? **Lección aprendida 2**: `ImGui_ImplDX12_Init()` internamente accede a `g.FontBaked`, por lo que **DEBE** haber un `NewFrame()/EndFrame()` previo para inicializar el estado interno de ImGui
+- ?? **Lección aprendida 3**: El orden correcto de inicialización de ImGui con múltiples backends es:
+  1. `ImGui::CreateContext()`
+  2. Configurar `io.ConfigFlags`, estilos, etc.
+  3. `io.Fonts->AddFontDefault()` (o AddFont...)
+  4. `ImGui_ImplWin32_Init(hwnd)` (backend de plataforma primero)
+  5. **`ImGui::NewFrame()` + `ImGui::EndFrame()`** (bakear fonts y estado)
+  6. `ImGui_ImplDX12_Init(...)` (backend de render después)
+  7. Loop principal con NewFrame/Render/EndFrame
 
 **Referencias**:
 
