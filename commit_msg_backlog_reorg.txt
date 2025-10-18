@@ -1,0 +1,68 @@
+docs: Reorganizar backlog post-v1.3.0 con roadmap de sprints futuros
+
+Reorganizacion completa del backlog tras completar Sprint v1.3.0 (ImGui Integration)
+
+Cambios principales:
+- Anadir seccion "Proximo Sprint Propuesto" con v1.4.0 (Scene Graph & Entity System)
+- Reorganizar items existentes (BACK-001, BACK-002, BACK-003)
+- Anadir 4 nuevas opciones de sprints futuros (BACK-004 a BACK-007)
+- Crear tabla resumen con prioridades y sprints sugeridos
+- Documentar prerequisitos y dependencias entre items
+
+Nuevo contenido:
+1. Proximo Sprint v1.4.0: Scene Graph & Entity System (CRITICA - siguiente inmediato)
+2. BACK-004: Viewport Real (Render Target como Textura) - Alta prioridad, v1.5.0
+3. BACK-005: Asset System & Resource Management - Alta prioridad, v1.6.0
+4. BACK-006: Advanced Rendering Features (PBR, Shadows, Post-Processing) - Media prioridad, v1.7.0
+5. BACK-007: Console Integration (Logs Reales) - Baja prioridad, v1.8.0
+
+Items reorganizados (mantienen ID original):
+- BACK-001: Custom Runtime UI Framework (Media prioridad, v1.9.0)
+- BACK-002: UI Theming & Styling (Baja prioridad, v1.10.0)
+- BACK-003: Deferred Rendering (Media prioridad, v1.11.0)
+
+Estructura mejorada:
+- Seccion "Proximo Sprint" claramente separada
+- Items con prioridad, complejidad, prerequisitos y sprint sugerido
+- Tabla resumen de backlog con orden de prioridades
+- Seccion "Proximos Pasos Recomendados" con roadmap de sprints
+
+Justificacion de prioridades:
+- Scene Graph es PREREQUISITO para casi todo lo demas (Viewport, Assets, Rendering)
+- Sin Scene Graph, los panels del editor siguen siendo placeholder (no funcionales 100%)
+- Con Scene Graph, el flujo de trabajo se vuelve profesional (crear/editar/eliminar objetos reales)
+
+Roadmap sugerido post-v1.3.0:
+1. v1.4.0: Scene Graph & Entity System (base fundamental)
+2. v1.5.0: Viewport Real (Render Target Texture)
+3. v1.6.0: Asset System & Resource Management
+4. v1.7.0: Advanced Rendering (PBR, Shadows, Post-Processing)
+5. v1.8.0: Console Integration (Logs Reales)
+6. v1.9.0: Custom Runtime UI Framework (largo plazo)
+7. v1.10.0: UI Theming & Styling (largo plazo)
+8. v1.11.0: Deferred Rendering (largo plazo)
+
+Beneficios:
+- Roadmap claro para proximos 8 sprints
+- Dependencias documentadas (prerequisitos claros)
+- Prioridades basadas en valor y prerequisitos
+- Backlog organizado y mantenible
+
+Tabla resumen anadida:
+| ID | Nombre | Prioridad | Complejidad | Sprint Sugerido |
+|----|--------|-----------|-------------|-----------------|
+| v1.4.0 | Scene Graph | CRITICA | Media | Siguiente |
+| BACK-004 | Viewport Real | Alta | Alta | v1.5.0 |
+| BACK-005 | Asset System | Alta | Alta | v1.6.0 |
+| BACK-006 | Advanced Rendering | Media | Muy Alta | v1.7.0 |
+| BACK-007 | Console Integration | Baja | Baja-Media | v1.8.0 |
+| BACK-001 | Runtime UI | Media | Muy Alta | v1.9.0 |
+| BACK-002 | UI Theming | Baja | Alta | v1.10.0 |
+| BACK-003 | Deferred Rendering | Media | Alta | v1.11.0 |
+
+Archivos modificados:
+- docs/backlog.md (reorganizacion completa con roadmap)
+
+Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)
+
+Referencia: Reorganizacion backlog post-Sprint v1.3.0

@@ -1,11 +1,15 @@
-# Sprint Bugs (v1.3.0)
+Ôªø# Sprint Bugs - vX.Y.Z (Active)
 
-Bugs reportados durante el sprint activo pendientes de resoluciÛn.
+> **Referencia**: Ver [docs/sprint_bug_attempts.md](sprint_bug_attempts.md) para intentos de soluci√≥n detallados.
+
+Este archivo contiene los bugs reportados durante el sprint activo vX.Y.Z que est√°n pendientes de resoluci√≥n.
 
 ---
 
-**(Sin bugs pendientes - Todos los bugs han sido resueltos)**
+## Bugs Reportados
 
-**⁄ltimo bug resuelto**: BUG-002 - Click de ratÛn no funciona en UI ImGui (resuelto el 2025-01-18)
+*No hay bugs reportados actualmente.*
 
-Ver `docs/sprint_fix.md` para historial completo de bugs resueltos durante este sprint.
+---
+
+**Total bugs**: 0 (0 reportados, 0 en progreso, 0 pendientes validaci√≥n)
