@@ -202,7 +202,7 @@ Cada entrada de bug debe incluir:
 - **Título**: Descripción breve del error
 - **Descripción**: Detalle del error, pasos para reproducir, comportamiento esperado vs observado
 - **Prioridad**: Crítica/Alta/Media/Baja
-- **Estado**: Reportado/En progreso
+- **Estado**: Reportado/En progreso/Pendiente validación usuario
 - **Fecha de entrada**: Fecha en que se reportó el bug
 - **Archivos afectados**: Lista de archivos relacionados con el bug
 
@@ -219,20 +219,41 @@ Cada entrada de bug debe incluir:
 **Archivos afectados**: [PLACEHOLDER: lista de archivos]
 ```
 
-### Flujo de trabajo:
-1. Cuando el usuario **reporte un bug** durante el sprint, el asistente añadirá una entrada en `docs/sprint_bugs.md` con ID **BUG-XXX** y estado "Reportado"
-2. Al comenzar a trabajar en el bug, **actualizar estado** a "En progreso"
-3. Al resolver el bug (commit exitoso), el asistente **moverá automáticamente** la entrada a `docs/sprint_fix.md` con:
-   - ID cambiado a **FIX-XXX**
-   - Estado "Resuelto"
-   - Fecha de resolución
-   - Hash del commit de resolución
-   - Descripción de la solución implementada
-4. El bug se elimina de `docs/sprint_bugs.md` tras moverlo a `docs/sprint_fix.md`
-5. Los bugs pendientes se **archivan** como `docs/sprint_bugs_v<version>.md` al finalizar el sprint
+### **Flujo de trabajo con doble validación Agente-Usuario**:
+1. **Reporte**: Cuando el usuario reporte un bug, el asistente añadirá entrada en `docs/sprint_bugs.md` con ID **BUG-XXX** y estado "Reportado"
+2. **En progreso**: Al comenzar a trabajar en el bug, actualizar estado a "En progreso"
+3. **Implementación**: El asistente implementa el fix, valida (compila/ejecuta/prueba según proyecto) y crea commit
+4. **Pendiente validación**: Actualizar estado a "Pendiente validación usuario" y **PAUSAR**
+5. **Validación usuario**: El usuario ejecuta la aplicación y verifica que el bug está realmente resuelto
+6. **Confirmación**: Si el usuario confirma que el fix funciona → mover a `docs/sprint_fix.md`
+7. **Rechazado**: Si el usuario reporta que el bug persiste → volver a estado "En progreso" y continuar debugging
 
-### Regla:
-El asistente **NO implementará** bugs directamente a menos que se indique explícitamente; primero los registrará en `docs/sprint_bugs.md` para priorización.
+### **CRÍTICO**:
+- El asistente **NO debe mover automáticamente** bugs de `sprint_bugs.md` a `sprint_fix.md` solo porque la validación automática (compilación/tests) sea limpia
+- La validación del usuario es **OBLIGATORIA** para confirmar que el fix es efectivo en ejecución real
+- **Excepciones** - Solo se permite mover automáticamente si:
+  - El fix es trivial (typo, warning cosmético)
+  - La prueba es determinista y verificable solo con validación automática (ej: error de sintaxis)
+  - El usuario da confirmación explícita sin necesidad de prueba manual
+
+### **Razón**:
+**La validación automática limpia NO garantiza que el bug esté resuelto en runtime**.
+
+Muchos bugs solo se manifiestan durante la ejecución:
+- Race conditions
+- Comportamiento de UI/UX
+- Crashes bajo condiciones específicas
+- Problemas de integración con sistemas externos
+- Errores de lógica de negocio
+
+### **Regla**:
+- El asistente implementa el fix
+- El asistente crea el commit
+- El asistente actualiza estado a "Pendiente validación usuario"
+- **PAUSA** y espera confirmación del usuario
+- Solo tras confirmación → mover a `sprint_fix.md`
+
+Los bugs pendientes se **archivan** como `docs/sprint_bugs_v<version>.md` al finalizar el sprint.
 
 ---
 

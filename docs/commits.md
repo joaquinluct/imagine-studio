@@ -690,6 +690,29 @@ Lección aprendida:
 
 Ref: #BUG-002 #FIX-002
 
+- fix(imgui): corregir captura de eventos de ratón en UI
+
+Problema: Los clics de ratón no tenían efecto en la UI de ImGui
+Causa raíz: Window::WndProc() retornaba inmediatamente si ImGui_ImplWin32_WndProcHandler() != 0
+Solución: Llamar SIEMPRE al handler sin verificar su retorno, continuar con procesamiento normal
+
+✅ NO se modificó código en external/imgui/
+✅ Se arregló NUESTRO código en src/platform/Window.cpp
+✅ ImGui captura eventos actualizando io.WantCaptureMouse internamente
+
+Archivos modificados:
+- src/platform/Window.cpp: Eliminar condición if (imgui_result != 0) return
+- CMakeLists.txt: Añadir linkado de ImGui a material_test
+
+Lección aprendida:
+- ImGui_ImplWin32_WndProcHandler() debe llamarse SIEMPRE en WndProc
+- El handler retorna 0 en mayoría de casos pero sigue procesando eventos
+- Verificar documentación oficial antes de asumir comportamientos
+
+Compilación: CMake Debug OK + MSBuild VS Debug OK (0 errores, 0 warnings)
+
+Ref: #BUG-001 #FIX-001
+
 
 
 

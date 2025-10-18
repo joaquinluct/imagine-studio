@@ -4,6 +4,77 @@ Bugs resueltos durante el sprint activo.
 
 ---
 
+### FIX-001 - Clics de ratón sin efecto en UI de ImGui
+
+**ID Original**: BUG-001
+**Prioridad**: Alta
+**Fecha de entrada**: 2025-01-18
+**Fecha de resolución**: 2025-01-18
+
+**Descripción del problema**: 
+
+Los clics de ratón no tenían efecto en la UI de ImGui:
+- No cambia de menú al hacer clic
+- No abre/cierra desplegables
+- No responde a interacción con controles
+
+La tecla F1 (toggle UI) sí funcionaba correctamente, indicando que el problema era específico de eventos de ratón.
+
+**Causa raíz identificada**:
+
+La lógica en `Window::WndProc()` estaba **retornando inmediatamente** si `ImGui_ImplWin32_WndProcHandler()` retornaba un valor distinto de 0:
+
+```cpp
+// ? INCORRECTO (código anterior)
+LRESULT imgui_result = ImGui_ImplWin32_WndProcHandler(hwnd_, message, wParam, lParam);
+if (imgui_result != 0)
+    return imgui_result; // Retornar inmediatamente bloquea eventos
+```
+
+Según la documentación oficial de ImGui, **el handler retorna 0 en la mayoría de casos** PERO sigue capturando y procesando eventos internamente. El código estaba bloqueando el procesamiento normal de mensajes cuando NO debía hacerlo.
+
+ImGui gestiona eventos de ratón/teclado actualizando internamente `io.WantCaptureMouse` e `io.WantCaptureKeyboard`, pero **el handler DEBE ser llamado siempre** sin importar su valor de retorno.
+
+**Solución implementada**:
+
+Eliminar la verificación del retorno de `ImGui_ImplWin32_WndProcHandler()` y permitir que el procesamiento normal de mensajes continúe:
+
+```cpp
+// ? CORRECTO
+// Llamar SIEMPRE al handler de ImGui para que capture eventos internamente
+// NO retornar inmediatamente - continuar con el procesamiento normal
+ImGui_ImplWin32_WndProcHandler(hwnd_, message, wParam, lParam);
+
+switch (message)
+{
+    // Procesamiento normal de mensajes...
+}
+```
+
+**Archivos afectados**: 
+
+- `src/platform/Window.cpp` - Eliminar condición `if (imgui_result != 0) return imgui_result`
+- `CMakeLists.txt` - Añadir linkado de ImGui a `material_test` (compilación auxiliar)
+
+**Commit de resolución**: 80b7b7e
+
+**Validación**:
+- ? Compilación 1 (CMake): 0 errores, 0 warnings
+- ? Compilación 2 (MSBuild): 0 errores, 0 warnings
+
+**Notas importantes**:
+
+- ?? **Lección aprendida**: `ImGui_ImplWin32_WndProcHandler()` debe llamarse **SIEMPRE** en el WndProc, sin verificar su retorno
+- ?? El backend Win32 de ImGui gestiona eventos de forma pasiva: actualiza estado interno (`io.WantCaptureMouse`, etc.) pero NO bloquea mensajes de Windows
+- ?? Verificar siempre la documentación oficial de backends antes de asumir comportamientos
+
+**Referencias**:
+
+- ImGui Win32 backend: `external/imgui/backends/imgui_impl_win32.h`
+- Documentación oficial: https://github.com/ocornut/imgui/blob/master/backends/imgui_impl_win32.cpp
+
+---
+
 ### FIX-002 - ImFontAtlasBuilder nulo al llamar ImFontAtlasUpdateNewFrame
 
 **ID Original**: BUG-002

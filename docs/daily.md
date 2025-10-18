@@ -1,4 +1,5 @@
 ﻿# Daily Log
 
-Hecho: H2.3 Integrar ImGui_ImplDX12_NewFrame() en render loop (demo window preparado, compilación limpia)
-Siguiente: H2.4 Renderizar ImGui draw data en UIPass()
+Hecho: FIX-001 Implementar corrección para clics de ratón en UI (commit 80b7b7e)
+Siguiente: Validación usuario BUG-001 - Probar clics de ratón en UI de ImGui
+
