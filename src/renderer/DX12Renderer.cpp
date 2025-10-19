@@ -500,136 +500,115 @@ void DX12Renderer::RenderForwardPass()
     CalculateMVPMatrix();
     m_opaquePass->SetMVPMatrix(m_mvpMatrix);
     
-    // Declare command list pointer for use throughout the method
-    ID3D12GraphicsCommandList* commandList = nullptr;
-    
-    // === RESOURCE STATE TRANSITION: Scene RT ? RENDER_TARGET (only after first frame) ===
-    // BUG-4 FIX INTENTO #4: Scene RT starts in RENDER_TARGET state on creation
-    // Only transition from PIXEL_SHADER_RESOURCE on subsequent frames
-    static bool isFirstFrame = true;
-    
-    if (!isFirstFrame)
-    {
-        m_commandContext->BeginFrame(nullptr);
-        commandList = m_commandContext->GetCommandList();
-        
-        if (commandList && m_sceneRenderTarget)
-        {
-            // Transition: PIXEL_SHADER_RESOURCE ? RENDER_TARGET (frame N+1)
-            D3D12_RESOURCE_BARRIER sceneRTBarrier = {};
-            sceneRTBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-            sceneRTBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-            sceneRTBarrier.Transition.pResource = m_sceneRenderTarget;
-            sceneRTBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-            sceneRTBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-            sceneRTBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-            
-            commandList->ResourceBarrier(1, &sceneRTBarrier);
-        }
-        
-        m_commandContext->EndFrame();
-        m_commandContext->Execute();
-        m_commandContext->WaitForGPU();
-    }
-    
-    // === PASS 1: OPAQUE PASS (render 3D scene to scene RT) ===
-    m_commandContext->BeginFrame(m_pipelineState);
-    m_opaquePass->Execute(*m_commandContext);
-    m_commandContext->EndFrame();
-    m_commandContext->Execute();
-    m_commandContext->WaitForGPU();
-    
-    // === RESOURCE STATE TRANSITION: Scene RT ? PIXEL_SHADER_RESOURCE ===
-    // BUG-4 FIX: Transition scene RT from RENDER_TARGET to PIXEL_SHADER_RESOURCE
-    // so ImGui can sample it as a texture in the Viewport panel
+    // v1.7.0 H1.8 - FRAME PIPELINING: ONE command list for entire frame
+    // BeginFrame() now waits only if CPU is >FRAME_LATENCY frames ahead (built into FrameContext)
     m_commandContext->BeginFrame(nullptr);
-    commandList = m_commandContext->GetCommandList();
+    ID3D12GraphicsCommandList* commandList = m_commandContext->GetCommandList();
     
-    if (commandList && m_sceneRenderTarget)
+    if (!commandList)
     {
-        D3D12_RESOURCE_BARRIER sceneRTBarrier = {};
-        sceneRTBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-        sceneRTBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-        sceneRTBarrier.Transition.pResource = m_sceneRenderTarget;
-        sceneRTBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-        sceneRTBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-        sceneRTBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-        
-        commandList->ResourceBarrier(1, &sceneRTBarrier);
+        CORE_LOG_ERROR("DX12Renderer::RenderForwardPass: Failed to get command list");
+        return;
     }
     
-    m_commandContext->EndFrame();
-    m_commandContext->Execute();
-    m_commandContext->WaitForGPU();
-    
-    // Mark that first frame has been processed
-    isFirstFrame = false;
-    
-    // === PASS 2: UI PASS (render ImGui to back buffer) ===
+    // Get back buffer for this frame
     unsigned int backBufferIndex = m_swapChain->GetCurrentBackBufferIndex();
     ID3D12Resource* backBuffer = m_swapChain->GetBackBuffer(backBufferIndex);
-    
-    // Get RTV for back buffer
     D3D12_CPU_DESCRIPTOR_HANDLE backBufferRTV = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
     backBufferRTV.ptr += backBufferIndex * m_rtvDescriptorSize;
     
-    // === RESOURCE STATE TRANSITION: Back Buffer PRESENT ? RENDER_TARGET ===
-    // BUG-4 FIX INTENTO #3: Transition back buffer to RENDER_TARGET before UIPass
-    m_commandContext->BeginFrame(nullptr);
-    commandList = m_commandContext->GetCommandList();
+    // v1.7.0 H1.8 + H2 (Barrier Batching) - Batch ALL initial barriers
+    static bool isFirstFrame = true;
     
-    if (commandList && backBuffer)
+    if (isFirstFrame)
     {
-        D3D12_RESOURCE_BARRIER backBufferBarrier = {};
-        backBufferBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-        backBufferBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-        backBufferBarrier.Transition.pResource = backBuffer;
-        backBufferBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-        backBufferBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-        backBufferBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+        // FRAME 1: Scene RT already in RENDER_TARGET, back buffer in PRESENT
+        // Barrier: Back buffer PRESENT ? RENDER_TARGET (needed for UIPass later)
+        D3D12_RESOURCE_BARRIER initialBarriers[1] = {};
+        initialBarriers[0].Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+        initialBarriers[0].Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+        initialBarriers[0].Transition.pResource = backBuffer;
+        initialBarriers[0].Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+        initialBarriers[0].Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+        initialBarriers[0].Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
         
-        commandList->ResourceBarrier(1, &backBufferBarrier);
+        commandList->ResourceBarrier(1, initialBarriers);
+    }
+    else
+    {
+        // FRAME N+1: Scene RT in PSR (from previous frame), back buffer in PRESENT
+        // Batch barriers: Scene RT PSR?RT, Back buffer PRESENT?RT
+        D3D12_RESOURCE_BARRIER initialBarriers[2] = {};
+        
+        // Barrier 1: Scene RT PSR ? RT
+        initialBarriers[0].Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+        initialBarriers[0].Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+        initialBarriers[0].Transition.pResource = m_sceneRenderTarget;
+        initialBarriers[0].Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+        initialBarriers[0].Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+        initialBarriers[0].Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+        
+        // Barrier 2: Back buffer PRESENT ? RT
+        initialBarriers[1].Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+        initialBarriers[1].Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+        initialBarriers[1].Transition.pResource = backBuffer;
+        initialBarriers[1].Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+        initialBarriers[1].Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+        initialBarriers[1].Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+        
+        commandList->ResourceBarrier(2, initialBarriers);
     }
     
-    m_commandContext->EndFrame();
-    m_commandContext->Execute();
-    m_commandContext->WaitForGPU();
+    // === PASS 1: OPAQUE PASS (render 3D scene to scene RT) ===
+    // Set pipeline state for OpaquePass
+    commandList->SetPipelineState(m_pipelineState);
     
-    // Configure UIPass
+    // Execute OpaquePass commands (inline, no separate command list)
+    m_opaquePass->Execute(*m_commandContext);
+    
+    // === MID-FRAME BARRIER: Scene RT ? PIXEL_SHADER_RESOURCE ===
+    // Transition scene RT so ImGui can sample it in Viewport
+    D3D12_RESOURCE_BARRIER midBarrier = {};
+    midBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    midBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    midBarrier.Transition.pResource = m_sceneRenderTarget;
+    midBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    midBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+    midBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    
+    commandList->ResourceBarrier(1, &midBarrier);
+    
+    // === PASS 2: UI PASS (render ImGui to back buffer) ===
     m_uiPass->SetRenderTarget(backBuffer, backBufferRTV);
     m_uiPass->SetImGuiSrvHeap(m_imguiSrvHeap);
     m_uiPass->SetUIVisible(m_uiVisible);
     
-    // Execute UIPass
-    m_commandContext->BeginFrame(nullptr);
+    // Execute UIPass commands (inline, same command list)
     m_uiPass->Execute(*m_commandContext);
+    
+    // === END-FRAME BARRIER: Back Buffer ? PRESENT ===
+    D3D12_RESOURCE_BARRIER endBarrier = {};
+    endBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    endBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    endBarrier.Transition.pResource = backBuffer;
+    endBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    endBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+    endBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    
+    commandList->ResourceBarrier(1, &endBarrier);
+    
+    // v1.7.0 H1.8 - END FRAME: Close and execute command list ONCE
     m_commandContext->EndFrame();
-    m_commandContext->Execute();
-    m_commandContext->WaitForGPU();
+    m_commandContext->Execute(); // GPU starts working, CPU continues to next frame
     
-    // === RESOURCE STATE TRANSITION: Back Buffer RENDER_TARGET ? PRESENT ===
-    // BUG-4 FIX INTENTO #3: Transition back buffer to PRESENT before Present()
-    m_commandContext->BeginFrame(nullptr);
-    commandList = m_commandContext->GetCommandList();
+    // v1.7.0 H1.8 - NO WaitForGPU() here!
+    // Frame pipelining: GPU works on frame N, CPU prepares frame N+1
+    // Wait only happens in BeginFrame() if CPU is >FRAME_LATENCY frames ahead
     
-    if (commandList && backBuffer)
-    {
-        D3D12_RESOURCE_BARRIER backBufferBarrier = {};
-        backBufferBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-        backBufferBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-        backBufferBarrier.Transition.pResource = backBuffer;
-        backBufferBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-        backBufferBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-        backBufferBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-        
-        commandList->ResourceBarrier(1, &backBufferBarrier);
-    }
+    // Mark first frame complete
+    isFirstFrame = false;
     
-    m_commandContext->EndFrame();
-    m_commandContext->Execute();
-    m_commandContext->WaitForGPU();
-    
-    // Present
+    // Present (swap buffers)
     m_swapChain->Present(true); // VSync on
 #else
     // Stub rendering
