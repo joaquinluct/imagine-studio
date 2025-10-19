@@ -10,6 +10,7 @@
 #include "renderer/Camera.h"     // v1.5.0 H2.3 - Camera controls
 #include "renderer/DX12Renderer.h"
 #include "scene/Scene.h"
+#include "scene/Transform.h"     // v1.8.0 H3.2 - Transform Component
 #include "tools/Profiler.h"
 #include "ui/SimpleUI.h"
 
@@ -159,9 +160,17 @@ static int RunApp(HINSTANCE hInstance)
     CORE_LOG_INFO("Scene created: Main Scene");
     
     // Create default entities for demo
-    Scene::Entity* camera = scene.CreateEntity("Main Camera");
-    Scene::Entity* light = scene.CreateEntity("Directional Light");
-    Scene::Entity* geometry = scene.CreateEntity("Quad");
+    Scene::Entity* cameraEntity = scene.CreateEntity("Main Camera");
+    Scene::Entity* lightEntity = scene.CreateEntity("Directional Light");
+    Scene::Entity* geometryEntity = scene.CreateEntity("Quad");
+    
+    // v1.8.0 H3.2 - Setup Transform for geometry entity
+    Scene::Transform* quadTransform = geometryEntity->GetComponent<Scene::Transform>();
+    if (quadTransform) {
+        quadTransform->SetPosition(0.0f, 0.0f, 0.0f);
+        quadTransform->SetScale(1.0f, 1.0f, 1.0f);
+        CORE_LOG_INFO("Quad Transform configured: position (0,0,0), scale (1,1,1)");
+    }
     
     CORE_LOG_INFO("Default entities created: Main Camera, Directional Light, Quad");
     
@@ -242,6 +251,10 @@ static int RunApp(HINSTANCE hInstance)
         // Example: if Escape pressed, exit
         if (input.IsKeyDown(VK_ESCAPE))
             break;
+        
+        // v1.8.0 H3.2 - Update Scene (process all entities)
+        float deltaTime = 0.016f; // ~60 FPS (will be replaced with actual frame time)
+        scene.Update(deltaTime);
         
         // H2.3: Toggle UI visibility with F1 key
         if (input.IsKeyPressed(VK_F1))
