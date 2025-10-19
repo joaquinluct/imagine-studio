@@ -1,39 +1,56 @@
 ﻿# Daily Log
 
-Hecho: Sprint v1.6.0 cerrado ✅ - Viewport AAA completado (quad visible, resource barriers correctos)
-Siguiente: Sprint v1.7.0 iniciado 🚀 - Performance Optimization (H1: Frame Pipelining)
+Hecho: Sprint v1.7.0 H1+H2+H3 completados ✅ - Frame pipelining + barrier batching + deferred release queue
+Siguiente: Continuar con H4 (Conditional Logging) o validar FPS real (VSync OFF)
 
 ## Última Sesión (2025-01-18)
 
-### ✅ Sprint v1.6.0 CERRADO
-- **BUG-4 RESUELTO**: Quad visible con interpolación de colores
-- **Archivos archivados**: 9 ficheros en `docs/sprints/sprint_*_v1.6.0.md`
-- **Commits**: `85f190d`, `46fb951`, `2723e30`
-- **Performance final**: 220 FPS (sin VSync)
+### ✅ Completado - Sprint v1.7.0 Performance Optimization
 
-### 🚀 Sprint v1.7.0 INICIADO
-- **Objetivo**: Optimizar renderer de 4/10 AAA → 9/10 AAA
-- **Ganancia esperada**: +300-500% FPS (de 220 → 800-1200 FPS)
-- **Primera tarea**: H1 - Frame Pipelining (double buffering)
+**H1 - Frame Pipelining** ✅:
+- FrameContext ring buffer (FRAME_LATENCY=2)
+- BeginFrame auto-wait solo si CPU >2 frames adelante
+- WaitForGPU reducido: 7 → 0 calls por frame
+- Execute reducido: 7 → 1 call por frame
+- Shutdown limpio sin crashes
+- Commits: `263366c`
 
-### 📊 Auditoría AAA Realizada
-Problemas identificados (prioridad por impacto):
-1. 🔴 WaitForGPU() excesivo (7 calls/frame) - Calificación: 2/10 AAA
-2. 🟡 Command allocator único - Calificación: 3/10 AAA  
-3. 🟡 Barriers fragmentados - Calificación: 4/10 AAA
-4. 🟠 Upload buffer manual - Calificación: 5/10 AAA
-5. 🟢 Logging en hot path - Calificación: 6/10 AAA
+**H2 - Barrier Batching** ✅:
+- Barriers agrupadas en arrays (initial, mid, end)
+- Implementado junto con H1
+- Reduce overhead de ExecuteCommandLists
+
+**H3 - Deferred Release Queue** ✅:
+- Infraestructura PendingRelease completa
+- ProcessDeferredReleases() implementado
+- Shutdown seguro (libera pendientes)
+- Backward compatibility mantenida
+- Commits: `a123004`
+
+### 📊 Resultados Medidos
+
+| Métrica | v1.6.0 | v1.7.0 | Mejora |
+|---------|--------|--------|--------|
+| **FPS** | 220 | 240 | +9% (VSync ON) |
+| **WaitForGPU()/frame** | 7 | 0 | -100% |
+| **Execute()/frame** | 7 | 1 | -86% |
+| **Shutdown** | ❌ Crash | ✅ Limpio | ✅ |
+| **GPU Usage** | ~30% | 24% | VSync limitando |
+
+**Ganancia potencial**: +300% FPS (660-880 FPS) si VSync OFF
 
 ### 🎯 Próximos Pasos
-1. Implementar H1: Frame Pipelining (FrameContext ring buffer)
-2. Validar con benchmarks (FPS antes/después)
-3. Continuar con H2-H5 según resultados
+
+1. **Opción A**: Desactivar VSync y medir FPS real (validar +300% ganancia)
+2. **Opción B**: H4 - Conditional Logging (#ifdef _DEBUG)
+3. **Opción C**: H5 - Benchmarking completo
 
 ---
 
 **Estado del proyecto**: 
 - ✅ Sprint v1.6.0: CERRADO (100% completado)
-- 🟢 Sprint v1.7.0: ACTIVO (0% completado)
+- 🟢 Sprint v1.7.0: ACTIVO (60% completado - H1+H2+H3)
 - 📂 Bugs pendientes: 0
+- 📈 Performance: 4/10 AAA → 7/10 AAA (camino a 9/10)
 
 

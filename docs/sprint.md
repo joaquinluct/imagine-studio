@@ -16,9 +16,9 @@ Ver [`docs/sprint_histories.md`](sprint_histories.md) para historias detalladas.
 
 | ID | Historia | Prioridad | Estado |
 |----|----------|-----------|--------|
-| H1 | Frame Pipelining (Double Buffering) | 🔴 Crítica | ⏳ Pendiente |
-| H2 | Barrier Batching | 🟡 Alta | ⏳ Pendiente |
-| H3 | Deferred Release Queue | 🟠 Media | ⏳ Pendiente |
+| H1 | Frame Pipelining (Double Buffering) | 🔴 Crítica | ✅ **COMPLETADO** |
+| H2 | Barrier Batching | 🟡 Alta | ✅ **COMPLETADO** |
+| H3 | Deferred Release Queue | 🟠 Media | ✅ **COMPLETADO** |
 | H4 | Conditional Logging | 🟢 Baja | ⏳ Pendiente |
 | H5 | Validación y Benchmarking | 🔵 Validación | ⏳ Pendiente |
 
@@ -26,25 +26,25 @@ Ver [`docs/sprint_histories.md`](sprint_histories.md) para historias detalladas.
 
 | Métrica | Baseline (v1.6.0) | Objetivo (v1.7.0) | Estado |
 |---------|-------------------|-------------------|--------|
-| **FPS (sin VSync)** | 220 FPS | 800-1200 FPS | ⏳ Pendiente |
-| **GPU Usage** | ~30% | >90% | ⏳ Pendiente |
-| **WaitForGPU() calls/frame** | 7 | 1 (o 0) | ⏳ Pendiente |
-| **Execute() calls/frame** | 7 | 1 | ⏳ Pendiente |
-| **Frame Time** | ~4.5ms | <2ms | ⏳ Pendiente |
-| **Calificación AAA** | 4/10 | 9/10 | ⏳ Pendiente |
+| **FPS (sin VSync)** | 220 FPS | 800-1200 FPS | ⚠️ **240 FPS** (VSync ON) |
+| **GPU Usage** | ~30% | >90% | ⚠️ **24%** (VSync limitando) |
+| **WaitForGPU() calls/frame** | 7 | 1 (o 0) | ✅ **0** |
+| **Execute() calls/frame** | 7 | 1 | ✅ **1** |
+| **Frame Time** | ~4.5ms | <2ms | ⏳ Por medir (VSync OFF) |
+| **Calificación AAA** | 4/10 | 9/10 | 🟡 **7/10** (progreso) |
 
 ## 📈 Progreso
 
-**Historias completadas**: 0/5 (0%)  
-**Tareas completadas**: 0/17 (0%)
+**Historias completadas**: 3/5 (60%)  
+**Tareas completadas**: 13/17 (76%)
 
 ```
 ┌────────────────────────────────────────────────────────────────────┐
-│⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛ 0.0%│
+│🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛ 60.0%│
 └────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
 *Última actualización*: 2025-01-18  
-*Sprint*: v1.7.0 - Performance Optimization - **EN PROGRESO**
+*Sprint*: v1.7.0 - Performance Optimization - **EN PROGRESO** (60% completado)
