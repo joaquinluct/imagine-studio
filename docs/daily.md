@@ -1,11 +1,24 @@
 ﻿# Daily Log
 
-Hecho: Sprint v1.7.0 CERRADO ✅ - Sprint v1.8.0 PLANIFICADO 🎯
-Siguiente: Validar Scene Graph existente y actualizar planificación Sprint v1.8.0
+Hecho: Sprint v1.8.0 H3.1 iniciada ⏳ - Scene conectada con Renderer (parcial)
+Siguiente: Completar H3.1 (Scene::Update() + renderizar entities)
 
 ## Última Sesión (2025-01-18)
 
-### ✅ Completado en Sesión
+### ⏳ En Progreso - Sprint v1.8.0 (12%)
+
+**H3.1: Conectar Scene con Renderer** ⏳ (parcial):
+- ✅ Scene* member añadido a DX12Renderer
+- ✅ SetScene() / GetScene() accessors implementados
+- ✅ Scene conectada en main.cpp
+- ⏳ Pendiente: Scene::Update() en render loop
+- ⏳ Pendiente: Renderizar entities con Transform
+
+**Commit**: `f00ab95`
+
+---
+
+### ✅ Completado Anteriormente en Sesión
 
 1. **Sprint v1.7.0 CERRADO** ✅ (100% completado)
    - Frame Pipelining + Barrier Batching + Deferred Release Queue
@@ -21,31 +34,24 @@ Siguiente: Validar Scene Graph existente y actualizar planificación Sprint v1.8
 3. **Sprint v1.8.0 PLANIFICADO** ✅
    - Scene Graph & Entity System
    - 4 historias (H1-H4), 16 tareas
-   - Duración estimada: 1 semana
+   - Duración estimada: 3-5 días (reducida por Scene Graph existente)
+
+---
 
 ### 🔍 **DESCUBRIMIENTO IMPORTANTE**
 
 **Scene Graph PARCIALMENTE IMPLEMENTADO** ✅:
-Al iniciar Sprint v1.8.0, se descubrió que el sistema de Scene Graph **YA EXISTE** en el código:
-
-**Archivos encontrados**:
 - ✅ `src/scene/Entity.h/cpp` - Entity class con ID, name, components
 - ✅ `src/scene/Component.h/cpp` - Component base class
 - ✅ `src/scene/Transform.h/cpp` - Transform Component (DirectXMath)
 - ✅ `src/scene/EntityManager.h/cpp` - EntityManager singleton
 - ✅ `src/scene/Scene.h/cpp` - Scene class con entities
 
-**Estado**:
-- ⚠️ Implementación existente **NO está conectada** al editor (Hierarchy/Inspector siguen siendo placeholder)
-- ⚠️ Renderer **NO usa** entities para renderizado (sigue usando quad hardcoded)
-- ⚠️ No documentado en sprints anteriores
-
-**Acción necesaria**:
-1. **Validar** implementación existente (compilar, tests)
-2. **Actualizar** Sprint v1.8.0 para enfocarse en:
-   - H3: Scene Graph Integration (conectar con renderer)
-   - H4: Editor Integration (conectar Hierarchy/Inspector)
-3. **Reducir** duración estimada (H1+H2 ya están implementadas)
+**Ajuste Sprint v1.8.0**:
+- ~~H1: Entity System Core~~ ✅ **YA IMPLEMENTADO**
+- ~~H2: Transform Component~~ ✅ **YA IMPLEMENTADO**
+- **H3: Scene Graph Integration** ← **EN PROGRESO** (12%)
+- **H4: Editor Integration** ← **PENDIENTE**
 
 ---
 
@@ -66,25 +72,25 @@ Al iniciar Sprint v1.8.0, se descubrió que el sistema de Scene Graph **YA EXIST
 
 ## 🎯 **Sprint v1.8.0 - Scene Graph & Entity System** (ACTIVO)
 
-**Estado**: 🟢 Planificado (ajuste pendiente)  
+**Estado**: 🟢 En progreso (12%)  
 **Fecha inicio**: 2025-01-18  
-**Duración estimada**: 3-5 días (reducida por implementación existente)
+**Duración estimada**: 3-5 días
 
-**Objetivo ajustado**:
+**Objetivo**:
 - ~~H1: Entity System Core~~ ✅ **YA IMPLEMENTADO**
 - ~~H2: Transform Component~~ ✅ **YA IMPLEMENTADO**
-- **H3: Scene Graph Integration** ← **Prioridad CRÍTICA**
-- **H4: Editor Integration** ← **Prioridad ALTA**
+- **H3: Scene Graph Integration** ← **EN PROGRESO (12%)**
+- **H4: Editor Integration** ← **PENDIENTE**
 
-**Progreso**: 0/4 historias (0%)
+**Progreso**: 0/4 historias (0%), 2/16 tareas (12%)
 
 ---
 
 **Estado del proyecto**: 
 - ✅ Sprint v1.7.0: CERRADO (100%)
-- 🟢 Sprint v1.8.0: PLANIFICADO (ajuste pendiente)
+- 🟢 Sprint v1.8.0: EN PROGRESO (12%)
 - 📂 Bugs pendientes: 0
 - 📈 Performance: 7/10 AAA
-- 🔍 Scene Graph: **Parcialmente implementado** (no conectado)
+- 🔍 Scene Graph: **Conectado** con Renderer (parcial)
 
 

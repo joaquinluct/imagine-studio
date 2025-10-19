@@ -177,10 +177,19 @@ private:
 ## Historia 3: Scene Graph Integration (H3)
 
 ### Tarea H3.1: Refactorizar Scene class con EntityManager
-**Estado**: ⏳ Pendiente  
-**Archivos afectados**: `src/scene/Scene.h`, `src/scene/Scene.cpp`
+**Estado**: ⏳ En progreso  
+**Archivos afectados**: `src/scene/Scene.h`, `src/scene/Scene.cpp`, `src/renderer/DX12Renderer.h/cpp`, `src/main.cpp`
 
-**Descripción**: Integrar EntityManager en Scene, añadir Scene::Update() que llama Component::Update().
+**Descripción**: Integrar EntityManager en Scene, añadir Scene::Update() que llama Component::Update(). Conectar Scene con DX12Renderer.
+
+**Progreso**:
+- [x] Añadir Scene* member a DX12Renderer
+- [x] SetScene() / GetScene() accessors
+- [x] Conectar Scene en main.cpp
+- [ ] Scene::Update() llamado en render loop
+- [ ] Renderer itera entities para renderizado
+
+**Commit**: `f00ab95` (parcial)
 
 ---
 
