@@ -1,20 +1,21 @@
-﻿# Sprint v1.8.0 - Scene Graph & Entity System
+﻿# Sprint v1.9.0 - Asset System & Resource Management
 
-> **Estado**: ✅ Cerrado  
+> **Estado**: 🟢 En planificación  
 > **Fecha inicio**: 2025-01-18  
-> **Fecha fin**: 2025-01-18
+> **Fecha fin estimada**: 2025-02-01
 
 ---
 
 ## 🎯 Objetivo del Sprint
 
-**Meta**: Implementar sistema de Scene Graph con Entity-Component architecture para reemplazar placeholders de Hierarchy/Inspector por funcionalidad real.
+**Meta**: Implementar Asset System completo para cargar contenido real (texturas, meshes, shaders) desde disco, con Asset Browser panel en editor y flujo de trabajo profesional (importar → usar → guardar).
 
-**Resultado esperado**: Al finalizar el sprint, el editor tendrá un sistema de entities funcional donde el usuario puede:
-- Crear/eliminar entities desde Hierarchy
-- Seleccionar entities y ver/editar su Transform en Inspector
-- Jerarquía padre-hijo funcional con transforms heredados
-- Base sólida para Asset System, Rendering avanzado, y Editor 100% funcional
+**Resultado esperado**: Al finalizar el sprint, el editor tendrá:
+- Asset Database funcional con tracking de archivos
+- Importers para Textures, Meshes y Shaders
+- Asset Browser panel para navegar contenido
+- Drag & drop de assets al Viewport/Inspector
+- Scene serialization (save/load JSON)
 
 ---
 
@@ -24,10 +25,11 @@ Ver [`docs/sprint_histories.md`](sprint_histories.md) para historias detalladas.
 
 | ID | Historia | Prioridad | Estado |
 |----|----------|-----------|--------|
-| H1 | Entity System Core | 🔴 Crítica | ✅ Completada |
-| H2 | Transform Component | 🔴 Crítica | ✅ Completada |
-| H3 | Scene Graph Integration | 🟡 Alta | ✅ Completada |
-| H4 | Editor Integration | 🟡 Alta | ✅ Completada |
+| H1 | Asset Database Core | 🔴 Crítica | ⏳ Pendiente |
+| H2 | Texture Importer | 🔴 Crítica | ⏳ Pendiente |
+| H3 | Mesh Importer | 🟡 Alta | ⏳ Pendiente |
+| H4 | Asset Browser Panel | 🟡 Alta | ⏳ Pendiente |
+| H5 | Scene Serialization | 🟡 Alta | ⏳ Pendiente |
 
 ---
 
@@ -35,104 +37,87 @@ Ver [`docs/sprint_histories.md`](sprint_histories.md) para historias detalladas.
 
 | Métrica | Objetivo |
 |---------|----------|
-| **Entities creables** | Crear/eliminar desde Hierarchy |
-| **Inspector funcional** | Editar Transform en tiempo real |
-| **Jerarquía padre-hijo** | Transforms heredados correctos |
-| **Renderizado** | Entities visibles en Viewport |
+| **Formatos soportados** | PNG, JPG (texturas), OBJ (meshes), HLSL (shaders) |
+| **Asset Browser** | Navegación de carpetas funcional |
+| **Drag & drop** | Texturas y meshes al Viewport |
+| **Serialization** | Save/load escenas completas |
+| **Performance** | Carga de assets sin bloqueo UI (<100ms) |
 | **Compilación limpia** | 0 errores, 0 warnings |
 
 ---
 
 ## 📈 Progreso
 
-**Historias completadas**: 4/4 (100%) ✅  
-**Tareas completadas**: 16/16 (100%) ✅
+**Historias completadas**: 0/5 (0%)  
+**Tareas completadas**: 0/20 (0%)
 
 ```
 ┌────────────────────────────────────────────────────────────────────┐
-│🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩 100%│
+│⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛ 0.0%│
 └────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## 🎊 **¡SPRINT COMPLETADO!**
-
-**Descubrimiento**: El Scene Graph & Editor Integration ya estaban completamente implementados. Solo faltaba conectar Scene con Renderer (H3.1-H3.2), lo cual se completó en esta sesión.
-
-**Resultado**: Editor AAA 100% funcional con:
-- ✅ Hierarchy muestra entities reales
-- ✅ Inspector edita Transform
-- ✅ Create/Delete Entity desde UI
-- ✅ Sistema de selección funcional
-- ✅ Scene::Update() integrado en render loop
-
-**Estado**: Sprint v1.8.0 CERRADO ✅ (2025-01-18)
 
 ---
 
 ## 🏗️ Arquitectura Propuesta
 
 ```cpp
-// Entity class (ID único, nombre, componentes, hierarchy)
-class Entity {
-    EntityID m_id;
-    std::string m_name;
-    std::vector<Component*> m_components;
-    Entity* m_parent = nullptr;
-    std::vector<Entity*> m_children;
+// Asset Database (tracking de assets en disco)
+class AssetDatabase {
+    std::unordered_map<AssetID, AssetMetadata> m_assets;
+    std::unordered_map<std::string, AssetID> m_pathToID;
+    
+    AssetID ImportAsset(const std::string& path);
+    AssetMetadata* GetAsset(AssetID id);
+    void RefreshAssets(); // Detecta cambios en disco
 };
 
-// Component base class
-class Component {
-    Entity* m_owner;
-    virtual void Update(float deltaTime) = 0;
+// Asset Importers (PNG/JPG → DX12 Texture)
+class TextureImporter {
+    ID3D12Resource* ImportTexture(const std::string& path);
+    void GenerateMipmaps(ID3D12Resource* texture);
 };
 
-// Transform Component (position, rotation, scale)
-class Transform : public Component {
-    glm::vec3 m_localPosition;
-    glm::quat m_localRotation;
-    glm::vec3 m_localScale;
-    glm::mat4 GetWorldMatrix() const;
+class MeshImporter {
+    MeshData ImportOBJ(const std::string& path);
 };
 
-// EntityManager (singleton, gestiona todas las entities)
-class EntityManager {
-    std::unordered_map<EntityID, Entity*> m_entities;
-    Entity* CreateEntity(const std::string& name);
-    void DestroyEntity(EntityID id);
+// Asset Browser Panel (UI para navegar assets)
+class AssetBrowser {
+    void RenderAssetBrowser();
+    void OnAssetSelected(AssetID id);
+    void OnAssetDoubleClick(AssetID id);
 };
 
-// Scene class (root entity, Add/Remove, Update)
-class Scene {
-    Entity* m_root;
-    EntityManager* m_entityManager;
-    void Update(float deltaTime);
+// Scene Serialization (save/load JSON)
+class SceneSerializer {
+    void SaveScene(Scene* scene, const std::string& path);
+    Scene* LoadScene(const std::string& path);
 };
 ```
 
 ---
 
-## 🎯 Comparación con v1.7.0
+## 🎯 Comparación con v1.8.0
 
-| Aspecto | v1.7.0 | v1.8.0 (Este Sprint) |
+| Aspecto | v1.8.0 | v1.9.0 (Este Sprint) |
 |---------|--------|----------------------|
-| **Hierarchy** | Placeholder (3 entities hardcoded) | Funcional (crear/eliminar entities) |
-| **Inspector** | Placeholder (sin edición) | Editar Transform real |
-| **Scene Graph** | No existe | Entity-Component System |
-| **Jerarquía** | No hay parent-child | Parent-child con transforms heredados |
-| **Renderizado** | Quad hardcoded | Entities con Transform renderizables |
+| **Assets** | Hardcoded (quad geometry) | Importados desde disco |
+| **Texturas** | No disponibles | PNG/JPG → DX12 Texture |
+| **Meshes** | Quad hardcoded | OBJ → Vertex/Index buffers |
+| **Asset Browser** | No disponible | Panel funcional con preview |
+| **Serialization** | No disponible | Save/load escenas JSON |
+| **Workflow** | Manual (código) | Profesional (importar → usar) |
 
 ---
 
 ## 📚 Referencias
 
-- **Prerequisitos**: Sprint v1.7.0 completado ✅
-- **Backlog**: BACK-004 (Scene Graph & Entity System)
-- **Inspiración**: Unity GameObject/Transform, Unreal Engine Actor/SceneComponent
+- **Prerequisitos**: Sprint v1.8.0 completado ✅
+- **Backlog**: BACK-005 (Asset System & Resource Management)
+- **Inspiración**: Unity Asset Database, Unreal Asset Manager
 
 ---
 
 *Última actualización*: 2025-01-18  
-*Sprint*: v1.8.0 - Scene Graph & Entity System - ✅ **CERRADO**
+*Sprint*: v1.9.0 - Asset System & Resource Management - 🟢 **EN PLANIFICACIÓN**
