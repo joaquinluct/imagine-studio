@@ -25,6 +25,13 @@ class RenderTarget;
 class CommandAllocator;
 class Fence;
 
+} // namespace Renderer
+
+// v1.8.0 H3.1 - Scene Graph forward declaration
+namespace Scene { class Scene; }
+
+namespace Renderer {
+
 // v1.6.0 DEV-002.6 - DX12Renderer (AAA Architecture - Orchestrator)
 // Orchestrates render passes and coordinates subsystems
 // Reduced from 1100+ lines to ~300 lines
@@ -57,6 +64,10 @@ public:
     // Camera accessor (v1.5.0 - H2.3)
     Camera* GetCamera() { return m_camera; }
     
+    // v1.8.0 H3.1 - Scene accessor
+    void SetScene(Scene::Scene* scene) { m_scene = scene; }
+    Scene::Scene* GetScene() { return m_scene; }
+    
     // ImGui SRV heap accessor (v1.3.0 - H2.2)
 #if defined(_WIN32) && defined(_MSC_VER)
     ID3D12DescriptorHeap* GetImGuiSrvHeap() const { return m_imguiSrvHeap; }
@@ -85,6 +96,9 @@ private:
     
     // Camera system
     Camera* m_camera = nullptr;
+    
+    // v1.8.0 H3.1 - Scene Graph integration
+    Scene::Scene* m_scene = nullptr;
     
     // Legacy stubs (for non-DX12 platforms)
     RenderTarget* rt_ = nullptr;

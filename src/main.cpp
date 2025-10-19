@@ -164,6 +164,9 @@ static int RunApp(HINSTANCE hInstance)
     Scene::Entity* geometry = scene.CreateEntity("Quad");
     
     CORE_LOG_INFO("Default entities created: Main Camera, Directional Light, Quad");
+    
+    // v1.8.0 H3.1 - Connect Scene with Renderer
+    renderer.SetScene(&scene);
 
     // Setup Platform/Renderer backends (H2.2 - ImGui DX12 Backend)
 #if defined(_WIN32) && defined(_MSC_VER)
