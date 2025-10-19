@@ -3,9 +3,19 @@
 #if defined(_WIN32) && defined(_MSC_VER)
 #include <d3d12.h>
 #include <dxgiformat.h>
+#include <vector>
 #endif
 
 namespace Renderer {
+
+// v1.7.0 H3 - Deferred Release Queue
+// Estructura para trackear recursos temporales pendientes de liberación
+#if defined(_WIN32) && defined(_MSC_VER)
+struct PendingRelease {
+    ID3D12Resource* resource;
+    unsigned long long fenceValue;
+};
+#endif
 
 // v1.6.0 DEV-002.3 - Resource Manager (AAA Architecture)
 // Encapsulates resource creation (buffers, textures, descriptor heaps)
@@ -124,6 +134,16 @@ public:
 #endif
     );
 
+    // v1.7.0 H3 - Deferred Release Queue
+    // Process pending releases for resources whose fence value has been reached by GPU
+    void ProcessDeferredReleases(
+#if defined(_WIN32) && defined(_MSC_VER)
+        unsigned long long completedFenceValue
+#else
+        unsigned long long completedFenceValue
+#endif
+    );
+
     // Shutdown and release all resources
     void Shutdown();
 
@@ -136,6 +156,9 @@ private:
     unsigned int m_descriptorSizeDSV = 0;
     unsigned int m_descriptorSizeCBV_SRV_UAV = 0;
     unsigned int m_descriptorSizeSampler = 0;
+
+    // v1.7.0 H3 - Deferred Release Queue
+    std::vector<PendingRelease> m_pendingReleases;
 
     // Helper: Create upload heap for staging
     ID3D12Resource* CreateUploadBuffer(unsigned int sizeInBytes);

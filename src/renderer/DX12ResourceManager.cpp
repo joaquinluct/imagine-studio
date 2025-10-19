@@ -148,17 +148,18 @@ void* DX12ResourceManager::CreateVertexBuffer(
 
         uploadCommandList->ResourceBarrier(1, &barrier);
 
-        // BUG-4 FIX INTENTO #5: Return upload buffer to caller
-        // Caller MUST keep it alive until GPU finishes copying, then release it
+        // v1.7.0 H3.5: Return upload buffer to caller for backward compatibility
+        // In future versions, this will be removed and upload buffer will be auto-enqueued
         if (outUploadBuffer)
         {
             *outUploadBuffer = uploadBuffer;
+            CORE_LOG_INFO("DX12ResourceManager: Upload buffer returned to caller (manual management)");
         }
         else
         {
-            // If caller doesn't want to manage upload buffer, release it immediately
-            // WARNING: This will cause D3D12 errors if GPU hasn't finished copying yet
+            // Legacy path: release immediately (DEPRECATED - causes errors)
             uploadBuffer->Release();
+            CORE_LOG_WARN("DX12ResourceManager: Upload buffer released immediately (DEPRECATED)");
         }
     }
 
@@ -409,6 +410,16 @@ void DX12ResourceManager::ReleaseDescriptorHeap(
 void DX12ResourceManager::Shutdown()
 {
 #if defined(_WIN32) && defined(_MSC_VER)
+    // v1.7.0 H3: Release ALL pending resources before shutdown
+    for (auto& pending : m_pendingReleases)
+    {
+        if (pending.resource)
+        {
+            pending.resource->Release();
+        }
+    }
+    m_pendingReleases.clear();
+
     CORE_LOG_INFO("DX12ResourceManager shutdown");
 #endif
 
@@ -482,5 +493,38 @@ void DX12ResourceManager::CopyBufferRegion(
     commandList->CopyBufferRegion(dest, 0, src, 0, sizeInBytes);
 }
 #endif
+
+void DX12ResourceManager::ProcessDeferredReleases(
+#if defined(_WIN32) && defined(_MSC_VER)
+    unsigned long long completedFenceValue
+#else
+    unsigned long long completedFenceValue
+#endif
+)
+{
+#if defined(_WIN32) && defined(_MSC_VER)
+    // v1.7.0 H3.4 - Process pending releases
+    // Release resources whose fence value has been reached by GPU
+    for (auto it = m_pendingReleases.begin(); it != m_pendingReleases.end(); )
+    {
+        if (completedFenceValue >= it->fenceValue)
+        {
+            // GPU finished using this resource, safe to release
+            if (it->resource)
+            {
+                it->resource->Release();
+            }
+            
+            // Remove from pending list
+            it = m_pendingReleases.erase(it);
+        }
+        else
+        {
+            // GPU still using this resource, keep it
+            ++it;
+        }
+    }
+#endif
+}
 
 } // namespace Renderer
