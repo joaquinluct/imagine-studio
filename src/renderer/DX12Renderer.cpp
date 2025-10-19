@@ -401,8 +401,12 @@ void DX12Renderer::CreateSceneRenderTarget()
     d3dDevice->CreateShaderResourceView(m_sceneRenderTarget, &srvDesc, m_sceneSRV_CPU);
     
     CORE_LOG_INFO("DX12Renderer: Scene render target created (1920x1080, offscreen)");
+    
+#ifdef _DEBUG
+    // v1.7.0 H4: Debug-only logging (verbose descriptor handles)
     CORE_LOG_INFO("Scene RT SRV GPU handle: " + std::to_string(m_sceneSRV_GPU.ptr));
     CORE_LOG_INFO("Scene RT SRV CPU handle: " + std::to_string(m_sceneSRV_CPU.ptr));
+#endif
 }
 
 void DX12Renderer::CalculateMVPMatrix()
@@ -428,9 +432,10 @@ void DX12Renderer::CalculateMVPMatrix()
     const float* viewMatrix = m_camera->GetViewMatrix();
     const float* projectionMatrix = m_camera->GetProjectionMatrix();
     
-    // BUG-4 DEBUG: Log camera position
+#ifdef _DEBUG
+    // v1.7.0 H4: Debug-only camera matrix logging
     static int frameCount = 0;
-    if (frameCount++ == 0) // Solo primer frame
+    if (frameCount++ == 0)
     {
         CORE_LOG_INFO("BUG-4 DEBUG: Camera view matrix:");
         for (int i = 0; i < 4; ++i)
@@ -440,6 +445,7 @@ void DX12Renderer::CalculateMVPMatrix()
             CORE_LOG_INFO(ss.str());
         }
     }
+#endif
     
     // Calculate ModelView = Model * View
     float modelView[16];
