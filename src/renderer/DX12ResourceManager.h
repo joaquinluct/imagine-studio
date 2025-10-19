@@ -28,17 +28,20 @@ public:
 
     // Create vertex buffer (GPU-only memory, optimal performance)
     // Returns nullptr on failure
+    // BUG-4 FIX: outUploadBuffer parameter allows caller to keep upload buffer alive until GPU finishes
 #if defined(_WIN32) && defined(_MSC_VER)
     ID3D12Resource* CreateVertexBuffer(
         const void* data,
         unsigned int sizeInBytes,
-        ID3D12GraphicsCommandList* uploadCommandList = nullptr
+        ID3D12GraphicsCommandList* uploadCommandList = nullptr,
+        ID3D12Resource** outUploadBuffer = nullptr
     );
 #else
     void* CreateVertexBuffer(
         const void* data,
         unsigned int sizeInBytes,
-        void* uploadCommandList = nullptr
+        void* uploadCommandList = nullptr,
+        void** outUploadBuffer = nullptr
     );
 #endif
 

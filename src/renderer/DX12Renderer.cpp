@@ -31,6 +31,7 @@
 #endif
 
 #include <iostream>
+#include <sstream>
 
 namespace Renderer {
 
@@ -278,10 +279,13 @@ void DX12Renderer::Initialize(HWND hwnd)
     // Use command context for vertex buffer upload
     m_commandContext->BeginFrame(nullptr);
     
+    // BUG-4 FIX INTENTO #5: Keep upload buffer alive until GPU finishes copying
+    ID3D12Resource* uploadBuffer = nullptr;
     m_vertexBuffer = m_resourceManager->CreateVertexBuffer(
         vertices,
         vertexBufferSize,
-        m_commandContext->GetCommandList()
+        m_commandContext->GetCommandList(),
+        &uploadBuffer
     );
     
     if (!m_vertexBuffer)
@@ -294,6 +298,12 @@ void DX12Renderer::Initialize(HWND hwnd)
     m_commandContext->EndFrame();
     m_commandContext->Execute();
     m_commandContext->WaitForGPU();
+    
+    // BUG-4 FIX INTENTO #5: NOW it's safe to release upload buffer (GPU finished copying)
+    if (uploadBuffer)
+    {
+        uploadBuffer->Release();
+    }
     
     // Configure vertex buffer view
     m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
@@ -391,6 +401,8 @@ void DX12Renderer::CreateSceneRenderTarget()
     d3dDevice->CreateShaderResourceView(m_sceneRenderTarget, &srvDesc, m_sceneSRV_CPU);
     
     CORE_LOG_INFO("DX12Renderer: Scene render target created (1920x1080, offscreen)");
+    CORE_LOG_INFO("Scene RT SRV GPU handle: " + std::to_string(m_sceneSRV_GPU.ptr));
+    CORE_LOG_INFO("Scene RT SRV CPU handle: " + std::to_string(m_sceneSRV_CPU.ptr));
 }
 
 void DX12Renderer::CalculateMVPMatrix()
@@ -415,6 +427,19 @@ void DX12Renderer::CalculateMVPMatrix()
     
     const float* viewMatrix = m_camera->GetViewMatrix();
     const float* projectionMatrix = m_camera->GetProjectionMatrix();
+    
+    // BUG-4 DEBUG: Log camera position
+    static int frameCount = 0;
+    if (frameCount++ == 0) // Solo primer frame
+    {
+        CORE_LOG_INFO("BUG-4 DEBUG: Camera view matrix:");
+        for (int i = 0; i < 4; ++i)
+        {
+            std::ostringstream ss;
+            ss << "[" << viewMatrix[i*4+0] << ", " << viewMatrix[i*4+1] << ", " << viewMatrix[i*4+2] << ", " << viewMatrix[i*4+3] << "]";
+            CORE_LOG_INFO(ss.str());
+        }
+    }
     
     // Calculate ModelView = Model * View
     float modelView[16];
@@ -475,6 +500,38 @@ void DX12Renderer::RenderForwardPass()
     CalculateMVPMatrix();
     m_opaquePass->SetMVPMatrix(m_mvpMatrix);
     
+    // Declare command list pointer for use throughout the method
+    ID3D12GraphicsCommandList* commandList = nullptr;
+    
+    // === RESOURCE STATE TRANSITION: Scene RT ? RENDER_TARGET (only after first frame) ===
+    // BUG-4 FIX INTENTO #4: Scene RT starts in RENDER_TARGET state on creation
+    // Only transition from PIXEL_SHADER_RESOURCE on subsequent frames
+    static bool isFirstFrame = true;
+    
+    if (!isFirstFrame)
+    {
+        m_commandContext->BeginFrame(nullptr);
+        commandList = m_commandContext->GetCommandList();
+        
+        if (commandList && m_sceneRenderTarget)
+        {
+            // Transition: PIXEL_SHADER_RESOURCE ? RENDER_TARGET (frame N+1)
+            D3D12_RESOURCE_BARRIER sceneRTBarrier = {};
+            sceneRTBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+            sceneRTBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+            sceneRTBarrier.Transition.pResource = m_sceneRenderTarget;
+            sceneRTBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+            sceneRTBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+            sceneRTBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+            
+            commandList->ResourceBarrier(1, &sceneRTBarrier);
+        }
+        
+        m_commandContext->EndFrame();
+        m_commandContext->Execute();
+        m_commandContext->WaitForGPU();
+    }
+    
     // === PASS 1: OPAQUE PASS (render 3D scene to scene RT) ===
     m_commandContext->BeginFrame(m_pipelineState);
     m_opaquePass->Execute(*m_commandContext);
@@ -482,14 +539,61 @@ void DX12Renderer::RenderForwardPass()
     m_commandContext->Execute();
     m_commandContext->WaitForGPU();
     
+    // === RESOURCE STATE TRANSITION: Scene RT ? PIXEL_SHADER_RESOURCE ===
+    // BUG-4 FIX: Transition scene RT from RENDER_TARGET to PIXEL_SHADER_RESOURCE
+    // so ImGui can sample it as a texture in the Viewport panel
+    m_commandContext->BeginFrame(nullptr);
+    commandList = m_commandContext->GetCommandList();
+    
+    if (commandList && m_sceneRenderTarget)
+    {
+        D3D12_RESOURCE_BARRIER sceneRTBarrier = {};
+        sceneRTBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+        sceneRTBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+        sceneRTBarrier.Transition.pResource = m_sceneRenderTarget;
+        sceneRTBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+        sceneRTBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+        sceneRTBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+        
+        commandList->ResourceBarrier(1, &sceneRTBarrier);
+    }
+    
+    m_commandContext->EndFrame();
+    m_commandContext->Execute();
+    m_commandContext->WaitForGPU();
+    
+    // Mark that first frame has been processed
+    isFirstFrame = false;
+    
     // === PASS 2: UI PASS (render ImGui to back buffer) ===
-    // IMPORTANT: Always execute UI pass, visibility is handled inside UIPass::Execute
     unsigned int backBufferIndex = m_swapChain->GetCurrentBackBufferIndex();
     ID3D12Resource* backBuffer = m_swapChain->GetBackBuffer(backBufferIndex);
     
     // Get RTV for back buffer
     D3D12_CPU_DESCRIPTOR_HANDLE backBufferRTV = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
     backBufferRTV.ptr += backBufferIndex * m_rtvDescriptorSize;
+    
+    // === RESOURCE STATE TRANSITION: Back Buffer PRESENT ? RENDER_TARGET ===
+    // BUG-4 FIX INTENTO #3: Transition back buffer to RENDER_TARGET before UIPass
+    m_commandContext->BeginFrame(nullptr);
+    commandList = m_commandContext->GetCommandList();
+    
+    if (commandList && backBuffer)
+    {
+        D3D12_RESOURCE_BARRIER backBufferBarrier = {};
+        backBufferBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+        backBufferBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+        backBufferBarrier.Transition.pResource = backBuffer;
+        backBufferBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+        backBufferBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+        backBufferBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+        
+        commandList->ResourceBarrier(1, &backBufferBarrier);
+    }
+    
+    m_commandContext->EndFrame();
+    m_commandContext->Execute();
+    m_commandContext->WaitForGPU();
     
     // Configure UIPass
     m_uiPass->SetRenderTarget(backBuffer, backBufferRTV);
@@ -499,6 +603,28 @@ void DX12Renderer::RenderForwardPass()
     // Execute UIPass
     m_commandContext->BeginFrame(nullptr);
     m_uiPass->Execute(*m_commandContext);
+    m_commandContext->EndFrame();
+    m_commandContext->Execute();
+    m_commandContext->WaitForGPU();
+    
+    // === RESOURCE STATE TRANSITION: Back Buffer RENDER_TARGET ? PRESENT ===
+    // BUG-4 FIX INTENTO #3: Transition back buffer to PRESENT before Present()
+    m_commandContext->BeginFrame(nullptr);
+    commandList = m_commandContext->GetCommandList();
+    
+    if (commandList && backBuffer)
+    {
+        D3D12_RESOURCE_BARRIER backBufferBarrier = {};
+        backBufferBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+        backBufferBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+        backBufferBarrier.Transition.pResource = backBuffer;
+        backBufferBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+        backBufferBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+        backBufferBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+        
+        commandList->ResourceBarrier(1, &backBufferBarrier);
+    }
+    
     m_commandContext->EndFrame();
     m_commandContext->Execute();
     m_commandContext->WaitForGPU();

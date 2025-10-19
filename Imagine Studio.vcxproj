@@ -131,6 +131,8 @@
     <None Include="assets\asset_high.dat" />
     <None Include="assets\asset_normal.dat" />
     <None Include="assets\example_asset.dat" />
+    <None Include="BUG4_FIX.md" />
+    <None Include="BUG4_FIX_INTENTO4.md" />
     <None Include="docs\AAA_STANDARDS.md" />
     <None Include="docs\backlog.md" />
     <None Include="docs\CLOSE_SPRINT.md" />

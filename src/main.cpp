@@ -327,9 +327,13 @@ static int RunApp(HINSTANCE hInstance)
             if (viewport)
             {
 #if defined(_WIN32) && defined(_MSC_VER)
-                // v1.6.0 DEV-002.6: Get scene render target SRV (AAA architecture)
+                // BUG-4 FIX INTENTO #4: ImGui DX12 backend expects ImTextureID as GPU descriptor handle
+                // We need to pass the GPU handle directly, not just the .ptr value
                 D3D12_GPU_DESCRIPTOR_HANDLE srvHandle = renderer.GetSceneRenderTargetSRV();
-                viewport->SetRenderTargetSRV(reinterpret_cast<void*>(srvHandle.ptr));
+                
+                // CRITICAL: Cast the ENTIRE handle structure as ImTextureID
+                // ImGui DX12 backend internally uses this to access the SRV
+                viewport->SetRenderTargetSRV(reinterpret_cast<void*>(static_cast<intptr_t>(srvHandle.ptr)));
 #endif
             }
             

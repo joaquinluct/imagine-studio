@@ -52,13 +52,15 @@ bool DX12ResourceManager::Initialize(
 ID3D12Resource* DX12ResourceManager::CreateVertexBuffer(
     const void* data,
     unsigned int sizeInBytes,
-    ID3D12GraphicsCommandList* uploadCommandList
+    ID3D12GraphicsCommandList* uploadCommandList,
+    ID3D12Resource** outUploadBuffer
 )
 #else
 void* DX12ResourceManager::CreateVertexBuffer(
     const void* data,
     unsigned int sizeInBytes,
-    void* uploadCommandList
+    void* uploadCommandList,
+    void** outUploadBuffer
 )
 #endif
 {
@@ -146,8 +148,18 @@ void* DX12ResourceManager::CreateVertexBuffer(
 
         uploadCommandList->ResourceBarrier(1, &barrier);
 
-        // Release upload buffer (caller must execute command list and wait before using vertex buffer)
-        uploadBuffer->Release();
+        // BUG-4 FIX INTENTO #5: Return upload buffer to caller
+        // Caller MUST keep it alive until GPU finishes copying, then release it
+        if (outUploadBuffer)
+        {
+            *outUploadBuffer = uploadBuffer;
+        }
+        else
+        {
+            // If caller doesn't want to manage upload buffer, release it immediately
+            // WARNING: This will cause D3D12 errors if GPU hasn't finished copying yet
+            uploadBuffer->Release();
+        }
     }
 
     CORE_LOG_INFO("DX12ResourceManager: Vertex buffer created (" + std::to_string(sizeInBytes) + " bytes)");
