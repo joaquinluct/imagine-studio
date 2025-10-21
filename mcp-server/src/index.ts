@@ -25,15 +25,11 @@ class AutoGenStudioMCP {
   private server: Server;
 
   constructor() {
+    // FIX: Server constructor only accepts 1 argument in latest SDK
     this.server = new Server(
       {
         name: 'autogen-studio-mcp',
         version: '1.0.0',
-      },
-      {
-        capabilities: {
-          tools: {},
-        },
       }
     );
 
