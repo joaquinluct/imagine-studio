@@ -69,4 +69,20 @@ docs/**/*.html
 # Ignore local settings
 *.local
 
+# AutoGen Studio (temporales)
+autogen/outputs/*/         # Archivos generados temporalmente
+autogen/sessions/*_failed.md    # Logs de intentos fallidos (solo guardar success)
+autogen/.autogenstudio/     # Caché de AutoGen Studio
+*.autogen.tmp
+
+# MCP Server (Node.js)
+mcp-server/node_modules/
+mcp-server/dist/
+mcp-server/*.log
+mcp-server/.env
+
+# Keep tracked
+!autogen/sessions/summary/  # Guardar summaries diarios
+!autogen/sessions/*_success.md  # Guardar logs exitosos
+
 # Keep this file tracked
