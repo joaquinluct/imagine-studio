@@ -1,0 +1,53 @@
+{
+  "provider": "autogen_agentchat.teams.SelectorGroupChat",
+  "component_type": "team",
+  "version": 1,
+  "component_version": 1,
+  "description": "Imagine Studio DevTeam - Selector-based workflow (ALTERNATIVA - NO RECOMENDADA)",
+  "label": "Imagine Studio DevTeam Selector",
+  "config": {
+    "participants": [
+      {
+        "component_ref": "orchestrator"
+      },
+      {
+        "component_ref": "planner"
+      },
+      {
+        "component_ref": "coder"
+      },
+      {
+        "component_ref": "reviewer"
+      },
+      {
+        "component_ref": "tester"
+      }
+    ],
+    "selector_agent": {
+      "component_ref": "orchestrator"
+    },
+    "termination_condition": {
+      "provider": "autogen_agentchat.base.OrTerminationCondition",
+      "component_type": "termination",
+      "version": 1,
+      "component_version": 1,
+      "label": "WorkflowTermination",
+      "config": {
+        "conditions": [
+          {
+            "provider": "autogen_agentchat.conditions.TextMentionTermination",
+            "component_type": "termination",
+            "version": 1,
+            "component_version": 1,
+            "description": "Terminate when workflow completes successfully",
+            "label": "WorkflowComplete",
+            "config": {
+              "text": "WORKFLOW_FINISHED_OK"
+            }
+          }
+        ]
+      }
+    },
+    "max_turns": 20
+  }
+}

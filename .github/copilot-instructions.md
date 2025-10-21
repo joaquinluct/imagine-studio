@@ -1,6 +1,6 @@
 # GitHub Copilot Instructions - Imagine Studio
 
-> **Quick Context**: C++ Game Engine (AAA standards), Agile sprints, DirectX 12 rendering
+> **Quick Context**: C++ Game Engine (AAA standards), Agile sprints, DirectX 12 rendering, AutoGen Multi-Agent System
 
 ---
 
@@ -9,10 +9,40 @@
 **First session**: Read these **once**:
 1. [`docs/MAIN.md`](../docs/MAIN.md) - Project pillars & AAA standards  
 2. [`docs/methodology/CORE.md`](../docs/methodology/CORE.md) - Methodology fundamentals
+3. **[`.github/autogen-context.md`](autogen-context.md) - AutoGen multi-agent system** ? **NEW**
 
 **Every session**: Check:
 1. [`docs/daily.md`](../docs/daily.md) - Last task + current task  
 2. This file - Core workflow rules
+
+---
+
+## ?? AUTOGEN MULTI-AGENT SYSTEM
+
+**When working with AutoGen** (tasks in `autogen/`):
+- Read: [`.github/autogen-context.md`](autogen-context.md) for complete context
+- **4 specialized agents**: Planner, Coder, Reviewer, Tester
+- **Workflow**: Round Robin (sequential turns)
+- **Termination keyword**: `WORKFLOW_FINISHED_OK`
+
+**Quick commands**:
+```powershell
+# Start AutoGen Studio
+autogenstudio ui --port 8081 --appdir .
+
+# Create prompt from template
+Copy-Item "autogen/prompts/_template.md" "autogen/prompts/sprint_v1.9.0/HX.Y.md"
+
+# Log session
+.\autogen\log-autogen-session.ps1 -TaskID "H1.1" -Status "SUCCESS" -LogContent "..." -Duration 210
+```
+
+**Structure**:
+- `autogen/agents/` - 4 agent JSON files
+- `autogen/teams/` - Team configurations
+- `autogen/prompts/` - Reusable prompts by sprint
+- `autogen/sessions/` - Execution logs
+- `autogen/outputs/` - Generated files (temporary)
 
 ---
 
@@ -26,7 +56,7 @@
 Repeat from 1
 ```
 
-### Validation (MANDATORY)
+**Validation (MANDATORY)**:
 
 **Build 1 (CMake)**:
 ```powershell
@@ -55,6 +85,7 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 | `docs/sprint.md` | Sprint goals | When needed |
 | `docs/sprint_tasks.md` | Task details | When needed |
 | `docs/sprint_bugs.md` | Bug tracking | When debugging |
+| **`.github/autogen-context.md`** | **AutoGen system** | **When using AutoGen** |
 
 **Full methodology**: [`docs/methodology/CORE.md`](../docs/methodology/CORE.md)
 
@@ -85,6 +116,11 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 ### 5. File Encoding
 - **UTF-8 with BOM** + **CRLF** line endings (Windows)
 - Run `.\scripts\check-encoding.ps1 -Fix` if issues detected
+
+### 6. AutoGen Termination Keywords (NEW)
+- **Use**: `WORKFLOW_FINISHED_OK` (Tester Agent when builds pass)
+- **Avoid**: `BUILD_SUCCESS` in prompts (causes premature termination)
+- See: [`autogen/TERMINATION_FIX.md`](../autogen/TERMINATION_FIX.md)
 
 ---
 
@@ -133,6 +169,8 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 - IA sessions (85% limit) ? [`docs/methodology/SESSIONS.md`](../docs/methodology/SESSIONS.md)
 - Sprint deviations ? [`docs/methodology/DEVIATIONS.md`](../docs/methodology/DEVIATIONS.md)
 - Full workflow ? [`docs/methodology/WORKFLOW.md`](../docs/methodology/WORKFLOW.md)
+- **AutoGen setup** ? [`autogen/SETUP.md`](../autogen/SETUP.md)
+- **AutoGen workflow** ? [`autogen/WORKFLOW_COMPLETE.md`](../autogen/WORKFLOW_COMPLETE.md)
 
 ---
 
@@ -151,6 +189,11 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 - Run `.\scripts\check-encoding.ps1 -Fix`
 - Verify UTF-8 with BOM + CRLF
 
+**AutoGen issues?**
+- Read: [`autogen/TERMINATION_FIX.md`](../autogen/TERMINATION_FIX.md)
+- Verify: AutoGen Studio running from project root
+- Check: Team has `WORKFLOW_FINISHED_OK` termination (not `BUILD_SUCCESS`)
+
 ---
 
 ## ?? PREFERENCES
@@ -159,6 +202,7 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 - **AAA standards**: Every module production-ready from start
 - **Include order**: Project headers (`"..."`) first, then system (`<...>`), alphabetically within groups
 - **Validate before commit**: Always compile + fix errors/warnings
+- **AutoGen logging**: Always register successful sessions in `autogen/sessions/`
 
 ---
 
@@ -174,10 +218,14 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 # Archives all to docs/sprints/ with version suffix
 Move-Item "docs/sprint_v<version>.md" "docs/sprints/"
 # ... (script handles all files)
+
+# Copy AutoGen logs
+Copy-Item "autogen/sessions/*_success.md" "docs/sprints/sprint_v<version>_autogen/"
 ```
 
 ---
-**Version**: 2.0  
+**Version**: 2.1  
 **Last update**: 2025-01-18  
 **Full methodology**: [`docs/methodology/CORE.md`](../docs/methodology/CORE.md)  
+**AutoGen context**: [`.github/autogen-context.md`](autogen-context.md)  
 **Templates (for other projects)**: [`docs/templates/`](../docs/templates/)
