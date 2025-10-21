@@ -2,6 +2,8 @@
 
 > **Resumen**: Configuración completa de sistema multi-agente AutoGen Studio con integración MCP (Model Context Protocol) para GitHub Copilot.
 
+> **?? IMPORTANTE**: MCP solo funciona con **VS Code**. Si usas **Visual Studio 2022**, sigue la [Guía para Visual Studio 2022](#guía-para-visual-studio-2022) al final del documento.
+
 ---
 
 ## ?? ÍNDICE
@@ -14,6 +16,7 @@
 6. [Integración con GitHub Copilot](#integración-con-github-copilot)
 7. [Primera Tarea Completada (H1.1)](#primera-tarea-completada-h11)
 8. [Próximos Pasos](#próximos-pasos)
+9. **[Guía para Visual Studio 2022](#guía-para-visual-studio-2022)** ? **NUEVO**
 
 ---
 
@@ -1013,7 +1016,7 @@ Y Copilot ejecutará las 3 tareas automáticamente.
 **Fecha**: 2025-01-18  
 **Sesión**: AutoGen Studio + MCP Setup  
 **Estado**: ? Completada  
-**Próximos pasos**: Configurar MCP y ejecutar H1.2
+**Próximos pasos**: Usar AutoGen Studio UI en Visual Studio 2022
 
 ---
 
