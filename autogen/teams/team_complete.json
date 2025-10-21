@@ -1,0 +1,60 @@
+{
+  "provider": "autogen_agentchat.teams.RoundRobinGroupChat",
+  "component_type": "team",
+  "version": 1,
+  "component_version": 1,
+  "description": "Imagine Studio DevTeam - Complete workflow with 4 specialized agents",
+  "label": "Imagine Studio DevTeam",
+  "config": {
+    "participants": [
+      {
+        "component_ref": "planner"
+      },
+      {
+        "component_ref": "coder"
+      },
+      {
+        "component_ref": "reviewer"
+      },
+      {
+        "component_ref": "tester"
+      }
+    ],
+    "termination_condition": {
+      "provider": "autogen_agentchat.base.OrTerminationCondition",
+      "component_type": "termination",
+      "version": 1,
+      "component_version": 1,
+      "label": "WorkflowTermination",
+      "config": {
+        "conditions": [
+          {
+            "provider": "autogen_agentchat.conditions.TextMentionTermination",
+            "component_type": "termination",
+            "version": 1,
+            "component_version": 1,
+            "description": "Terminate when workflow completes successfully",
+            "label": "WorkflowComplete",
+            "config": {
+              "text": "WORKFLOW_FINISHED_OK"
+            }
+          },
+          {
+            "provider": "autogen_agentchat.conditions.MaxMessageTermination",
+            "component_type": "termination",
+            "version": 1,
+            "component_version": 1,
+            "description": "Terminate after max messages (safety limit)",
+            "label": "MaxRounds",
+            "config": {
+              "max_messages": 100,
+              "include_agent_event": false
+            }
+          }
+        ]
+      }
+    },
+    "max_turns": 20,
+    "emit_team_events": true
+  }
+}

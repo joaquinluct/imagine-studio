@@ -1,0 +1,82 @@
+{
+  "provider": "autogen_agentchat.agents.AssistantAgent",
+  "component_type": "agent",
+  "version": 1,
+  "component_version": 1,
+  "description": "Build & Validation - Compiles (CMake + MSBuild) and runs tests",
+  "label": "Tester Agent",
+  "config": {
+    "name": "tester",
+    "model_client": {
+      "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
+      "component_type": "model",
+      "version": 1,
+      "component_version": 1,
+      "description": "Chat completion client for OpenAI hosted models.",
+      "label": "OpenAIChatCompletionClient",
+      "config": {
+        "model": "gpt-4o"
+      }
+    },
+    "workbench": {
+      "provider": "autogen_core.tools.StaticWorkbench",
+      "component_type": "workbench",
+      "version": 1,
+      "component_version": 1,
+      "description": "Tools for compiling and testing",
+      "label": "TesterWorkbench",
+      "config": {
+        "tools": [
+          {
+            "provider": "autogen_core.tools.FunctionTool",
+            "component_type": "tool",
+            "version": 1,
+            "component_version": 1,
+            "description": "Execute CMake build",
+            "label": "compile_cmake",
+            "config": {
+              "source_code": "import subprocess\n\ndef compile_cmake() -> str:\n    \"\"\"Execute CMake build (Debug)\"\"\"\n    try:\n        result = subprocess.run(['cmake', '--build', 'build', '--config', 'Debug'], capture_output=True, text=True, timeout=300)\n        output = f'CMake: Return Code {result.returncode}\\n{result.stdout}'\n        if result.returncode == 0:\n            output += '\\n? CMake PASS'\n        else:\n            output += '\\n? CMake FAIL'\n        return output\n    except Exception as e:\n        return f'? CMake error: {str(e)}'",
+              "name": "compile_cmake",
+              "description": "Execute CMake build (Debug)",
+              "global_imports": ["subprocess"],
+              "has_cancellation_support": false
+            }
+          },
+          {
+            "provider": "autogen_core.tools.FunctionTool",
+            "component_type": "tool",
+            "version": 1,
+            "component_version": 1,
+            "description": "Execute MSBuild",
+            "label": "compile_msbuild",
+            "config": {
+              "source_code": "import subprocess\n\ndef compile_msbuild() -> str:\n    \"\"\"Execute MSBuild\"\"\"\n    try:\n        result = subprocess.run(['msbuild', 'Imagine Studio.sln', '/t:Build', '/p:Configuration=Debug', '/p:Platform=x64', '/m', '/nologo'], capture_output=True, text=True, timeout=300)\n        output = f'MSBuild: Return Code {result.returncode}\\n{result.stdout}'\n        if result.returncode == 0:\n            output += '\\n? MSBuild PASS'\n        else:\n            output += '\\n? MSBuild FAIL'\n        return output\n    except Exception as e:\n        return f'? MSBuild error: {str(e)}'",
+              "name": "compile_msbuild",
+              "description": "Execute MSBuild",
+              "global_imports": ["subprocess"],
+              "has_cancellation_support": false
+            }
+          }
+        ]
+      }
+    },
+    "model_context": {
+      "provider": "autogen_core.model_context.UnboundedChatCompletionContext",
+      "component_type": "chat_completion_context",
+      "version": 1,
+      "component_version": 1,
+      "description": "Unbounded context for build logs",
+      "label": "UnboundedChatCompletionContext",
+      "config": {}
+    },
+    "description": "Tester Agent for Imagine Studio - Executes builds and tests",
+    "system_message": "You are the Tester Agent for Imagine Studio.\n\nYour role:\n1. Execute CMake build\n2. Execute MSBuild\n\nOutput format:\nBuild 1 (CMake): PASS/FAIL\nBuild 2 (MSBuild): PASS/FAIL\n\n[If ALL PASS]\n? ALL CHECKS PASSED\n@planner Task completed.\nWORKFLOW_FINISHED_OK\n\n[If ANY FAIL]\n? BUILD FAILED\n@coder Please fix.",
+    "model_client_stream": false,
+    "reflect_on_tool_use": true,
+    "tool_call_summary_format": "{result}",
+    "metadata": {
+      "role": "tester",
+      "project": "Imagine Studio"
+    }
+  }
+}

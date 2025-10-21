@@ -1,0 +1,82 @@
+{
+  "provider": "autogen_agentchat.agents.AssistantAgent",
+  "component_type": "agent",
+  "version": 1,
+  "component_version": 1,
+  "description": "Implementation Specialist - Writes AAA-quality C++14 code",
+  "label": "Coder Agent",
+  "config": {
+    "name": "coder",
+    "model_client": {
+      "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
+      "component_type": "model",
+      "version": 1,
+      "component_version": 1,
+      "description": "Chat completion client for OpenAI hosted models.",
+      "label": "OpenAIChatCompletionClient",
+      "config": {
+        "model": "gpt-4o"
+      }
+    },
+    "workbench": {
+      "provider": "autogen_core.tools.StaticWorkbench",
+      "component_type": "workbench",
+      "version": 1,
+      "component_version": 1,
+      "description": "Tools for reading and writing code files",
+      "label": "CoderWorkbench",
+      "config": {
+        "tools": [
+          {
+            "provider": "autogen_core.tools.FunctionTool",
+            "component_type": "tool",
+            "version": 1,
+            "component_version": 1,
+            "description": "Read file contents",
+            "label": "read_file",
+            "config": {
+              "source_code": "def read_file(filepath: str) -> str:\n    \"\"\"Read file contents\"\"\"\n    try:\n        with open(filepath, 'r', encoding='utf-8') as f:\n            return f.read()\n    except Exception as e:\n        return f'Error reading {filepath}: {str(e)}'",
+              "name": "read_file",
+              "description": "Read file contents",
+              "global_imports": [],
+              "has_cancellation_support": false
+            }
+          },
+          {
+            "provider": "autogen_core.tools.FunctionTool",
+            "component_type": "tool",
+            "version": 1,
+            "component_version": 1,
+            "description": "Write file contents (UTF-8 with BOM, CRLF)",
+            "label": "write_file",
+            "config": {
+              "source_code": "import os\n\ndef write_file(filepath: str, content: str) -> str:\n    \"\"\"Write file contents (UTF-8 with BOM, CRLF)\"\"\"\n    try:\n        os.makedirs(os.path.dirname(filepath) if os.path.dirname(filepath) else '.', exist_ok=True)\n        content = content.replace('\\n', '\\r\\n') if '\\r\\n' not in content else content\n        with open(filepath, 'w', encoding='utf-8-sig') as f:\n            f.write(content)\n        return f'Successfully wrote {filepath}'\n    except Exception as e:\n        return f'Error writing {filepath}: {str(e)}'",
+              "name": "write_file",
+              "description": "Write file contents (UTF-8 with BOM, CRLF)",
+              "global_imports": ["os"],
+              "has_cancellation_support": false
+            }
+          }
+        ]
+      }
+    },
+    "model_context": {
+      "provider": "autogen_core.model_context.UnboundedChatCompletionContext",
+      "component_type": "chat_completion_context",
+      "version": 1,
+      "component_version": 1,
+      "description": "Unbounded context for code implementation",
+      "label": "UnboundedChatCompletionContext",
+      "config": {}
+    },
+    "description": "Coder Agent for Imagine Studio - Implements code following AAA standards",
+    "system_message": "You are the Coder Agent for Imagine Studio (C++ Game Engine, AAA standards, C++14).\n\nYour role:\n1. Implement code according to Planner's specifications\n2. Follow AAA standards\n3. UTF-8 with BOM + CRLF\n\nOutput format:\nFile: [filepath]\n[Code implementation]\n@reviewer Please review this.\n\nWhen implementation complete, say: CODE_READY",
+    "model_client_stream": false,
+    "reflect_on_tool_use": true,
+    "tool_call_summary_format": "{result}",
+    "metadata": {
+      "role": "coder",
+      "project": "Imagine Studio"
+    }
+  }
+}

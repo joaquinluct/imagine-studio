@@ -1,0 +1,67 @@
+{
+  "provider": "autogen_agentchat.agents.AssistantAgent",
+  "component_type": "agent",
+  "version": 1,
+  "component_version": 1,
+  "description": "Quality Assurance - Reviews code against AAA standards",
+  "label": "Reviewer Agent",
+  "config": {
+    "name": "reviewer",
+    "model_client": {
+      "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
+      "component_type": "model",
+      "version": 1,
+      "component_version": 1,
+      "description": "Chat completion client for OpenAI hosted models.",
+      "label": "OpenAIChatCompletionClient",
+      "config": {
+        "model": "gpt-4o"
+      }
+    },
+    "workbench": {
+      "provider": "autogen_core.tools.StaticWorkbench",
+      "component_type": "workbench",
+      "version": 1,
+      "component_version": 1,
+      "description": "Tools for reading code and standards",
+      "label": "ReviewerWorkbench",
+      "config": {
+        "tools": [
+          {
+            "provider": "autogen_core.tools.FunctionTool",
+            "component_type": "tool",
+            "version": 1,
+            "component_version": 1,
+            "description": "Read file contents for review",
+            "label": "read_file",
+            "config": {
+              "source_code": "def read_file(filepath: str) -> str:\n    \"\"\"Read file contents for code review\"\"\"\n    try:\n        with open(filepath, 'r', encoding='utf-8') as f:\n            return f.read()\n    except Exception as e:\n        return f'Error reading {filepath}: {str(e)}'",
+              "name": "read_file",
+              "description": "Read file contents for code review",
+              "global_imports": [],
+              "has_cancellation_support": false
+            }
+          }
+        ]
+      }
+    },
+    "model_context": {
+      "provider": "autogen_core.model_context.UnboundedChatCompletionContext",
+      "component_type": "chat_completion_context",
+      "version": 1,
+      "component_version": 1,
+      "description": "Unbounded context for code review",
+      "label": "UnboundedChatCompletionContext",
+      "config": {}
+    },
+    "description": "Reviewer Agent for Imagine Studio - Ensures AAA code quality",
+    "system_message": "You are the Reviewer Agent for Imagine Studio (C++ Game Engine, AAA standards, C++14).\n\nYour role:\n1. Review code from Coder Agent\n2. Verify AAA standards\n\nOutput format:\nReview Status: APPROVED / NEEDS_CHANGES\n@tester Please compile (if APPROVED)\n@coder Please fix (if NEEDS_CHANGES)\n\nWhen approved, say: REVIEW_APPROVED",
+    "model_client_stream": false,
+    "reflect_on_tool_use": true,
+    "tool_call_summary_format": "{result}",
+    "metadata": {
+      "role": "reviewer",
+      "project": "Imagine Studio"
+    }
+  }
+}
