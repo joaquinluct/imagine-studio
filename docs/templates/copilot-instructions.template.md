@@ -1,13 +1,13 @@
-# GitHub Copilot Instructions - Imagine Studio
+# GitHub Copilot Instructions - [PLACEHOLDER: Project Name]
 
-> **Quick Context**: C++ Game Engine (AAA standards), Agile sprints, DirectX 12 rendering
+> **Quick Context**: [PLACEHOLDER: Brief project description - e.g., "Python web API, FastAPI + PostgreSQL"]
 
 ---
 
 ## ? QUICK START (Read Once)
 
 **First session**: Read these **once**:
-1. [`docs/MAIN.md`](../docs/MAIN.md) - Project pillars & AAA standards  
+1. [`docs/MAIN.md`](../docs/MAIN.md) - [PLACEHOLDER: Project fundamentals document name]
 2. [`docs/methodology/CORE.md`](../docs/methodology/CORE.md) - Methodology fundamentals
 
 **Every session**: Check:
@@ -21,28 +21,23 @@
 ```
 1. Read daily.md ? 2. Check code ? 3. Propose next step
       ?
-4. Implement ? 5. Validate (CMake + MSBuild) ? 6. Commit + Update docs
+4. Implement ? 5. Validate ([PLACEHOLDER]) ? 6. Commit + Update docs
       ?
 Repeat from 1
 ```
 
 ### Validation (MANDATORY)
 
-**Build 1 (CMake)**:
-```powershell
-cmake --build build --config Debug
-```
+**[PLACEHOLDER: Validation commands for your stack]**
 
-**Build 2 (MSBuild - Main Solution)**:
-```powershell
-msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
-```
+Examples by technology:
+- **C++/CMake**: `cmake --build build --config Debug`
+- **Python**: `pytest && mypy . && black --check .`
+- **Node.js**: `npm run lint && npm test && npm run build`
+- **Rust**: `cargo clippy && cargo test && cargo build`
+- **Go**: `go fmt && go vet && go test && go build`
 
-**Success criteria**: 0 errors, 0 warnings (both builds)
-
-**Note**: TWO build systems exist:
-- **Main Solution** (`Imagine Studio.sln` in root) ? Daily development (F5/Ctrl+Shift+B)
-- **CMake System** (`build/ImagineStudio.sln`) ? CI/automation
+**Success criteria**: [PLACEHOLDER: 0 errors, 0 warnings / All tests pass / etc.]
 
 ---
 
@@ -62,14 +57,13 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 
 ## ?? CRITICAL RULES
 
-### 1. Never Modify `external/`
-- Third-party libraries are **READ-ONLY**
-- Fix bugs in **OUR** code, not in libraries
+### 1. Never Modify [PLACEHOLDER: External Dependencies Path]
+- [PLACEHOLDER: Third-party libraries / npm packages / pip packages] are **READ-ONLY**
+- Fix bugs in **OUR** code, not in dependencies
 - Create wrappers in `src/` if needed
-- See [`docs/THIRD_PARTY.md`](../docs/THIRD_PARTY.md)
 
 ### 2. Validation Before Commit
-- **BOTH** builds must be clean (CMake + MSBuild)
+- [PLACEHOLDER: Build/test/lint] must be clean
 - Auto-fix errors when possible
 - Retry until clean
 
@@ -82,9 +76,11 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 - `daily.md` + `sprint_commits.md` after **every** commit
 - No push to remote (only local commits)
 
-### 5. File Encoding
-- **UTF-8 with BOM** + **CRLF** line endings (Windows)
-- Run `.\scripts\check-encoding.ps1 -Fix` if issues detected
+### 5. [PLACEHOLDER: Code Style Rules]
+Examples:
+- **C++**: Include order (project first, then system, alphabetically)
+- **Python**: PEP 8, type hints mandatory
+- **JavaScript**: ESLint + Prettier, JSDoc for public APIs
 
 ---
 
@@ -94,26 +90,24 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 
 ### 1. Titles
 ```markdown
-? Done: H1.3 - EntityManager implemented
-?? Next: H1.4 - Unit tests Entity System
+? Done: H1.3 - [PLACEHOLDER: Task completed]
+?? Next: H1.4 - [PLACEHOLDER: Next task]
 ```
 
 ### 2. Visualization (MANDATORY)
 ```markdown
 ### ??? Visualization:
 
-**Changes visible after F5?**: **YES** ? / **NO** ?
+**Changes visible after [PLACEHOLDER: F5 / npm start / etc.]?**: **YES** ? / **NO** ?
 
 [If YES]
 **You should see**:
-1. ? Panel "Hierarchy" visible on left side
-2. ? Expandable tree with objects
+1. ? [PLACEHOLDER: Specific visual change 1]
+2. ? [PLACEHOLDER: Specific visual change 2]
 
 [If NO]
-**Reason**: This task implements internal classes without UI effect
+**Reason**: [PLACEHOLDER: Why no visual changes]
 ```
-
-**Position**: AFTER titles, BEFORE progress bar
 
 ### 3. Progress Bar
 ```
@@ -121,8 +115,6 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 ?????????????????????????????????????????????????????? 18.8%?
 +--------------------------------------------------------------------+
 ```
-
-**Calculate**: `(completed tasks / total sprint tasks) × 100`
 
 ---
 
@@ -138,27 +130,24 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 
 ## ??? TROUBLESHOOTING
 
-**Build fails?**
-1. Check solution exists: `Get-ChildItem *.sln`
-2. Verify files in `.vcxproj` / `CMakeLists.txt`
-3. Clean rebuild: `cmake --build build --target clean`
+**[PLACEHOLDER: Common issues and solutions for your stack]**
 
-**LNK2019 main error?**
-- Check CONSOLE vs WINDOWS subsystem
-- Ensure `WinMain` or `main` signature matches
-
-**Encoding issues?**
-- Run `.\scripts\check-encoding.ps1 -Fix`
-- Verify UTF-8 with BOM + CRLF
+Examples:
+- **Build fails?**: Check [PLACEHOLDER: build file] exists, verify dependencies
+- **[PLACEHOLDER: Error type]?**: [PLACEHOLDER: Solution]
+- **Encoding issues?**: [PLACEHOLDER: How to fix - e.g., UTF-8 with BOM, CRLF]
 
 ---
 
 ## ?? PREFERENCES
 
+[PLACEHOLDER: Quality preferences and coding standards]
+
+Examples:
 - **Quality first**: No temporary/incomplete solutions
-- **AAA standards**: Every module production-ready from start
-- **Include order**: Project headers (`"..."`) first, then system (`<...>`), alphabetically within groups
-- **Validate before commit**: Always compile + fix errors/warnings
+- **[PLACEHOLDER: Standards name]**: Every module [PLACEHOLDER: quality level] from start
+- **[PLACEHOLDER: Code style preference]**
+- **Validate before commit**: Always [PLACEHOLDER: build/test/lint] + fix errors
 
 ---
 
@@ -170,14 +159,14 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 - `docs/sprint_deviations.md`, `sprint_ia_sessions.md`
 
 **At sprint end**:
-```powershell
+```[PLACEHOLDER: shell language - bash/powershell/etc.]
 # Archives all to docs/sprints/ with version suffix
-Move-Item "docs/sprint_v<version>.md" "docs/sprints/"
-# ... (script handles all files)
+[PLACEHOLDER: move/mv command] "docs/sprint_v<version>.md" "docs/sprints/"
 ```
 
 ---
+
 **Version**: 2.0  
-**Last update**: 2025-01-18  
+**Last update**: [PLACEHOLDER: Date]  
 **Full methodology**: [`docs/methodology/CORE.md`](../docs/methodology/CORE.md)  
-**Templates (for other projects)**: [`docs/templates/`](../docs/templates/)
+**Technology**: [PLACEHOLDER: Main stack - e.g., "Python 3.11 + FastAPI + PostgreSQL"]
