@@ -1,0 +1,133 @@
+{
+  "provider": "autogen_agentchat.teams.RoundRobinGroupChat",
+  "component_type": "team",
+  "version": 1,
+  "component_version": 1,
+  "description": "Imagine Studio DevTeam - Complete workflow with 4 specialized agents (Planner, Coder, Reviewer, Tester) working in sequence to implement sprint tasks with AAA quality standards.",
+  "label": "Imagine Studio DevTeam",
+  "config": {
+    "participants": [
+      {
+        "agent_ref": "planner",
+        "description": "Sprint Manager - Plans tasks and proposes implementation steps"
+      },
+      {
+        "agent_ref": "coder",
+        "description": "Implementation Specialist - Writes AAA-quality C++14 code"
+      },
+      {
+        "agent_ref": "reviewer",
+        "description": "Quality Assurance - Reviews code against AAA standards"
+      },
+      {
+        "agent_ref": "tester",
+        "description": "Build & Validation - Compiles (CMake + MSBuild) and runs tests"
+      }
+    ],
+    "termination_condition": {
+      "provider": "autogen_agentchat.base.OrTerminationCondition",
+      "component_type": "termination",
+      "version": 1,
+      "component_version": 1,
+      "label": "WorkflowTermination",
+      "config": {
+        "conditions": [
+          {
+            "provider": "autogen_agentchat.conditions.TextMentionTermination",
+            "component_type": "termination",
+            "version": 1,
+            "component_version": 1,
+            "description": "Terminate when entire workflow completes",
+            "label": "WorkflowComplete",
+            "config": {
+              "text": "WORKFLOW_COMPLETE"
+            }
+          },
+          {
+            "provider": "autogen_agentchat.conditions.TextMentionTermination",
+            "component_type": "termination",
+            "version": 1,
+            "component_version": 1,
+            "description": "Terminate when build succeeds and ready for commit",
+            "label": "BuildSuccess",
+            "config": {
+              "text": "BUILD_SUCCESS"
+            }
+          },
+          {
+            "provider": "autogen_agentchat.conditions.MaxMessageTermination",
+            "component_type": "termination",
+            "version": 1,
+            "component_version": 1,
+            "description": "Terminate after max rounds (safety limit)",
+            "label": "MaxRounds",
+            "config": {
+              "max_messages": 100,
+              "include_agent_event": false
+            }
+          }
+        ]
+      }
+    },
+    "max_turns": 20,
+    "emit_team_events": true,
+    "metadata": {
+      "project": "Imagine Studio",
+      "workflow": "Sprint Task Implementation",
+      "agents": ["planner", "coder", "reviewer", "tester"],
+      "order": "Sequential (Round Robin)",
+      "description": "Complete CI/CD-like workflow for sprint task implementation"
+    }
+  },
+  "workflow_description": {
+    "name": "Sprint Task Implementation Workflow",
+    "steps": [
+      {
+        "step": 1,
+        "agent": "planner",
+        "action": "Read docs/daily.md and docs/sprint_tasks.md",
+        "output": "Implementation plan with steps and files",
+        "next": "@coder"
+      },
+      {
+        "step": 2,
+        "agent": "coder",
+        "action": "Implement code according to plan",
+        "output": "Code files (UTF-8 with BOM, CRLF)",
+        "next": "@reviewer"
+      },
+      {
+        "step": 3,
+        "agent": "reviewer",
+        "action": "Review code against AAA standards",
+        "output": "APPROVED or NEEDS_CHANGES",
+        "next": "@tester (if APPROVED) or @coder (if NEEDS_CHANGES)"
+      },
+      {
+        "step": 4,
+        "agent": "tester",
+        "action": "Execute CMake + MSBuild + unit tests",
+        "output": "BUILD_SUCCESS or error details",
+        "next": "@planner (if SUCCESS) or @coder (if FAIL)"
+      },
+      {
+        "step": 5,
+        "agent": "planner",
+        "action": "Update docs/daily.md and prepare commit",
+        "output": "WORKFLOW_COMPLETE",
+        "next": "TERMINATE"
+      }
+    ],
+    "error_handling": {
+      "review_fails": "Loop back to coder with reviewer feedback",
+      "build_fails": "Loop back to coder with tester error analysis",
+      "max_retries": 5,
+      "timeout": "30 minutes per task"
+    }
+  },
+  "usage_instructions": {
+    "how_to_use": "Import all 4 agent JSON files into AutoGen Studio, then import this workflow JSON. The agents will work in sequence automatically.",
+    "initial_prompt_template": "Implement task {TASK_ID} from Sprint {SPRINT_VERSION}.\n\nContext:\n- Sprint: {SPRINT_VERSION} - {SPRINT_NAME}\n- Task: {TASK_ID} - {TASK_NAME}\n- Files to read: docs/daily.md, docs/sprint_tasks.md\n\nWorkflow:\n1. Planner: Read task details and create implementation plan\n2. Coder: Implement code following AAA standards\n3. Reviewer: Review code quality\n4. Tester: Compile (CMake + MSBuild) and test\n5. If all OK: Update docs/daily.md and commit",
+    "example_prompt": "Implement task H1.1 from Sprint v1.9.0.\n\nContext:\n- Sprint: v1.9.0 - Asset System & Resource Management\n- Task: H1.1 - Crear AssetDatabase.h\n- Files to read: docs/daily.md, docs/sprint_tasks.md\n\nWorkflow:\n1. Planner: Read task details and create implementation plan\n2. Coder: Implement AssetDatabase.h\n3. Reviewer: Review code quality\n4. Tester: Compile (CMake + MSBuild)\n5. If all OK: Update docs/daily.md and commit"
+  }
+}

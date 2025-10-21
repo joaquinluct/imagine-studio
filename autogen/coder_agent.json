@@ -1,0 +1,163 @@
+{
+  "provider": "autogen_agentchat.teams.RoundRobinGroupChat",
+  "component_type": "team",
+  "version": 1,
+  "component_version": 1,
+  "description": "Coder Agent - Implementation Specialist for Imagine Studio. Implements code according to Planner specifications, follows AAA standards.",
+  "label": "Coder Agent",
+  "config": {
+    "participants": [
+      {
+        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "Code implementation agent with file manipulation capabilities",
+        "label": "CoderAssistant",
+        "config": {
+          "name": "coder",
+          "model_client": {
+            "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
+            "component_type": "model",
+            "version": 1,
+            "component_version": 1,
+            "description": "Chat completion client for OpenAI hosted models.",
+            "label": "OpenAIChatCompletionClient",
+            "config": {
+              "model": "gpt-4o"
+            }
+          },
+          "workbench": {
+            "provider": "autogen_core.tools.StaticWorkbench",
+            "component_type": "workbench",
+            "version": 1,
+            "component_version": 1,
+            "description": "Tools for reading and writing code files",
+            "label": "CoderWorkbench",
+            "config": {
+              "tools": [
+                {
+                  "provider": "autogen_core.tools.FunctionTool",
+                  "component_type": "tool",
+                  "version": 1,
+                  "component_version": 1,
+                  "description": "Read file contents",
+                  "label": "read_file",
+                  "config": {
+                    "source_code": "def read_file(filepath: str) -> str:\n    \"\"\"Read file contents\"\"\"\n    try:\n        with open(filepath, 'r', encoding='utf-8') as f:\n            return f.read()\n    except Exception as e:\n        return f'Error reading {filepath}: {str(e)}'",
+                    "name": "read_file",
+                    "description": "Read file contents",
+                    "global_imports": [],
+                    "has_cancellation_support": false
+                  }
+                },
+                {
+                  "provider": "autogen_core.tools.FunctionTool",
+                  "component_type": "tool",
+                  "version": 1,
+                  "component_version": 1,
+                  "description": "Write file contents (creates or overwrites)",
+                  "label": "write_file",
+                  "config": {
+                    "source_code": "import os\n\ndef write_file(filepath: str, content: str) -> str:\n    \"\"\"Write file contents (UTF-8 with BOM, CRLF line endings for Windows)\"\"\"\n    try:\n        # Create directory if doesn't exist\n        os.makedirs(os.path.dirname(filepath) if os.path.dirname(filepath) else '.', exist_ok=True)\n        \n        # Convert LF to CRLF for Windows\n        content = content.replace('\\n', '\\r\\n') if '\\r\\n' not in content else content\n        \n        # Write with UTF-8 BOM\n        with open(filepath, 'w', encoding='utf-8-sig') as f:\n            f.write(content)\n        \n        return f'Successfully wrote {filepath} (UTF-8 with BOM, CRLF)'\n    except Exception as e:\n        return f'Error writing {filepath}: {str(e)}'",
+                    "name": "write_file",
+                    "description": "Write file contents (UTF-8 with BOM, CRLF line endings)",
+                    "global_imports": ["os"],
+                    "has_cancellation_support": false
+                  }
+                },
+                {
+                  "provider": "autogen_core.tools.FunctionTool",
+                  "component_type": "tool",
+                  "version": 1,
+                  "component_version": 1,
+                  "description": "Read copilot instructions for standards",
+                  "label": "read_standards",
+                  "config": {
+                    "source_code": "def read_standards() -> str:\n    \"\"\"Read .github/copilot-instructions.md for project standards\"\"\"\n    try:\n        with open('.github/copilot-instructions.md', 'r', encoding='utf-8') as f:\n            return f.read()\n    except Exception as e:\n        return f'Error reading standards: {str(e)}'",
+                    "name": "read_standards",
+                    "description": "Read .github/copilot-instructions.md for project standards",
+                    "global_imports": [],
+                    "has_cancellation_support": false
+                  }
+                },
+                {
+                  "provider": "autogen_core.tools.FunctionTool",
+                  "component_type": "tool",
+                  "version": 1,
+                  "component_version": 1,
+                  "description": "List files in directory",
+                  "label": "list_files",
+                  "config": {
+                    "source_code": "import os\n\ndef list_files(directory: str) -> str:\n    \"\"\"List all files in a directory recursively\"\"\"\n    try:\n        result = []\n        for root, dirs, files in os.walk(directory):\n            for file in files:\n                result.append(os.path.join(root, file))\n        return '\\n'.join(result) if result else f'No files found in {directory}'\n    except Exception as e:\n        return f'Error listing {directory}: {str(e)}'",
+                    "name": "list_files",
+                    "description": "List all files in a directory recursively",
+                    "global_imports": ["os"],
+                    "has_cancellation_support": false
+                  }
+                }
+              ]
+            }
+          },
+          "model_context": {
+            "provider": "autogen_core.model_context.UnboundedChatCompletionContext",
+            "component_type": "chat_completion_context",
+            "version": 1,
+            "component_version": 1,
+            "description": "Unbounded context for code implementation",
+            "label": "UnboundedChatCompletionContext",
+            "config": {}
+          },
+          "description": "Coder Agent for Imagine Studio - Implements code following AAA standards",
+          "system_message": "You are the Coder Agent for Imagine Studio (C++ Game Engine, AAA standards, C++14).\n\nYour role:\n1. Implement code according to Planner's specifications\n2. Follow AAA standards (docs/MAIN.md)\n3. Maintain consistent style:\n   - Project headers first (\\\"...\\\"), then system (<...>)\n   - Alphabetically within groups\n   - C++14 standard\n   - UTF-8 with BOM + CRLF line endings (Windows)\n4. Create new files when needed\n\nStandards:\n- Read: .github/copilot-instructions.md\n- Follow: docs/methodology/WORKFLOW.md\n\nFile encoding (CRITICAL):\n- UTF-8 with BOM\n- CRLF line endings (Windows)\n- Use write_file tool (handles encoding automatically)\n\nNEVER modify:\n- external/ directory (third-party libraries are READ-ONLY)\n\nInclude order example:\n```cpp\n#include \\\"scene/Entity.h\\\"        // Project headers first\n#include \\\"scene/Component.h\\\"\n#include <cstdint>              // System headers after\n#include <string>\n#include <vector>               // Alphabetically within groups\n```\n\nOutput format:\n```\nImplementation for [Task ID]:\n\nFile: [filepath]\nAction: [CREATE/MODIFY]\n\n[Code implementation]\n\n@reviewer Please review this implementation.\n```\n\nWhen implementation is complete, say: CODE_READY",
+          "model_client_stream": false,
+          "reflect_on_tool_use": true,
+          "tool_call_summary_format": "{result}",
+          "metadata": {
+            "role": "coder",
+            "project": "Imagine Studio",
+            "language": "C++14",
+            "standards": "AAA",
+            "encoding": "UTF-8 with BOM",
+            "line_endings": "CRLF"
+          }
+        }
+      }
+    ],
+    "termination_condition": {
+      "provider": "autogen_agentchat.base.OrTerminationCondition",
+      "component_type": "termination",
+      "version": 1,
+      "component_version": 1,
+      "label": "OrTerminationCondition",
+      "config": {
+        "conditions": [
+          {
+            "provider": "autogen_agentchat.conditions.TextMentionTermination",
+            "component_type": "termination",
+            "version": 1,
+            "component_version": 1,
+            "description": "Terminate when code is ready for review",
+            "label": "TextMentionTermination",
+            "config": {
+              "text": "CODE_READY"
+            }
+          },
+          {
+            "provider": "autogen_agentchat.conditions.MaxMessageTermination",
+            "component_type": "termination",
+            "version": 1,
+            "component_version": 1,
+            "description": "Terminate after max messages",
+            "label": "MaxMessageTermination",
+            "config": {
+              "max_messages": 50,
+              "include_agent_event": false
+            }
+          }
+        ]
+      }
+    },
+    "emit_team_events": true
+  }
+}

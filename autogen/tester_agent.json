@@ -1,0 +1,161 @@
+{
+  "provider": "autogen_agentchat.teams.RoundRobinGroupChat",
+  "component_type": "team",
+  "version": 1,
+  "component_version": 1,
+  "description": "Tester Agent - Build & Validation for Imagine Studio. Executes CMake + MSBuild compilations, runs unit tests, reports errors.",
+  "label": "Tester Agent",
+  "config": {
+    "participants": [
+      {
+        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "Build execution and testing agent",
+        "label": "TesterAssistant",
+        "config": {
+          "name": "tester",
+          "model_client": {
+            "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
+            "component_type": "model",
+            "version": 1,
+            "component_version": 1,
+            "description": "Chat completion client for OpenAI hosted models.",
+            "label": "OpenAIChatCompletionClient",
+            "config": {
+              "model": "gpt-4o"
+            }
+          },
+          "workbench": {
+            "provider": "autogen_core.tools.StaticWorkbench",
+            "component_type": "workbench",
+            "version": 1,
+            "component_version": 1,
+            "description": "Tools for compiling and testing",
+            "label": "TesterWorkbench",
+            "config": {
+              "tools": [
+                {
+                  "provider": "autogen_core.tools.FunctionTool",
+                  "component_type": "tool",
+                  "version": 1,
+                  "component_version": 1,
+                  "description": "Execute CMake build",
+                  "label": "compile_cmake",
+                  "config": {
+                    "source_code": "import subprocess\n\ndef compile_cmake() -> str:\n    \"\"\"Execute CMake build (Debug configuration)\"\"\"\n    try:\n        result = subprocess.run(\n            ['cmake', '--build', 'build', '--config', 'Debug'],\n            capture_output=True,\n            text=True,\n            timeout=300  # 5 minutes timeout\n        )\n        \n        output = f'CMake Build Result:\\n'\n        output += f'Return Code: {result.returncode}\\n'\n        output += f'\\nSTDOUT:\\n{result.stdout}\\n'\n        \n        if result.stderr:\n            output += f'\\nSTDERR:\\n{result.stderr}\\n'\n        \n        # Check for success\n        if result.returncode == 0 and 'error' not in result.stdout.lower():\n            output += '\\n? CMake Build: PASS (0 errors, 0 warnings)'\n        else:\n            output += '\\n? CMake Build: FAIL'\n        \n        return output\n    except subprocess.TimeoutExpired:\n        return '? CMake build timed out (>5 minutes)'\n    except Exception as e:\n        return f'? Error executing CMake build: {str(e)}'",
+                    "name": "compile_cmake",
+                    "description": "Execute CMake build (Debug configuration)",
+                    "global_imports": ["subprocess"],
+                    "has_cancellation_support": false
+                  }
+                },
+                {
+                  "provider": "autogen_core.tools.FunctionTool",
+                  "component_type": "tool",
+                  "version": 1,
+                  "component_version": 1,
+                  "description": "Execute MSBuild compilation",
+                  "label": "compile_msbuild",
+                  "config": {
+                    "source_code": "import subprocess\n\ndef compile_msbuild() -> str:\n    \"\"\"Execute MSBuild on main solution (Debug x64)\"\"\"\n    try:\n        result = subprocess.run(\n            ['msbuild', 'Imagine Studio.sln', \n             '/t:Build', '/p:Configuration=Debug', \n             '/p:Platform=x64', '/m', '/nologo'],\n            capture_output=True,\n            text=True,\n            timeout=300  # 5 minutes timeout\n        )\n        \n        output = f'MSBuild Result:\\n'\n        output += f'Return Code: {result.returncode}\\n'\n        output += f'\\nSTDOUT:\\n{result.stdout}\\n'\n        \n        if result.stderr:\n            output += f'\\nSTDERR:\\n{result.stderr}\\n'\n        \n        # Parse MSBuild output for errors/warnings\n        stdout_lower = result.stdout.lower()\n        if result.returncode == 0 and '0 error' in stdout_lower and '0 warning' in stdout_lower:\n            output += '\\n? MSBuild: PASS (0 errors, 0 warnings)'\n        else:\n            output += '\\n? MSBuild: FAIL'\n            # Extract error/warning counts\n            lines = result.stdout.split('\\n')\n            for line in lines:\n                if 'error' in line.lower() or 'warning' in line.lower():\n                    output += f'\\n  {line}'\n        \n        return output\n    except subprocess.TimeoutExpired:\n        return '? MSBuild timed out (>5 minutes)'\n    except Exception as e:\n        return f'? Error executing MSBuild: {str(e)}'",
+                    "name": "compile_msbuild",
+                    "description": "Execute MSBuild on main solution (Debug x64)",
+                    "global_imports": ["subprocess"],
+                    "has_cancellation_support": false
+                  }
+                },
+                {
+                  "provider": "autogen_core.tools.FunctionTool",
+                  "component_type": "tool",
+                  "version": 1,
+                  "component_version": 1,
+                  "description": "Run unit tests",
+                  "label": "run_tests",
+                  "config": {
+                    "source_code": "import subprocess\nimport os\n\ndef run_tests() -> str:\n    \"\"\"Run all unit tests in build/Debug/\"\"\"\n    try:\n        test_dir = 'build/Debug'\n        test_executables = []\n        \n        # Find all test executables\n        if os.path.exists(test_dir):\n            for file in os.listdir(test_dir):\n                if file.endswith('_test.exe') or file.endswith('_bench.exe'):\n                    test_executables.append(os.path.join(test_dir, file))\n        \n        if not test_executables:\n            return '?? No test executables found in build/Debug/'\n        \n        output = 'Unit Test Results:\\n\\n'\n        total_passed = 0\n        total_failed = 0\n        \n        for test_exe in test_executables:\n            result = subprocess.run(\n                [test_exe],\n                capture_output=True,\n                text=True,\n                timeout=60  # 1 minute per test\n            )\n            \n            output += f'Test: {os.path.basename(test_exe)}\\n'\n            output += f'Return Code: {result.returncode}\\n'\n            \n            # Parse Google Test output\n            if 'PASSED' in result.stdout:\n                passed = result.stdout.count('PASSED')\n                total_passed += passed\n                output += f'? {passed} tests PASSED\\n'\n            \n            if 'FAILED' in result.stdout:\n                failed = result.stdout.count('FAILED')\n                total_failed += failed\n                output += f'? {failed} tests FAILED\\n'\n                output += result.stdout + '\\n'\n            \n            output += '\\n'\n        \n        output += f'\\nTotal: {total_passed} PASSED, {total_failed} FAILED\\n'\n        \n        if total_failed == 0:\n            output += '? All tests PASSED'\n        else:\n            output += '? Some tests FAILED'\n        \n        return output\n    except Exception as e:\n        return f'? Error running tests: {str(e)}'",
+                    "name": "run_tests",
+                    "description": "Run all unit tests in build/Debug/",
+                    "global_imports": ["subprocess", "os"],
+                    "has_cancellation_support": false
+                  }
+                },
+                {
+                  "provider": "autogen_core.tools.FunctionTool",
+                  "component_type": "tool",
+                  "version": 1,
+                  "component_version": 1,
+                  "description": "Read file for error analysis",
+                  "label": "read_file",
+                  "config": {
+                    "source_code": "def read_file(filepath: str) -> str:\n    \"\"\"Read file contents for error analysis\"\"\"\n    try:\n        with open(filepath, 'r', encoding='utf-8') as f:\n            return f.read()\n    except Exception as e:\n        return f'Error reading {filepath}: {str(e)}'",
+                    "name": "read_file",
+                    "description": "Read file contents for error analysis",
+                    "global_imports": [],
+                    "has_cancellation_support": false
+                  }
+                }
+              ]
+            }
+          },
+          "model_context": {
+            "provider": "autogen_core.model_context.UnboundedChatCompletionContext",
+            "component_type": "chat_completion_context",
+            "version": 1,
+            "component_version": 1,
+            "description": "Unbounded context for build logs",
+            "label": "UnboundedChatCompletionContext",
+            "config": {}
+          },
+          "description": "Tester Agent for Imagine Studio - Executes builds and tests",
+          "system_message": "You are the Tester Agent for Imagine Studio (C++ Game Engine, AAA standards, C++14).\n\nYour role:\n1. Execute builds: CMake + MSBuild\n2. Run unit tests\n3. Report errors with details\n4. Suggest fixes if build fails\n\nBuild sequence (MANDATORY - BOTH must pass):\n1. CMake: cmake --build build --config Debug\n2. MSBuild: msbuild \"Imagine Studio.sln\" /t:Build /p:Configuration=Debug /p:Platform=x64 /m\n\nSuccess criteria:\n- Build 1 (CMake): 0 errors, 0 warnings\n- Build 2 (MSBuild): 0 errors, 0 warnings\n- All unit tests pass\n\nIf build fails:\n1. Parse error messages (extract file:line, error code, description)\n2. Identify root cause (missing file, syntax error, linker error, etc.)\n3. Suggest fix to @coder\n4. Request re-implementation\n\nCommon errors and fixes:\n- LNK2019 (unresolved external): Missing implementation or wrong subsystem\n- C2065 (undeclared identifier): Missing #include\n- C4100 (unreferenced parameter): Add (void)param; or remove\n- File not found: Add to CMakeLists.txt or .vcxproj\n\nOutput format:\n```\nBuild Results:\n\nBuild 1 (CMake):\n[Status: PASS/FAIL]\n[Error details if FAIL]\n\nBuild 2 (MSBuild):\n[Status: PASS/FAIL]\n[Error details if FAIL]\n\nUnit Tests:\n[X/Y tests PASSED]\n[Failed test details if any]\n\n[If ALL PASS]\n? ALL CHECKS PASSED\n? Ready for commit\n\n@planner Task completed successfully. Ready to update docs/daily.md.\n\n[If ANY FAIL]\n? BUILD FAILED\n\nRoot cause: [Analysis]\n\nSuggested fixes:\n1. [Fix #1]\n2. [Fix #2]\n\n@coder Please fix these issues and recompile.\n```\n\nWhen all checks pass, say: BUILD_SUCCESS",
+          "model_client_stream": false,
+          "reflect_on_tool_use": true,
+          "tool_call_summary_format": "{result}",
+          "metadata": {
+            "role": "tester",
+            "project": "Imagine Studio",
+            "language": "C++14",
+            "builds": ["CMake", "MSBuild"]
+          }
+        }
+      }
+    ],
+    "termination_condition": {
+      "provider": "autogen_agentchat.base.OrTerminationCondition",
+      "component_type": "termination",
+      "version": 1,
+      "component_version": 1,
+      "label": "OrTerminationCondition",
+      "config": {
+        "conditions": [
+          {
+            "provider": "autogen_agentchat.conditions.TextMentionTermination",
+            "component_type": "termination",
+            "version": 1,
+            "component_version": 1,
+            "description": "Terminate when build succeeds",
+            "label": "TextMentionTermination",
+            "config": {
+              "text": "BUILD_SUCCESS"
+            }
+          },
+          {
+            "provider": "autogen_agentchat.conditions.MaxMessageTermination",
+            "component_type": "termination",
+            "version": 1,
+            "component_version": 1,
+            "description": "Terminate after max messages",
+            "label": "MaxMessageTermination",
+            "config": {
+              "max_messages": 50,
+              "include_agent_event": false
+            }
+          }
+        ]
+      }
+    },
+    "emit_team_events": true
+  }
+}
