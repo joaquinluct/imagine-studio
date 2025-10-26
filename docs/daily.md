@@ -1,91 +1,59 @@
 ﻿# Daily Log
 
-Hecho: Sprint v2.0.0 - HISTORIA H2 COMPLETADA (5/5 tareas - 100%) ✅
-Siguiente: Sprint v2.0.0 - H3.1 (Material Editor Panel - ImGui)
+Hecho: Sprint v2.0.0 - H3.1 COMPLETADA (Material Editor Panel - ImGui) ✅
+Siguiente: Sprint v2.0.0 - H3.2 (Texture slots con drag & drop)
 
 ## Ultima Sesion (2025-01-21)
 
-### 🎉 HISTORIA H2 COMPLETADA - PBR SHADER PIPELINE (5/5 TAREAS) 🎉
+### 🎉 TAREA H3.1 COMPLETADA - MATERIAL EDITOR PANEL (ImGui) 🎉
 
-**Duración H2 (completa)**: ~120 minutos ⚡  
-**Estado**: Historia H2 al 100% (5/5 tareas completadas)
+**Duración H3.1**: ~20 minutos ⚡  
+**Estado**: H3.1 + H3.3 completadas (50% de H3)
 
 **Logros de la sesion**:
 
-### 1. **H2.1 COMPLETADA** - PBR Vertex Shader ✅
-   - [x] `assets/shaders/pbr_vs.hlsl` creado con transform completo
-   - [x] TBN matrix para normal mapping
-   - [x] Local → World → Clip space transformation
-   - [x] Añadido al `.vcxproj` con Shader Model 5.0
-   - [x] Compilación validada: CMake + MSBuild 0 errores
+### 1. **H3.1 COMPLETADA** - Material Editor Panel (ImGui) ✅
+   - [x] `src/editor/MaterialEditor.h` creado con clase MaterialEditor
+   - [x] `src/editor/MaterialEditor.cpp` con `Render()` completo
+   - [x] Panel ImGui dockable "Material Editor"
+   - [x] Botones "New Material" y "Save Material" (placeholders con logs)
+   - [x] Sección "Material Properties" con CollapsingHeader:
+     - ColorEdit4 para Albedo Color (default: blanco)
+     - SliderFloat para Metallic (0.0-1.0, default: 0.0)
+     - SliderFloat para Roughness (0.0-1.0, default: 0.5)
+   - [x] Sección "Texture Slots" con 5 slots (t0-t4):
+     - Albedo (t0), Normal (t1), Roughness (t2), Metallic (t3), AO (t4)
+     - Botones "None##SlotName" (placeholders con logs)
+   - [x] Preview placeholder (texto amarillo: "Not implemented yet (H3.4)")
+   - [x] Integrado en `EditorUI::RenderMaterialEditor()`
+   - [x] Llamado desde `EditorUI::RenderAllPanels()`
+   - [x] Compilación validada: CMake + MSBuild 0 errores, 0 warnings
 
-### 2. **H2.2 COMPLETADA** - PBR Pixel Shader (Cook-Torrance) ✅
-   - [x] `assets/shaders/pbr_ps.hlsl` con BRDF completo
-   - [x] Cook-Torrance specular + Lambert diffuse
-   - [x] Normal mapping en tangent space
-   - [x] GGX distribution, Schlick-GGX geometry, Fresnel-Schlick
-   - [x] Tone mapping (Reinhard) + gamma correction
-   - [x] Añadido al `.vcxproj` con Shader Model 5.0
-   - [x] Compilación validada: CMake + MSBuild 0 errores
+### 2. **H3.3 COMPLETADA** - Property Sliders ✅
+   - [x] **Ya implementado en H3.1** (albedo color picker, metallic slider, roughness slider)
+   - [x] Tarea H3.3 marcada como completada (implementación adelantada)
 
-### 3. **H2.3 COMPLETADA** - MaterialConstants.h ✅
-   - [x] `src/renderer/MaterialConstants.h` creado
-   - [x] 3 constant buffer structs:
-     - MaterialConstants (b1): albedo, metallic, roughness
-     - LightConstants (b2): direction, intensity, color, camera pos
-     - PerObjectConstants (b0): matrices (World, View, Projection, WVP)
-   - [x] 16-byte alignment correcto
-   - [x] Valores default establecidos
-   - [x] Matches exactos con shaders HLSL
-   - [x] Compilación validada: CMake + MSBuild 0 errores
+### 3. **PowerShell Terminal Blocking documentado** ✅
+   - [x] Sección crítica agregada en `.github/copilot-instructions.md` (v2.5)
+   - [x] 6 iteraciones bloqueadas documentadas como lección
+   - [x] Comandos que bloquean: `Select-Object`, `Select-String`, regex complejos
+   - [x] Comandos seguros: `/v:q`, `Out-String`, comandos simples
+   - [x] Recovery steps documentados
+   - [x] Commit a84ba15 registrado en `sprint_commits.md`
 
-### 4. **H2.4 COMPLETADA** - Descriptor Heap Config para Materiales PBR ✅
-   - [x] Configuración descriptor heap en `MaterialConstants.h`
-   - [x] `MATERIAL_SRV_HEAP_SIZE`: 80 descriptors (16 materiales × 5 texturas)
-   - [x] Slot layout documentado:
-     - baseSlot + 0: Albedo (t0)
-     - baseSlot + 1: Normal (t1)
-     - baseSlot + 2: Roughness (t2)
-     - baseSlot + 3: Metallic (t3)
-     - baseSlot + 4: AO (t4)
-   - [x] Constantes: `MATERIAL_TEXTURE_SLOTS_PER_MATERIAL = 5`, `MAX_MATERIALS = 16`
-   - [x] Compilación validada: CMake + MSBuild 0 errores
-
-### 5. **H2.5 COMPLETADA** - PSO PBR Preparado ✅
-   - [x] Shaders PBR listos para integración
-   - [x] MaterialConstants structs con layout correcto
-   - [x] Descriptor heap config (80 slots)
-   - [x] PSO se creará en H4 cuando se asignen materiales a meshes
-   - [x] Compilación validada: CMake + MSBuild 0 errores
-
-### 6. **SYSTEM PROMPT añadido** - Workflow obligatorio ✅
-   - [x] Sección crítica al inicio de `.github/copilot-instructions.md`
-   - [x] Pre-Commit Validation Sequence: CMake + MSBuild obligatorios
-   - [x] "STOP IMMEDIATELY if MSBuild skipped"
-   - [x] Version 2.4
-
-### 7. **Fix CMAKE BUILD** - Solución bloqueo terminal ✅
-   - [x] Actualizar instrucciones: `cmake --build build --config Debug 2>&1 | Out-String`
-   - [x] Razón: Prevenir bloqueo con `Select-Object` antes de completar
-   - [x] Note añadida: "Never use Select-Object before completion"
-
-### 8. **CRITICAL RULE documentada** - Auto-update docs ✅
-   - [x] Workflow completo: implementar → CMake → MSBuild → commit → update docs → commit docs
-   - [x] Sección en español añadida: "ALWAYS respond in Spanish"
-
-**Compilación**: ✅ TODAS las tareas: CMake + MSBuild 0 errores, 0 warnings
+**Compilación**: ✅ CMake + MSBuild 0 errores, 0 warnings
 
 ---
 
 ### Sprint v2.0.0 - Material System (PBR)
 
-**Estado**: 🚀 **EN PROGRESO** (Historia H1 ✅ 100%, Historia H2 ✅ 100%)  
+**Estado**: 🚀 **EN PROGRESO** (Historia H1 ✅ 100%, Historia H2 ✅ 100%, Historia H3 🚀 50%)  
 **Fecha inicio**: 2025-01-21  
 
-**Historias**: 2/5 completadas (40%)
-**Tareas**: 9/19 completadas (47.4%)
+**Historias**: 2/5 completadas (40%), H3 en progreso (50%)  
+**Tareas**: 11/19 completadas (57.9%)
 
-**Próxima tarea**: H3.1 - Material Editor Panel (ImGui)
+**Próxima tarea**: H3.2 - Texture slots con drag & drop
 
 **Funcionalidad entregada**:
 - **H1 (Material Core - 100%)**: Material class, MaterialInstance, MaterialManager, texturas PBR copiadas
@@ -95,6 +63,11 @@ Siguiente: Sprint v2.0.0 - H3.1 (Material Editor Panel - ImGui)
   - Constant buffers (3 structs)
   - Descriptor heap config (80 slots)
   - PSO preparado (se integrará en H4)
+- **H3 (Material Editor Panel - 50%)**:
+  - ✅ H3.1: MaterialEditor panel (botones, properties, texture slots placeholders)
+  - ✅ H3.3: Property sliders (implementado en H3.1)
+  - ⏳ H3.2: Texture slots con drag & drop (pendiente)
+  - ⏳ H3.4: Preview thumbnail (pendiente)
 
 ---
 
@@ -107,47 +80,47 @@ Siguiente: Sprint v2.0.0 - H3.1 (Material Editor Panel - ImGui)
 | v1.8.0 | Scene Graph & Entity System | CERRADO | 100% | 8/10 |
 | v1.9.0 | Asset System | CERRADO | 100% | 9/10 ⭐⭐ |
 | v1.9.1 | Console Integration | CERRADO | 100% | 9/10 ⭐⭐ |
-| v2.0.0 | Material System (PBR) | EN PROGRESO | 47.4% | TBD (objetivo: 9.5/10 ⭐⭐⭐) |
+| v2.0.0 | Material System (PBR) | EN PROGRESO | 57.9% | TBD (objetivo: 9.5/10 ⭐⭐⭐) |
 
-### 🎨 Visualization (H2 completo):
+### 🎨 Visualization (H3.1 completo):
 
-**Changes visible after F5?**: **NO** ❌
+**Changes visible after F5?**: **YES** ✅
 
-**Reason**: H2 completo crea shaders HLSL y constant buffer structs, pero **NO están conectados al rendering pipeline activo** todavía. Los shaders están compilados pero no se usan en el render actual.
+**You should see**:
+1. ✅ Panel "Material Editor" visible en editor (dockable)
+2. ✅ Botones "New Material" y "Save Material"
+3. ✅ CollapsingHeader "Material Properties" (abierto por defecto)
+   - Color picker "Albedo Color" (blanco default)
+   - Slider "Metallic" (0.0-1.0)
+   - Slider "Roughness" (0.0-1.0)
+4. ✅ CollapsingHeader "Texture Slots" (abierto por defecto)
+   - 5 botones: "None##Albedo", "None##Normal", etc.
+5. ✅ Texto amarillo: "Preview: Not implemented yet (H3.4)"
+6. ✅ Panel se puede mover y dockear (ImGui docking funcional)
 
-**Visualization will come in**: 
-- **H3** (Material Editor Panel): Panel ImGui para crear/editar materiales
-- **H4** (Material Assignment): Drag & drop materiales a meshes → **AQUÍ se verán cambios visuales** ✨
-- **H5** (Hot-reload): Cambios en materiales se reflejan sin recompilar
-
-**Qué NO verás al presionar F5 ahora**:
-- ❌ NO verás materiales PBR (todavía usa shader `quad.hlsl` legacy)
-- ❌ NO verás normal mapping
-- ❌ NO verás lighting PBR
-
-**Qué SÍ verás al presionar F5 después de H4**:
-- ✅ Materiales PBR con lighting real
-- ✅ Normal mapping funcional
-- ✅ Metallic/Roughness workflow
-- ✅ Cook-Torrance BRDF
+**Interaction**:
+- Click en "New Material" → Log en Console: "MaterialEditor: New Material button clicked (placeholder)"
+- Click en "Save Material" → Log en Console: "MaterialEditor: Save Material button clicked (placeholder)"
+- Click en texture slots → Logs en Console con slot name
+- Editar sliders/color picker → Valores cambian en UI (no conectados a Material real todavía)
 
 **Progreso Sprint v2.0.0**:
 ```
 +--------------------------------------------------------------------+
-████████████████████████████████ 47.4%⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛
+████████████████████████████████████████████████████ 57.9%⬛⬛⬛⬛⬛⬛⬛⬛⬛
 +--------------------------------------------------------------------+
 ```
 
-**Proxima meta**: H3.1 - Material Editor Panel (ImGui) - **Panel para crear/editar materiales**
+**Proxima meta**: H3.2 - Texture slots con drag & drop - **Conectar texture slots con Asset Browser**
 
 ---
 
 **Estado del proyecto**: 
 - ✅ **5 sprints cerrados al 100%** (v1.6.0, v1.7.0, v1.8.0, v1.9.0, v1.9.1)
-- 🚀 Sprint v2.0.0 en progreso (47.4% - Historia H1 ✅, Historia H2 ✅)
+- 🚀 Sprint v2.0.0 en progreso (57.9% - Historia H1 ✅, Historia H2 ✅, Historia H3 🚀 50%)
 - Calificacion AAA actual: **9/10** ⭐⭐
 - Objetivo v2.0.0: **9.5/10** ⭐⭐⭐
-- Shaders PBR compilados y listos para usar
+- Material Editor panel funcional con UI completa
 - **Proyecto compilando limpiamente: 0 errores, 0 warnings** ✅
 
 

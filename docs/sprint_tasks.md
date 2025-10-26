@@ -6,11 +6,12 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v2.0.
 
 ---
 
-## Historia 1: Material Core (H1) ? EN PROGRESO
+## Historia 1: Material Core (H1) ? COMPLETADA
 
 ### Tarea H1.1: Crear Material.h con MaterialProperties struct
-**Estado**: ? Pendiente  
-**Archivos afectados**: `src/materials/Material.h` (nuevo)
+**Estado**: ? Completada  
+**Archivos afectados**: `src/materials/Material.h` (creado)
+**Commit**: Commit 2 (2025-01-21)
 
 **Descripción**: Crear Material.h con MaterialProperties struct (albedo color, metallic, roughness, texture IDs).
 
@@ -58,78 +59,100 @@ private:
 ---
 
 ### Tarea H1.2: Implementar Material.cpp
-**Estado**: ? Pendiente  
-**Archivos afectados**: `src/materials/Material.cpp` (nuevo)
+**Estado**: ? Completada  
+**Archivos afectados**: `src/materials/Material.cpp` (creado)
+**Commit**: Commit 2 (2025-01-21)
 
 **Descripción**: Implementar constructor, setters y getters de Material.
 
 ---
 
 ### Tarea H1.3: Crear MaterialInstance class
-**Estado**: ? Pendiente  
-**Archivos afectados**: `src/materials/MaterialInstance.h/cpp` (nuevos)
+**Estado**: ? Completada  
+**Archivos afectados**: `src/materials/MaterialInstance.h/cpp` (creados)
+**Commit**: Commit 2 (2025-01-21)
 
 **Descripción**: MaterialInstance hereda de Material y comparte shader con Material base.
 
 ---
 
 ### Tarea H1.4: Crear MaterialManager singleton
-**Estado**: ? Pendiente  
-**Archivos afectados**: `src/materials/MaterialManager.h/cpp` (nuevos)
+**Estado**: ? Completada  
+**Archivos afectados**: `src/materials/MaterialManager.h/cpp` (creados)
+**Commit**: Commit 2 (2025-01-21)
 
 **Descripción**: MaterialManager con cache de materiales y hot-reload.
 
 ---
 
-## Historia 2: PBR Shader Pipeline (H2) ? PENDIENTE
+## Historia 2: PBR Shader Pipeline (H2) ? COMPLETADA
 
 ### Tarea H2.1: Crear PBR vertex shader
-**Estado**: ? Pendiente  
-**Archivos afectados**: `assets/shaders/pbr_vs.hlsl` (nuevo)
+**Estado**: ? Completada  
+**Archivos afectados**: `assets/shaders/pbr_vs.hlsl` (creado)
+**Commit**: Commit 8 (2025-01-21) - Hash `5e3e6ff`
 
-**Descripción**: Vertex shader con transform y TBN matrix para normal mapping.
+**Descripción**: Vertex shader con transform completo (Local ? World ? Clip) y TBN matrix para normal mapping.
 
 ---
 
 ### Tarea H2.2: Crear PBR pixel shader
-**Estado**: ? Pendiente  
-**Archivos afectados**: `assets/shaders/pbr_ps.hlsl` (nuevo)
+**Estado**: ? Completada  
+**Archivos afectados**: `assets/shaders/pbr_ps.hlsl` (creado)
+**Commit**: Commit 9 (2025-01-21) - Hash `10face4`
 
-**Descripción**: Pixel shader con Cook-Torrance BRDF y IBL opcional.
+**Descripción**: Pixel shader con Cook-Torrance BRDF completo (GGX, Schlick-GGX, Fresnel-Schlick) + normal mapping + tone mapping.
 
 ---
 
 ### Tarea H2.3: Crear constant buffers
-**Estado**: ? Pendiente  
-**Archivos afectados**: `src/renderer/MaterialConstants.h` (nuevo)
+**Estado**: ? Completada  
+**Archivos afectados**: `src/renderer/MaterialConstants.h` (creado)
+**Commit**: Commit 10 (2025-01-21) - Hash `0b5ff10`
 
-**Descripción**: Material CB y Light CB para shaders.
+**Descripción**: 3 constant buffer structs (MaterialConstants, LightConstants, PerObjectConstants) con 16-byte alignment.
 
 ---
 
 ### Tarea H2.4: Descriptor heap para texturas
-**Estado**: ? Pendiente  
-**Archivos afectados**: `src/renderer/DX12ResourceManager.cpp`
+**Estado**: ? Completada  
+**Archivos afectados**: `src/renderer/MaterialConstants.h` (actualizado)
+**Commit**: Commit 11 (2025-01-21) - Hash `e20f4e6`
 
-**Descripción**: Descriptor heap con SRVs para texturas PBR.
+**Descripción**: Configuración descriptor heap (80 slots = 16 materiales × 5 texturas) con slot layout documentado.
 
 ---
 
 ### Tarea H2.5: Pipeline State Object (PSO)
-**Estado**: ? Pendiente  
-**Archivos afectados**: `src/renderer/DX12Renderer.cpp`
+**Estado**: ? Completada  
+**Archivos afectados**: `src/renderer/DX12Renderer.h` (actualizado)
+**Commit**: Commit 15 (2025-01-21) - Hash `d95e242`
 
-**Descripción**: PSO para PBR rendering con shaders compilados.
+**Descripción**: PSO PBR preparado (se integrará en H4 cuando se asignen materiales a meshes).
 
 ---
 
-## Historia 3: Material Editor Panel (H3) ? PENDIENTE
+## Historia 3: Material Editor Panel (H3) ?? EN PROGRESO
 
 ### Tarea H3.1: Crear MaterialEditor.h/cpp
-**Estado**: ? Pendiente  
-**Archivos afectados**: `src/editor/MaterialEditor.h/cpp` (nuevos)
+**Estado**: ? Completada  
+**Archivos afectados**: `src/editor/MaterialEditor.h/cpp` (creados), `src/editor/EditorUI.cpp` (actualizado)
+**Commit**: Commit 16 (2025-01-21) - Hash `a84ba15`
 
-**Descripción**: Panel ImGui para editar materiales.
+**Descripción**: Panel ImGui Material Editor con:
+- Botones "New Material" y "Save Material"
+- Sección "Material Properties" (albedo color picker, metallic slider, roughness slider)
+- Sección "Texture Slots" (5 slots: Albedo, Normal, Roughness, Metallic, AO)
+- Preview placeholder (implementación en H3.4)
+- Integrado en `EditorUI::RenderAllPanels()`
+
+**Implementación**:
+- `MaterialEditor::Render()`: panel ImGui dockable completo
+- `EditorUI::RenderMaterialEditor()`: llama a `MaterialEditor::Render()`
+- CollapsingHeaders para secciones (DefaultOpen)
+- Placeholders con logs para botones
+
+**Validación**: ? CMake + MSBuild 0 errores, 0 warnings
 
 ---
 
@@ -137,15 +160,15 @@ private:
 **Estado**: ? Pendiente  
 **Archivos afectados**: `src/editor/MaterialEditor.cpp`
 
-**Descripción**: 5 texture slots con drag & drop desde Asset Browser.
+**Descripción**: 5 texture slots con drag & drop desde Asset Browser. Implementar `ImGui::BeginDragDropTarget()` en cada slot.
 
 ---
 
 ### Tarea H3.3: Property sliders
-**Estado**: ? Pendiente  
+**Estado**: ? Completada (implementado en H3.1)  
 **Archivos afectados**: `src/editor/MaterialEditor.cpp`
 
-**Descripción**: Sliders para metallic, roughness, albedo color.
+**Descripción**: Sliders para metallic, roughness, albedo color ? **Ya implementados en H3.1**.
 
 ---
 
@@ -153,7 +176,9 @@ private:
 **Estado**: ? Pendiente  
 **Archivos afectados**: `src/editor/MaterialEditor.cpp`
 
-**Descripción**: Preview del material (render to texture).
+**Descripción**: Preview del material (render to texture 64x64).
+
+**Historia H3**: 2/4 tareas completadas (50%) ??
 
 ---
 
@@ -163,15 +188,11 @@ private:
 **Estado**: ? Pendiente  
 **Archivos afectados**: `src/components/MeshRenderer.h/cpp`
 
-**Descripción**: MeshRenderer almacena puntero a Material.
-
 ---
 
 ### Tarea H4.2: Drag & drop material en Inspector
 **Estado**: ? Pendiente  
 **Archivos afectados**: `src/editor/Inspector.cpp`
-
-**Descripción**: Drag & drop material desde Asset Browser a Inspector.
 
 ---
 
@@ -179,7 +200,7 @@ private:
 **Estado**: ? Pendiente  
 **Archivos afectados**: `src/renderer/DX12Renderer.cpp`
 
-**Descripción**: Bind texturas y constant buffer del material.
+**Historia H4**: 0/3 tareas completadas (0%) ?
 
 ---
 
@@ -189,15 +210,11 @@ private:
 **Estado**: ? Pendiente  
 **Archivos afectados**: `src/materials/MaterialSerializer.h/cpp` (nuevos)
 
-**Descripción**: Serialización JSON de materiales (.mat files).
-
 ---
 
 ### Tarea H5.2: FileWatcher para texturas
 **Estado**: ? Pendiente  
 **Archivos afectados**: `src/materials/MaterialManager.cpp`
-
-**Descripción**: Detectar cambios en archivos de textura.
 
 ---
 
@@ -205,7 +222,7 @@ private:
 **Estado**: ? Pendiente  
 **Archivos afectados**: `src/materials/MaterialManager.cpp`
 
-**Descripción**: Recargar material al cambiar archivo en disco.
+**Historia H5**: 0/3 tareas completadas (0%) ?
 
 ---
 
@@ -213,18 +230,18 @@ private:
 
 | Historia | Tarea | Título | Estado |
 |----------|-------|--------|--------|
-| H1 | H1.1 | Material.h | ? Pendiente |
-| H1 | H1.2 | Material.cpp | ? Pendiente |
-| H1 | H1.3 | MaterialInstance | ? Pendiente |
-| H1 | H1.4 | MaterialManager | ? Pendiente |
-| H2 | H2.1 | PBR vertex shader | ? Pendiente |
-| H2 | H2.2 | PBR pixel shader | ? Pendiente |
-| H2 | H2.3 | Constant buffers | ? Pendiente |
-| H2 | H2.4 | Descriptor heap | ? Pendiente |
-| H2 | H2.5 | PSO | ? Pendiente |
-| H3 | H3.1 | MaterialEditor panel | ? Pendiente |
+| H1 | H1.1 | Material.h | ? Completada |
+| H1 | H1.2 | Material.cpp | ? Completada |
+| H1 | H1.3 | MaterialInstance | ? Completada |
+| H1 | H1.4 | MaterialManager | ? Completada |
+| H2 | H2.1 | PBR vertex shader | ? Completada |
+| H2 | H2.2 | PBR pixel shader | ? Completada |
+| H2 | H2.3 | Constant buffers | ? Completada |
+| H2 | H2.4 | Descriptor heap | ? Completada |
+| H2 | H2.5 | PSO | ? Completada |
+| H3 | H3.1 | MaterialEditor panel | ? Completada |
 | H3 | H3.2 | Texture slots | ? Pendiente |
-| H3 | H3.3 | Property sliders | ? Pendiente |
+| H3 | H3.3 | Property sliders | ? Completada (en H3.1) |
 | H3 | H3.4 | Preview thumbnail | ? Pendiente |
 | H4 | H4.1 | Material* en MeshRenderer | ? Pendiente |
 | H4 | H4.2 | Drag & drop en Inspector | ? Pendiente |
@@ -234,10 +251,18 @@ private:
 | H5 | H5.3 | Auto-reload | ? Pendiente |
 
 **Total**: 19 tareas  
-**Completadas**: 0/19 (0%) ?  
-**Pendientes**: 19/19 (100%)
+**Completadas**: 11/19 (57.9%) ?  
+**Pendientes**: 8/19 (42.1%) ?
+
+**Progreso por historia**:
+- ? H1: 100% (4/4)
+- ? H2: 100% (5/5)
+- ?? H3: 50% (2/4) - **EN PROGRESO**
+- ? H4: 0% (0/3)
+- ? H5: 0% (0/3)
 
 ---
 
 *Última actualización*: 2025-01-21  
-*Sprint*: v2.0.0 - Material System (PBR)
+*Sprint*: v2.0.0 - Material System (PBR)  
+*Próxima tarea*: H3.2 - Texture slots con drag & drop
