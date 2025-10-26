@@ -59,4 +59,20 @@ struct PerObjectConstants {
     }
 };
 
+// === H2.4 - Material Texture Descriptor Heap Configuration ===
+
+// Descriptor heap configuration for PBR material textures
+// Each material uses 5 SRV slots (Albedo, Normal, Roughness, Metallic, AO)
+// Max materials: 16 (extendable if needed)
+constexpr unsigned int MATERIAL_TEXTURE_SLOTS_PER_MATERIAL = 5;
+constexpr unsigned int MAX_MATERIALS = 16;
+constexpr unsigned int MATERIAL_SRV_HEAP_SIZE = MAX_MATERIALS * MATERIAL_TEXTURE_SLOTS_PER_MATERIAL; // 80 descriptors
+
+// Descriptor slot layout for a single material:
+// baseSlot + 0: Albedo texture (t0)
+// baseSlot + 1: Normal texture (t1)
+// baseSlot + 2: Roughness texture (t2)
+// baseSlot + 3: Metallic texture (t3)
+// baseSlot + 4: AO texture (t4)
+
 } // namespace Rendering

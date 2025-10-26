@@ -303,6 +303,7 @@
     <ClInclude Include="src\renderer\Fence.h" />
     <ClInclude Include="src\renderer\IRenderer.h" />
     <ClInclude Include="src\renderer\Material.h" />
+    <ClInclude Include="src\renderer\MaterialConstants.h" />
     <ClInclude Include="src\renderer\RenderTarget.h" />
     <ClInclude Include="src\scene\Component.h" />
     <ClInclude Include="src\scene\Entity.h" />
@@ -366,7 +367,7 @@
     <Text Include="commit_sprint_v130_plan.txt" />
   </ItemGroup>
   <ItemGroup>
-        <FxCompile Include="shaders\quad.hlsl">
+    <FxCompile Include="shaders\quad.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VSMain</EntryPointName>
     </FxCompile>
     <FxCompile Include="assets\shaders\pbr_vs.hlsl">
