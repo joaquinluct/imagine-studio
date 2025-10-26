@@ -1,47 +1,47 @@
-# IA Sessions Management - Gestión al 85% de Contexto
+ï»¿# IA Sessions Management - Gestiï¿½n al 85% de Contexto
 
-> **Propósito**: Sistema de gestión de sesiones IA cuando se alcanza el 85% de consumo de la ventana de contexto.
+> **Propï¿½sito**: Sistema de gestiï¿½n de sesiones IA cuando se alcanza el 85% de consumo de la ventana de contexto.
 
 ---
 
-## ?? ¿QUÉ ES EL 85% DE CONTEXTO?
+## ?? ï¿½QUï¿½ ES EL 85% DE CONTEXTO?
 
-### Aclaración Importante
+### Aclaraciï¿½n Importante
 
 **NO se refiere a**:
-- ? Límite total del modelo LLM (1M tokens)
-- ? Límite de tu plan/suscripción
+- ? Lï¿½mite total del modelo LLM (1M tokens)
+- ? Lï¿½mite de tu plan/suscripciï¿½n
 
-**SÍ se refiere a**:
-- ? Ventana de contexto **activa** de la sesión de chat actual
-- ? Típicamente: ~128k-200k tokens (depende del modelo)
+**Sï¿½ se refiere a**:
+- ? Ventana de contexto **activa** de la sesiï¿½n de chat actual
+- ? Tï¿½picamente: ~128k-200k tokens (depende del modelo)
 
-### ¿Por Qué 85%?
+### ï¿½Por Quï¿½ 85%?
 
 ```
 0%                    85%                    100%
 ?????????????????????????????????????????????
 ?   CONTEXTO FRESCO   ?   CONTEXTO TRUNCADO ?
 ?   ? Coherente      ?   ?? Olvida mensajes?
-?   ? Rápido         ?   ?? Lento          ?
+?   ? Rï¿½pido         ?   ?? Lento          ?
 ?   ? Preciso        ?   ?? Inconsistente  ?
 ```
 
 **Razones**:
-- ?? **Evitar pérdida de contexto**: Al 85%, el LLM empieza a "olvidar" mensajes antiguos
-- ? **Prevenir estado 'busy'**: La sesión se vuelve lenta
+- ?? **Evitar pï¿½rdida de contexto**: Al 85%, el LLM empieza a "olvidar" mensajes antiguos
+- ? **Prevenir estado 'busy'**: La sesiï¿½n se vuelve lenta
 - ?? **Garantizar coherencia**: Evita contradicciones con decisiones del inicio
 - ?? **Trazabilidad completa**: Documentar prompts usados
 
 ---
 
-## ?? FLUJO AUTOMÁTICO AL 85%
+## ?? FLUJO AUTOMï¿½TICO AL 85%
 
 ### Vista General
 
 ```
 ???????????????????
-? 1. DETECTAR 85% ? ? Sesión supera umbral
+? 1. DETECTAR 85% ? ? Sesiï¿½n supera umbral
 ???????????????????
         ?
 ???????????????????
@@ -58,8 +58,8 @@
 ???????????????????
         ?
 ???????????????????
-? 5. REGISTRAR    ? ? Añadir a sprint_ia_sessions.md
-?    SESIÓN       ?
+? 5. REGISTRAR    ? ? Aï¿½adir a sprint_ia_sessions.md
+?    SESIï¿½N       ?
 ???????????????????
         ?
 ???????????????????
@@ -68,7 +68,7 @@
 ???????????????????
         ?
 ???????????????????
-? 7. PAUSAR       ? ? Esperar cierre de sesión
+? 7. PAUSAR       ? ? Esperar cierre de sesiï¿½n
 ???????????????????
 ```
 
@@ -76,23 +76,23 @@
 
 ## ?? ARCHIVO: `docs/sprint_ia_sessions.md`
 
-### Propósito
+### Propï¿½sito
 Registro de sesiones IA que superan el 85% de consumo de ventana de contexto.
 
 ### Formato de Entrada
 
 ```markdown
-## Sesión IA #001 - Sprint v1.9.0
+## Sesiï¿½n IA #001 - Sprint v1.9.0
 
 **LLM**: GitHub Copilot (Claude 3.5 Sonnet)
 **Fecha/Hora**: 2025-01-18 14:00-18:30 UTC
 **Usuario (Orquestador)**: joaquinluct
 **Ventana de Contexto**: 172,000 / 200,000 (86.0%)
-**Estado**: ?? LÍMITE 85% ALCANZADO - Sesión cerrada
+**Estado**: ?? Lï¿½MITE 85% ALCANZADO - Sesiï¿½n cerrada
 
-### Resumen de la Sesión:
+### Resumen de la Sesiï¿½n:
 
-Esta sesión ha sido muy productiva:
+Esta sesiï¿½n ha sido muy productiva:
 
 1. ? **Asset Database Core** (H1.1-H1.4)
    - AssetDatabase.h/cpp implementado
@@ -104,32 +104,32 @@ Esta sesión ha sido muy productiva:
    - TextureImporter.h/cpp implementado
    - DX12 Texture2D creado desde pixel data
 
-3. ? **Validación completa**
-   - Compilación limpia (CMake + MSBuild)
-   - Validación usuario: OK 100%
+3. ? **Validaciï¿½n completa**
+   - Compilaciï¿½n limpia (CMake + MSBuild)
+   - Validaciï¿½n usuario: OK 100%
 
 ### Prompts Ejecutados:
 
 ```
 1. "Vamos con Sprint v1.9.0 - Asset System"
-   ? Planificación completa (5 historias, 20 tareas)
+   ? Planificaciï¿½n completa (5 historias, 20 tareas)
 
 2. "Comenzar con H1.1 - AssetDatabase.h"
-   ? Implementación estructuras básicas
+   ? Implementaciï¿½n estructuras bï¿½sicas
 
 3. "Continuar con H1.2-H1.4"
    ? EntityManager + tests completos
 
 4. "Vamos con H2 - Texture Importer"
-   ? Integración stb_image + DX12
+   ? Integraciï¿½n stb_image + DX12
 
-[... continúa con todos los prompts ejecutados]
+[... continï¿½a con todos los prompts ejecutados]
 ```
 
-### Contexto de la Sesión:
+### Contexto de la Sesiï¿½n:
 
 - **Sprint activo**: v1.9.0 (Asset System & Resource Management)
-- **Tareas completadas en sesión**:
+- **Tareas completadas en sesiï¿½n**:
   - H1.1: AssetDatabase.h ?
   - H1.2: AssetDatabase.cpp ?
   - H1.3: Asset folders ?
@@ -169,15 +169,15 @@ Esta sesión ha sido muy productiva:
 
 ### Archivos Modificados:
 
-- `CMakeLists.txt` (añadir asset system + stb_image)
-- `Imagine Studio.vcxproj` (añadir archivos asset)
+- `CMakeLists.txt` (aï¿½adir asset system + stb_image)
+- `Imagine Studio.vcxproj` (aï¿½adir archivos asset)
 - `src/renderer/DX12ResourceManager.h/cpp` (CreateTexture2DFromData)
 - `docs/daily.md` (actualizado progreso)
-- `docs/sprint_commits.md` (6 commits añadidos)
+- `docs/sprint_commits.md` (6 commits aï¿½adidos)
 
-### Métricas de la Sesión:
+### Mï¿½tricas de la Sesiï¿½n:
 
-- **Duración**: 4.5 horas
+- **Duraciï¿½n**: 4.5 horas
 - **Commits**: 6
 - **Archivos creados**: 8
 - **Archivos modificados**: 5
@@ -185,17 +185,17 @@ Esta sesión ha sido muy productiva:
 - **Compilaciones**: 12 (todas limpias)
 - **Progreso sprint**: 0% ? 35% (+7 tareas de 20)
 
-### Próxima Sesión (Recomendaciones):
+### Prï¿½xima Sesiï¿½n (Recomendaciones):
 
 - **Continuar desde**: H2.4 - Testing TextureImporter
 - **Leer antes**:
   - `docs/daily.md` (estado actual)
   - `docs/sprint_tasks.md` (detalles H2.4)
-  - `docs/methodology/CORE.md` (refrescar metodología)
+  - `docs/methodology/CORE.md` (refrescar metodologï¿½a)
 - **Validar**:
-  - Compilación limpia (CMake + MSBuild)
+  - Compilaciï¿½n limpia (CMake + MSBuild)
   - Tests de textura PNG real (assets/textures/test.png)
-- **Objetivo siguiente sesión**:
+- **Objetivo siguiente sesiï¿½n**:
   - Completar H2.4 (tests TextureImporter)
   - Avanzar H3.1-H3.2 (MeshImporter base)
 
@@ -204,34 +204,34 @@ Esta sesión ha sido muy productiva:
 
 ---
 
-## ?? NOTIFICACIÓN AL USUARIO
+## ?? NOTIFICACIï¿½N AL USUARIO
 
-### Formato de Notificación
+### Formato de Notificaciï¿½n
 
 ```markdown
-?? LÍMITE DE VENTANA DE CONTEXTO ALCANZADO (>85%)
+?? Lï¿½MITE DE VENTANA DE CONTEXTO ALCANZADO (>85%)
 
 ? Tarea actual completada: H2.3 - DX12 Texture2D from pixel data
 ? Commit creado: pqr678i
-? Sesión registrada en docs/sprint_ia_sessions.md
+? Sesiï¿½n registrada en docs/sprint_ia_sessions.md
 
 ?? Ventana de contexto: 172,000 / 200,000 tokens (86.0%)
 
-?? RECOMENDACIÓN: Cerrar esta sesión y abrir nuevo prompt
+?? RECOMENDACIï¿½N: Cerrar esta sesiï¿½n y abrir nuevo prompt
 
-**Razón**: Al superar el 85% de la ventana de contexto, el LLM
-empieza a perder información de mensajes antiguos, lo que puede
+**Razï¿½n**: Al superar el 85% de la ventana de contexto, el LLM
+empieza a perder informaciï¿½n de mensajes antiguos, lo que puede
 causar inconsistencias o contradicciones.
 
-?? Próxima tarea sugerida: H2.4 - Testing TextureImporter
+?? Prï¿½xima tarea sugerida: H2.4 - Testing TextureImporter
 ?? Leer antes de continuar: docs/daily.md, docs/methodology/CORE.md
 
 ---
 
 ? **BENEFICIOS DE CERRAR AHORA**:
 - ? Nuevo chat con contexto fresco (100% disponible)
-- ? Leer recomendaciones de sesión anterior
-- ? Continuar con claridad desde donde se dejó
+- ? Leer recomendaciones de sesiï¿½n anterior
+- ? Continuar con claridad desde donde se dejï¿½
 - ? Evitar errores por contexto truncado
 ```
 
@@ -241,14 +241,14 @@ causar inconsistencias o contradicciones.
 
 ### 1. Detectar Umbral
 
-**Condición**:
+**Condiciï¿½n**:
 ```
-Ventana de contexto actual > 85% de límite
+Ventana de contexto actual > 85% de lï¿½mite
 ```
 
 **Ejemplo**:
 ```
-Límite: 200,000 tokens
+Lï¿½mite: 200,000 tokens
 Umbral 85%: 170,000 tokens
 Actual: 172,000 tokens ? ?? SUPERA 85%
 ```
@@ -256,36 +256,36 @@ Actual: 172,000 tokens ? ?? SUPERA 85%
 ### 2. Completar Tarea Actual
 
 **NO interrumpir** en medio de:
-- Implementación de código
-- Compilación en progreso
+- Implementaciï¿½n de cï¿½digo
+- Compilaciï¿½n en progreso
 - Commit a medio hacer
 
-**SÍ pausar** al terminar:
+**Sï¿½ pausar** al terminar:
 - ? Tarea completada
-- ? Compilación limpia
+- ? Compilaciï¿½n limpia
 - ? Commit creado
 - ? Docs actualizados
 
-### 3. Registrar Sesión
+### 3. Registrar Sesiï¿½n
 
 **Crear entrada en `docs/sprint_ia_sessions.md`**:
-- ID secuencial (Sesión #001, #002...)
+- ID secuencial (Sesiï¿½n #001, #002...)
 - Prompt completo ejecutado
-- Nombre y versión del LLM
+- Nombre y versiï¿½n del LLM
 - Timestamp + usuario orquestador
-- Consumo de ventana (actual/límite/porcentaje)
+- Consumo de ventana (actual/lï¿½mite/porcentaje)
 - Contexto (sprint, tareas completadas/pendientes)
-- Recomendaciones para próxima sesión
+- Recomendaciones para prï¿½xima sesiï¿½n
 
 ### 4. Notificar y Pausar
 
-**Mostrar notificación** al usuario con:
+**Mostrar notificaciï¿½n** al usuario con:
 - Estado actual (tarea completada, commit)
-- Métricas de contexto
-- Recomendación de cerrar sesión
-- Próxima tarea sugerida
+- Mï¿½tricas de contexto
+- Recomendaciï¿½n de cerrar sesiï¿½n
+- Prï¿½xima tarea sugerida
 
-**PAUSAR** y esperar que usuario cierre la sesión.
+**PAUSAR** y esperar que usuario cierre la sesiï¿½n.
 
 ---
 
@@ -298,32 +298,32 @@ Actual: 172,000 tokens ? ?? SUPERA 85%
 Move-Item "docs/sprint_ia_sessions_v1.9.0.md" "docs/sprints/"
 ```
 
-**Crear nuevo** `sprint_ia_sessions.md` vacío para siguiente sprint.
+**Crear nuevo** `sprint_ia_sessions.md` vacï¿½o para siguiente sprint.
 
 ---
 
 ## ?? OBLIGATORIO AL FINALIZAR SPRINT
 
-**CRÍTICO**: Al cerrar un sprint (`close-sprint.ps1`), el asistente **DEBE**:
+**CRï¿½TICO**: Al cerrar un sprint (`close-sprint.ps1`), el asistente **DEBE**:
 
-1. **Registrar sesión IA** en `docs/sprint_ia_sessions.md` **ANTES** de archivar
-2. **Incluir TODA la información** de la sesión:
+1. **Registrar sesiï¿½n IA** en `docs/sprint_ia_sessions.md` **ANTES** de archivar
+2. **Incluir TODA la informaciï¿½n** de la sesiï¿½n:
    - Prompts ejecutados (lista completa)
    - Tareas completadas
    - Commits creados
    - Archivos creados/modificados
-   - Métricas finales del sprint
+   - Mï¿½tricas finales del sprint
 3. **Archivar** con script: `sprint_ia_sessions_v<version>.md`
 
-### Por Qué es Obligatorio
+### Por Quï¿½ es Obligatorio
 
 - ?? **Trazabilidad completa** del desarrollo asistido por IA
-- ?? **Análisis retrospectivo** de metodología efectiva
-- ?? **Documentación valiosa** para futuros sprints
-- ?? **Auditoría** de decisiones tomadas
+- ?? **Anï¿½lisis retrospectivo** de metodologï¿½a efectiva
+- ?? **Documentaciï¿½n valiosa** para futuros sprints
+- ?? **Auditorï¿½a** de decisiones tomadas
 - ?? **Continuidad** entre sesiones y sprints
 
-### Excepción
+### Excepciï¿½n
 
 Si el sprint **NO** tuvo sesiones IA (desarrollo manual):
 ```markdown
@@ -343,6 +343,6 @@ Si el sprint **NO** tuvo sesiones IA (desarrollo manual):
 
 ---
 
-**Versión**: 2.0  
-**Última actualización**: 2025-01-18  
+**Versiï¿½n**: 2.0  
+**ï¿½ltima actualizaciï¿½n**: 2025-01-18  
 **Proyecto**: Imagine Studio (C++ Game Engine)

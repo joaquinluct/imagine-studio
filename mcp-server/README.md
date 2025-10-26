@@ -1,4 +1,4 @@
-# AutoGen Studio MCP Server
+ï»¿# AutoGen Studio MCP Server
 
 > **Model Context Protocol** server for seamless integration between LLMs (GitHub Copilot, Claude Desktop) and AutoGen Studio.
 
@@ -396,6 +396,6 @@ Restart Copilot after adding MCP configuration.
 ---
 
 **Version**: 1.0.0  
-**Author**: Joaquín Luct  
+**Author**: Joaquï¿½n Luct  
 **License**: MIT  
 **Project**: Imagine Studio Multi-Agent System

@@ -1,27 +1,51 @@
-# AutoGen Studio Context - Imagine Studio
+Ôªø# AutoGen Studio Context - Imagine Studio
 
-> **PropÛsito**: Contexto para GitHub Copilot Chat sobre el sistema multi-agente de AutoGen Studio.
+> **Prop√≥sito**: Contexto para GitHub Copilot Chat sobre el sistema multi-agente de AutoGen Studio.  
+> **Estado**: ‚úÖ FUNCIONAL | **MCP Integrado**: ‚úÖ | **√öltima actualizaci√≥n**: 2025-01-21
 
 ---
 
-## ?? SISTEMA MULTI-AGENTE ACTUAL
+## üöÄ QUICK REFERENCE - MCP TOOLS
+
+**Desde GitHub Copilot Chat**:
+```typescript
+// Listar equipos AutoGen configurados
+mcp_autogen-studi_list_autogen_teams()
+
+// Compilar proyecto (Debug/Release)
+mcp_autogen-studi_run_build(configuration: "Debug")
+
+// Guardar log de sesi√≥n AutoGen
+mcp_autogen-studi_save_autogen_log(
+  task_id: "H1.1",
+  status: "SUCCESS",
+  log_content: "...",
+  duration: 210
+)
+```
+
+**‚ö†Ô∏è Importante**: AutoGen Studio NO expone REST API. Para ejecutar prompts usa el UI en `http://localhost:8081/playground`.
+
+---
+
+## ü§ñ SISTEMA MULTI-AGENTE ACTUAL
 
 ### **4 Agentes Especializados**
 
 1. **Planner Agent** (`autogen/agents/planner_agent_fixed.json`)
    - Rol: Sprint Manager
    - Tools: `read_daily`, `read_tasks`, `read_sprint`, `list_files`
-   - System Message: Propone implementaciÛn de tareas del sprint
+   - System Message: Propone implementaciÔøΩn de tareas del sprint
 
 2. **Coder Agent** (`autogen/agents/coder_agent_fixed.json`)
    - Rol: Implementation Specialist
    - Tools: `read_file`, `write_file`, `read_standards`, `list_files`
-   - System Message: Implementa cÛdigo C++14 con est·ndares AAA (UTF-8 BOM, CRLF)
+   - System Message: Implementa cÔøΩdigo C++14 con estÔøΩndares AAA (UTF-8 BOM, CRLF)
 
 3. **Reviewer Agent** (`autogen/agents/reviewer_agent_fixed.json`)
    - Rol: Quality Assurance
    - Tools: `read_file`, `read_main`, `read_standards`, `check_external`
-   - System Message: Revisa cÛdigo contra est·ndares AAA, dice "REVIEW_APPROVED" si OK
+   - System Message: Revisa cÔøΩdigo contra estÔøΩndares AAA, dice "REVIEW_APPROVED" si OK
 
 4. **Tester Agent** (`autogen/agents/tester_agent_fixed.json`)
    - Rol: Build & Validation
@@ -46,14 +70,14 @@ autogen/
 ??? prompts/             [Plantillas reutilizables por sprint]
 ?   ??? sprint_v1.9.0/
 ?   ??? common/
-??? sessions/            [Logs de ejecuciÛn]
+??? sessions/            [Logs de ejecuciÔøΩn]
 ?   ??? summary/
 ??? outputs/             [Archivos generados temporalmente]
 ```
 
 ---
 
-## ?? WORKFLOW TÕPICO
+## ?? WORKFLOW TÔøΩPICO
 
 1. **Crear prompt** en `autogen/prompts/sprint_vX.Y.Z/TASK_ID.md`
 2. **Ejecutar** en AutoGen Studio Playground (http://127.0.0.1:8081)
@@ -101,12 +125,12 @@ Following autogen/teams/team_complete.json structure
 
 - `WORKFLOW_FINISHED_OK` ? Tester dice esto cuando build OK
 - `REVIEW_APPROVED` ? Reviewer dice esto cuando code OK
-- `CODE_READY` ? Coder dice esto cuando implementaciÛn completa
+- `CODE_READY` ? Coder dice esto cuando implementaciÔøΩn completa
 - `TASK_COMPLETED` ? Planner dice esto cuando tarea terminada
 
 ---
 
-## ?? INTEGRACI”N CON METODOLOGÕA
+## ?? INTEGRACIÔøΩN CON METODOLOGÔøΩA
 
 - **Sprint files**: `docs/sprint.md`, `docs/sprint_tasks.md`
 - **Daily tracking**: `docs/daily.md`
@@ -116,17 +140,17 @@ Following autogen/teams/team_complete.json structure
 
 ---
 
-## ?? REGLAS CRÕTICAS
+## ?? REGLAS CRÔøΩTICAS
 
 1. **Nunca modificar** `external/` (agentes tampoco pueden)
 2. **UTF-8 with BOM + CRLF** para archivos C++ (Coder Agent hace esto)
 3. **2 builds obligatorios**: CMake + MSBuild (Tester Agent ejecuta ambos)
-4. **TerminaciÛn**: Usar `WORKFLOW_FINISHED_OK`, NO `BUILD_SUCCESS` (evita terminaciÛn prematura)
-5. **Working directory**: AutoGen Studio debe correr desde raÌz del proyecto
+4. **TerminaciÔøΩn**: Usar `WORKFLOW_FINISHED_OK`, NO `BUILD_SUCCESS` (evita terminaciÔøΩn prematura)
+5. **Working directory**: AutoGen Studio debe correr desde raÔøΩz del proyecto
 
 ---
 
-## ?? COMANDOS ⁄TILES
+## ?? COMANDOS ÔøΩTILES
 
 ### Iniciar AutoGen Studio
 ```powershell
@@ -146,15 +170,16 @@ Copy-Item "autogen/prompts/_template.md" "autogen/prompts/sprint_v1.9.0/H1.X.md"
 
 ---
 
-## ?? ARCHIVOS DE REFERENCIA
+## üìã ARCHIVOS DE REFERENCIA
 
-- **Setup completo**: `autogen/SETUP.md`
-- **Workflow detallado**: `autogen/WORKFLOW_COMPLETE.md`
-- **Troubleshooting**: `autogen/TERMINATION_FIX.md`
-- **Estructura**: `autogen/README.md`
+- **Estado MCP**: `autogen/MCP_STATUS.md` - Estado actual del servidor MCP (3 tools funcionales)
+- **README principal**: `autogen/README.md` - Gu√≠a completa de uso
+- **Setup completo**: `autogen/SETUP.md` - Instalaci√≥n y configuraci√≥n detallada
+- **Workflow detallado**: `autogen/WORKFLOW_COMPLETE.md` - Flujo desde prompt hasta commit
+- **Troubleshooting**: `autogen/TERMINATION_FIX.md` - Soluci√≥n de problemas comunes
 
 ---
 
-**VersiÛn**: 1.0  
-**⁄ltima actualizaciÛn**: 2025-01-18  
+**Versi√≥n**: 2.0  
+**√öltima actualizaci√≥n**: 2025-01-21  
 **Proyecto**: Imagine Studio Multi-Agent System

@@ -1,8 +1,8 @@
-# Flujo de Trabajo con AutoGen Studio
+ï»¿# Flujo de Trabajo con AutoGen Studio
 
 ## ?? CICLO COMPLETO: DESDE PROMPT HASTA COMMIT
 
-### **1. PREPARACIÓN** (5 min - Una sola vez por sesión)
+### **1. PREPARACIï¿½N** (5 min - Una sola vez por sesiï¿½n)
 
 #### 1.1 Iniciar AutoGen Studio
 ```powershell
@@ -10,15 +10,15 @@ cd "C:\Users\joaqu\source\repos\Imagine Studio"
 autogenstudio ui --port 8081 --appdir .
 ```
 
-#### 1.2 Verificar Configuración
+#### 1.2 Verificar Configuraciï¿½n
 - Abrir: `http://127.0.0.1:8081`
 - Team: `Imagine Studio DevTeam`
 - Agentes: planner, coder, reviewer, tester (4)
-- Terminación: `WORKFLOW_FINISHED_OK`
+- Terminaciï¿½n: `WORKFLOW_FINISHED_OK`
 
 ---
 
-### **2. EJECUCIÓN** (2-4 min por tarea)
+### **2. EJECUCIï¿½N** (2-4 min por tarea)
 
 #### 2.1 Seleccionar Prompt
 ```powershell
@@ -32,11 +32,11 @@ code autogen/prompts/sprint_v1.9.0/H1.1_assetdatabase_h.md
 3. **Pegar** en el cuadro de texto
 4. **Click** "Run"
 
-#### 2.3 Monitorear Ejecución
+#### 2.3 Monitorear Ejecuciï¿½n
 Observar secuencia:
 ```
 [planner] ? Propone plan
-[coder] ? Implementa código
+[coder] ? Implementa cï¿½digo
 [reviewer] ? Revisa calidad
 [tester] ? Compila (CMake + MSBuild)
 ```
@@ -59,7 +59,7 @@ WORKFLOW_FINISHED_OK
 ```
 
 #### 3.2 Guardar Log
-**Opción A: Manual**
+**Opciï¿½n A: Manual**
 ```powershell
 # Crear archivo
 $date = Get-Date -Format "yyyy-MM-dd"
@@ -67,7 +67,7 @@ New-Item "autogen/sessions/$date`_H1.1_success.md" -ItemType File
 # Pegar contenido
 ```
 
-**Opción B: Automático (Script)**
+**Opciï¿½n B: Automï¿½tico (Script)**
 ```powershell
 .\autogen\log-autogen-session.ps1 `
     -TaskID "H1.1" `
@@ -78,7 +78,7 @@ New-Item "autogen/sessions/$date`_H1.1_success.md" -ItemType File
 
 ---
 
-### **4. VERIFICACIÓN** (1 min)
+### **4. VERIFICACIï¿½N** (1 min)
 
 #### 4.1 Verificar Archivos Generados
 ```powershell
@@ -88,7 +88,7 @@ Get-ChildItem src/assets/ -Recurse
 
 #### 4.2 Compilar Manualmente (opcional)
 ```powershell
-# Verificar compilación
+# Verificar compilaciï¿½n
 cmake --build build --config Debug
 msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64
 ```
@@ -124,13 +124,13 @@ AutoGen Session: YYYY-MM-DD_H1.1_success"
 
 ```
 ???????????????????????????????????????????????????????
-? 1. PREPARACIÓN (5 min - una vez)                   ?
+? 1. PREPARACIï¿½N (5 min - una vez)                   ?
 ?    - Iniciar AutoGen Studio                         ?
-?    - Verificar configuración                        ?
+?    - Verificar configuraciï¿½n                        ?
 ???????????????????????????????????????????????????????
                       ?
 ???????????????????????????????????????????????????????
-? 2. EJECUCIÓN (2-4 min)                              ?
+? 2. EJECUCIï¿½N (2-4 min)                              ?
 ?    - Seleccionar prompt                             ?
 ?    - Ejecutar en Playground                         ?
 ?    - Monitorear agentes                             ?
@@ -143,7 +143,7 @@ AutoGen Session: YYYY-MM-DD_H1.1_success"
 ???????????????????????????????????????????????????????
                       ?
 ???????????????????????????????????????????????????????
-? 4. VERIFICACIÓN (1 min)                             ?
+? 4. VERIFICACIï¿½N (1 min)                             ?
 ?    - Verificar archivos generados                   ?
 ?    - Compilar manualmente (opcional)                ?
 ???????????????????????????????????????????????????????
@@ -161,13 +161,13 @@ AutoGen Session: YYYY-MM-DD_H1.1_success"
 
 ## ?? EJEMPLO COMPLETO: TAREA H1.1
 
-### **Paso 1: Preparación**
+### **Paso 1: Preparaciï¿½n**
 ```powershell
 cd "C:\Users\joaqu\source\repos\Imagine Studio"
 autogenstudio ui --port 8081 --appdir .
 ```
 
-### **Paso 2: Ejecución**
+### **Paso 2: Ejecuciï¿½n**
 1. Abrir: `http://127.0.0.1:8081/playground`
 2. Team: `Imagine Studio DevTeam`
 3. Copiar contenido de: `autogen/prompts/sprint_v1.9.0/H1.1_assetdatabase_h.md`
@@ -202,7 +202,7 @@ WORKFLOW_FINISHED_OK
     -Duration 210
 ```
 
-### **Paso 4: Verificación**
+### **Paso 4: Verificaciï¿½n**
 ```powershell
 # Verificar archivo creado
 Get-Content src/assets/AssetDatabase.h | Select-Object -First 10
@@ -222,7 +222,7 @@ Refs: H1.1, Sprint v1.9.0"
 
 ---
 
-## ?? MÉTRICAS POR SESIÓN
+## ?? Mï¿½TRICAS POR SESIï¿½N
 
 Registrar en `autogen/sessions/summary/YYYY-MM-DD_metrics.md`:
 
@@ -242,7 +242,7 @@ Registrar en `autogen/sessions/summary/YYYY-MM-DD_metrics.md`:
 
 ---
 
-## ?? INTEGRACIÓN CON `docs/`
+## ?? INTEGRACIï¿½N CON `docs/`
 
 Al cerrar el sprint:
 
@@ -258,6 +258,6 @@ Copy-Item "autogen/sessions/summary/*" `
 
 ---
 
-**Versión**: 1.0  
-**Última actualización**: 2025-01-18  
+**Versiï¿½n**: 1.0  
+**ï¿½ltima actualizaciï¿½n**: 2025-01-18  
 **Proyecto**: Imagine Studio

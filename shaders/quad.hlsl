@@ -27,7 +27,7 @@ PSInput VSMain(VSInput input)
     PSInput output;
     
     // Transform vertex position to clip space using MVP matrix
-    // Row-major: row vector × matrix
+    // Row-major: row vector ï¿½ matrix
     output.pos = mul(float4(input.pos, 1.0), mvp);
     
     // Pass vertex color through for interpolation

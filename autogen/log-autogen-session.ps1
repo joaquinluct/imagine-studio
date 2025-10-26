@@ -1,4 +1,4 @@
-# log-autogen-session.ps1
+ï»¿# log-autogen-session.ps1
 # Script para registrar logs de sesiones de AutoGen Studio
 
 param(
@@ -50,12 +50,12 @@ $LogContent
 ---
 
 ## Build Results
-[Resultados de compilación]
+[Resultados de compilaciï¿½n]
 
 ---
 
 ## Next Steps
-[Próxima tarea o acciones necesarias]
+[Prï¿½xima tarea o acciones necesarias]
 
 ---
 

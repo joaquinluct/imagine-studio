@@ -1,28 +1,28 @@
-## ?? Formato de la Explicación Final de Cada Iteración
+ï»¿## ?? Formato de la Explicaciï¿½n Final de Cada Iteraciï¿½n
 
 ### Requisito:
-Al final de cada iteración (cuando se informa lo realizado y el siguiente punto), la explicación debe contener **obligatoriamente**:
+Al final de cada iteraciï¿½n (cuando se informa lo realizado y el siguiente punto), la explicaciï¿½n debe contener **obligatoriamente**:
 
-### 1. **Dos títulos numerados** siguiendo el esquema del Sprint:
-- **"Hecho: \<número\> \<título\>"** (ej: "Hecho: 9.18 Shading/material...") que describe en breve lo completado
-- **"Siguiente: \<número\> \<título\>"** que describe el siguiente punto propuesto
+### 1. **Dos tï¿½tulos numerados** siguiendo el esquema del Sprint:
+- **"Hecho: \<nï¿½mero\> \<tï¿½tulo\>"** (ej: "Hecho: 9.18 Shading/material...") que describe en breve lo completado
+- **"Siguiente: \<nï¿½mero\> \<tï¿½tulo\>"** que describe el siguiente punto propuesto
 
-### 2. **??? Visualización** (¿Qué cambia visualmente al ejecutar?):
+### 2. **??? Visualizaciï¿½n** (ï¿½Quï¿½ cambia visualmente al ejecutar?):
 
-**Formato**: Indica claramente si hay cambios visuales tras la ejecución y qué se debería ver
+**Formato**: Indica claramente si hay cambios visuales tras la ejecuciï¿½n y quï¿½ se deberï¿½a ver
 
 **Ejemplo**:
 ```
-### ??? Visualización:
+### ??? Visualizaciï¿½n:
 
-**¿Algo nuevo que cambie la vista tras ejecución?**: **SÍ** ? / **NO** ?
+**ï¿½Algo nuevo que cambie la vista tras ejecuciï¿½n?**: **Sï¿½** ? / **NO** ?
 
-**Qué deberías ver al ejecutar** (si SÍ):
+**Quï¿½ deberï¿½as ver al ejecutar** (si Sï¿½):
 1. ? [PLACEHOLDER: Cambio visual 1]
 2. ? [PLACEHOLDER: Cambio visual 2]
 3. ? [PLACEHOLDER: Nuevo componente UI visible]
 
-**Qué ha cambiado** (si aplica):
+**Quï¿½ ha cambiado** (si aplica):
 - ?? [PLACEHOLDER: Componente modificado]
 - ?? [PLACEHOLDER: Comportamiento actualizado]
 
@@ -32,14 +32,14 @@ Al final de cada iteración (cuando se informa lo realizado y el siguiente punto)
 ```
 
 **Especificaciones**:
-- La sección debe indicar claramente si hay cambios visuales con **SÍ** ? o **NO** ?
-- Si es **SÍ**: Listar qué se debería ver al ejecutar la aplicación (F5, `npm run dev`, etc.)
-- Incluir qué es **nuevo**, qué ha **cambiado** y qué está **ausente**
+- La secciï¿½n debe indicar claramente si hay cambios visuales con **Sï¿½** ? o **NO** ?
+- Si es **Sï¿½**: Listar quï¿½ se deberï¿½a ver al ejecutar la aplicaciï¿½n (F5, `npm run dev`, etc.)
+- Incluir quï¿½ es **nuevo**, quï¿½ ha **cambiado** y quï¿½ estï¿½ **ausente**
 - Usar emojis para claridad visual:
   - ? = Nuevo/Visible
   - ?? = Modificado/Actualizado
   - ? = Ausente/Deshabilitado
-- Esta sección debe aparecer **ANTES** de la barra de progreso del sprint
+- Esta secciï¿½n debe aparecer **ANTES** de la barra de progreso del sprint
 
 ### 3. **Barra de progreso visual del sprint** mostrando el avance de tareas completadas:
 
@@ -54,14 +54,14 @@ Al final de cada iteración (cuando se informa lo realizado y el siguiente punto)
 
 **Especificaciones**:
 - La barra debe ocupar todo el ancho disponible del prompt (aprox. 70-80 caracteres)
-- El porcentaje se calcula como: `(tareas completadas / total tareas sprint) × 100`
+- El porcentaje se calcula como: `(tareas completadas / total tareas sprint) ï¿½ 100`
 - Usar emojis/caracteres Unicode:
   - ?? (verde) = tarea completada
   - ? (negro) = tarea pendiente
 - Incluir el porcentaje en formato `"XX.X%"` al final de la barra
 
-**Datos para el cálculo**:
-El asistente rellenará los números y calculará el progreso guiándose por:
+**Datos para el cï¿½lculo**:
+El asistente rellenarï¿½ los nï¿½meros y calcularï¿½ el progreso guiï¿½ndose por:
 - `docs/sprint.md`
 - `docs/sprint_tasks.md`
 - `docs/daily.md`

@@ -244,10 +244,87 @@ HISTORIA H2 en progreso (Texture Importer - 3/4 tareas, 75%)
 Refs: H2.3 (Sprint v1.9.0)
 ```
 
+### Commit 8 - H2.4: Testing TextureImporter (Historia H2 COMPLETADA ✅)
+**Fecha**: 2025-01-21  
+**Tipo**: test  
+**Archivos**:
+- `tests/texture_importer_test.cpp` (nuevo)
+- `assets/textures/test_4x4.png` (imagen de prueba)
+- `CMakeLists.txt` (añadir test target)
+- `scripts/generate_test_texture.py` (script generador)
+
+**Mensaje**:
+```
+test(assets): Testing TextureImporter - Historia H2 completada
+
+Tests implementados:
+- TestIsSupportedFormat (12 assertions) - Valida extensiones soportadas
+- TestImportTextureInvalid (1 assertion) - Valida manejo de errores
+- TestGetTextureInfo (5 assertions) - Valida info sin cargar pixels
+- TestImportTextureValid (7 assertions) - Valida carga completa
+- TestImportTextureChannels (3 assertions) - Valida RGBA forzado
+
+Resultado: 27 assertions passed ✓
+
+Imagen de prueba:
+- assets/textures/test_4x4.png (79 bytes)
+- 4x4 píxeles en patrón checkerboard (rojo/azul)
+- Formato RGB (3 canales)
+- Generada con Python PIL (scripts/generate_test_texture.py)
+
+Beneficios:
+- Validación completa de TextureImporter
+- Cobertura de casos edge (errores, formatos inválidos)
+- Tests rápidos (no requieren DX12 context)
+- Imagen de prueba reutilizable
+
+Compilación limpia: 0 errores, 0 warnings (CMake + MSBuild)
+
+HISTORIA H2 COMPLETADA (Texture Importer - 4/4 tareas)
+Segunda historia del Sprint v1.9.0 completada (40% del sprint)
+
+Refs: H2.4 (Sprint v1.9.0)
+```
+
+---
+
+## 📊 Estadísticas del Sprint
+
+**Total commits**: 8  
+**Historias completadas**: 2/5 (H1 ✅, H2 ✅)  
+**Tareas completadas**: 8/20 (40%)  
+**Progreso sprint**: 40%
+
+### Desglose por tipo
+- **feat**: 4 commits (50%)
+- **test**: 2 commits (25%)
+- **chore**: 2 commits (25%)
+
+### Compilación
+- **CMake builds**: 8/8 exitosos ✅
+- **MSBuild builds**: 8/8 exitosos ✅
+- **Errores**: 0
+- **Warnings**: 0
+
+### Tests
+- **Test targets creados**: 2 (asset_database_test, texture_importer_test)
+- **Total assertions**: 54 (27 + 27)
+- **Assertions passed**: 54/54 ✅ (100%)
+
+---
+
+## 🎯 Próximos Commits
+
+### Historia H3: Mesh Importer (siguiente)
+**Commit 9 - H3.1**: Crear MeshData.h con struct MeshData  
+**Commit 10 - H3.2**: Implementar OBJ parser  
+**Commit 11 - H3.3**: DX12 Vertex/Index buffers  
+**Commit 12 - H3.4**: Testing MeshImporter  
+
 ---
 
 **Versión**: v1.0  
 **Última actualización**: 2025-01-21  
-**Sprint**: v1.9.0 - Asset System - **EN PROGRESO** (35%)  
-**Historias completadas**: 1/5 (H1 ✅)  
-**Historias en progreso**: 1/5 (H2 - 3/4 tareas, 75%)
+**Sprint**: v1.9.0 - Asset System - **EN PROGRESO** (40%)  
+**Historias completadas**: 2/5 (✅ H1, ✅ H2)  
+**Próxima tarea**: H3.1 - Planificar Mesh Importer

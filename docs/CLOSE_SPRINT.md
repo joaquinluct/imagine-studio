@@ -1,17 +1,17 @@
-# Script close-sprint.ps1 - Documentación
+ï»¿# Script close-sprint.ps1 - Documentaciï¿½n
 
-## Propósito
+## Propï¿½sito
 
 Script automatizado para cerrar un sprint y archivar sus ficheros en `docs/sprints/`.
 
-**Ubicación**: `scripts/close-sprint.ps1`
+**Ubicaciï¿½n**: `scripts/close-sprint.ps1`
 
-## ?? REGLA CRÍTICA
+## ?? REGLA CRï¿½TICA
 
 **NUNCA** ejecutar comandos PowerShell directamente en el terminal para archivar sprints.  
 **SIEMPRE** usar este script dedicado.
 
-**Razón**: Los comandos PowerShell ejecutados directamente desde el asistente pueden quedarse bloqueados sin output o fallar silenciosamente. Este script es más robusto y proporciona feedback claro.
+**Razï¿½n**: Los comandos PowerShell ejecutados directamente desde el asistente pueden quedarse bloqueados sin output o fallar silenciosamente. Este script es mï¿½s robusto y proporciona feedback claro.
 
 ## Uso
 
@@ -20,21 +20,21 @@ Script automatizado para cerrar un sprint y archivar sus ficheros en `docs/sprin
 .\scripts\close-sprint.ps1 -Version "1.3.0"
 ```
 
-**Parámetros**:
-- `-Version`: Versión del sprint en formato X.Y.Z (obligatorio)
+**Parï¿½metros**:
+- `-Version`: Versiï¿½n del sprint en formato X.Y.Z (obligatorio)
 
-## Qué hace el script
+## Quï¿½ hace el script
 
-1. ? Valida que la versión tenga formato correcto (X.Y.Z)
+1. ? Valida que la versiï¿½n tenga formato correcto (X.Y.Z)
 2. ? Crea directorio `docs/sprints/` si no existe
 3. ? Copia todos los ficheros del sprint actual a `docs/sprints/` con sufijo `_vX.Y.Z`
 4. ? Verifica que los archivos se copiaron correctamente
-5. ? Crea ficheros vacíos para el siguiente sprint con templates correctos
+5. ? Crea ficheros vacï¿½os para el siguiente sprint con templates correctos
 6. ? Proporciona feedback visual con colores (Verde=OK, Rojo=Error, Gris=Skip)
 
-## ?? VERIFICACIÓN POST-CIERRE (OBLIGATORIA)
+## ?? VERIFICACIï¿½N POST-CIERRE (OBLIGATORIA)
 
-**Después de ejecutar el script, SIEMPRE verificar**:
+**Despuï¿½s de ejecutar el script, SIEMPRE verificar**:
 
 ### 1. Verificar archivos en `docs/sprints/`:
 
@@ -58,7 +58,7 @@ ls docs/sprints/*v1.3.0* | Select-Object Name
 ls docs/sprint*.md | Select-Object Name
 ```
 
-**Debe mostrar 8 archivos (templates vacíos)**:
+**Debe mostrar 8 archivos (templates vacï¿½os)**:
 - `sprint.md`
 - `sprint_histories.md`
 - `sprint_tasks.md`
@@ -84,7 +84,7 @@ Get-Content docs/sprint.md -Head 5
 
 ## ?? Objetivo del Sprint
 
-[Descripción del objetivo principal del sprint]
+[Descripciï¿½n del objetivo principal del sprint]
 
 ## ?? Historias de Usuario
 
@@ -92,7 +92,7 @@ Ver [`docs/sprint_histories.md`](sprint_histories.md) para historias detalladas.
 
 | ID | Historia | Prioridad | Estado |
 |----|----------|-----------|--------|
-| H1 | [Título] | Alta | ?? Pendiente |
+| H1 | [Tï¿½tulo] | Alta | ?? Pendiente |
 
 ## ?? Progreso
 
@@ -101,16 +101,16 @@ Ver [`docs/sprint_histories.md`](sprint_histories.md) para historias detalladas.
 
 ---
 
-*Última actualización*: [FECHA]
+*ï¿½ltima actualizaciï¿½n*: [FECHA]
 ```
 
-**Si el contenido es diferente** (por ejemplo, tiene datos del sprint v1.3.0), **el cierre NO se completó correctamente**.
+**Si el contenido es diferente** (por ejemplo, tiene datos del sprint v1.3.0), **el cierre NO se completï¿½ correctamente**.
 
-### 4. Checklist de verificación:
+### 4. Checklist de verificaciï¿½n:
 
 - [ ] 8 archivos copiados a `docs/sprints/` con sufijo `_v1.3.0`
-- [ ] 8 archivos vacíos creados en `docs/` con templates correctos
-- [ ] `docs/sprint.md` contiene template vacío (no datos v1.3.0)
+- [ ] 8 archivos vacï¿½os creados en `docs/` con templates correctos
+- [ ] `docs/sprint.md` contiene template vacï¿½o (no datos v1.3.0)
 - [ ] `docs/daily.md` actualizado con "Sprint v1.3.0 cerrado"
 - [ ] Commit creado con todos los cambios
 
@@ -160,27 +160,27 @@ Verificando archivos copiados:
 
 Total archivados: 8 ficheros
 
-Creando ficheros vacíos para el siguiente sprint:
-  [OK] sprint.md (vacío)
-  [OK] sprint_histories.md (vacío)
-  [OK] sprint_tasks.md (vacío)
-  [OK] sprint_bugs.md (vacío)
-  [OK] sprint_bug_attempts.md (vacío)
-  [OK] sprint_fix.md (vacío)
-  [OK] sprint_deviations.md (vacío)
-  [OK] sprint_ia_sessions.md (vacío)
+Creando ficheros vacï¿½os para el siguiente sprint:
+  [OK] sprint.md (vacï¿½o)
+  [OK] sprint_histories.md (vacï¿½o)
+  [OK] sprint_tasks.md (vacï¿½o)
+  [OK] sprint_bugs.md (vacï¿½o)
+  [OK] sprint_bug_attempts.md (vacï¿½o)
+  [OK] sprint_fix.md (vacï¿½o)
+  [OK] sprint_deviations.md (vacï¿½o)
+  [OK] sprint_ia_sessions.md (vacï¿½o)
 
 === Sprint v1.3.0 cerrado exitosamente ===
 Archivos archivados en: docs/sprints/
-Ficheros vacíos creados para el siguiente sprint
+Ficheros vacï¿½os creados para el siguiente sprint
 
-Próximo paso: Actualizar docs/daily.md manualmente con:
+Prï¿½ximo paso: Actualizar docs/daily.md manualmente con:
   'Sprint v1.3.0 cerrado. Sin sprint activo.'
 ```
 
 ## Paso adicional manual
 
-Después de ejecutar el script, actualizar `docs/daily.md`:
+Despuï¿½s de ejecutar el script, actualizar `docs/daily.md`:
 
 ```markdown
 # Daily Log
@@ -191,13 +191,13 @@ Siguiente: Sprint v1.3.0 cerrado. Sin sprint activo.
 
 ## Errores comunes
 
-### Error: Versión incorrecta
+### Error: Versiï¿½n incorrecta
 
 ```
-Error: Versión debe tener formato X.Y.Z (ejemplo: 1.3.0)
+Error: Versiï¿½n debe tener formato X.Y.Z (ejemplo: 1.3.0)
 ```
 
-**Solución**: Usar formato correcto con tres números separados por puntos.
+**Soluciï¿½n**: Usar formato correcto con tres nï¿½meros separados por puntos.
 
 ```powershell
 # ? Incorrecto
@@ -214,15 +214,15 @@ Error: Versión debe tener formato X.Y.Z (ejemplo: 1.3.0)
 [ERROR] Fichero obligatorio no encontrado: docs/sprint.md
 ```
 
-**Solución**: Verificar que todos los ficheros obligatorios existan en `docs/` antes de cerrar el sprint.
+**Soluciï¿½n**: Verificar que todos los ficheros obligatorios existan en `docs/` antes de cerrar el sprint.
 
 ### Error: Templates no se crearon correctamente
 
-**Síntoma**: `docs/sprint.md` contiene datos del sprint anterior en lugar de template vacío.
+**Sï¿½ntoma**: `docs/sprint.md` contiene datos del sprint anterior en lugar de template vacï¿½o.
 
-**Causa**: El script se ejecutó pero los templates no se sobreescribieron correctamente.
+**Causa**: El script se ejecutï¿½ pero los templates no se sobreescribieron correctamente.
 
-**Solución**:
+**Soluciï¿½n**:
 ```powershell
 # Ejecutar nuevamente el script
 .\scripts\close-sprint.ps1 -Version "1.3.0"
@@ -231,9 +231,9 @@ Error: Versión debe tener formato X.Y.Z (ejemplo: 1.3.0)
 Get-Content docs/sprint.md -Head 10
 ```
 
-## Templates de ficheros vacíos
+## Templates de ficheros vacï¿½os
 
-El script crea ficheros vacíos con templates correctos para el siguiente sprint:
+El script crea ficheros vacï¿½os con templates correctos para el siguiente sprint:
 
 ### `sprint.md`
 ```markdown
@@ -245,7 +245,7 @@ El script crea ficheros vacíos con templates correctos para el siguiente sprint:
 
 ## ?? Objetivo del Sprint
 
-[Descripción del objetivo principal del sprint]
+[Descripciï¿½n del objetivo principal del sprint]
 
 ## ?? Historias de Usuario
 
@@ -253,7 +253,7 @@ Ver [`docs/sprint_histories.md`](sprint_histories.md) para historias detalladas.
 
 | ID | Historia | Prioridad | Estado |
 |----|----------|-----------|--------|
-| H1 | [Título] | Alta | ?? Pendiente |
+| H1 | [Tï¿½tulo] | Alta | ?? Pendiente |
 
 ## ?? Progreso
 
@@ -262,12 +262,12 @@ Ver [`docs/sprint_histories.md`](sprint_histories.md) para historias detalladas.
 
 ---
 
-*Última actualización*: [FECHA]
+*ï¿½ltima actualizaciï¿½n*: [FECHA]
 ```
 
 ### `sprint_histories.md`, `sprint_tasks.md`, etc.
 
-Cada fichero tiene un template apropiado con formato correcto y placeholders para facilitar la planificación del siguiente sprint.
+Cada fichero tiene un template apropiado con formato correcto y placeholders para facilitar la planificaciï¿½n del siguiente sprint.
 
 ## Flujo de trabajo completo
 
@@ -276,21 +276,21 @@ Cada fichero tiene un template apropiado con formato correcto y placeholders par
 3. **Verificar output**: Comprobar que todos los ficheros se archivaron correctamente
 4. **Verificar archivos** (OBLIGATORIO):
    - `ls docs/sprints/*vX.Y.Z*` ? Debe mostrar 8 archivos
-   - `ls docs/sprint*.md` ? Debe mostrar 8 templates vacíos
-   - `Get-Content docs/sprint.md -Head 5` ? Debe mostrar template vacío
-5. **Actualizar daily.md**: Indicar que el sprint está cerrado
+   - `ls docs/sprint*.md` ? Debe mostrar 8 templates vacï¿½os
+   - `Get-Content docs/sprint.md -Head 5` ? Debe mostrar template vacï¿½o
+5. **Actualizar daily.md**: Indicar que el sprint estï¿½ cerrado
 6. **Crear commit**: Archivar cambios en Git
-7. **Planificar siguiente sprint**: Usar templates vacíos para documentar nuevo sprint
+7. **Planificar siguiente sprint**: Usar templates vacï¿½os para documentar nuevo sprint
 
 ## Ventajas del script
 
-? **Automático**: No requiere copiar ficheros manualmente  
+? **Automï¿½tico**: No requiere copiar ficheros manualmente  
 ? **Robusto**: Valida que todo se copie correctamente  
 ? **Visual**: Feedback claro con colores (Verde/Rojo/Gris)  
 ? **Seguro**: No sobreescribe archivos existentes (usa `-Force` solo cuando es necesario)  
-? **Completo**: Crea templates vacíos para el siguiente sprint  
+? **Completo**: Crea templates vacï¿½os para el siguiente sprint  
 ? **Documentado**: Output detallado de cada paso  
-? **Verificable**: Checklist de verificación post-cierre
+? **Verificable**: Checklist de verificaciï¿½n post-cierre
 
 ## Comandos a EVITAR
 
@@ -303,7 +303,7 @@ Move-Item "docs/sprint.md" "docs/sprints/sprint_v1.3.0.md"
 Get-ChildItem "docs/*.md" | Copy-Item -Destination "docs/sprints/"
 ```
 
-**Razón**: Estos comandos pueden:
+**Razï¿½n**: Estos comandos pueden:
 - Quedarse bloqueados sin output
 - Fallar silenciosamente
 - No proporcionar feedback claro
@@ -320,10 +320,10 @@ Get-ChildItem "docs/*.md" | Copy-Item -Destination "docs/sprints/"
 ## Referencias
 
 - Script: `scripts/close-sprint.ps1`
-- Documentación metodología: `.github/copilot-instructions.md`
-- Plantilla metodología: `docs/TEMPLATE.md`
-- Directorio de históricos: `docs/sprints/`
+- Documentaciï¿½n metodologï¿½a: `.github/copilot-instructions.md`
+- Plantilla metodologï¿½a: `docs/TEMPLATE.md`
+- Directorio de histï¿½ricos: `docs/sprints/`
 
 ---
 
-*Última actualización*: 2025-01-19
+*ï¿½ltima actualizaciï¿½n*: 2025-01-19

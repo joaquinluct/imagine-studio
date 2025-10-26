@@ -1,4 +1,4 @@
-#!/usr/bin/env pwsh
+ï»¿#!/usr/bin/env pwsh
 # close-sprint.ps1
 # Script para cerrar un sprint y archivar sus ficheros en docs/sprints/
 # 
@@ -7,8 +7,8 @@
 # Este script:
 # 1. Crea el directorio docs/sprints/ si no existe
 # 2. Copia todos los ficheros del sprint actual a docs/sprints/ con sufijo _vX.Y.Z
-# 3. Crea ficheros vacíos para el siguiente sprint
-# 4. Actualiza daily.md indicando que el sprint está cerrado
+# 3. Crea ficheros vacï¿½os para el siguiente sprint
+# 4. Actualiza daily.md indicando que el sprint estï¿½ cerrado
 # 
 # Ficheros que se archivan:
 # - sprint.md -> sprint_vX.Y.Z.md
@@ -26,9 +26,9 @@ param(
     [string]$Version
 )
 
-# Validar formato de versión (debe ser X.Y.Z)
+# Validar formato de versiï¿½n (debe ser X.Y.Z)
 if ($Version -notmatch '^\d+\.\d+\.\d+$') {
-    Write-Error "Error: Versión debe tener formato X.Y.Z (ejemplo: 1.3.0)"
+    Write-Error "Error: Versiï¿½n debe tener formato X.Y.Z (ejemplo: 1.3.0)"
     exit 1
 }
 
@@ -104,10 +104,10 @@ if ($copiedFiles.Count -gt 0) {
     exit 1
 }
 
-# 7. Crear ficheros vacíos para el siguiente sprint
-Write-Host "`nCreando ficheros vacíos para el siguiente sprint:" -ForegroundColor Yellow
+# 7. Crear ficheros vacï¿½os para el siguiente sprint
+Write-Host "`nCreando ficheros vacï¿½os para el siguiente sprint:" -ForegroundColor Yellow
 
-# sprint.md vacío
+# sprint.md vacï¿½o
 $sprintContent = @"
 # Sprint vX.Y.Z - [NOMBRE DEL SPRINT]
 
@@ -117,7 +117,7 @@ $sprintContent = @"
 
 ## ?? Objetivo del Sprint
 
-[Descripción del objetivo principal del sprint]
+[Descripciï¿½n del objetivo principal del sprint]
 
 ## ?? Historias de Usuario
 
@@ -125,7 +125,7 @@ Ver [`docs/sprint_histories.md`](sprint_histories.md) para historias detalladas.
 
 | ID | Historia | Prioridad | Estado |
 |----|----------|-----------|--------|
-| H1 | [Título] | Alta | ? Pendiente |
+| H1 | [Tï¿½tulo] | Alta | ? Pendiente |
 
 ## ?? Progreso
 
@@ -134,12 +134,12 @@ Ver [`docs/sprint_histories.md`](sprint_histories.md) para historias detalladas.
 
 ---
 
-*Última actualización*: [FECHA]
+*ï¿½ltima actualizaciï¿½n*: [FECHA]
 "@
 Set-Content "docs/sprint.md" $sprintContent -Encoding UTF8
-Write-Host "  [OK] sprint.md (vacío)" -ForegroundColor Green
+Write-Host "  [OK] sprint.md (vacï¿½o)" -ForegroundColor Green
 
-# sprint_histories.md vacío
+# sprint_histories.md vacï¿½o
 $historiesContent = @"
 # Sprint Histories - vX.Y.Z (Active)
 
@@ -151,14 +151,14 @@ Este archivo contiene las historias de usuario (alto nivel) del sprint activo vX
 
 ## Historia 1: [NOMBRE] (H1)
 
-### H1 - [Título de la historia]
+### H1 - [Tï¿½tulo de la historia]
 **ID**: H1  
 **Prioridad**: Alta  
 **Estado**: ? Pendiente  
 
-**Descripción**: [Descripción de la historia]
+**Descripciï¿½n**: [Descripciï¿½n de la historia]
 
-**Criterios de aceptación**:
+**Criterios de aceptaciï¿½n**:
 - [ ] [Criterio 1]
 - [ ] [Criterio 2]
 
@@ -169,9 +169,9 @@ Este archivo contiene las historias de usuario (alto nivel) del sprint activo vX
 *Total historias*: 1
 "@
 Set-Content "docs/sprint_histories.md" $historiesContent -Encoding UTF8
-Write-Host "  [OK] sprint_histories.md (vacío)" -ForegroundColor Green
+Write-Host "  [OK] sprint_histories.md (vacï¿½o)" -ForegroundColor Green
 
-# sprint_tasks.md vacío
+# sprint_tasks.md vacï¿½o
 $tasksContent = @"
 # Sprint Tasks - vX.Y.Z (Active)
 
@@ -183,11 +183,11 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo vX.Y.
 
 ## Historia 1: [NOMBRE] (H1)
 
-### Tarea H1.1: [Título de la tarea]
+### Tarea H1.1: [Tï¿½tulo de la tarea]
 **Estado**: ? Pendiente  
 **Archivos afectados**: [lista de archivos]
 
-**Descripción**: [Descripción de la tarea]
+**Descripciï¿½n**: [Descripciï¿½n de la tarea]
 
 **Pasos**:
 1. [ ] [Paso 1]
@@ -199,22 +199,22 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo vX.Y.
 
 ## ?? Resumen de Tareas
 
-| Historia | Tarea | Título | Estado |
+| Historia | Tarea | Tï¿½tulo | Estado |
 |----------|-------|--------|--------|
-| H1 | H1.1 | [Título] | ? Pendiente |
+| H1 | H1.1 | [Tï¿½tulo] | ? Pendiente |
 
 **Total**: 1 tarea (0 completadas, 1 pendiente)
 "@
 Set-Content "docs/sprint_tasks.md" $tasksContent -Encoding UTF8
-Write-Host "  [OK] sprint_tasks.md (vacío)" -ForegroundColor Green
+Write-Host "  [OK] sprint_tasks.md (vacï¿½o)" -ForegroundColor Green
 
-# sprint_bugs.md vacío
+# sprint_bugs.md vacï¿½o
 $bugsContent = @"
 # Sprint Bugs - vX.Y.Z (Active)
 
-> **Referencia**: Ver [`docs/sprint_bug_attempts.md`](sprint_bug_attempts.md) para intentos de solución detallados.
+> **Referencia**: Ver [`docs/sprint_bug_attempts.md`](sprint_bug_attempts.md) para intentos de soluciï¿½n detallados.
 
-Este archivo contiene los bugs reportados durante el sprint activo vX.Y.Z que están pendientes de resolución.
+Este archivo contiene los bugs reportados durante el sprint activo vX.Y.Z que estï¿½n pendientes de resoluciï¿½n.
 
 ---
 
@@ -224,33 +224,33 @@ Este archivo contiene los bugs reportados durante el sprint activo vX.Y.Z que es
 
 ---
 
-**Total bugs**: 0 (0 reportados, 0 en progreso, 0 pendientes validación)
+**Total bugs**: 0 (0 reportados, 0 en progreso, 0 pendientes validaciï¿½n)
 "@
 Set-Content "docs/sprint_bugs.md" $bugsContent -Encoding UTF8
-Write-Host "  [OK] sprint_bugs.md (vacío)" -ForegroundColor Green
+Write-Host "  [OK] sprint_bugs.md (vacï¿½o)" -ForegroundColor Green
 
-# sprint_bug_attempts.md vacío
+# sprint_bug_attempts.md vacï¿½o
 $attemptsContent = @"
 # Sprint Bug Attempts - vX.Y.Z (Active)
 
 > **Referencia**: Ver [`docs/sprint_bugs.md`](sprint_bugs.md) para bugs reportados actualmente.
 
-Este archivo contiene el registro detallado de TODOS los intentos de solución para cada bug reportado durante el sprint activo vX.Y.Z.
+Este archivo contiene el registro detallado de TODOS los intentos de soluciï¿½n para cada bug reportado durante el sprint activo vX.Y.Z.
 
 ---
 
-## Intentos de Solución
+## Intentos de Soluciï¿½n
 
-*No hay intentos de solución registrados actualmente.*
+*No hay intentos de soluciï¿½n registrados actualmente.*
 
 ---
 
-**Nota**: Este fichero se actualiza automáticamente conforme se trabajan los bugs en `sprint_bugs.md`.
+**Nota**: Este fichero se actualiza automï¿½ticamente conforme se trabajan los bugs en `sprint_bugs.md`.
 "@
 Set-Content "docs/sprint_bug_attempts.md" $attemptsContent -Encoding UTF8
-Write-Host "  [OK] sprint_bug_attempts.md (vacío)" -ForegroundColor Green
+Write-Host "  [OK] sprint_bug_attempts.md (vacï¿½o)" -ForegroundColor Green
 
-# sprint_fix.md vacío
+# sprint_fix.md vacï¿½o
 $fixContent = @"
 # Sprint Fix - vX.Y.Z (Active)
 
@@ -269,9 +269,9 @@ Este archivo contiene el historial de bugs resueltos durante el sprint activo vX
 **Total bugs resueltos**: 0
 "@
 Set-Content "docs/sprint_fix.md" $fixContent -Encoding UTF8
-Write-Host "  [OK] sprint_fix.md (vacío)" -ForegroundColor Green
+Write-Host "  [OK] sprint_fix.md (vacï¿½o)" -ForegroundColor Green
 
-# sprint_commits.md vacío (NUEVO)
+# sprint_commits.md vacï¿½o (NUEVO)
 $commitsContent = @"
 # Sprint Commits - vX.Y.Z (Active)
 
@@ -286,7 +286,7 @@ Este archivo registra todos los commits realizados durante el **Sprint vX.Y.Z**.
 Formato recomendado para los mensajes de commit:
 
 ``````
-<tipo>(<ámbito>): <mensaje corto>
+<tipo>(<ï¿½mbito>): <mensaje corto>
 
 <mensaje largo opcional>
 
@@ -295,12 +295,12 @@ Refs: <issue/track-id>
 
 ### Tipos comunes:
 - **feat**: Nueva funcionalidad
-- **fix**: Corrección de errores
-- **docs**: Cambios en documentación
+- **fix**: Correcciï¿½n de errores
+- **docs**: Cambios en documentaciï¿½n
 - **style**: Formato, estilo, sin cambios funcionales
-- **refactor**: Refactorización sin cambios en comportamiento
+- **refactor**: Refactorizaciï¿½n sin cambios en comportamiento
 - **perf**: Mejoras de rendimiento
-- **test**: Añadir o corregir tests
+- **test**: Aï¿½adir o corregir tests
 - **chore**: Tareas de mantenimiento
 
 ---
@@ -311,20 +311,20 @@ Refs: <issue/track-id>
 
 ---
 
-**Versión**: v1.0  
-**Última actualización**: [FECHA]  
+**Versiï¿½n**: v1.0  
+**ï¿½ltima actualizaciï¿½n**: [FECHA]  
 **Sprint**: vX.Y.Z - **EN PROGRESO**
 "@
 Set-Content "docs/sprint_commits.md" $commitsContent -Encoding UTF8
-Write-Host "  [OK] sprint_commits.md (vacío)" -ForegroundColor Green
+Write-Host "  [OK] sprint_commits.md (vacï¿½o)" -ForegroundColor Green
 
-# sprint_deviations.md vacío (opcional)
+# sprint_deviations.md vacï¿½o (opcional)
 $deviationsContent = @"
 # Sprint Deviations - vX.Y.Z (Active)
 
-> **Referencia**: Ver [`docs/backlog.md`](backlog.md) para ítems diferidos a sprints futuros.
+> **Referencia**: Ver [`docs/backlog.md`](backlog.md) para ï¿½tems diferidos a sprints futuros.
 
-Este archivo contiene las desviaciones, ajustes arquitectónicos y tareas emergentes que surgen durante la ejecución del sprint activo vX.Y.Z.
+Este archivo contiene las desviaciones, ajustes arquitectï¿½nicos y tareas emergentes que surgen durante la ejecuciï¿½n del sprint activo vX.Y.Z.
 
 ---
 
@@ -334,16 +334,16 @@ Este archivo contiene las desviaciones, ajustes arquitectónicos y tareas emergen
 
 ---
 
-**Nota**: Solo se registran aquí desviaciones CRÍTICAS que NO pueden diferirse al backlog.
+**Nota**: Solo se registran aquï¿½ desviaciones CRï¿½TICAS que NO pueden diferirse al backlog.
 "@
 Set-Content "docs/sprint_deviations.md" $deviationsContent -Encoding UTF8
-Write-Host "  [OK] sprint_deviations.md (vacío)" -ForegroundColor Green
+Write-Host "  [OK] sprint_deviations.md (vacï¿½o)" -ForegroundColor Green
 
-# sprint_ia_sessions.md vacío (opcional)
+# sprint_ia_sessions.md vacï¿½o (opcional)
 $sessionsContent = @"
 # Sprint IA Sessions - vX.Y.Z (Active)
 
-> **Referencia**: Ver [`.github/copilot-instructions.md`](../.github/copilot-instructions.md) para gestión de sesiones IA.
+> **Referencia**: Ver [`.github/copilot-instructions.md`](../.github/copilot-instructions.md) para gestiï¿½n de sesiones IA.
 
 Este archivo contiene el registro de sesiones de trabajo con asistentes IA que superan el 85% de consumo de tokens/contexto durante el sprint activo vX.Y.Z.
 
@@ -355,13 +355,13 @@ Este archivo contiene el registro de sesiones de trabajo con asistentes IA que s
 
 ---
 
-**Nota**: Las sesiones se registran automáticamente cuando el consumo de tokens supera el 85% del límite.
+**Nota**: Las sesiones se registran automï¿½ticamente cuando el consumo de tokens supera el 85% del lï¿½mite.
 "@
 Set-Content "docs/sprint_ia_sessions.md" $sessionsContent -Encoding UTF8
-Write-Host "  [OK] sprint_ia_sessions.md (vacío)" -ForegroundColor Green
+Write-Host "  [OK] sprint_ia_sessions.md (vacï¿½o)" -ForegroundColor Green
 
 Write-Host "`n=== Sprint v$Version cerrado exitosamente ===" -ForegroundColor Cyan
 Write-Host "Archivos archivados en: $sprintsDir/" -ForegroundColor Green
-Write-Host "Ficheros vacíos creados para el siguiente sprint" -ForegroundColor Green
-Write-Host "`nPróximo paso: Actualizar docs/daily.md manualmente con:" -ForegroundColor Yellow
+Write-Host "Ficheros vacï¿½os creados para el siguiente sprint" -ForegroundColor Green
+Write-Host "`nPrï¿½ximo paso: Actualizar docs/daily.md manualmente con:" -ForegroundColor Yellow
 Write-Host "  'Sprint v$Version cerrado. Sin sprint activo.'" -ForegroundColor Gray

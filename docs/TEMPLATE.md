@@ -1,14 +1,14 @@
-# Metodología de Desarrollo Ágil Asistido por IA - Template
+ï»¿# Metodologï¿½a de Desarrollo ï¿½gil Asistido por IA - Template
 
-> **Propósito**: Overview de metodología genérica reutilizable en cualquier proyecto de software.
+> **Propï¿½sito**: Overview de metodologï¿½a genï¿½rica reutilizable en cualquier proyecto de software.
 
-**Para implementación completa**: Ver [`docs/templates/`](templates/) con versiones detalladas con `[PLACEHOLDER]`.
+**Para implementaciï¿½n completa**: Ver [`docs/templates/`](templates/) con versiones detalladas con `[PLACEHOLDER]`.
 
 ---
 
 ## ? QUICK START
 
-### Adaptación a Tu Proyecto (5 pasos)
+### Adaptaciï¿½n a Tu Proyecto (5 pasos)
 
 1. **Copiar estructura base**:
    ```bash
@@ -18,9 +18,9 @@
    ```
 
 2. **Reemplazar `[PLACEHOLDER]`** con:
-   - Tecnologías específicas (C++, Python, React, etc.)
-   - Comandos de build/validación reales
-   - Estándares de código del proyecto
+   - Tecnologï¿½as especï¿½ficas (C++, Python, React, etc.)
+   - Comandos de build/validaciï¿½n reales
+   - Estï¿½ndares de cï¿½digo del proyecto
    - Preferencias del equipo
 
 3. **Crear `docs/MAIN.md`** con pilares fundamentales del proyecto
@@ -29,10 +29,10 @@
    - `docs/sprint.md` - Sprint actual
    - `docs/sprint_histories.md` - Historias de usuario
    - `docs/sprint_tasks.md` - Tareas detalladas
-   - `docs/daily.md` - Última tarea + actual
-   - `docs/backlog.md` - Ítems futuros
+   - `docs/daily.md` - ï¿½ltima tarea + actual
+   - `docs/backlog.md` - ï¿½tems futuros
 
-5. **Configurar validación** según tu stack:
+5. **Configurar validaciï¿½n** segï¿½n tu stack:
    - **C++/C#**: `cmake`, `msbuild`, `gcc`, `clang`
    - **Web**: `npm run lint && npm test && npm run build`
    - **Python**: `pytest && mypy . && black --check .`

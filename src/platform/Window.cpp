@@ -1,4 +1,4 @@
-#include "Window.h"
+ï»¿#include "Window.h"
 #include "../core/Log.h"
 
 #include <sstream>
@@ -6,12 +6,12 @@
 #include <map>
 
 // Forward declaration de ImGui Win32 handler (v1.3.0 - H2.3)
-// Esta función está implementada en la biblioteca ImGui que linkamos
+// Esta funciï¿½n estï¿½ implementada en la biblioteca ImGui que linkamos
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 namespace Platform {
 
-// ?? BUG-002 Intento #6: Definir map estático fuera de la clase
+// ?? BUG-002 Intento #6: Definir map estï¿½tico fuera de la clase
 std::map<HWND, Window*> Window::s_windowMap;
 
 Window::Window(HINSTANCE hInstance, const wchar_t* title, int width, int height)
@@ -22,7 +22,7 @@ Window::Window(HINSTANCE hInstance, const wchar_t* title, int width, int height)
     // ?? BUG-002 Intento #6: Usar SIEMPRE GetModuleHandle(NULL) para consistencia
     HINSTANCE moduleInstance = GetModuleHandle(NULL);
 
-    // ? Verificar si la clase ya está registrada
+    // ? Verificar si la clase ya estï¿½ registrada
     WNDCLASSEXW existingClass = {};
     existingClass.cbSize = sizeof(existingClass);
     BOOL classExists = GetClassInfoExW(moduleInstance, CLASS_NAME, &existingClass);
@@ -53,7 +53,7 @@ Window::Window(HINSTANCE hInstance, const wchar_t* title, int width, int height)
             ss << "Window::Window - RegisterClassExW FAILED, GetLastError=" << err;
             CORE_LOG_ERROR(ss.str());
             
-            // ? CRÍTICO: Abortar si no podemos registrar la clase
+            // ? CRï¿½TICO: Abortar si no podemos registrar la clase
             MessageBoxW(NULL, L"Failed to register window class. Cannot continue.", 
                        L"Imagine Studio - Fatal Error", MB_OK | MB_ICONERROR);
             return;
@@ -66,7 +66,7 @@ Window::Window(HINSTANCE hInstance, const wchar_t* title, int width, int height)
     }
 
     // ?? BUG-002 Intento #6: Crear ventana SIN pasar 'this' en lpCreateParams
-    // Registraremos la asociación HWND ? Window* manualmente después de creación
+    // Registraremos la asociaciï¿½n HWND ? Window* manualmente despuï¿½s de creaciï¿½n
     hwnd_ = CreateWindowExW(
         0,
         CLASS_NAME,  // ?? Usar nombre de clase directamente (no atom)
@@ -76,7 +76,7 @@ Window::Window(HINSTANCE hInstance, const wchar_t* title, int width, int height)
         NULL,
         NULL,
         moduleInstance,  // ? Mismo HINSTANCE que registro
-        nullptr  // ?? NO pasar 'this' aquí (evitar problemas con WM_NCCREATE)
+        nullptr  // ?? NO pasar 'this' aquï¿½ (evitar problemas con WM_NCCREATE)
     );
     
     if (!hwnd_)
@@ -114,7 +114,7 @@ Window::Window(HINSTANCE hInstance, const wchar_t* title, int width, int height)
     ss << "Window::Window - CreateWindowExW succeeded, HWND=" << reinterpret_cast<void*>(hwnd_);
     CORE_LOG_INFO(ss.str());
     
-    // ?? BUG-002 Intento #6: Registrar asociación HWND ? Window* en map estático
+    // ?? BUG-002 Intento #6: Registrar asociaciï¿½n HWND ? Window* en map estï¿½tico
     s_windowMap[hwnd_] = this;
     CORE_LOG_INFO("Window::Window - Registered HWND in static map");
     
@@ -123,7 +123,7 @@ Window::Window(HINSTANCE hInstance, const wchar_t* title, int width, int height)
 
 Window::~Window()
 {
-    // ?? BUG-002 Intento #6: Eliminar asociación del map estático
+    // ?? BUG-002 Intento #6: Eliminar asociaciï¿½n del map estï¿½tico
     if (hwnd_)
     {
         s_windowMap.erase(hwnd_);
@@ -133,7 +133,7 @@ Window::~Window()
 
 LRESULT CALLBACK Window::WndProcStatic(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    // ?? BUG-002 Intento #6: Buscar Window* en map estático en lugar de GWLP_USERDATA
+    // ?? BUG-002 Intento #6: Buscar Window* en map estï¿½tico en lugar de GWLP_USERDATA
     auto it = s_windowMap.find(hWnd);
     if (it != s_windowMap.end())
     {
@@ -168,9 +168,9 @@ LRESULT Window::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
         CORE_LOG_INFO(ss.str());
     }
     
-    // ? CRÍTICO: Pasar eventos a ImGui PRIMERO y respetar su retorno (v1.3.0 - H2.3)
+    // ? CRï¿½TICO: Pasar eventos a ImGui PRIMERO y respetar su retorno (v1.3.0 - H2.3)
     // Si ImGui captura el evento (retorna != 0), NO debemos procesarlo nosotros
-    // Esto es ESENCIAL para que los clicks de ratón funcionen en la UI
+    // Esto es ESENCIAL para que los clicks de ratï¿½n funcionen en la UI
     LRESULT imgui_result = ImGui_ImplWin32_WndProcHandler(hwnd_, message, wParam, lParam);
     
     // ?? DEBUG: Log handler result (BUG-002 Intento #4)

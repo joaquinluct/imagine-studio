@@ -1,8 +1,8 @@
-# Sprint Tasks - v1.3.0 (Active)
+ï»¿# Sprint Tasks - v1.3.0 (Active)
 
 > **Referencia**: Ver [`docs/sprint_histories.md`](sprint_histories.md) para historias de usuario del sprint.
 
-Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.0 (ImGui Integration). Cada tarea es la unidad mínima de trabajo y se implementa en una iteración del asistente.
+Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.0 (ImGui Integration). Cada tarea es la unidad mï¿½nima de trabajo y se implementa en una iteraciï¿½n del asistente.
 
 ---
 
@@ -12,11 +12,11 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 **Estado**: ? Completada  
 **Archivos afectados**: `external/imgui/` (nuevo directorio), `scripts/install-imgui.ps1` (nuevo), `docs/IMGUI_INSTALL.md` (nuevo)
 
-**Descripción**: Descargar la última versión estable de ImGui desde GitHub oficial y copiar archivos necesarios al proyecto usando script automatizado.
+**Descripciï¿½n**: Descargar la ï¿½ltima versiï¿½n estable de ImGui desde GitHub oficial y copiar archivos necesarios al proyecto usando script automatizado.
 
 **Pasos**:
-1. [x] Crear script automatizado `scripts/install-imgui.ps1` para descarga e instalación
-2. [x] Crear documentación completa en `docs/IMGUI_INSTALL.md` (origen, instalación, actualización, reinstalación)
+1. [x] Crear script automatizado `scripts/install-imgui.ps1` para descarga e instalaciï¿½n
+2. [x] Crear documentaciï¿½n completa en `docs/IMGUI_INSTALL.md` (origen, instalaciï¿½n, actualizaciï¿½n, reinstalaciï¿½n)
 3. [x] Ejecutar script: `.\scripts\install-imgui.ps1 -Version v1.91.5`
 4. [x] Descargar ImGui v1.91.5 desde https://github.com/ocornut/imgui
 5. [x] Crear directorio `external/imgui/`
@@ -36,23 +36,23 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
    - `backends/imgui_impl_dx12.cpp` ?
    - `backends/imgui_impl_win32.h` ?
    - `backends/imgui_impl_win32.cpp` ?
-8. [x] Crear archivo VERSION.txt con tracking de versión
+8. [x] Crear archivo VERSION.txt con tracking de versiï¿½n
 9. [x] Verificar archivos copiados correctamente (14 archivos + VERSION.txt)
 
-**Resultado**: ImGui v1.91.5 instalado correctamente con script automatizado y documentación completa.
+**Resultado**: ImGui v1.91.5 instalado correctamente con script automatizado y documentaciï¿½n completa.
 
 **Commit**: [Hash pendiente]
 
 ---
 
-### Tarea H1.2: Añadir ImGui a CMakeLists.txt
+### Tarea H1.2: Aï¿½adir ImGui a CMakeLists.txt
 **Estado**: ? Completada  
 **Archivos afectados**: `CMakeLists.txt`
 
-**Descripción**: Configurar ImGui como library estática en CMake y linkear con el proyecto principal.
+**Descripciï¿½n**: Configurar ImGui como library estï¿½tica en CMake y linkear con el proyecto principal.
 
 **Pasos**:
-1. [x] Añadir ImGui como library estática en CMakeLists.txt:
+1. [x] Aï¿½adir ImGui como library estï¿½tica en CMakeLists.txt:
    ```cmake
    # ImGui library (Dear ImGui - Editor UI Framework)
    add_library(ImGui STATIC
@@ -73,33 +73,33 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 4. [x] Compilar y validar (CMake Debug build) ?
 5. [x] Compilar y validar (MSBuild Debug build) ?
 
-**Resultado**: ImGui integrado en CMake como library estática y linkeado con ImagineStudio. Compilación limpia (0 errores, 0 warnings).
+**Resultado**: ImGui integrado en CMake como library estï¿½tica y linkeado con ImagineStudio. Compilaciï¿½n limpia (0 errores, 0 warnings).
 
 **Commit**: [Hash pendiente]
 
 ---
 
-### Tarea H1.3: Añadir ImGui a Visual Studio project
-**Estado**: ? Completada (no requerida - CMake configura VS automáticamente)  
-**Archivos afectados**: Ninguno (integración automática vía CMake)
+### Tarea H1.3: Aï¿½adir ImGui a Visual Studio project
+**Estado**: ? Completada (no requerida - CMake configura VS automï¿½ticamente)  
+**Archivos afectados**: Ninguno (integraciï¿½n automï¿½tica vï¿½a CMake)
 
-**Descripción**: Añadir archivos ImGui al proyecto Visual Studio manualmente para asegurar que están en el build system principal.
+**Descripciï¿½n**: Aï¿½adir archivos ImGui al proyecto Visual Studio manualmente para asegurar que estï¿½n en el build system principal.
 
-**Resultado**: Esta tarea NO fue necesaria porque el proyecto principal de Visual Studio (`Imagine Studio.vcxproj`) utiliza la configuración de CMake. La tarea H1.2 ya configuró ImGui como library estática en CMakeLists.txt, y Visual Studio usa esa configuración automáticamente.
+**Resultado**: Esta tarea NO fue necesaria porque el proyecto principal de Visual Studio (`Imagine Studio.vcxproj`) utiliza la configuraciï¿½n de CMake. La tarea H1.2 ya configurï¿½ ImGui como library estï¿½tica en CMakeLists.txt, y Visual Studio usa esa configuraciï¿½n automï¿½ticamente.
 
-**Verificación**:
-1. [x] Compilación MSBuild exitosa con ImGui incluido
+**Verificaciï¿½n**:
+1. [x] Compilaciï¿½n MSBuild exitosa con ImGui incluido
 2. [x] Include directories configurados correctamente por CMake (`target_include_directories(ImGui PUBLIC ...)`)
-3. [x] Archivos ImGui accesibles desde el código del proyecto
+3. [x] Archivos ImGui accesibles desde el cï¿½digo del proyecto
 4. [x] No se requieren modificaciones manuales al `.vcxproj`
 
-**Justificación**: 
+**Justificaciï¿½n**: 
 - El proyecto usa CMake como sistema de build principal
-- CMake genera automáticamente el proyecto Visual Studio con las configuraciones correctas
-- La library estática ImGui de H1.2 está correctamente linkeada con ImagineStudio
-- Los include directories públicos (`external/imgui`, `external/imgui/backends`) están disponibles globalmente
+- CMake genera automï¿½ticamente el proyecto Visual Studio con las configuraciones correctas
+- La library estï¿½tica ImGui de H1.2 estï¿½ correctamente linkeada con ImagineStudio
+- Los include directories pï¿½blicos (`external/imgui`, `external/imgui/backends`) estï¿½n disponibles globalmente
 
-**Compilación**: MSBuild VS Debug OK (0 errores, 0 warnings)
+**Compilaciï¿½n**: MSBuild VS Debug OK (0 errores, 0 warnings)
 
 **Commit**: N/A (no se requirieron cambios)
 
@@ -109,7 +109,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 **Estado**: ? Completada  
 **Archivos afectados**: `src/main.cpp`, `scripts/install-imgui.ps1`, `external/imgui/` (actualizado a rama docking), `Imagine Studio.vcxproj`, `src/platform/Input.h` (eliminado), `src/platform/Input.cpp` (eliminado), `src/platform/InputManager.cpp` (actualizado a C++14)
 
-**Descripción**: Inicializar ImGui context, configurar ImGuiIO, y establecer estilo por defecto (dark theme).
+**Descripciï¿½n**: Inicializar ImGui context, configurar ImGuiIO, y establecer estilo por defecto (dark theme).
 
 **Pasos**:
 1. [ ] Incluir headers ImGui en `main.cpp`:
@@ -118,7 +118,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
    #include "imgui_impl_dx12.h"
    #include "imgui_impl_win32.h"
    ```
-2. [ ] Crear ImGui context después de inicializar ventana:
+2. [ ] Crear ImGui context despuï¿½s de inicializar ventana:
    ```cpp
    // Setup Dear ImGui context
    IMGUI_CHECKVERSION();
@@ -131,7 +131,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
    // Setup Dear ImGui style
    ImGui::StyleColorsDark();
    ```
-3. [ ] Añadir ImGui cleanup antes de cerrar aplicación:
+3. [ ] Aï¿½adir ImGui cleanup antes de cerrar aplicaciï¿½n:
    ```cpp
    // Cleanup ImGui
    ImGui::DestroyContext();
@@ -148,10 +148,10 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 **Estado**: ? Completada  
 **Archivos afectados**: `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`
 
-**Descripción**: Crear descriptor heap SRV separado para ImGui (1 descriptor para font atlas texture). ImGui requiere un heap SRV shader-visible para renderizar font atlas.
+**Descripciï¿½n**: Crear descriptor heap SRV separado para ImGui (1 descriptor para font atlas texture). ImGui requiere un heap SRV shader-visible para renderizar font atlas.
 
 **Pasos**:
-1. [ ] Añadir miembros en `DX12Renderer.h`:
+1. [ ] Aï¿½adir miembros en `DX12Renderer.h`:
    ```cpp
    ID3D12DescriptorHeap* m_imguiSrvHeap;  // SRV heap para ImGui (font atlas)
    ```
@@ -183,10 +183,10 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 **Estado**: ? Completada  
 **Archivos afectados**: `src/main.cpp`, `src/renderer/DX12Renderer.h`, `src/renderer/DX12Renderer.cpp`
 
-**Descripción**: Llamar a `ImGui_ImplDX12_Init()` con device, num frames, format y descriptor heap SRV de ImGui.
+**Descripciï¿½n**: Llamar a `ImGui_ImplDX12_Init()` con device, num frames, format y descriptor heap SRV de ImGui.
 
 **Pasos**:
-1. [x] Añadir método público `GetDevice()` en `DX12Renderer.h` para obtener ID3D12Device*
+1. [x] Aï¿½adir mï¿½todo pï¿½blico `GetDevice()` en `DX12Renderer.h` para obtener ID3D12Device*
 2. [x] Implementar `GetDevice()` en `DX12Renderer.cpp` (evitar forward declaration issues)
 3. [x] Incluir headers DirectX 12 en `main.cpp` (`<d3d12.h>`)
 4. [x] Obtener descriptores CPU/GPU handle del heap ImGui en `main.cpp`:
@@ -194,7 +194,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
    D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = imguiSrvHeap->GetCPUDescriptorHandleForHeapStart();
    D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = imguiSrvHeap->GetGPUDescriptorHandleForHeapStart();
    ```
-5. [x] Inicializar backend ImGui DX12 en `main.cpp` (después de `renderer.Initialize(hwnd)`):
+5. [x] Inicializar backend ImGui DX12 en `main.cpp` (despuï¿½s de `renderer.Initialize(hwnd)`):
    ```cpp
    // Get ImGui SRV descriptor heap and device from renderer
    ID3D12DescriptorHeap* imguiSrvHeap = renderer.GetImGuiSrvHeap();
@@ -219,14 +219,14 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
        CORE_LOG_INFO("ImGui DX12 backend initialized");
    }
    ```
-6. [x] Añadir shutdown en cleanup:
+6. [x] Aï¿½adir shutdown en cleanup:
    ```cpp
    ImGui_ImplDX12_Shutdown();
    CORE_LOG_INFO("ImGui DX12 backend shutdown");
    ```
 7. [x] Compilar y validar (CMake Debug build: 0 errores, 0 warnings) ?
 
-**Resultado**: ImGui DX12 backend inicializado correctamente. Device y heap SRV accesibles desde main.cpp mediante métodos públicos del renderer. Backend shutdown correctamente en cleanup.
+**Resultado**: ImGui DX12 backend inicializado correctamente. Device y heap SRV accesibles desde main.cpp mediante mï¿½todos pï¿½blicos del renderer. Backend shutdown correctamente en cleanup.
 
 **Commit**: [Hash pendiente]
 
@@ -236,13 +236,13 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 **Estado**: ? Completada  
 **Archivos afectados**: `src/main.cpp`, `CMakeLists.txt`, `scripts/install-imgui.ps1`, `Imagine Studio.vcxproj`, `.github/copilot-instructions.md`
 
-**Descripción**: Llamar a `ImGui_ImplDX12_NewFrame()` antes de `ImGui::NewFrame()` en el render loop para preparar frame ImGui.
+**Descripciï¿½n**: Llamar a `ImGui_ImplDX12_NewFrame()` antes de `ImGui::NewFrame()` en el render loop para preparar frame ImGui.
 
 **Pasos**:
-1. [x] Añadir `imgui_demo.cpp` a `scripts/install-imgui.ps1` (necesario para `ImGui::ShowDemoWindow()`)
+1. [x] Aï¿½adir `imgui_demo.cpp` a `scripts/install-imgui.ps1` (necesario para `ImGui::ShowDemoWindow()`)
 2. [x] Reinstalar ImGui con demo incluido: `.\scripts\install-imgui.ps1 -Branch docking -Reinstall`
-3. [x] Añadir `imgui_demo.cpp` a `CMakeLists.txt` en la library ImGui
-4. [x] Añadir `imgui_demo.cpp` a `Imagine Studio.vcxproj` usando PowerShell XML
+3. [x] Aï¿½adir `imgui_demo.cpp` a `CMakeLists.txt` en la library ImGui
+4. [x] Aï¿½adir `imgui_demo.cpp` a `Imagine Studio.vcxproj` usando PowerShell XML
 5. [x] Verificar que render loop tiene llamadas correctas (ya implementadas):
    ```cpp
    // Start ImGui frame (H2.3 - ImGui DX12 NewFrame integration)
@@ -260,14 +260,14 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
    ```
 6. [x] Compilar y validar (CMake Debug build: 0 errores, 0 warnings) ?
 7. [x] Compilar y validar (MSBuild Debug build: 0 errores, 0 warnings) ?
-8. [x] Documentar método de modificación de `.vcxproj` en `.github/copilot-instructions.md`
+8. [x] Documentar mï¿½todo de modificaciï¿½n de `.vcxproj` en `.github/copilot-instructions.md`
 
-**Resultado**: Render loop preparado para ImGui frames. Demo window preparado (aún no visible porque falta rendering en UIPass de H2.4). Compilación limpia en ambos sistemas de build.
+**Resultado**: Render loop preparado para ImGui frames. Demo window preparado (aï¿½n no visible porque falta rendering en UIPass de H2.4). Compilaciï¿½n limpia en ambos sistemas de build.
 
-**Notas técnicas**:
-- Se resolvió problema de linkeo: `ImGui::ShowDemoWindow()` requería `imgui_demo.cpp` que no estaba incluido
-- Se actualizó script de instalación para incluir demo en futuras instalaciones
-- Se documentó procedimiento correcto para modificar `.vcxproj` sin cerrar Visual Studio (PowerShell XML)
+**Notas tï¿½cnicas**:
+- Se resolviï¿½ problema de linkeo: `ImGui::ShowDemoWindow()` requerï¿½a `imgui_demo.cpp` que no estaba incluido
+- Se actualizï¿½ script de instalaciï¿½n para incluir demo en futuras instalaciones
+- Se documentï¿½ procedimiento correcto para modificar `.vcxproj` sin cerrar Visual Studio (PowerShell XML)
 
 **Commit**: [Hash pendiente]
 
@@ -277,10 +277,10 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 **Estado**: ?? Pendiente  
 **Archivos afectados**: `src/renderer/DX12Renderer.cpp`
 
-**Descripción**: Implementar rendering de ImGui draw data en `UIPass()` usando `ImGui_ImplDX12_RenderDrawData()`.
+**Descripciï¿½n**: Implementar rendering de ImGui draw data en `UIPass()` usando `ImGui_ImplDX12_RenderDrawData()`.
 
 **Pasos**:
-1. [ ] Modificar `UIPass()` para renderizar ImGui en lugar del rectángulo blanco:
+1. [ ] Modificar `UIPass()` para renderizar ImGui en lugar del rectï¿½ngulo blanco:
    ```cpp
    void DX12Renderer::UIPass() {
        if (!m_uiVisible) return;
@@ -293,9 +293,9 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
        ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), m_commandList);
    }
    ```
-2. [ ] Remover código de rectángulo blanco (vertex buffer temporal UI)
+2. [ ] Remover cï¿½digo de rectï¿½ngulo blanco (vertex buffer temporal UI)
 3. [ ] Compilar y validar (CMake + MSBuild Debug, 0 errores, 0 warnings)
-4. [ ] Testing visual: Ejecutar aplicación y verificar que ImGui demo window se ve (text, buttons, widgets)
+4. [ ] Testing visual: Ejecutar aplicaciï¿½n y verificar que ImGui demo window se ve (text, buttons, widgets)
 
 **Resultado esperado**: ImGui demo window visible con text rendering funcional.
 
@@ -309,17 +309,17 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 **Estado**: ?? Pendiente  
 **Archivos afectados**: `src/main.cpp`
 
-**Descripción**: Llamar a `ImGui_ImplWin32_Init()` con HWND para habilitar input Win32 en ImGui.
+**Descripciï¿½n**: Llamar a `ImGui_ImplWin32_Init()` con HWND para habilitar input Win32 en ImGui.
 
 **Pasos**:
-1. [ ] Inicializar backend ImGui Win32 después de crear ventana:
+1. [ ] Inicializar backend ImGui Win32 despuï¿½s de crear ventana:
    ```cpp
    // Setup Platform/Renderer backends
    ImGui_ImplWin32_Init(window.GetHWND());
    ImGui_ImplDX12_Init(/* ... */);
    CORE_LOG_INFO("ImGui Win32 backend initialized");
    ```
-2. [ ] Añadir shutdown en cleanup:
+2. [ ] Aï¿½adir shutdown en cleanup:
    ```cpp
    ImGui_ImplWin32_Shutdown();
    ImGui_ImplDX12_Shutdown();
@@ -334,14 +334,14 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 **Estado**: ?? Pendiente  
 **Archivos afectados**: `src/platform/Window.cpp`
 
-**Descripción**: Forward eventos Win32 (WM_MOUSEMOVE, WM_LBUTTONDOWN, WM_KEYDOWN, etc.) a ImGui usando `ImGui_ImplWin32_WndProcHandler()`.
+**Descripciï¿½n**: Forward eventos Win32 (WM_MOUSEMOVE, WM_LBUTTONDOWN, WM_KEYDOWN, etc.) a ImGui usando `ImGui_ImplWin32_WndProcHandler()`.
 
 **Pasos**:
 1. [ ] Incluir header ImGui Win32 en `Window.cpp`:
    ```cpp
    #include "imgui_impl_win32.h"
    ```
-2. [ ] Añadir forward declaration externa de WndProcHandler:
+2. [ ] Aï¿½adir forward declaration externa de WndProcHandler:
    ```cpp
    extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
    ```
@@ -365,10 +365,10 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 **Estado**: ?? Pendiente  
 **Archivos afectados**: `src/main.cpp`
 
-**Descripción**: Llamar a `ImGui_ImplWin32_NewFrame()` antes de `ImGui::NewFrame()` para actualizar input state de ImGui.
+**Descripciï¿½n**: Llamar a `ImGui_ImplWin32_NewFrame()` antes de `ImGui::NewFrame()` para actualizar input state de ImGui.
 
 **Pasos**:
-1. [ ] Añadir `ImGui_ImplWin32_NewFrame()` en render loop:
+1. [ ] Aï¿½adir `ImGui_ImplWin32_NewFrame()` en render loop:
    ```cpp
    // Start ImGui frame
    ImGui_ImplDX12_NewFrame();
@@ -376,7 +376,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
    ImGui::NewFrame();
    ```
 2. [ ] Compilar y validar (CMake + MSBuild Debug, 0 errores, 0 warnings)
-3. [ ] Testing visual: Ejecutar aplicación y verificar que ImGui responde a mouse (hover, click, drag)
+3. [ ] Testing visual: Ejecutar aplicaciï¿½n y verificar que ImGui responde a mouse (hover, click, drag)
 
 **Resultado esperado**: ImGui demo window interactivo (clicks en buttons, drag de ventanas, scroll funcional).
 
@@ -386,11 +386,11 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 
 ## Historia 4: Editor Panels & Docking (H4)
 
-### Tarea H4.1: Crear panel "Hierarchy" con árbol de objetos placeholder
+### Tarea H4.1: Crear panel "Hierarchy" con ï¿½rbol de objetos placeholder
 **Estado**: ?? Pendiente  
 **Archivos afectados**: `src/editor/EditorUI.h` (nuevo), `src/editor/EditorUI.cpp` (nuevo), `src/main.cpp`
 
-**Descripción**: Crear primer panel de Editor "Hierarchy" con árbol de objetos placeholder (hardcoded por ahora).
+**Descripciï¿½n**: Crear primer panel de Editor "Hierarchy" con ï¿½rbol de objetos placeholder (hardcoded por ahora).
 
 **Pasos**:
 1. [ ] Crear `src/editor/EditorUI.h`:
@@ -416,7 +416,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
        void EditorUI::RenderHierarchy() {
            ImGui::Begin("Hierarchy");
            
-           // Placeholder: árbol hardcoded
+           // Placeholder: ï¿½rbol hardcoded
            if (ImGui::TreeNode("Scene Root")) {
                if (ImGui::TreeNode("Camera")) {
                    ImGui::Text("Main Camera");
@@ -439,7 +439,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
        void EditorUI::RenderViewport() { }
    }
    ```
-3. [ ] Llamar `RenderHierarchy()` en `main.cpp` render loop (después de NewFrame):
+3. [ ] Llamar `RenderHierarchy()` en `main.cpp` render loop (despuï¿½s de NewFrame):
    ```cpp
    ImGui::NewFrame();
    Editor::EditorUI::RenderHierarchy();
@@ -455,7 +455,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 **Estado**: ?? Pendiente  
 **Archivos afectados**: `src/editor/EditorUI.cpp`, `src/main.cpp`
 
-**Descripción**: Crear panel "Inspector" mostrando propiedades placeholder de objeto seleccionado.
+**Descripciï¿½n**: Crear panel "Inspector" mostrando propiedades placeholder de objeto seleccionado.
 
 **Pasos**:
 1. [ ] Implementar `RenderInspector()` en `EditorUI.cpp`:
@@ -502,7 +502,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 **Estado**: ?? Pendiente  
 **Archivos afectados**: `src/editor/EditorUI.cpp`, `src/main.cpp`
 
-**Descripción**: Crear panel "Console" mostrando logs del sistema (integrar con CORE_LOG_*).
+**Descripciï¿½n**: Crear panel "Console" mostrando logs del sistema (integrar con CORE_LOG_*).
 
 **Pasos**:
 1. [ ] Implementar `RenderConsole()` en `EditorUI.cpp`:
@@ -525,7 +525,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 2. [ ] Llamar `RenderConsole()` en `main.cpp` render loop
 3. [ ] Compilar y validar (CMake + MSBuild Debug, 0 errores, 0 warnings)
 
-**Nota**: Integración real con `Log.h` se hará en sprint futuro (requiere refactorizar logging system para capturar mensajes).
+**Nota**: Integraciï¿½n real con `Log.h` se harï¿½ en sprint futuro (requiere refactorizar logging system para capturar mensajes).
 
 **Commit**: [Hash pendiente]
 
@@ -535,7 +535,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 **Estado**: ?? Pendiente  
 **Archivos afectados**: `src/editor/EditorUI.cpp`, `src/main.cpp`
 
-**Descripción**: Crear panel "Viewport" mostrando el render target del renderer (geometría 3D renderizada).
+**Descripciï¿½n**: Crear panel "Viewport" mostrando el render target del renderer (geometrï¿½a 3D renderizada).
 
 **Pasos**:
 1. [ ] Implementar `RenderViewport()` en `EditorUI.cpp`:
@@ -547,7 +547,7 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
        ImGui::Text("3D Viewport (render target placeholder)");
        ImGui::Text("Size: 1920x1080");
        
-       // TODO: Renderizar render target como ImGui::Image() cuando esté disponible
+       // TODO: Renderizar render target como ImGui::Image() cuando estï¿½ disponible
        // Requiere exponer back buffer como SRV texture
        
        ImGui::End();
@@ -566,14 +566,14 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 **Estado**: ? Completada  
 **Archivos afectados**: `src/main.cpp`, `src/editor/EditorUI.cpp`
 
-**Descripción**: Habilitar docking de ImGui y validar que todos los panels funcionan correctamente con toggle F1.
+**Descripciï¿½n**: Habilitar docking de ImGui y validar que todos los panels funcionan correctamente con toggle F1.
 
 **Pasos**:
-1. [x] Verificar que docking está habilitado (ya configurado en H1.4):
+1. [x] Verificar que docking estï¿½ habilitado (ya configurado en H1.4):
    ```cpp
    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
    ```
-2. [x] Añadir dockspace principal en render loop:
+2. [x] Aï¿½adir dockspace principal en render loop:
    ```cpp
    ImGui::NewFrame();
    
@@ -590,22 +590,22 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
    ```
 3. [x] Verificar que toggle F1 funciona (mostrar/ocultar UI de Editor)
 4. [x] Compilar y validar (CMake + MSBuild Debug, 0 errores, 0 warnings)
-5. [x] Testing visual: Ejecutar aplicación y verificar:
+5. [x] Testing visual: Ejecutar aplicaciï¿½n y verificar:
    - 4 panels visibles (Hierarchy, Inspector, Console, Viewport) ?
    - Panels pueden arrastrarse, redimensionarse y dockear ?
    - Toggle F1 muestra/oculta todos los panels ?
    - 220 FPS estables con ImGui activo ?
 
-**Resultado**: Editor UI completo funcional con docking, similar a Unity/Unreal Editor layout. Performance óptima (220 FPS con 4 panels activos, 38% GPU, 7% CPU). Layout profesional validado visualmente.
+**Resultado**: Editor UI completo funcional con docking, similar a Unity/Unreal Editor layout. Performance ï¿½ptima (220 FPS con 4 panels activos, 38% GPU, 7% CPU). Layout profesional validado visualmente.
 
-**Validación visual confirmada**:
-- ? Los 4 panels están visibles simultáneamente
+**Validaciï¿½n visual confirmada**:
+- ? Los 4 panels estï¿½n visibles simultï¿½neamente
 - ? Docking funcional (panels pueden moverse y anclarse)
-- ? Render 3D visible detrás con fondo semitransparente (70% opacidad)
-- ? Hierarchy: Árbol de escena completo con Scene Root, Camera, Lights, Geometry
+- ? Render 3D visible detrï¿½s con fondo semitransparente (70% opacidad)
+- ? Hierarchy: ï¿½rbol de escena completo con Scene Root, Camera, Lights, Geometry
 - ? Inspector: Transform y Camera con propiedades editables
 - ? Console: Logs coloreados (verde INFO, amarillo WARNING, rojo ERROR)
-- ? Viewport: Placeholder con información técnica del render target
+- ? Viewport: Placeholder con informaciï¿½n tï¿½cnica del render target
 
 **Commit**: [Hash pendiente]
 
@@ -613,11 +613,11 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.3.
 
 ## ?? Resumen de Tareas
 
-| Historia | Tarea | Título | Estado |
+| Historia | Tarea | Tï¿½tulo | Estado |
 |----------|-------|--------|--------|
 | H1 | H1.1 | Descargar e integrar ImGui | ? Completada |
-| H1 | H1.2 | Añadir ImGui a CMakeLists.txt | ? Completada |
-| H1 | H1.3 | Añadir ImGui a Visual Studio project | ? Completada |
+| H1 | H1.2 | Aï¿½adir ImGui a CMakeLists.txt | ? Completada |
+| H1 | H1.3 | Aï¿½adir ImGui a Visual Studio project | ? Completada |
 | H1 | H1.4 | Crear ImGui context en main.cpp | ? Completada |
 | H2 | H2.1 | Crear descriptor heap SRV para ImGui | ? Completada |
 | H2 | H2.2 | Inicializar backend ImGui DX12 | ? Completada |

@@ -6,15 +6,16 @@ Este archivo contiene las tareas detalladas (bajo nivel) del sprint activo v1.9.
 
 ---
 
-## Historia 1: Asset Database Core (H1)
+## Historia 1: Asset Database Core (H1) ? COMPLETADA
 
 ### Tarea H1.1: Crear AssetDatabase.h con estructuras básicas
-**Estado**: ? Pendiente  
+**Estado**: ? Completada  
+**Fecha**: 2025-01-18  
 **Archivos afectados**: `src/assets/AssetDatabase.h` (nuevo)
 
 **Descripción**: Crear AssetDatabase.h con AssetID, AssetType, AssetMetadata y AssetDatabase class.
 
-**Cambios**:
+**Cambios realizados**:
 ```cpp
 #pragma once
 #include <string>
@@ -71,66 +72,87 @@ private:
 
 ### Tarea H1.2: Implementar AssetDatabase.cpp
 **Estado**: ? Completada  
+**Fecha**: 2025-01-21  
 **Archivos afectados**: `src/assets/AssetDatabase.cpp` (nuevo)
 
 **Descripción**: Implementar métodos de AssetDatabase (ImportAsset, GetAsset, RefreshAssets).
 
+**Implementación**: Singleton thread-safe con métodos Register/Unregister/HasAsset/GetMetadata.
+
 ---
 
 ### Tarea H1.3: Crear asset folder structure
-**Estado**: ? Pendiente  
+**Estado**: ? Completada  
+**Fecha**: 2025-01-21  
 **Archivos afectados**: `assets/` (carpetas nuevas)
 
 **Descripción**: Crear estructura de carpetas para assets:
 ```
 assets/
-+-- textures/
-+-- meshes/
-+-- shaders/
-+-- scenes/
+??? textures/
+??? meshes/
+??? shaders/
+??? scenes/
 ```
+
+**Implementación**: Estructura completa creada con README.md y .gitkeep files.
 
 ---
 
 ### Tarea H1.4: Testing AssetDatabase
-**Estado**: ? Pendiente  
+**Estado**: ? Completada  
+**Fecha**: 2025-01-21  
 **Archivos afectados**: `tests/asset_database_test.cpp` (nuevo)
 
 **Descripción**: Tests unitarios para AssetDatabase (ImportAsset, GetAsset, DetectType).
 
+**Resultado**: 27 assertions passed ?
+
 ---
 
-## Historia 2: Texture Importer (H2)
+## Historia 2: Texture Importer (H2) ? COMPLETADA
 
 ### Tarea H2.1: Integrar stb_image library
-**Estado**: ? Pendiente  
+**Estado**: ? Completada  
+**Fecha**: 2025-01-21  
 **Archivos afectados**: `external/stb/` (nuevo), `CMakeLists.txt`
 
 **Descripción**: Descargar stb_image.h y añadir a external/ para cargar PNG/JPG.
 
+**Implementación**: stb_image integrado con target CMake, soporte PNG/JPG/BMP/TGA/PSD/GIF/HDR/PIC.
+
 ---
 
 ### Tarea H2.2: Crear TextureImporter.h/cpp
-**Estado**: ? Pendiente  
+**Estado**: ? Completada  
+**Fecha**: 2025-01-21  
 **Archivos afectados**: `src/assets/TextureImporter.h/cpp` (nuevos)
 
 **Descripción**: Implementar TextureImporter con ImportTexture(path) usando stb_image.
 
+**Implementación**: TextureImporter class con métodos ImportTexture, ImportTextureRGBA, GetTextureInfo, IsSupportedFormat.
+
 ---
 
 ### Tarea H2.3: Crear DX12 Texture2D desde pixel data
-**Estado**: ? Pendiente  
+**Estado**: ? Completada  
+**Fecha**: 2025-01-21  
 **Archivos afectados**: `src/renderer/DX12ResourceManager.h/cpp`
 
 **Descripción**: Añadir CreateTexture2DFromData() en DX12ResourceManager para upload de pixels.
 
+**Implementación**: CreateTexture2DFromData con staging buffer, row pitch alignment, resource barrier.
+
 ---
 
 ### Tarea H2.4: Testing TextureImporter
-**Estado**: ? Pendiente  
-**Archivos afectados**: `tests/texture_importer_test.cpp` (nuevo), `assets/textures/test.png`
+**Estado**: ? Completada  
+**Fecha**: 2025-01-21  
+**Archivos afectados**: `tests/texture_importer_test.cpp` (nuevo), `assets/textures/test_4x4.png`
 
 **Descripción**: Tests con textura PNG real (importar, verificar dimensiones, formato).
+
+**Resultado**: 27 assertions passed ? (5 test suites: IsSupportedFormat, ImportInvalid, GetInfo, ImportValid, Channels)
 
 ---
 
@@ -240,14 +262,14 @@ assets/
 
 | Historia | Tarea | Título | Estado |
 |----------|-------|--------|--------|
-| H1 | H1.1 | AssetDatabase.h | ? Pendiente |
-| H1 | H1.2 | AssetDatabase.cpp | ? Pendiente |
-| H1 | H1.3 | Asset folders | ? Pendiente |
-| H1 | H1.4 | Testing AssetDatabase | ? Pendiente |
-| H2 | H2.1 | Integrar stb_image | ? Pendiente |
-| H2 | H2.2 | TextureImporter | ? Pendiente |
-| H2 | H2.3 | DX12 Texture2D | ? Pendiente |
-| H2 | H2.4 | Testing TextureImporter | ? Pendiente |
+| H1 | H1.1 | AssetDatabase.h | ? Completada |
+| H1 | H1.2 | AssetDatabase.cpp | ? Completada |
+| H1 | H1.3 | Asset folders | ? Completada |
+| H1 | H1.4 | Testing AssetDatabase | ? Completada |
+| H2 | H2.1 | Integrar stb_image | ? Completada |
+| H2 | H2.2 | TextureImporter | ? Completada |
+| H2 | H2.3 | DX12 Texture2D | ? Completada |
+| H2 | H2.4 | Testing TextureImporter | ? Completada |
 | H3 | H3.1 | MeshImporter.h | ? Pendiente |
 | H3 | H3.2 | OBJ parser | ? Pendiente |
 | H3 | H3.3 | DX12 buffers | ? Pendiente |
@@ -261,9 +283,13 @@ assets/
 | H5 | H5.3 | File menu | ? Pendiente |
 | H5 | H5.4 | Testing Serializer | ? Pendiente |
 
-**Total**: 20 tareas (0 completadas, 20 pendientes)
+**Total**: 20 tareas  
+**Completadas**: 8/20 (40%)  
+**Pendientes**: 12/20 (60%)
+
+**Historias completadas**: 2/5 (40%) - ? H1, ? H2
 
 ---
 
-*Última actualización*: 2025-01-18  
+*Última actualización*: 2025-01-21  
 *Sprint*: v1.9.0 - Asset System & Resource Management

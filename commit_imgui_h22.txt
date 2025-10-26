@@ -1,20 +1,20 @@
-feat(imgui): inicializar backend ImGui DX12 (H2.2)
+ï»¿feat(imgui): inicializar backend ImGui DX12 (H2.2)
 
-Implementación:
-- Añadido método público GetDevice() en DX12Renderer.h/cpp para acceso al ID3D12Device*
+Implementaciï¿½n:
+- Aï¿½adido mï¿½todo pï¿½blico GetDevice() en DX12Renderer.h/cpp para acceso al ID3D12Device*
 - Incluidos headers DirectX 12 (<d3d12.h>) en main.cpp
 - Inicializado backend ImGui DX12 con ImGui_ImplDX12_Init():
-  * Parámetros: device, 2 frames (double buffering), DXGI_FORMAT_R8G8B8A8_UNORM
+  * Parï¿½metros: device, 2 frames (double buffering), DXGI_FORMAT_R8G8B8A8_UNORM
   * Heap SRV para font atlas con descriptores CPU/GPU
-- Añadido shutdown ImGui_ImplDX12_Shutdown() en cleanup
+- Aï¿½adido shutdown ImGui_ImplDX12_Shutdown() en cleanup
 
 Archivos modificados:
-- src/renderer/DX12Renderer.h (método GetDevice())
-- src/renderer/DX12Renderer.cpp (implementación GetDevice())
+- src/renderer/DX12Renderer.h (mï¿½todo GetDevice())
+- src/renderer/DX12Renderer.cpp (implementaciï¿½n GetDevice())
 - src/main.cpp (includes D3D12, init backend, shutdown)
 - docs/daily.md (H2.2 completada ? siguiente H2.3)
 - docs/sprint_tasks.md (H2.2 marcada como completada, 6/16 tareas)
 
-Compilación: CMake Debug OK (0 errores, 0 warnings)
+Compilaciï¿½n: CMake Debug OK (0 errores, 0 warnings)
 
 Relacionado: Tarea H2.2 (Sprint v1.3.0 - ImGui Integration)

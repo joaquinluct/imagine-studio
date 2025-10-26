@@ -1,16 +1,16 @@
-# Workflow Detallado - Desarrollo con Asistente IA
+ï»¿# Workflow Detallado - Desarrollo con Asistente IA
 
-> **Propósito**: Documentación paso a paso del flujo de trabajo con asistentes IA.
+> **Propï¿½sito**: Documentaciï¿½n paso a paso del flujo de trabajo con asistentes IA.
 
 ---
 
-## ?? CICLO COMPLETO DE ITERACIÓN
+## ?? CICLO COMPLETO DE ITERACIï¿½N
 
 ### Vista General
 
 ```
 ????????????????
-?  1. LEER     ? ? Consultar daily.md + código actual
+?  1. LEER     ? ? Consultar daily.md + cï¿½digo actual
 ????????????????
        ?
 ????????????????
@@ -42,21 +42,21 @@
 
 ### Archivos a Consultar
 
-**Obligatorio cada sesión**:
+**Obligatorio cada sesiï¿½n**:
 ```markdown
 1. docs/daily.md
-   ?? Ver última tarea completada
+   ?? Ver ï¿½ltima tarea completada
    ?? Ver tarea actual en progreso
 
 2. .github/copilot-instructions.md
-   ?? Recordar reglas críticas
+   ?? Recordar reglas crï¿½ticas
    ?? Verificar workflow
 ```
 
 **Cuando sea necesario**:
 ```markdown
 3. docs/sprint_tasks.md
-   ?? Detalles de implementación de tarea actual
+   ?? Detalles de implementaciï¿½n de tarea actual
 
 4. docs/sprint_histories.md
    ?? Contexto de la historia asociada
@@ -81,18 +81,18 @@ Siguiente: H1.4 - Tests unitarios Entity System
 ### Verificar Estado Actual
 
 **Checklist**:
-- [ ] Leer código fuente de archivos relacionados
-- [ ] Verificar última modificación (git log)
-- [ ] Comprobar compilación actual (si dudas)
+- [ ] Leer cï¿½digo fuente de archivos relacionados
+- [ ] Verificar ï¿½ltima modificaciï¿½n (git log)
+- [ ] Comprobar compilaciï¿½n actual (si dudas)
 - [ ] Identificar punto exacto donde continuar
 
 ### Ejemplo
 
 ```cpp
 // Tarea actual: H1.4 - Tests unitarios Entity System
-// Verificar: ¿Existe tests/entity_test.cpp?
-// Verificar: ¿Está EntityManager implementado?
-// Verificar: ¿Hay framework de tests (Google Test)?
+// Verificar: ï¿½Existe tests/entity_test.cpp?
+// Verificar: ï¿½Estï¿½ EntityManager implementado?
+// Verificar: ï¿½Hay framework de tests (Google Test)?
 ```
 
 ---
@@ -104,41 +104,41 @@ Siguiente: H1.4 - Tests unitarios Entity System
 ```markdown
 ?? **Siguiente: H1.4 - Tests unitarios Entity System**
 
-Implementaré tests unitarios para EntityManager con Google Test:
+Implementarï¿½ tests unitarios para EntityManager con Google Test:
 - Crear tests/entity_test.cpp
 - Tests de CreateEntity, DestroyEntity, GetEntity
 - Integrar con CMake
 
-¿Procedo?
+ï¿½Procedo?
 ```
 
-**Ejecución automática**: Si usuario confirmó previamente "auto-ejecución", el asistente procede sin esperar confirmación.
+**Ejecuciï¿½n automï¿½tica**: Si usuario confirmï¿½ previamente "auto-ejecuciï¿½n", el asistente procede sin esperar confirmaciï¿½n.
 
 ---
 
 ## ?? PASO 4: IMPLEMENTAR
 
-### Proceso de Implementación
+### Proceso de Implementaciï¿½n
 
 1. **Leer task details** en `docs/sprint_tasks.md`:
    ```markdown
    ### H1.4 - Tests unitarios Entity System
-   **Descripción**: Implementar tests con Google Test
+   **Descripciï¿½n**: Implementar tests con Google Test
    **Archivos afectados**: tests/entity_test.cpp, CMakeLists.txt
-   **Criterio de éxito**: 15 tests PASSED
+   **Criterio de ï¿½xito**: 15 tests PASSED
    ```
 
 2. **Crear/modificar archivos**:
-   - Seguir ejemplos de código en task
+   - Seguir ejemplos de cï¿½digo en task
    - Mantener estilo consistente
-   - Comentar código complejo
+   - Comentar cï¿½digo complejo
 
 3. **Verificar includes**:
    - Project includes primero (`"..."`)
-   - System includes después (`<...>`)
-   - Orden alfabético dentro de cada grupo
+   - System includes despuï¿½s (`<...>`)
+   - Orden alfabï¿½tico dentro de cada grupo
 
-### Ejemplo de Implementación
+### Ejemplo de Implementaciï¿½n
 
 ```cpp
 // tests/entity_test.cpp
@@ -159,14 +159,14 @@ TEST(EntityTest, CreateEntity) {
 
 ## ? PASO 5: VALIDAR (OBLIGATORIO)
 
-### Doble Compilación Obligatoria
+### Doble Compilaciï¿½n Obligatoria
 
 **Build 1 - CMake**:
 ```powershell
 cmake --build build --config Debug
 ```
 
-**Criterio de éxito**: 
+**Criterio de ï¿½xito**: 
 ```
 Build succeeded.
     0 Warning(s)
@@ -178,30 +178,30 @@ Build succeeded.
 msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 ```
 
-**Criterio de éxito**:
+**Criterio de ï¿½xito**:
 ```
 Build succeeded.
     0 Warning(s)
     0 Error(s)
 ```
 
-### Si Compilación Falla
+### Si Compilaciï¿½n Falla
 
-**Proceso de corrección**:
+**Proceso de correcciï¿½n**:
 1. Leer mensaje de error completo
-2. Identificar archivo y línea del error
+2. Identificar archivo y lï¿½nea del error
 3. Corregir el error
-4. Repetir compilación desde Build 1
+4. Repetir compilaciï¿½n desde Build 1
 5. No avanzar hasta tener ambas compilaciones limpias
 
 ### Errores Comunes y Soluciones
 
-| Error | Causa | Solución |
+| Error | Causa | Soluciï¿½n |
 |-------|-------|----------|
-| `LNK2019: unresolved external` | Archivo no incluido en proyecto | Añadir a `.vcxproj` / `CMakeLists.txt` |
-| `C2065: undeclared identifier` | Falta include | Añadir `#include` necesario |
-| `C4100: unreferenced parameter` | Parámetro no usado | Añadir `(void)param;` o eliminar |
-| `LNK1120: unresolved externals` | Falta implementación | Implementar función declarada |
+| `LNK2019: unresolved external` | Archivo no incluido en proyecto | Aï¿½adir a `.vcxproj` / `CMakeLists.txt` |
+| `C2065: undeclared identifier` | Falta include | Aï¿½adir `#include` necesario |
+| `C4100: unreferenced parameter` | Parï¿½metro no usado | Aï¿½adir `(void)param;` o eliminar |
+| `LNK1120: unresolved externals` | Falta implementaciï¿½n | Implementar funciï¿½n declarada |
 
 ---
 
@@ -211,7 +211,7 @@ Build succeeded.
 
 **Formato de mensaje**:
 ```
-<tipo>(<ámbito>): <mensaje corto>
+<tipo>(<ï¿½mbito>): <mensaje corto>
 
 <mensaje largo opcional>
 
@@ -220,10 +220,10 @@ Refs: <issue/track-id>
 
 **Tipos comunes**:
 - `feat`: Nueva funcionalidad
-- `fix`: Corrección de errores
-- `docs`: Cambios en documentación
-- `test`: Añadir/corregir tests
-- `refactor`: Refactorización
+- `fix`: Correcciï¿½n de errores
+- `docs`: Cambios en documentaciï¿½n
+- `test`: Aï¿½adir/corregir tests
+- `refactor`: Refactorizaciï¿½n
 - `perf`: Mejoras de rendimiento
 
 **Ejemplo**:
@@ -245,9 +245,9 @@ git add -A
 git commit -m "test(scene): implementar tests Entity System (H1.4)"
 ```
 
-### Actualizar Documentación
+### Actualizar Documentaciï¿½n
 
-**Automático tras commit**:
+**Automï¿½tico tras commit**:
 
 1. **docs/daily.md**:
    ```markdown
@@ -256,17 +256,17 @@ git commit -m "test(scene): implementar tests Entity System (H1.4)"
    ```
 
 2. **docs/sprint_commits.md**:
-   Añadir entrada con hash del commit
+   Aï¿½adir entrada con hash del commit
 
 3. **docs/sprint_tasks.md**:
    Actualizar estado de H1.4 a ? Completada
 
 4. **README.md** (si aplica):
-   Actualizar sección de tests o cambios relevantes
+   Actualizar secciï¿½n de tests o cambios relevantes
 
 ---
 
-## ?? ITERACIÓN COMPLETA
+## ?? ITERACIï¿½N COMPLETA
 
 ### Ejemplo Real
 
@@ -277,16 +277,16 @@ Leer daily.md: "Siguiente: H1.4 - Tests unitarios Entity System"
 
 **Propuesta**:
 ```
-Implementaré tests con Google Test para EntityManager
+Implementarï¿½ tests con Google Test para EntityManager
 ```
 
-**Implementación**:
+**Implementaciï¿½n**:
 ```cpp
 // Crear tests/entity_test.cpp
 // 15 tests implementados
 ```
 
-**Validación**:
+**Validaciï¿½n**:
 ```
 Build 1 (CMake): ? 0 errors, 0 warnings
 Build 2 (MSBuild): ? 0 errors, 0 warnings
@@ -302,7 +302,7 @@ git commit -m "test(scene): implementar tests Entity System (H1.4)"
 ```markdown
 daily.md: Hecho H1.4, Siguiente H2.1
 sprint_tasks.md: H1.4 ? Completada
-sprint_commits.md: Añadir hash abc123
+sprint_commits.md: Aï¿½adir hash abc123
 ```
 
 **Reportar**:
@@ -310,9 +310,9 @@ sprint_commits.md: Añadir hash abc123
 ? Hecho: H1.4 - Tests unitarios Entity System
 ?? Siguiente: H2.1 - Transform Component
 
-### ??? Visualización:
-**¿Algo nuevo?**: **NO** ?
-**Razón**: Tests internos sin efecto en UI
+### ??? Visualizaciï¿½n:
+**ï¿½Algo nuevo?**: **NO** ?
+**Razï¿½n**: Tests internos sin efecto en UI
 
 +--------------------------------------------------------------------+
 ??????????????????????????????????????????????????????? 25.0%?
@@ -321,30 +321,30 @@ sprint_commits.md: Añadir hash abc123
 
 ---
 
-## ? EJECUCIÓN AUTOMÁTICA
+## ? EJECUCIï¿½N AUTOMï¿½TICA
 
 ### Cuando NO Pausar
 
-El asistente ejecuta automáticamente si:
-- ? Tarea es clara y específica
-- ? No requiere decisión arquitectónica
-- ? No hay ambigüedad en la implementación
-- ? Usuario ha confirmado "auto-ejecución" previamente
+El asistente ejecuta automï¿½ticamente si:
+- ? Tarea es clara y especï¿½fica
+- ? No requiere decisiï¿½n arquitectï¿½nica
+- ? No hay ambigï¿½edad en la implementaciï¿½n
+- ? Usuario ha confirmado "auto-ejecuciï¿½n" previamente
 
-### Cuando SÍ Pausar
+### Cuando Sï¿½ Pausar
 
 El asistente PAUSA si:
-- ? Bloqueo técnico (no se puede continuar)
-- ? Decisión arquitectónica crítica necesaria
-- ? Ambigüedad en requisitos
-- ? Bug necesita validación de usuario
+- ? Bloqueo tï¿½cnico (no se puede continuar)
+- ? Decisiï¿½n arquitectï¿½nica crï¿½tica necesaria
+- ? Ambigï¿½edad en requisitos
+- ? Bug necesita validaciï¿½n de usuario
 - ? Dependencia externa no disponible
 
 ---
 
-## ?? MÉTRICAS DE ITERACIÓN
+## ?? Mï¿½TRICAS DE ITERACIï¿½N
 
-### Duración Estimada por Tarea
+### Duraciï¿½n Estimada por Tarea
 
 | Complejidad | Tiempo (con IA) | Tiempo (sin IA) |
 |-------------|-----------------|-----------------|
@@ -356,9 +356,9 @@ El asistente PAUSA si:
 
 **Ejemplo Sprint v1.9.0**:
 - 20 tareas totales
-- Duración estimada: 20-40 horas (con IA)
-- Duración tradicional: 80-120 horas (sin IA)
-- **Aceleración**: 4-6x más rápido
+- Duraciï¿½n estimada: 20-40 horas (con IA)
+- Duraciï¿½n tradicional: 80-120 horas (sin IA)
+- **Aceleraciï¿½n**: 4-6x mï¿½s rï¿½pido
 
 ---
 
@@ -371,6 +371,6 @@ El asistente PAUSA si:
 
 ---
 
-**Versión**: 2.0  
-**Última actualización**: 2025-01-18  
+**Versiï¿½n**: 2.0  
+**ï¿½ltima actualizaciï¿½n**: 2025-01-18  
 **Proyecto**: Imagine Studio (C++ Game Engine)

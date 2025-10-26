@@ -1,23 +1,23 @@
-# Estándares AAA - Imagine Studio
+ï»¿# Estï¿½ndares AAA - Imagine Studio
 
-**OBLIGATORIO**: Este proyecto sigue estándares AAA de la industria (Unity, Unreal, Blender). **NUNCA** implementar "apaños temporales" o "soluciones rápidas" que comprometan la arquitectura.
+**OBLIGATORIO**: Este proyecto sigue estï¿½ndares AAA de la industria (Unity, Unreal, Blender). **NUNCA** implementar "apaï¿½os temporales" o "soluciones rï¿½pidas" que comprometan la arquitectura.
 
 ---
 
-## ?? REGLA CRÍTICA: NO "Apaños Temporales"
+## ?? REGLA CRï¿½TICA: NO "Apaï¿½os Temporales"
 
-### Filosofía del Proyecto
+### Filosofï¿½a del Proyecto
 
 > **"Hacer bien las cosas desde el principio"** - Preferencia del propietario
 
-- Cada módulo debe cumplir estándares AAA desde su **concepción**
+- Cada mï¿½dulo debe cumplir estï¿½ndares AAA desde su **concepciï¿½n**
 - **NO** soluciones intermedias, temporales, incompletas o no funcionales
-- Si se detecta un "apaño", **refactorizar a solución AAA inmediatamente**
+- Si se detecta un "apaï¿½o", **refactorizar a soluciï¿½n AAA inmediatamente**
 - Tender SIEMPRE a la arquitectura de Unity/Unreal/Blender (referencias de industria)
 
 ---
 
-## ? Ejemplos de "Apaños" NO Permitidos
+## ? Ejemplos de "Apaï¿½os" NO Permitidos
 
 ### 1. **Procesar UI Siempre (Sin Condicional de Visibilidad)**
 
@@ -36,30 +36,30 @@ ImGui::Render();  // ? Se ejecuta SIEMPRE, desperdicio de CPU/GPU
 
 ```cpp
 // ? NO HACER: Llamar Build() manualmente "por si acaso"
-io.Fonts->Build();  // ? ImGui backends lo hacen automáticamente
+io.Fonts->Build();  // ? ImGui backends lo hacen automï¿½ticamente
 ```
 
 **Problema**: Duplica trabajo, puede causar race conditions con backends.
 
-### 3. **Logs de Debug en Producción**
+### 3. **Logs de Debug en Producciï¿½n**
 
 ```cpp
 // ? NO HACER: Logs en cada frame sin condicional
 CORE_LOG_INFO("[NewFrame] io.MouseDown[0]=" << ...);  // ? Sin #ifdef _DEBUG
 ```
 
-**Problema**: Contamina logs de producción, impacto en performance.
+**Problema**: Contamina logs de producciï¿½n, impacto en performance.
 
-### 4. **Código Sin Separación de Concerns**
+### 4. **Cï¿½digo Sin Separaciï¿½n de Concerns**
 
 ```cpp
-// ? NO HACER: Lógica de UI mezclada con lógica de aplicación
+// ? NO HACER: Lï¿½gica de UI mezclada con lï¿½gica de aplicaciï¿½n
 void MainLoop() {
-    // Código de input, rendering, UI todo mezclado...
+    // Cï¿½digo de input, rendering, UI todo mezclado...
 }
 ```
 
-**Problema**: Dificulta mantenimiento, testing, y expansión.
+**Problema**: Dificulta mantenimiento, testing, y expansiï¿½n.
 
 ---
 
@@ -78,7 +78,7 @@ if (renderer.IsUIVisible())  // ? F1 toggle controla esto
     // Dockspace ANTES de panels (AAA standard)
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
     
-    // Editor UI (NO demo window en producción)
+    // Editor UI (NO demo window en producciï¿½n)
     #ifdef EDITOR_MODE
         Editor::EditorUI::RenderAllPanels();
     #endif
@@ -91,9 +91,9 @@ if (renderer.IsUIVisible())  // ? F1 toggle controla esto
 **Beneficios**:
 - ? Ahorro de CPU/GPU cuando UI oculta
 - ? Respeta toggle F1 correctamente
-- ? Separación clara de responsabilidades
+- ? Separaciï¿½n clara de responsabilidades
 
-### 2. **Separación de Capas (Clean Architecture)**
+### 2. **Separaciï¿½n de Capas (Clean Architecture)**
 
 ```
 main.cpp (Application Layer)
@@ -105,16 +105,16 @@ DX12Renderer (Graphics Layer)
     ??? UIPass() ejecuta ImGui_ImplDX12_RenderDrawData()
 
 Editor::EditorUI (Editor Layer)
-??? Lógica de panels (Hierarchy, Inspector, Console, Viewport)
+??? Lï¿½gica de panels (Hierarchy, Inspector, Console, Viewport)
     ??? Solo se llama si EDITOR_MODE definido
 ```
 
 **Beneficios**:
 - ? Testabilidad (capas independientes)
 - ? Mantenibilidad (responsabilidades claras)
-- ? Extensibilidad (añadir panels sin tocar renderer)
+- ? Extensibilidad (aï¿½adir panels sin tocar renderer)
 
-### 3. **Condicionales de Compilación (Debug vs Release)**
+### 3. **Condicionales de Compilaciï¿½n (Debug vs Release)**
 
 ```cpp
 // ? CORRECTO: Debug logs solo en builds debug
@@ -133,9 +133,9 @@ Editor::EditorUI (Editor Layer)
 ```
 
 **Beneficios**:
-- ? Logs limpios en producción
-- ? No contaminar release con código de testing
-- ? Performance óptima en builds finales
+- ? Logs limpios en producciï¿½n
+- ? No contaminar release con cï¿½digo de testing
+- ? Performance ï¿½ptima en builds finales
 
 ### 4. **Control de Estado Centralizado**
 
@@ -158,8 +158,8 @@ if (renderer.IsUIVisible()) {
 
 **Beneficios**:
 - ? Single source of truth
-- ? Fácil de testear y debuggear
-- ? Extensible (añadir más controles centralizados)
+- ? Fï¿½cil de testear y debuggear
+- ? Extensible (aï¿½adir mï¿½s controles centralizados)
 
 ---
 
@@ -167,13 +167,13 @@ if (renderer.IsUIVisible()) {
 
 Antes de crear un commit, verificar:
 
-- [ ] ¿Esta solución es "temporal" o "definitiva"?
-- [ ] ¿Unity/Unreal implementarían así esta funcionalidad?
-- [ ] ¿Hay condicionales de visibilidad donde corresponde?
-- [ ] ¿Los logs de debug están bajo `#ifdef _DEBUG`?
-- [ ] ¿La arquitectura tiene separación de concerns clara?
-- [ ] ¿El código es extensible sin modificar arquitectura base?
-- [ ] ¿Se evita código duplicado o "llamar por si acaso"?
+- [ ] ï¿½Esta soluciï¿½n es "temporal" o "definitiva"?
+- [ ] ï¿½Unity/Unreal implementarï¿½an asï¿½ esta funcionalidad?
+- [ ] ï¿½Hay condicionales de visibilidad donde corresponde?
+- [ ] ï¿½Los logs de debug estï¿½n bajo `#ifdef _DEBUG`?
+- [ ] ï¿½La arquitectura tiene separaciï¿½n de concerns clara?
+- [ ] ï¿½El cï¿½digo es extensible sin modificar arquitectura base?
+- [ ] ï¿½Se evita cï¿½digo duplicado o "llamar por si acaso"?
 
 **Si la respuesta a cualquier pregunta es NO ? REFACTORIZAR antes de commit**.
 
@@ -184,19 +184,19 @@ Antes de crear un commit, verificar:
 ### Unity Editor:
 - Panels con docking flexible
 - Toggle de UI con tecla (F1/Alt+Enter)
-- Separación clara entre Game/Scene/Editor views
-- Hot reload sin cerrar aplicación
+- Separaciï¿½n clara entre Game/Scene/Editor views
+- Hot reload sin cerrar aplicaciï¿½n
 
 ### Unreal Editor:
 - Content Browser separado
 - Blueprint vs C++ layers
 - Console integrado con logs filtrados
-- Viewport como panel más (no hardcoded)
+- Viewport como panel mï¿½s (no hardcoded)
 
 ### Blender:
 - Workspaces predefinidos pero customizables
 - Paneles independientes del engine core
-- Shortcuts consistentes (F1-F12 asignados lógicamente)
+- Shortcuts consistentes (F1-F12 asignados lï¿½gicamente)
 - UI no bloquea rendering core
 
 ---
@@ -205,44 +205,44 @@ Antes de crear un commit, verificar:
 
 ### 1. **"Quick Fix" Syndrome**
 ```cpp
-// ? Añadir check defensivo sin entender el problema
-if (ptr != nullptr) { /* usar ptr */ }  // ? ¿Por qué es nullptr?
+// ? Aï¿½adir check defensivo sin entender el problema
+if (ptr != nullptr) { /* usar ptr */ }  // ? ï¿½Por quï¿½ es nullptr?
 ```
-**Correcto**: Investigar POR QUÉ ptr es nullptr y arreglar causa raíz.
+**Correcto**: Investigar POR QUï¿½ ptr es nullptr y arreglar causa raï¿½z.
 
 ### 2. **"Works On My Machine"**
 ```cpp
 // ? Hardcodear rutas o configuraciones locales
 const char* path = "C:\\Users\\joaqu\\...";
 ```
-**Correcto**: Usar paths relativos o configuración centralizada.
+**Correcto**: Usar paths relativos o configuraciï¿½n centralizada.
 
 ### 3. **"Copy-Paste Engineering"**
 ```cpp
-// ? Copiar código sin entender
-// (código de Stack Overflow sin adaptar al proyecto)
+// ? Copiar cï¿½digo sin entender
+// (cï¿½digo de Stack Overflow sin adaptar al proyecto)
 ```
-**Correcto**: Entender, adaptar y documentar código externo.
+**Correcto**: Entender, adaptar y documentar cï¿½digo externo.
 
 ### 4. **"TODO Later" Hell**
 ```cpp
-// ? Dejar TODOs sin plan de resolución
-// TODO: fix this later  ? ¿Cuándo? ¿Cómo?
+// ? Dejar TODOs sin plan de resoluciï¿½n
+// TODO: fix this later  ? ï¿½Cuï¿½ndo? ï¿½Cï¿½mo?
 ```
-**Correcto**: Crear issue/task en backlog con plan específico.
+**Correcto**: Crear issue/task en backlog con plan especï¿½fico.
 
 ---
 
 ## ?? Referencias
 
 - `docs/MAIN.md` - Pilares fundamentales del proyecto
-- `docs/THIRD_PARTY.md` - Políticas sobre bibliotecas externas
+- `docs/THIRD_PARTY.md` - Polï¿½ticas sobre bibliotecas externas
 - [Unity Editor Architecture](https://docs.unity3d.com/Manual/UIE-Editor.html)
 - [Unreal Engine Editor](https://docs.unrealengine.com/5.3/en-US/editor-fundamentals-in-unreal-engine/)
 - [Dear ImGui Best Practices](https://github.com/ocornut/imgui/wiki/Getting-Started)
 
 ---
 
-**Versión**: v1.0  
-**Última actualización**: 2025-01-18  
+**Versiï¿½n**: v1.0  
+**ï¿½ltima actualizaciï¿½n**: 2025-01-18  
 **Aplica a**: Sprint v1.3.0 en adelante

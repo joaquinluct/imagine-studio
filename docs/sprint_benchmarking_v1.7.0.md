@@ -1,19 +1,19 @@
-# Sprint v1.7.0 - Performance Benchmarking Report
+ï»¿# Sprint v1.7.0 - Performance Benchmarking Report
 
 **Fecha**: 2025-01-18  
 **Hardware**: NVIDIA GeForce RTX 4060 Laptop GPU  
-**Versión base**: v1.6.0 (Viewport AAA)  
-**Versión optimizada**: v1.7.0 (Performance Optimization)
+**Versiï¿½n base**: v1.6.0 (Viewport AAA)  
+**Versiï¿½n optimizada**: v1.7.0 (Performance Optimization)
 
 ---
 
 ## ?? **Resultados de Benchmarking**
 
-### **Métric
+### **Mï¿½tric
 
 as Principales**
 
-| Métrica | v1.6.0 (Base) | v1.7.0 (Optimizado) | Mejora | Estado |
+| Mï¿½trica | v1.6.0 (Base) | v1.7.0 (Optimizado) | Mejora | Estado |
 |---------|---------------|---------------------|--------|--------|
 | **FPS (VSync ON)** | 220 FPS | 240 FPS | **+9%** | ? Medido |
 | **FPS (VSync OFF)** | ~220 FPS | **~800-1200 FPS** | **+300-450%** | ? Estimado |
@@ -29,10 +29,10 @@ as Principales**
 
 ### **H1 - Frame Pipelining (Double Buffering)** ?
 
-**Implementación**:
+**Implementaciï¿½n**:
 - `FrameContext` ring buffer con `FRAME_LATENCY = 2`
 - `BeginFrame()` auto-wait solo si CPU >2 frames adelante
-- `Execute()` signal fence único por frame + avanza ring buffer
+- `Execute()` signal fence ï¿½nico por frame + avanza ring buffer
 - `Shutdown()` espera TODOS los FrameContext antes de liberar resources
 
 **Impacto Medido**:
@@ -46,7 +46,7 @@ as Principales**
 
 ### **H2 - Barrier Batching** ?
 
-**Implementación**:
+**Implementaciï¿½n**:
 - Barriers agrupadas en arrays (`initialBarriers[2]`, `midBarrier`, `endBarrier`)
 - UNA SOLA `ExecuteCommandLists()` call por frame (antes: 7)
 - Reduce overhead de GPU pipeline flush + kernel overhead
@@ -62,51 +62,51 @@ as Principales**
 
 ### **H3 - Deferred Release Queue** ?
 
-**Implementación**:
+**Implementaciï¿½n**:
 - Estructura `PendingRelease` con resource + fence value
-- `ProcessDeferredReleases(completedFenceValue)` libera resources automáticamente
+- `ProcessDeferredReleases(completedFenceValue)` libera resources automï¿½ticamente
 - `Shutdown()` libera pendientes antes de cerrar
 
 **Impacto**:
 - **Robustez**: Previene memory leaks
-- **Mantenibilidad**: Código más seguro
+- **Mantenibilidad**: Cï¿½digo mï¿½s seguro
 - **Performance**: Impacto neutro (infraestructura para futuro)
 
 ---
 
 ### **H4 - Conditional Logging** ?
 
-**Implementación**:
+**Implementaciï¿½n**:
 - Logs verbose wrapped con `#ifdef _DEBUG`
 - 3 logs de debugging (descriptor handles, camera matrix) solo en debug builds
 
 **Impacto**:
-- **Debug builds**: Impacto mínimo (~1-2% FPS)
-- **Release builds**: 0% overhead (logs eliminados en compilación)
+- **Debug builds**: Impacto mï¿½nimo (~1-2% FPS)
+- **Release builds**: 0% overhead (logs eliminados en compilaciï¿½n)
 
 ---
 
-## ?? **Calificación AAA**
+## ?? **Calificaciï¿½n AAA**
 
 | Aspecto | v1.6.0 | v1.7.0 | Objetivo AAA |
 |---------|--------|--------|--------------|
-| **Frame Pipelining** | ? No | ? Sí (FRAME_LATENCY=2) | ? |
-| **Barrier Batching** | ? No | ? Sí (1 Execute/frame) | ? |
-| **Deferred Release** | ? Manual | ? Automático | ? |
+| **Frame Pipelining** | ? No | ? Sï¿½ (FRAME_LATENCY=2) | ? |
+| **Barrier Batching** | ? No | ? Sï¿½ (1 Execute/frame) | ? |
+| **Deferred Release** | ? Manual | ? Automï¿½tico | ? |
 | **WaitForGPU() minimal** | ? 7/frame | ? 0/frame | ? |
 | **Shutdown limpio** | ? Crash | ? Limpio | ? |
 | **GPU Usage >90%** | ? 30% | ?? 24% (VSync) | ? Por validar |
 
-**Calificación global**: **4/10 AAA** ? **7/10 AAA** (+75% progreso hacia 9/10)
+**Calificaciï¿½n global**: **4/10 AAA** ? **7/10 AAA** (+75% progreso hacia 9/10)
 
 ---
 
-## ?? **Próximos Pasos para Alcanzar 9/10 AAA**
+## ?? **Prï¿½ximos Pasos para Alcanzar 9/10 AAA**
 
-### **Validación Pendiente**
+### **Validaciï¿½n Pendiente**
 
 1. **Desactivar VSync** (`m_swapChain->Present(false)`)
-   - Medir FPS real sin límite de 240 Hz
+   - Medir FPS real sin lï¿½mite de 240 Hz
    - Validar ganancia de +300-450% FPS
 
 2. **Medir Frame Time con VSync OFF**
@@ -115,7 +115,7 @@ as Principales**
 
 ### **Optimizaciones Futuras** (Sprint v1.8.0+)
 
-| Optimización | Ganancia Estimada | Prioridad |
+| Optimizaciï¿½n | Ganancia Estimada | Prioridad |
 |--------------|-------------------|-----------|
 | **Command allocator ring buffer** | +20% FPS | ?? Alta |
 | **Descriptor heap optimization** | +10% FPS | ?? Media |
@@ -127,9 +127,9 @@ as Principales**
 
 ## ?? **Lecciones Aprendidas**
 
-### **1. Frame Pipelining es la Optimización #1**
+### **1. Frame Pipelining es la Optimizaciï¿½n #1**
 
-Reducir `WaitForGPU()` de 7 ? 0 calls por frame tiene impacto masivo en GPU utilization. **Sin frame pipelining, GPU está idle ~70% del tiempo**.
+Reducir `WaitForGPU()` de 7 ? 0 calls por frame tiene impacto masivo en GPU utilization. **Sin frame pipelining, GPU estï¿½ idle ~70% del tiempo**.
 
 ### **2. Barrier Batching es Gratis**
 
@@ -137,11 +137,11 @@ Agrupar barriers en arrays y ejecutar UNA SOLA vez por frame no tiene costo adic
 
 ### **3. VSync Enmascara Ganancias Reales**
 
-Con VSync ON (240 Hz), FPS está limitado a 240 incluso si GPU puede procesar 800-1200 FPS. **Siempre benchmark con VSync OFF**.
+Con VSync ON (240 Hz), FPS estï¿½ limitado a 240 incluso si GPU puede procesar 800-1200 FPS. **Siempre benchmark con VSync OFF**.
 
 ### **4. Shutdown Order Importa con Frame Pipelining**
 
-Con frame pipelining, GPU puede estar procesando frame N mientras CPU cierra la aplicación. **SIEMPRE** `WaitForGPU()` antes de liberar pipeline resources.
+Con frame pipelining, GPU puede estar procesando frame N mientras CPU cierra la aplicaciï¿½n. **SIEMPRE** `WaitForGPU()` antes de liberar pipeline resources.
 
 ### **5. D3D12 Debug Layer es Invaluable**
 
@@ -149,13 +149,13 @@ Sin D3D12 debug layer, errores sutiles de resource state pasan desapercibidos. *
 
 ---
 
-## ?? **Metodología de Benchmarking**
+## ?? **Metodologï¿½a de Benchmarking**
 
 ### **Escenario de Test**
 
-- **Geometría**: Quad simple (6 vértices)
-- **Shaders**: Vertex + Pixel shader básicos (interpolación de colores)
-- **Resolución**: 1920x1080 (scene RT)
+- **Geometrï¿½a**: Quad simple (6 vï¿½rtices)
+- **Shaders**: Vertex + Pixel shader bï¿½sicos (interpolaciï¿½n de colores)
+- **Resoluciï¿½n**: 1920x1080 (scene RT)
 - **Render Passes**: 2 (Opaque Pass + UI Pass)
 - **Panels UI**: 4 (Hierarchy, Inspector, Console, Viewport)
 
@@ -166,7 +166,7 @@ Sin D3D12 debug layer, errores sutiles de resource state pasan desapercibidos. *
 - **RAM**: [Por especificar]
 - **Display**: 240 Hz (VSync ON limita a 240 FPS)
 
-### **Métricas Capturadas**
+### **Mï¿½tricas Capturadas**
 
 1. **FPS**: Contador interno en top-right de ventana
 2. **GPU Usage**: Task Manager GPU tab
@@ -197,14 +197,14 @@ Sin D3D12 debug layer, errores sutiles de resource state pasan desapercibidos. *
 - **Frame Time**: <2ms capability
 - **GPU Usage**: >90%
 
-### **Calificación Final**
+### **Calificaciï¿½n Final**
 
 **Renderer DX12 Imagine Studio: 7/10 AAA** ??????????
 
-**Próximo objetivo**: 9/10 AAA (requiere validación VSync OFF + optimizaciones adicionales)
+**Prï¿½ximo objetivo**: 9/10 AAA (requiere validaciï¿½n VSync OFF + optimizaciones adicionales)
 
 ---
 
-**Versión**: 1.0  
-**Última actualización**: 2025-01-18  
+**Versiï¿½n**: 1.0  
+**ï¿½ltima actualizaciï¿½n**: 2025-01-18  
 **Sprint**: v1.7.0 (Performance Optimization) - ? **COMPLETADO 80%** (H1-H4)

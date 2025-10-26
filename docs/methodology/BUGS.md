@@ -1,6 +1,6 @@
-# Bug Management - Metodología Completa
+ï»¿# Bug Management - Metodologï¿½a Completa
 
-> **Propósito**: Sistema completo de gestión de bugs con doble validación (Agente + Usuario).
+> **Propï¿½sito**: Sistema completo de gestiï¿½n de bugs con doble validaciï¿½n (Agente + Usuario).
 
 ---
 
@@ -14,7 +14,7 @@
 ???????????????????
         ?
 ???????????????????
-? 2. REGISTRAR    ? ? Añadir a sprint_bugs.md (BUG-XXX)
+? 2. REGISTRAR    ? ? Aï¿½adir a sprint_bugs.md (BUG-XXX)
 ???????????????????
         ?
 ???????????????????
@@ -38,13 +38,13 @@
 ???????????????????
         ?
 ???????????????????
-?8. VALIDACIÓN    ? ? Usuario ejecuta y verifica
+?8. VALIDACIï¿½N    ? ? Usuario ejecuta y verifica
 ?   USUARIO       ?
 ???????????????????
         ?
-    ¿Fix OK?
+    ï¿½Fix OK?
     ?     ?
-  SÍ      NO
+  Sï¿½      NO
    ?       ?
 ??????  ??????????????
 ?FIX ?  ? VOLVER A 4 ?
@@ -56,7 +56,7 @@
 
 ## ?? ARCHIVO: `docs/sprint_bugs.md`
 
-### Propósito
+### Propï¿½sito
 Contenedor **inicial** de bugs reportados durante el sprint activo.
 
 ### Formato de Entrada
@@ -64,17 +64,17 @@ Contenedor **inicial** de bugs reportados durante el sprint activo.
 ```markdown
 ### BUG-001 - Crash al renderizar quad sin shader
 **ID**: BUG-001
-**Prioridad**: Crítica
+**Prioridad**: Crï¿½tica
 **Estado**: Reportado
 **Fecha de entrada**: 2025-01-15
 
-**Descripción**: 
-La aplicación crashea al intentar renderizar el quad si no se 
+**Descripciï¿½n**: 
+La aplicaciï¿½n crashea al intentar renderizar el quad si no se 
 compila correctamente el shader HLSL.
 
 **Pasos para reproducir**:
 1. Eliminar o renombrar shaders/quad.hlsl
-2. Ejecutar aplicación (F5)
+2. Ejecutar aplicaciï¿½n (F5)
 3. Observar crash en DX12Renderer::OpaquePass()
 
 **Comportamiento esperado**: 
@@ -90,19 +90,19 @@ Access violation al intentar usar PSO sin shader
 
 ### Estados Posibles
 
-| Estado | Descripción |
+| Estado | Descripciï¿½n |
 |--------|-------------|
-| `Reportado` | Bug detectado, aún no se está trabajando en él |
+| `Reportado` | Bug detectado, aï¿½n no se estï¿½ trabajando en ï¿½l |
 | `En progreso` | Asistente trabajando activamente en el fix |
-| `Pendiente validación usuario` | Fix implementado, esperando validación |
-| `Resuelto` | ? Usuario confirmó que funciona ? Mover a sprint_fix.md |
+| `Pendiente validaciï¿½n usuario` | Fix implementado, esperando validaciï¿½n |
+| `Resuelto` | ? Usuario confirmï¿½ que funciona ? Mover a sprint_fix.md |
 
 ---
 
 ## ?? ARCHIVO: `docs/sprint_bug_attempts.md`
 
-### Propósito
-Registro detallado de **TODOS** los intentos de solución (fallidos, parciales, exitosos).
+### Propï¿½sito
+Registro detallado de **TODOS** los intentos de soluciï¿½n (fallidos, parciales, exitosos).
 
 ### Formato de Entrada
 
@@ -110,26 +110,26 @@ Registro detallado de **TODOS** los intentos de solución (fallidos, parciales, e
 ### BUG-001 - Crash al renderizar quad sin shader
 
 **Intento #1**
-- **Descripción**: Añadir validación de shader blob antes de crear PSO
+- **Descripciï¿½n**: Aï¿½adir validaciï¿½n de shader blob antes de crear PSO
 - **Resultado**: Fallido
-- **Detalles**: El cambio evita el crash pero no resuelve el problema raíz. 
-  La aplicación muestra pantalla negra sin mensaje de error.
+- **Detalles**: El cambio evita el crash pero no resuelve el problema raï¿½z. 
+  La aplicaciï¿½n muestra pantalla negra sin mensaje de error.
 - **Fecha y hora**: 2025-01-15 10:00
 - **Archivos modificados**: src/renderer/DX12Renderer.cpp
 
 **Intento #2**
-- **Descripción**: Añadir logs de error en CompileShaderFromFile y early return
+- **Descripciï¿½n**: Aï¿½adir logs de error en CompileShaderFromFile y early return
 - **Resultado**: Parcial
-- **Detalles**: Ahora muestra mensaje de error en log pero la aplicación 
-  continúa ejecutándose con estado corrupto (pantalla negra, no cierra).
+- **Detalles**: Ahora muestra mensaje de error en log pero la aplicaciï¿½n 
+  continï¿½a ejecutï¿½ndose con estado corrupto (pantalla negra, no cierra).
 - **Fecha y hora**: 2025-01-15 10:15
 - **Archivos modificados**: src/renderer/DX12Renderer.cpp
 
 **Intento #3**
-- **Descripción**: Verificar archivo shader existe ANTES de compilar + 
+- **Descripciï¿½n**: Verificar archivo shader existe ANTES de compilar + 
   abortar Initialize() si falla
-- **Resultado**: Éxito
-- **Detalles**: La aplicación ahora detecta el shader faltante, muestra 
+- **Resultado**: ï¿½xito
+- **Detalles**: La aplicaciï¿½n ahora detecta el shader faltante, muestra 
   error claro en log y cierra limpiamente sin crash.
 - **Fecha y hora**: 2025-01-15 10:30
 - **Archivos modificados**: 
@@ -139,14 +139,14 @@ Registro detallado de **TODOS** los intentos de solución (fallidos, parciales, e
 
 ### Reglas de Registro
 
-**ANTES de tocar código**:
-1. Añadir nueva entrada con **Intento #N**
-2. Describir **QUÉ** se va a intentar
+**ANTES de tocar cï¿½digo**:
+1. Aï¿½adir nueva entrada con **Intento #N**
+2. Describir **QUï¿½** se va a intentar
 3. Incluir fecha/hora
 
-**DESPUÉS de compilar**:
-1. Actualizar entrada con **Resultado** (Éxito/Parcial/Fallido)
-2. Describir **QUÉ** pasó (logs, comportamiento)
+**DESPUï¿½S de compilar**:
+1. Actualizar entrada con **Resultado** (ï¿½xito/Parcial/Fallido)
+2. Describir **QUï¿½** pasï¿½ (logs, comportamiento)
 3. Listar **archivos modificados**
 
 ---
@@ -175,18 +175,18 @@ Registro detallado de **TODOS** los intentos de solución (fallidos, parciales, e
 **Crear entrada en `sprint_bug_attempts.md`**:
 ```markdown
 **Intento #N**
-- **Descripción**: [QUÉ se va a intentar]
-- **Resultado**: [Dejar vacío - llenar después]
-- **Detalles**: [Dejar vacío - llenar después]
+- **Descripciï¿½n**: [QUï¿½ se va a intentar]
+- **Resultado**: [Dejar vacï¿½o - llenar despuï¿½s]
+- **Detalles**: [Dejar vacï¿½o - llenar despuï¿½s]
 - **Fecha y hora**: 2025-01-18 14:30
-- **Archivos modificados**: [Dejar vacío - llenar después]
+- **Archivos modificados**: [Dejar vacï¿½o - llenar despuï¿½s]
 ```
 
-### 3. Implementación
+### 3. Implementaciï¿½n
 
-Codificar el fix según la descripción del intento.
+Codificar el fix segï¿½n la descripciï¿½n del intento.
 
-### 4. Compilación
+### 4. Compilaciï¿½n
 
 **Doble build obligatoria**:
 ```powershell
@@ -194,50 +194,50 @@ cmake --build build --config Debug
 msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 ```
 
-### 5. Registro de Resultado (DESPUÉS de compilar)
+### 5. Registro de Resultado (DESPUï¿½S de compilar)
 
 **Actualizar entrada en `sprint_bug_attempts.md`**:
 ```markdown
 **Intento #N**
-- **Descripción**: [Ya completado]
-- **Resultado**: Éxito / Parcial / Fallido
-- **Detalles**: [QUÉ pasó - incluir errores si hubo]
+- **Descripciï¿½n**: [Ya completado]
+- **Resultado**: ï¿½xito / Parcial / Fallido
+- **Detalles**: [QUï¿½ pasï¿½ - incluir errores si hubo]
 - **Fecha y hora**: [Ya completado]
 - **Archivos modificados**: src/file1.cpp, src/file2.h
 ```
 
-### 6. Validación Usuario
+### 6. Validaciï¿½n Usuario
 
-**Si compilación limpia**:
-1. Actualizar estado en `sprint_bugs.md` a **"Pendiente validación usuario"**
+**Si compilaciï¿½n limpia**:
+1. Actualizar estado en `sprint_bugs.md` a **"Pendiente validaciï¿½n usuario"**
 2. **PAUSAR** y notificar al usuario:
    ```
    ? Fix implementado para BUG-001
-   ? Compilación limpia (CMake + MSBuild)
-   ? Por favor ejecuta la aplicación (F5) y verifica si el bug está resuelto
+   ? Compilaciï¿½n limpia (CMake + MSBuild)
+   ? Por favor ejecuta la aplicaciï¿½n (F5) y verifica si el bug estï¿½ resuelto
    ```
-3. **ESPERAR** confirmación del usuario
+3. **ESPERAR** confirmaciï¿½n del usuario
 
-### 7. Iteración (Si falla)
+### 7. Iteraciï¿½n (Si falla)
 
 **Si intento fallido o parcial**:
 1. Volver al **Paso 2** con nuevo intento (#N+1)
 2. **NO repetir** intentos ya probados (consultar `sprint_bug_attempts.md`)
 
-### 8. Resolución Confirmada
+### 8. Resoluciï¿½n Confirmada
 
 **Solo cuando usuario confirme**:
 1. Crear entrada en `docs/sprint_fix.md`:
    ```markdown
    ### FIX-001 - Crash al renderizar quad sin shader
    **ID Original**: BUG-001
-   **Prioridad**: Crítica
+   **Prioridad**: Crï¿½tica
    **Fecha de entrada**: 2025-01-15
-   **Fecha de resolución**: 2025-01-15
+   **Fecha de resoluciï¿½n**: 2025-01-15
    
-   **Descripción del problema**: [Copiar de BUG-001]
+   **Descripciï¿½n del problema**: [Copiar de BUG-001]
    
-   **Solución implementada**: 
+   **Soluciï¿½n implementada**: 
    Verificar existencia de archivo shader ANTES de compilar.
    Si falta, mostrar error en log y abortar Initialize() limpiamente.
    
@@ -245,7 +245,7 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
    - src/renderer/DX12Renderer.cpp (Initialize, CompileShaderFromFile)
    - src/main.cpp (verificar return de Initialize)
    
-   **Commit de resolución**: abc123def
+   **Commit de resoluciï¿½n**: abc123def
    ```
 
 2. **Eliminar** entrada de `docs/sprint_bugs.md`
@@ -254,20 +254,20 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 
 ---
 
-## ?? REGLAS CRÍTICAS
+## ?? REGLAS CRï¿½TICAS
 
 ### ? El Asistente NO DEBE:
 
-1. **Modificar código sin registrar intento**
+1. **Modificar cï¿½digo sin registrar intento**
    ```markdown
    ? MAL: Codificar directamente
    ? BIEN: Registrar intento ? Codificar ? Actualizar resultado
    ```
 
-2. **Marcar bug como resuelto solo por compilación limpia**
+2. **Marcar bug como resuelto solo por compilaciï¿½n limpia**
    ```markdown
-   ? MAL: Compilación limpia ? Mover a sprint_fix.md
-   ? BIEN: Compilación limpia ? Pausar ? Esperar validación usuario
+   ? MAL: Compilaciï¿½n limpia ? Mover a sprint_fix.md
+   ? BIEN: Compilaciï¿½n limpia ? Pausar ? Esperar validaciï¿½n usuario
    ```
 
 3. **Repetir intentos ya probados**
@@ -282,26 +282,26 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
    ? BIEN: Compilar ? Actualizar resultado ? Commit
    ```
 
-### ? Excepciones (Auto-Resolución Permitida)
+### ? Excepciones (Auto-Resoluciï¿½n Permitida)
 
 **Solo en estos casos**:
-1. Fix es trivial (typo, warning cosmético)
-2. Prueba es determinista y verificable solo con compilación
-3. Usuario da confirmación explícita sin necesidad de prueba manual
+1. Fix es trivial (typo, warning cosmï¿½tico)
+2. Prueba es determinista y verificable solo con compilaciï¿½n
+3. Usuario da confirmaciï¿½n explï¿½cita sin necesidad de prueba manual
 
-**Ejemplo de excepción válida**:
+**Ejemplo de excepciï¿½n vï¿½lida**:
 ```cpp
 // BUG: Warning C4100: unreferenced parameter 'deltaTime'
 void Update(float deltaTime) {
     // No usa deltaTime
 }
 
-// FIX: Añadir (void)deltaTime;
+// FIX: Aï¿½adir (void)deltaTime;
 void Update(float deltaTime) {
     (void)deltaTime; // Suppress warning
 }
 
-// ? OK auto-resolver: Es un warning cosmético verificable con compilación
+// ? OK auto-resolver: Es un warning cosmï¿½tico verificable con compilaciï¿½n
 ```
 
 ---
@@ -310,30 +310,30 @@ void Update(float deltaTime) {
 
 ### 1. Evita Repetir Soluciones Fallidas
 ```markdown
-Intento #2 falló con enfoque X
+Intento #2 fallï¿½ con enfoque X
 ? Intento #3 prueba enfoque Y (diferente)
 ? No se repite enfoque X
 ```
 
-### 2. Contexto Histórico Invaluable
+### 2. Contexto Histï¿½rico Invaluable
 ```markdown
-Bug futuro similar ? Consultar sprint_bug_attempts.md históricos
-? Ver qué funcionó y qué no
+Bug futuro similar ? Consultar sprint_bug_attempts.md histï¿½ricos
+? Ver quï¿½ funcionï¿½ y quï¿½ no
 ? Aplicar lecciones aprendidas
 ```
 
-### 3. Facilita Colaboración
+### 3. Facilita Colaboraciï¿½n
 ```markdown
 Otro desarrollador puede ver:
-- Qué se intentó
-- Por qué falló
-- Qué funcionó finalmente
+- Quï¿½ se intentï¿½
+- Por quï¿½ fallï¿½
+- Quï¿½ funcionï¿½ finalmente
 ```
 
-### 4. Permite Análisis Post-Mortem
+### 4. Permite Anï¿½lisis Post-Mortem
 ```markdown
 Sprint Review:
-- Bugs más complejos (más intentos)
+- Bugs mï¿½s complejos (mï¿½s intentos)
 - Patrones de errores comunes
 - Mejoras en proceso de debugging
 ```
@@ -349,6 +349,6 @@ Sprint Review:
 
 ---
 
-**Versión**: 2.0  
-**Última actualización**: 2025-01-18  
+**Versiï¿½n**: 2.0  
+**ï¿½ltima actualizaciï¿½n**: 2025-01-18  
 **Proyecto**: Imagine Studio (C++ Game Engine)

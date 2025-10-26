@@ -8,16 +8,16 @@
   "config": {
     "participants": [
       {
-        "component_ref": "planner"
+        "component_ref": "Planner Agent"
       },
       {
-        "component_ref": "coder"
+        "component_ref": "Coder Agent"
       },
       {
-        "component_ref": "reviewer"
+        "component_ref": "Reviewer Agent"
       },
       {
-        "component_ref": "tester"
+        "component_ref": "Tester Agent"
       }
     ],
     "termination_condition": {

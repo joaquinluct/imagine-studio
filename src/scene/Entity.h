@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <cstdint>
 #include <string>
@@ -11,22 +11,22 @@ namespace Scene {
 using EntityID = uint64_t;
 class Component;
 
-/// @brief Entity representa un objeto en la escena con ID único, nombre y components
+/// @brief Entity representa un objeto en la escena con ID ï¿½nico, nombre y components
 /// @details Entity-Component pattern: Entity es un contenedor de Components
 ///          que definen el comportamiento del objeto (Transform, MeshRenderer, etc.)
 class Entity {
 public:
     /// @brief Constructor de Entity
-    /// @param id ID único de la entity (generado por EntityManager)
+    /// @param id ID ï¿½nico de la entity (generado por EntityManager)
     /// @param name Nombre de la entity (para debugging/UI)
     Entity(EntityID id, const std::string& name);
     
     /// @brief Destructor - libera todos los components
     ~Entity();
     
-    // ===== Getters/Setters básicos =====
+    // ===== Getters/Setters bï¿½sicos =====
     
-    /// @brief Obtener ID único de la entity
+    /// @brief Obtener ID ï¿½nico de la entity
     EntityID GetID() const { return m_id; }
     
     /// @brief Obtener nombre de la entity
@@ -37,7 +37,7 @@ public:
     
     // ===== Component Management =====
     
-    /// @brief Añadir component a la entity
+    /// @brief Aï¿½adir component a la entity
     /// @tparam T Tipo del component (debe heredar de Component)
     /// @return Puntero al component creado
     template<typename T>
@@ -61,17 +61,17 @@ public:
     // ===== Lifecycle =====
     
     /// @brief Actualizar entity (llama OnUpdate de todos los components)
-    /// @param deltaTime Tiempo transcurrido desde el último frame (en segundos)
+    /// @param deltaTime Tiempo transcurrido desde el ï¿½ltimo frame (en segundos)
     void Update(float deltaTime);
     
     /// @brief Destruir entity (llama OnDestroy de todos los components)
     void Destroy();
     
 private:
-    EntityID m_id;                                      ///< ID único de la entity
+    EntityID m_id;                                      ///< ID ï¿½nico de la entity
     std::string m_name;                                 ///< Nombre de la entity
     std::vector<Component*> m_components;               ///< Lista de components
-    std::unordered_map<std::type_index, Component*> m_componentMap; ///< Lookup rápido por tipo
+    std::unordered_map<std::type_index, Component*> m_componentMap; ///< Lookup rï¿½pido por tipo
 };
 
 // ===== Template Implementations =====

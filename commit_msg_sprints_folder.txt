@@ -1,4 +1,4 @@
-docs: Mejorar registro sesiones IA y crear carpeta docs/sprints/
+ï»¿docs: Mejorar registro sesiones IA y crear carpeta docs/sprints/
 
 Implementacion de mejoras administrativas al proceso
 
@@ -68,8 +68,8 @@ Archivos creados:
 - docs/sprints/README.md (documentacion de la carpeta)
 
 Archivos modificados:
-- .github/copilot-instructions.md (seccion Resumen añadida)
-- docs/TEMPLATE.md (seccion Resumen añadida)
+- .github/copilot-instructions.md (seccion Resumen aï¿½adida)
+- docs/TEMPLATE.md (seccion Resumen aï¿½adida)
 - docs/sprint_ia_sessions.md (plantilla actualizada con Resumen)
 
 Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)

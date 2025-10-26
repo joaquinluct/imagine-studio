@@ -1,4 +1,4 @@
-# Third Party Libraries
+ï»¿# Third Party Libraries
 
 Este documento registra todas las bibliotecas de terceros utilizadas en el proyecto y las reglas para su mantenimiento.
 
@@ -7,11 +7,11 @@ Este documento registra todas las bibliotecas de terceros utilizadas en el proye
 - **Version**: v1.92.5 WIP (development branch)
 - **License**: MIT
 - **URL**: https://github.com/ocornut/imgui
-- **Fecha de integración**: 2025-01-17
+- **Fecha de integraciï¿½n**: 2025-01-17
 - **Commit/Tag**: docking branch (latest as of 2025-01-17)
-- **Ubicación**: `external/imgui/`
-- **Modificaciones**: **NINGUNA** - Código original intacto
-- **Extensiones**: Todas las personalizaciones están en `src/editor/` y otros directorios del proyecto
+- **Ubicaciï¿½n**: `external/imgui/`
+- **Modificaciones**: **NINGUNA** - Cï¿½digo original intacto
+- **Extensiones**: Todas las personalizaciones estï¿½n en `src/editor/` y otros directorios del proyecto
 
 ### Archivos incluidos
 
@@ -34,33 +34,33 @@ external/imgui/
     ??? imgui_impl_dx12.cpp
 ```
 
-### ?? REGLA CRÍTICA: NO MODIFICAR CÓDIGO DE IMGUI
+### ?? REGLA CRï¿½TICA: NO MODIFICAR Cï¿½DIGO DE IMGUI
 
 **NUNCA** modificar directamente los archivos de `external/imgui/`. 
 
-#### ? Prácticas INCORRECTAS
+#### ? Prï¿½cticas INCORRECTAS
 
 ```cpp
-// ? NO HACER: Añadir checks en imgui_draw.cpp
+// ? NO HACER: Aï¿½adir checks en imgui_draw.cpp
 void ImFontAtlasUpdateNewFrame(ImFontAtlas* atlas, int frame_count, bool renderer_has_textures)
 {
-    // ? ESTO ESTÁ MAL - tapa el síntoma, no arregla la causa
+    // ? ESTO ESTï¿½ MAL - tapa el sï¿½ntoma, no arregla la causa
     if (atlas->Builder == NULL)
         ImFontAtlasBuildInit(atlas);
     
-    // ... resto del código
+    // ... resto del cï¿½digo
 }
 ```
 
-**Problemas de esta aproximación:**
-1. Imposible actualizar ImGui en el futuro (se perderán los cambios)
-2. Oculta bugs en nuestro código
+**Problemas de esta aproximaciï¿½n:**
+1. Imposible actualizar ImGui en el futuro (se perderï¿½n los cambios)
+2. Oculta bugs en nuestro cï¿½digo
 3. Rompe la reproducibilidad del proyecto
 4. Dificulta el debugging
 
-#### ? Prácticas CORRECTAS
+#### ? Prï¿½cticas CORRECTAS
 
-**Opción 1: Wrappers en nuestro código**
+**Opciï¿½n 1: Wrappers en nuestro cï¿½digo**
 ```cpp
 // src/editor/ImGuiWrapper.h
 namespace ImagineStudio {
@@ -70,7 +70,7 @@ namespace ImagineStudio {
     {
         // Asegurar estado correcto ANTES de llamar a ImGui
         if (atlas->Builder == NULL)
-            atlas->Build(); // O la función correcta de inicialización
+            atlas->Build(); // O la funciï¿½n correcta de inicializaciï¿½n
         
         ImFontAtlasUpdateNewFrame(atlas, frame_count, has_textures);
     }
@@ -78,7 +78,7 @@ namespace ImagineStudio {
 }
 ```
 
-**Opción 2: Inicialización correcta en nuestro código**
+**Opciï¿½n 2: Inicializaciï¿½n correcta en nuestro cï¿½digo**
 ```cpp
 // src/main.cpp o donde inicializamos ImGui
 void InitializeImGui()
@@ -86,8 +86,8 @@ void InitializeImGui()
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
     
-    // ? CORRECTO: Asegurar que el atlas está inicializado
-    io.Fonts->Build(); // O cualquier inicialización necesaria
+    // ? CORRECTO: Asegurar que el atlas estï¿½ inicializado
+    io.Fonts->Build(); // O cualquier inicializaciï¿½n necesaria
     
     // Inicializar backends
     ImGui_ImplWin32_Init(hwnd);
@@ -95,23 +95,23 @@ void InitializeImGui()
 }
 ```
 
-**Opción 3: Parches separados (solo si es absolutamente necesario)**
+**Opciï¿½n 3: Parches separados (solo si es absolutamente necesario)**
 ```
 external/
-  imgui/              ? Código original SIN TOCAR
+  imgui/              ? Cï¿½digo original SIN TOCAR
   imgui_patches/      ? Nuestras modificaciones (si son realmente necesarias)
     001-fix-init-order.patch
 ```
 
-### Actualización de ImGui
+### Actualizaciï¿½n de ImGui
 
 Para actualizar ImGui en el futuro:
 
 ```powershell
-# 1. Descargar nueva versión
+# 1. Descargar nueva versiï¿½n
 Invoke-WebRequest -Uri "https://github.com/ocornut/imgui/archive/docking.zip" -OutFile "imgui.zip"
 
-# 2. Respaldar configuración (si existe)
+# 2. Respaldar configuraciï¿½n (si existe)
 Copy-Item "external\imgui\imconfig.h" "imconfig.h.backup"
 
 # 3. Reemplazar todo el directorio
@@ -119,7 +119,7 @@ Remove-Item -Recurse -Force "external\imgui"
 Expand-Archive imgui.zip -DestinationPath "external"
 Rename-Item "external\imgui-docking" "external\imgui"
 
-# 4. Restaurar configuración personalizada (si existe)
+# 4. Restaurar configuraciï¿½n personalizada (si existe)
 Copy-Item "imconfig.h.backup" "external\imgui\imconfig.h"
 
 # 5. Compilar y probar
@@ -127,20 +127,20 @@ cmake --build build --config Debug
 msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 ```
 
-### Configuración permitida
+### Configuraciï¿½n permitida
 
-El **ÚNICO** archivo que podemos modificar es `imconfig.h` para configuración específica del proyecto:
+El **ï¿½NICO** archivo que podemos modificar es `imconfig.h` para configuraciï¿½n especï¿½fica del proyecto:
 
 ```cpp
 // external/imgui/imconfig.h
-// ? ESTO SÍ está permitido - es el archivo de configuración
+// ? ESTO Sï¿½ estï¿½ permitido - es el archivo de configuraciï¿½n
 
 #pragma once
 
 // Definir tipos personalizados si es necesario
 // #define ImTextureID MyTextureType*
 
-// Habilitar características opcionales
+// Habilitar caracterï¿½sticas opcionales
 #define IMGUI_ENABLE_FREETYPE
 ```
 
@@ -148,23 +148,23 @@ El **ÚNICO** archivo que podemos modificar es `imconfig.h` para configuración es
 
 Si encuentras un problema relacionado con ImGui:
 
-1. **Verificar inicialización**: ¿Estamos llamando a las funciones de ImGui en el orden correcto?
-2. **Consultar documentación**: Revisar `imgui.h` y ejemplos oficiales
+1. **Verificar inicializaciï¿½n**: ï¿½Estamos llamando a las funciones de ImGui en el orden correcto?
+2. **Consultar documentaciï¿½n**: Revisar `imgui.h` y ejemplos oficiales
 3. **Buscar en issues**: https://github.com/ocornut/imgui/issues
-4. **Hacer wrapper**: Crear función de ayuda en `src/editor/ImGuiWrapper.h`
-5. **Como último recurso**: Si es un bug real de ImGui, reportarlo upstream
+4. **Hacer wrapper**: Crear funciï¿½n de ayuda en `src/editor/ImGuiWrapper.h`
+5. **Como ï¿½ltimo recurso**: Si es un bug real de ImGui, reportarlo upstream
 
 ### ?? Ejemplo del problema actual (BUG-002)
 
-**Síntoma**: `builder` es `nullptr` en `ImFontAtlasUpdateNewFrame`
+**Sï¿½ntoma**: `builder` es `nullptr` en `ImFontAtlasUpdateNewFrame`
 
-**? Solución INCORRECTA**: Añadir `if (builder == NULL)` en `imgui_draw.cpp`
+**? Soluciï¿½n INCORRECTA**: Aï¿½adir `if (builder == NULL)` en `imgui_draw.cpp`
 
-**? Solución CORRECTA**: Investigar por qué nuestro código está llamando a `ImFontAtlasUpdateNewFrame` sin haber inicializado el atlas correctamente. El problema está en **NUESTRO código**, no en ImGui.
+**? Soluciï¿½n CORRECTA**: Investigar por quï¿½ nuestro cï¿½digo estï¿½ llamando a `ImFontAtlasUpdateNewFrame` sin haber inicializado el atlas correctamente. El problema estï¿½ en **NUESTRO cï¿½digo**, no en ImGui.
 
 ```cpp
 // src/main.cpp
-// ? Asegurar orden correcto de inicialización
+// ? Asegurar orden correcto de inicializaciï¿½n
 void InitializeRendering()
 {
     // 1. Crear contexto
@@ -174,7 +174,7 @@ void InitializeRendering()
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     
-    // 3. ? CRÍTICO: Construir atlas de fuentes ANTES de usar
+    // 3. ? CRï¿½TICO: Construir atlas de fuentes ANTES de usar
     io.Fonts->Build();
     
     // 4. Inicializar backends
@@ -187,12 +187,12 @@ void InitializeRendering()
 
 ## Otras bibliotecas de terceros
 
-(Añadir aquí según se integren)
+(Aï¿½adir aquï¿½ segï¿½n se integren)
 
-## Política general para bibliotecas externas
+## Polï¿½tica general para bibliotecas externas
 
-1. **NUNCA** modificar código en `external/`
+1. **NUNCA** modificar cï¿½digo en `external/`
 2. **SIEMPRE** usar wrappers en `src/`
-3. **DOCUMENTAR** versión y fecha de integración
+3. **DOCUMENTAR** versiï¿½n y fecha de integraciï¿½n
 4. **VERIFICAR** licencia compatible con el proyecto
 5. **MANTENER** historial de actualizaciones en este documento

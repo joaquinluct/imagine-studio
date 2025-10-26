@@ -1,4 +1,4 @@
-#include "EditorUI.h"
+ï»¿#include "EditorUI.h"
 #include "Viewport.h"  // v1.5.0 H3.1
 #include "../scene/Scene.h"
 #include "../scene/Entity.h"
@@ -166,7 +166,7 @@ void EditorUI::RenderConsole()
     ImGui::SameLine();
     ImGui::Text("Network connection timeout (retrying...)");
     
-    // Más INFO logs para demostrar scroll
+    // Mï¿½s INFO logs para demostrar scroll
     ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "[INFO]");
     ImGui::SameLine();
     ImGui::Text("Editor UI panels loaded: Hierarchy, Inspector, Console");
@@ -175,7 +175,7 @@ void EditorUI::RenderConsole()
     ImGui::SameLine();
     ImGui::Text("Frame rendering at 220 FPS");
     
-    // Auto-scroll al final (mantiene los logs más recientes visibles)
+    // Auto-scroll al final (mantiene los logs mï¿½s recientes visibles)
     if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
         ImGui::SetScrollHereY(1.0f);
     

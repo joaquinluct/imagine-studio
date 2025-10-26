@@ -1,18 +1,18 @@
-# Sprint Archives - Histórico de Sprints Completados
+ï»¿# Sprint Archives - Histï¿½rico de Sprints Completados
 
 Esta carpeta contiene los archivos versionados de **sprints completados** del proyecto Imagine Studio.
 
 ---
 
-## ?? Propósito
+## ?? Propï¿½sito
 
 Al finalizar un sprint (release), **todos** los archivos activos del sprint se mueven a esta carpeta con versionado (`_vX.Y.Z`).
 
 Esto permite:
-- ? **Trazabilidad histórica**: Consultar decisiones de sprints pasados
-- ? **Organización**: Mantener `docs/` limpio con solo archivos activos
-- ? **Auditoría**: Revisar evolución del proyecto sprint a sprint
-- ? **Aprendizaje**: Analizar qué funcionó y qué no en sprints anteriores
+- ? **Trazabilidad histï¿½rica**: Consultar decisiones de sprints pasados
+- ? **Organizaciï¿½n**: Mantener `docs/` limpio con solo archivos activos
+- ? **Auditorï¿½a**: Revisar evoluciï¿½n del proyecto sprint a sprint
+- ? **Aprendizaje**: Analizar quï¿½ funcionï¿½ y quï¿½ no en sprints anteriores
 
 ---
 
@@ -23,7 +23,7 @@ docs/sprints/
 ??? sprint_v1.0.0.md
 ??? sprint_histories_v1.0.0.md
 ??? sprint_tasks_v1.0.0.md
-??? sprint_bugs_v1.0.0.md (si había bugs pendientes)
+??? sprint_bugs_v1.0.0.md (si habï¿½a bugs pendientes)
 ??? sprint_bug_attempts_v1.0.0.md (si hubo debugging)
 ??? sprint_fix_v1.0.0.md (si se resolvieron bugs)
 ??? sprint_deviations_v1.0.0.md (si hubo desviaciones)
@@ -38,7 +38,7 @@ docs/sprints/
 
 ## ?? Proceso de Archivado (al finalizar sprint)
 
-**Automático**: El asistente IA ejecuta estos pasos al cerrar un sprint:
+**Automï¿½tico**: El asistente IA ejecuta estos pasos al cerrar un sprint:
 
 ```powershell
 # 1. Crear carpeta si no existe
@@ -54,8 +54,8 @@ Move-Item "docs/sprint_fix_v<version>.md" "docs/sprints/" # Si existe
 Move-Item "docs/sprint_deviations_v<version>.md" "docs/sprints/" # Si existe
 Move-Item "docs/sprint_ia_sessions_v<version>.md" "docs/sprints/" # Si existe
 
-# 3. Crear nuevos archivos vacíos para próximo sprint
-# (se hace en el momento de planificación del siguiente sprint)
+# 3. Crear nuevos archivos vacï¿½os para prï¿½ximo sprint
+# (se hace en el momento de planificaciï¿½n del siguiente sprint)
 ```
 
 ---
@@ -66,20 +66,20 @@ Cada sprint archivado incluye (si fueron utilizados):
 
 | Archivo | Contenido | Siempre Presente |
 |---------|-----------|------------------|
-| `sprint_vX.Y.Z.md` | Sprint de alto nivel (objetivos, hitos) | ? Sí |
-| `sprint_histories_vX.Y.Z.md` | Historias de usuario | ? Sí |
-| `sprint_tasks_vX.Y.Z.md` | Tareas detalladas | ? Sí |
+| `sprint_vX.Y.Z.md` | Sprint de alto nivel (objetivos, hitos) | ? Sï¿½ |
+| `sprint_histories_vX.Y.Z.md` | Historias de usuario | ? Sï¿½ |
+| `sprint_tasks_vX.Y.Z.md` | Tareas detalladas | ? Sï¿½ |
 | `sprint_bugs_vX.Y.Z.md` | Bugs pendientes al cerrar | ?? Si quedaron bugs sin resolver |
-| `sprint_bug_attempts_vX.Y.Z.md` | Intentos de solución a bugs | ?? Si hubo debugging |
+| `sprint_bug_attempts_vX.Y.Z.md` | Intentos de soluciï¿½n a bugs | ?? Si hubo debugging |
 | `sprint_fix_vX.Y.Z.md` | Bugs resueltos | ?? Si se resolvieron bugs |
-| `sprint_deviations_vX.Y.Z.md` | Desviaciones arquitectónicas | ?? Si hubo ajustes emergentes |
-| `sprint_ia_sessions_vX.Y.Z.md` | Sesiones IA registradas | ?? Si se alcanzó 85% tokens |
+| `sprint_deviations_vX.Y.Z.md` | Desviaciones arquitectï¿½nicas | ?? Si hubo ajustes emergentes |
+| `sprint_ia_sessions_vX.Y.Z.md` | Sesiones IA registradas | ?? Si se alcanzï¿½ 85% tokens |
 
 ---
 
-## ?? Cómo Consultar Históricos
+## ?? Cï¿½mo Consultar Histï¿½ricos
 
-### Por Versión:
+### Por Versiï¿½n:
 ```bash
 # Ver todos los archivos del sprint v1.2.0
 ls docs/sprints/*_v1.2.0.md
@@ -90,11 +90,11 @@ ls docs/sprints/*_v1.2.0.md
 # Ver todos los sprints de alto nivel
 ls docs/sprints/sprint_v*.md
 
-# Ver todas las desviaciones históricas
+# Ver todas las desviaciones histï¿½ricas
 ls docs/sprints/sprint_deviations_v*.md
 ```
 
-### Buscar Decisión Específica:
+### Buscar Decisiï¿½n Especï¿½fica:
 ```bash
 # Buscar "DockSpace" en todos los sprints
 grep -r "DockSpace" docs/sprints/
@@ -104,20 +104,20 @@ grep -r "DockSpace" docs/sprints/
 
 ## ?? Notas Importantes
 
-- **NO modificar** archivos en esta carpeta (son históricos inmutables)
+- **NO modificar** archivos en esta carpeta (son histï¿½ricos inmutables)
 - **NO eliminar** archivos de sprints completados (trazabilidad del proyecto)
 - Si necesitas **consultar** decisiones pasadas, busca en el archivo correspondiente
-- Los archivos **activos** del sprint actual están en `docs/` (raíz)
+- Los archivos **activos** del sprint actual estï¿½n en `docs/` (raï¿½z)
 
 ---
 
 ## ?? Sprints Archivados
 
 **Total de sprints completados**: 0  
-**Último sprint archivado**: -  
-**Próximo sprint**: v1.3.0 (ImGui Integration) - **EN PROGRESO**
+**ï¿½ltimo sprint archivado**: -  
+**Prï¿½ximo sprint**: v1.3.0 (ImGui Integration) - **EN PROGRESO**
 
 ---
 
-**Última actualización**: 2025-01-18  
-**Versión de la metodología**: 1.0
+**ï¿½ltima actualizaciï¿½n**: 2025-01-18  
+**Versiï¿½n de la metodologï¿½a**: 1.0

@@ -1,4 +1,4 @@
-docs: Añadir sistema Sprint Deviations para gestionar ajustes arquitectonicos
+ï»¿docs: Aï¿½adir sistema Sprint Deviations para gestionar ajustes arquitectonicos
 
 Implementacion de nuevo sistema de tracking de desviaciones durante sprint
 
@@ -15,12 +15,12 @@ Solucion:
    - Documenta DEV-001 (refactorizacion AAA) como caso real
 
 2. Actualizar docs/TEMPLATE.md:
-   - Añadir seccion "Sprint Deviations" con formato generico
+   - Aï¿½adir seccion "Sprint Deviations" con formato generico
    - Incluir criterios de uso vs backlog
-   - Añadir plantilla con placeholders reutilizables
+   - Aï¿½adir plantilla con placeholders reutilizables
 
 3. Actualizar .github/copilot-instructions.md:
-   - Añadir seccion completa "Gestion de Desviaciones del Sprint"
+   - Aï¿½adir seccion completa "Gestion de Desviaciones del Sprint"
    - Definir criterios: Bloqueante, Viola pilares, Impacto inmediato
    - Incluir ejemplo real DEV-001 con contexto completo
    - Actualizar versionado de archivos sprint (incluir sprint_deviations.md)
@@ -54,12 +54,12 @@ Caso real DEV-001 documentado:
 - Impacto: progreso 62.5% ? 75% (+12.5%)
 - Validacion usuario: OK 100%
 
-Archivos añadidos:
+Archivos aï¿½adidos:
 - docs/sprint_deviations.md (nuevo - con DEV-001 documentado)
 
 Archivos modificados:
-- docs/TEMPLATE.md (seccion Sprint Deviations añadida)
-- .github/copilot-instructions.md (seccion Gestion Desviaciones añadida)
+- docs/TEMPLATE.md (seccion Sprint Deviations aï¿½adida)
+- .github/copilot-instructions.md (seccion Gestion Desviaciones aï¿½adida)
 
 Beneficios:
 - Trazabilidad de decisiones arquitectonicas emergentes

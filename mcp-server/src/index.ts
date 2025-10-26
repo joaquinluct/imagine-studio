@@ -6,7 +6,6 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
-import axios from 'axios';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import * as fs from 'fs/promises';
@@ -14,24 +13,22 @@ import * as path from 'path';
 
 const execAsync = promisify(exec);
 
-// AutoGen Studio API configuration
-const AUTOGEN_API_URL = 'http://127.0.0.1:8081/api';
+// Configuration
 const PROJECT_ROOT = process.env.PROJECT_ROOT || 'C:\\Users\\joaqu\\source\\repos\\Imagine Studio';
 
 /**
- * MCP Server for AutoGen Studio Integration
+ * Simplified MCP Server for AutoGen Studio
+ * Provides tools for build, team listing, and log management
+ * Prompt execution must be done through AutoGen Studio UI
  */
 class AutoGenStudioMCP {
   private server: Server;
 
   constructor() {
-    // FIX: Server constructor only accepts 1 argument in latest SDK
-    this.server = new Server(
-      {
-        name: 'autogen-studio-mcp',
-        version: '1.0.0',
-      }
-    );
+    this.server = new Server({
+      name: 'autogen-studio-mcp',
+      version: '1.0.0',
+    });
 
     this.setupToolHandlers();
     this.setupErrorHandling();
@@ -42,52 +39,16 @@ class AutoGenStudioMCP {
     this.server.setRequestHandler(ListToolsRequestSchema, async () => ({
       tools: [
         {
-          name: 'execute_autogen_prompt',
-          description: 'Execute a prompt in AutoGen Studio with a specific team',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              team_name: {
-                type: 'string',
-                description: 'Name of the AutoGen team to use',
-              },
-              prompt: {
-                type: 'string',
-                description: 'The prompt to execute',
-              },
-              task_id: {
-                type: 'string',
-                description: 'Sprint task ID (e.g., H1.1)',
-              },
-            },
-            required: ['team_name', 'prompt'],
-          },
-        },
-        {
           name: 'list_autogen_teams',
-          description: 'List all available AutoGen teams',
+          description: 'List all available AutoGen teams from autogen/teams/ directory',
           inputSchema: {
             type: 'object',
             properties: {},
           },
         },
         {
-          name: 'get_autogen_session_status',
-          description: 'Get status of a running AutoGen session',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              session_id: {
-                type: 'string',
-                description: 'Session ID to query',
-              },
-            },
-            required: ['session_id'],
-          },
-        },
-        {
           name: 'run_build',
-          description: 'Execute CMake + MSBuild compilation',
+          description: 'Execute MSBuild compilation (CMake disabled)',
           inputSchema: {
             type: 'object',
             properties: {
@@ -102,7 +63,7 @@ class AutoGenStudioMCP {
         },
         {
           name: 'save_autogen_log',
-          description: 'Save AutoGen session log to file',
+          description: 'Save AutoGen session log to autogen/sessions/',
           inputSchema: {
             type: 'object',
             properties: {
@@ -134,12 +95,8 @@ class AutoGenStudioMCP {
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       try {
         switch (request.params.name) {
-          case 'execute_autogen_prompt':
-            return await this.executePrompt(request.params.arguments);
           case 'list_autogen_teams':
             return await this.listTeams();
-          case 'get_autogen_session_status':
-            return await this.getSessionStatus(request.params.arguments);
           case 'run_build':
             return await this.runBuild(request.params.arguments);
           case 'save_autogen_log':
@@ -161,66 +118,8 @@ class AutoGenStudioMCP {
     });
   }
 
-  private async executePrompt(args: any) {
-    const { team_name, prompt, task_id } = args;
-
-    try {
-      // Call AutoGen Studio API to execute prompt
-      const response = await axios.post(`${AUTOGEN_API_URL}/sessions`, {
-        team: team_name,
-        prompt: prompt,
-      });
-
-      const sessionId = response.data.session_id;
-
-      // Poll for completion
-      const result = await this.pollSession(sessionId);
-
-      // Save log automatically
-      if (task_id) {
-        await this.saveLog({
-          task_id,
-          status: result.status === 'completed' ? 'SUCCESS' : 'FAILED',
-          log_content: result.output,
-          duration: result.duration,
-        });
-      }
-
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify({
-              status: result.status,
-              output: result.output,
-              duration: result.duration,
-              session_id: sessionId,
-            }, null, 2),
-          },
-        ],
-      };
-    } catch (error: any) {
-      throw new Error(`Failed to execute prompt: ${error.message}`);
-    }
-  }
-
-  private async pollSession(sessionId: string, maxAttempts = 60): Promise<any> {
-    for (let i = 0; i < maxAttempts; i++) {
-      const response = await axios.get(`${AUTOGEN_API_URL}/sessions/${sessionId}`);
-      
-      if (response.data.status === 'completed' || response.data.status === 'failed') {
-        return response.data;
-      }
-
-      await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5 seconds
-    }
-
-    throw new Error('Session timeout');
-  }
-
   private async listTeams() {
     try {
-      // Read teams from filesystem
       const teamsDir = path.join(PROJECT_ROOT, 'autogen', 'teams');
       const files = await fs.readdir(teamsDir);
       
@@ -251,66 +150,55 @@ class AutoGenStudioMCP {
     }
   }
 
-  private async getSessionStatus(args: any) {
-    const { session_id } = args;
-
-    try {
-      const response = await axios.get(`${AUTOGEN_API_URL}/sessions/${session_id}`);
-      
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify(response.data, null, 2),
-          },
-        ],
-      };
-    } catch (error: any) {
-      throw new Error(`Failed to get session status: ${error.message}`);
-    }
-  }
-
   private async runBuild(args: any) {
     const { configuration } = args;
 
     try {
-      // Run CMake build
-      const cmakeResult = await execAsync(
-        `cmake --build build --config ${configuration}`,
-        { cwd: PROJECT_ROOT }
-      );
+      // Get MSBuild path
+      const msbuildPath = process.env.MSBUILD_PATH || 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin';
+      const msbuildExe = path.join(msbuildPath, 'msbuild.exe');
 
-      // Run MSBuild
+      // Run MSBuild only
       const msbuildResult = await execAsync(
-        `msbuild "Imagine Studio.sln" /t:Build /p:Configuration=${configuration} /p:Platform=x64 /m /nologo`,
-        { cwd: PROJECT_ROOT }
+        `"${msbuildExe}" "Imagine Studio.sln" /t:Build /p:Configuration=${configuration} /p:Platform=x64 /m /nologo`,
+        { cwd: PROJECT_ROOT, maxBuffer: 1024 * 1024 * 50 }
       );
 
       const parseErrors = (output: string) => {
-        const errors = (output.match(/error/gi) || []).length;
-        const warnings = (output.match(/warning/gi) || []).length;
-        return { errors, warnings };
+        const errorMatches = output.match(/(\d+) Error\(s\)/i);
+        const warningMatches = output.match(/(\d+) Warning\(s\)/i);
+        return {
+          errors: errorMatches ? parseInt(errorMatches[1]) : 0,
+          warnings: warningMatches ? parseInt(warningMatches[1]) : 0,
+        };
       };
+
+      const buildStats = parseErrors(msbuildResult.stdout + msbuildResult.stderr);
+      const fullOutput = msbuildResult.stdout + msbuildResult.stderr;
+      
+      // Extract only last 100 lines for summary
+      const lines = fullOutput.split('\n');
+      const summary = lines.slice(-100).join('\n');
 
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify({
-              cmake: {
-                ...parseErrors(cmakeResult.stdout),
-                output: cmakeResult.stdout,
-              },
-              msbuild: {
-                ...parseErrors(msbuildResult.stdout),
-                output: msbuildResult.stdout,
-              },
-            }, null, 2),
+            text: `MSBuild Result:\n\nErrors: ${buildStats.errors}\nWarnings: ${buildStats.warnings}\n\nStatus: ${buildStats.errors === 0 ? 'SUCCESS ✅' : 'FAILED ❌'}\n\nLast 100 lines:\n${summary}`,
           },
         ],
       };
     } catch (error: any) {
-      throw new Error(`Build failed: ${error.message}`);
+      // Build failed with error
+      const errorMessage = error.message || 'Unknown error';
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Build FAILED ❌\n\nError: ${errorMessage}\n\nThis usually means there are compilation errors.`,
+          },
+        ],
+      };
     }
   }
 
@@ -330,7 +218,7 @@ class AutoGenStudioMCP {
 
 **Date**: ${new Date().toISOString()}
 **Task**: ${task_id}
-**Status**: ${status === 'SUCCESS' ? '?' : '?'} ${status}
+**Status**: ${status === 'SUCCESS' ? '✅' : '❌'} ${status}
 **Duration**: ${duration}s
 
 ---

@@ -1,4 +1,4 @@
-# ImGui Installation Script for Imagine Studio
+﻿# ImGui Installation Script for Imagine Studio
 # Downloads and integrates ImGui from GitHub (supports branches and releases)
 
 param(

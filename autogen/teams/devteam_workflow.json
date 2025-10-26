@@ -4,7 +4,7 @@
   "version": 1,
   "component_version": 1,
   "description": "Imagine Studio DevTeam - Complete workflow with 4 specialized agents (Planner, Coder, Reviewer, Tester) working in sequence to implement sprint tasks with AAA quality standards.",
-  "label": "Imagine Studio DevTeam",
+  "label": "Imagine Studio DevTeam (Old)",
   "config": {
     "participants": [
       {

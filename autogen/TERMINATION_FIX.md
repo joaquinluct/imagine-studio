@@ -1,10 +1,10 @@
-# Cambiar Condición de Terminación - AutoGen Studio
+ï»¿# Cambiar Condiciï¿½n de Terminaciï¿½n - AutoGen Studio
 
 ## ?? Problema
 El workflow termina prematuramente cuando detecta "BUILD_SUCCESS" en el prompt del usuario.
 
-## ? Solución
-Cambiar la palabra clave de terminación a `WORKFLOW_FINISHED_OK` (palabra única que nunca usarás en prompts).
+## ? Soluciï¿½n
+Cambiar la palabra clave de terminaciï¿½n a `WORKFLOW_FINISHED_OK` (palabra ï¿½nica que nunca usarï¿½s en prompts).
 
 ---
 
@@ -13,9 +13,9 @@ Cambiar la palabra clave de terminación a `WORKFLOW_FINISHED_OK` (palabra única 
 ### **1. Editar Team en AutoGen Studio**
 
 1. **Abrir** AutoGen Studio: `http://127.0.0.1:8081`
-2. **Click** en "Team Builder" (menú izquierdo)
+2. **Click** en "Team Builder" (menï¿½ izquierdo)
 3. **Click** en "Imagine Studio DevTeam"
-4. **Buscar** sección "TERMINATIONS"
+4. **Buscar** secciï¿½n "TERMINATIONS"
 5. **Click** en "WorkflowTermination" (icono de editar ??)
 6. **Cambiar**:
 ```json
@@ -25,7 +25,7 @@ Cambiar la palabra clave de terminación a `WORKFLOW_FINISHED_OK` (palabra única 
   "text": "BUILD_SUCCESS"
 }
 
-// DESPUÉS
+// DESPUï¿½S
 {
   "type": "TextMentionTermination",
   "text": "WORKFLOW_FINISHED_OK"
@@ -37,36 +37,36 @@ Cambiar la palabra clave de terminación a `WORKFLOW_FINISHED_OK` (palabra única 
 
 ### **2. Actualizar Tester Agent**
 
-**Opción A: Manual en AutoGen Studio**
+**Opciï¿½n A: Manual en AutoGen Studio**
 
-1. **Click** en "Gallery" (menú izquierdo)
+1. **Click** en "Gallery" (menï¿½ izquierdo)
 2. **Buscar** "Tester Agent"
 3. **Click** en el icono de editar (??)
 4. **Scroll down** hasta "System Message"
-5. **Cambiar** la última línea:
+5. **Cambiar** la ï¿½ltima lï¿½nea:
 ```
 // ANTES
 BUILD_SUCCESS
 
-// DESPUÉS
+// DESPUï¿½S
 WORKFLOW_FINISHED_OK
 ```
 6. **Click** "Save"
 
-**Opción B: Re-importar JSON (Recomendado)**
+**Opciï¿½n B: Re-importar JSON (Recomendado)**
 
 1. **Gallery** ? **Tester Agent** ? **Delete** (icono ???)
-2. **Gallery** ? **Import** (botón azul)
+2. **Gallery** ? **Import** (botï¿½n azul)
 3. **Seleccionar** `autogen/agents/tester_agent_fixed.json`
-4. **Verificar** que se importó correctamente
+4. **Verificar** que se importï¿½ correctamente
 
 ---
 
-### **3. Verificar Team está Actualizado**
+### **3. Verificar Team estï¿½ Actualizado**
 
 1. **Team Builder** ? **Imagine Studio DevTeam**
-2. **Verificar** que la terminación dice `WORKFLOW_FINISHED_OK`
-3. **Verificar** que Tester Agent está en la lista de agentes del team
+2. **Verificar** que la terminaciï¿½n dice `WORKFLOW_FINISHED_OK`
+3. **Verificar** que Tester Agent estï¿½ en la lista de agentes del team
 
 ---
 
@@ -129,30 +129,30 @@ Stop reason: Text 'WORKFLOW_FINISHED_OK' mentioned
 ## ? TROUBLESHOOTING
 
 ### **Problema: Sigue terminando prematuramente**
-**Solución**: Verificar que:
+**Soluciï¿½n**: Verificar que:
 1. El team tiene `WORKFLOW_FINISHED_OK` (no `BUILD_SUCCESS`)
 2. El Tester Agent fue actualizado (borrar + reimportar)
-3. El team está usando el Tester Agent correcto (no una versión antigua)
+3. El team estï¿½ usando el Tester Agent correcto (no una versiï¿½n antigua)
 
 ### **Problema: No termina nunca**
-**Solución**: 
+**Soluciï¿½n**: 
 1. Verificar que el Tester Agent dice `WORKFLOW_FINISHED_OK` en su output
-2. Verificar que la terminación está configurada correctamente
+2. Verificar que la terminaciï¿½n estï¿½ configurada correctamente
 3. Usar MaxMessageTermination como respaldo (100 mensajes)
 
 ---
 
-## ?? VERIFICACIÓN FINAL
+## ?? VERIFICACIï¿½N FINAL
 
 Checklist antes de probar:
-- [ ] Team tiene terminación `WORKFLOW_FINISHED_OK`
+- [ ] Team tiene terminaciï¿½n `WORKFLOW_FINISHED_OK`
 - [ ] Tester Agent actualizado con nueva palabra
-- [ ] Tester Agent está en el team (no una versión antigua)
+- [ ] Tester Agent estï¿½ en el team (no una versiï¿½n antigua)
 - [ ] AutoGen Studio corre desde directorio correcto
 - [ ] Prompt NO menciona `WORKFLOW_FINISHED_OK`
 
 ---
 
-**Versión**: 1.0  
-**Última actualización**: 2025-01-18  
+**Versiï¿½n**: 1.0  
+**ï¿½ltima actualizaciï¿½n**: 2025-01-18  
 **Proyecto**: Imagine Studio Multi-Agent System

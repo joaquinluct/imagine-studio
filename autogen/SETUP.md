@@ -1,6 +1,6 @@
-# AutoGen Studio Setup - Imagine Studio Multi-Agent System
+ï»¿# AutoGen Studio Setup - Imagine Studio Multi-Agent System
 
-> **Propósito**: Guía completa para configurar los 4 agentes especializados en AutoGen Studio.
+> **Propï¿½sito**: Guï¿½a completa para configurar los 4 agentes especializados en AutoGen Studio.
 
 ---
 
@@ -10,7 +10,7 @@
 
 1. **AutoGen Studio instalado y corriendo**:
    ```bash
-   # Si aún no está instalado:
+   # Si aï¿½n no estï¿½ instalado:
    pip install autogenstudio
    
    # Iniciar AutoGen Studio:
@@ -21,7 +21,7 @@
 
 2. **OpenAI API Key configurada**:
    - Tener cuenta de OpenAI
-   - API Key válida
+   - API Key vï¿½lida
    - Configurar en AutoGen Studio ? Settings ? API Keys
 
 3. **Proyecto Imagine Studio**:
@@ -30,19 +30,19 @@
 
 ---
 
-## ?? INSTALACIÓN PASO A PASO
+## ?? INSTALACIï¿½N PASO A PASO
 
 ### Paso 1: Importar los 4 Agentes
 
 En AutoGen Studio:
 
-1. **Ir a "Agents" en el menú lateral**
+1. **Ir a "Agents" en el menï¿½ lateral**
 2. **Click en "Import Agent"**
 3. **Importar en este orden**:
    
    **a) Planner Agent**:
    - File: `autogen/planner_agent.json`
-   - Verificar que tools `read_daily`, `read_tasks`, `read_sprint`, `list_files` están presentes
+   - Verificar que tools `read_daily`, `read_tasks`, `read_sprint`, `list_files` estï¿½n presentes
    
    **b) Coder Agent**:
    - File: `autogen/coder_agent.json`
@@ -59,19 +59,19 @@ En AutoGen Studio:
 4. **Configurar modelo para cada agente**:
    - Planner: `gpt-4o` (recomendado para planning)
    - Coder: `gpt-4o` (necesita contexto amplio)
-   - Reviewer: `gpt-4o` (análisis detallado)
+   - Reviewer: `gpt-4o` (anï¿½lisis detallado)
    - Tester: `gpt-4o-mini` (parseo de logs, menos complejo)
 
 ---
 
 ### Paso 2: Crear Group Chat (DevTeam Workflow)
 
-1. **Ir a "Teams" en el menú lateral**
+1. **Ir a "Teams" en el menï¿½ lateral**
 2. **Click en "Create New Team"**
 3. **Configurar**:
    - Name: `ImagineStudio_DevTeam`
    - Type: `Round Robin Group Chat`
-   - Agents: Añadir los 4 agentes en orden:
+   - Agents: Aï¿½adir los 4 agentes en orden:
      1. `planner`
      2. `coder`
      3. `reviewer`
@@ -79,7 +79,7 @@ En AutoGen Studio:
    - Max turns: `20`
    - Max messages: `100`
 
-4. **Configurar terminación**:
+4. **Configurar terminaciï¿½n**:
    - Add termination condition: `Text Mention`
    - Text: `BUILD_SUCCESS`
    - Add another: `Max Messages`
@@ -91,19 +91,19 @@ En AutoGen Studio:
 
 ### Paso 3: Configurar Working Directory
 
-**CRÍTICO**: AutoGen Studio debe ejecutarse desde el directorio raíz del proyecto.
+**CRï¿½TICO**: AutoGen Studio debe ejecutarse desde el directorio raï¿½z del proyecto.
 
 ```powershell
 # Navegar al proyecto
 cd "C:\Users\joaqu\source\repos\Imagine Studio"
 
-# Iniciar AutoGen Studio desde aquí
+# Iniciar AutoGen Studio desde aquï¿½
 autogenstudio ui --port 8081 --appdir .
 ```
 
-**Por qué es importante**:
+**Por quï¿½ es importante**:
 - Los agentes leen archivos relativos: `docs/daily.md`, `docs/sprint_tasks.md`
-- Los comandos de compilación esperan `build/` y `Imagine Studio.sln` en raíz
+- Los comandos de compilaciï¿½n esperan `build/` y `Imagine Studio.sln` en raï¿½z
 - Los tools `write_file` crean archivos relativos a este directorio
 
 ---
@@ -132,7 +132,7 @@ Workflow:
 Please proceed with the workflow.
 ```
 
-**Ejecución esperada**:
+**Ejecuciï¿½n esperada**:
 
 ```
 [Turno 1 - Planner]
@@ -186,7 +186,7 @@ WORKFLOW_COMPLETE
 
 ---
 
-### Ejemplo 2: Implementar Múltiples Tareas
+### Ejemplo 2: Implementar Mï¿½ltiples Tareas
 
 **Prompt para batch processing**:
 
@@ -209,14 +209,14 @@ Continue until all 3 tasks are completed or max turns reached.
 
 ### Error: "File not found: docs/daily.md"
 
-**Problema**: AutoGen Studio no está en el directorio correcto.
+**Problema**: AutoGen Studio no estï¿½ en el directorio correcto.
 
-**Solución**:
+**Soluciï¿½n**:
 ```powershell
 # Detener AutoGen Studio (Ctrl+C)
 # Navegar al proyecto
 cd "C:\Users\joaqu\source\repos\Imagine Studio"
-# Reiniciar desde aquí
+# Reiniciar desde aquï¿½
 autogenstudio ui --port 8081 --appdir .
 ```
 
@@ -224,9 +224,9 @@ autogenstudio ui --port 8081 --appdir .
 
 ### Error: "Tool 'compile_cmake' failed"
 
-**Problema**: CMake no está en PATH o build/ no existe.
+**Problema**: CMake no estï¿½ en PATH o build/ no existe.
 
-**Solución**:
+**Soluciï¿½n**:
 ```powershell
 # Verificar CMake instalado
 cmake --version
@@ -242,40 +242,40 @@ cd ..
 
 ### Error: "Tool 'compile_msbuild' failed"
 
-**Problema**: MSBuild no está en PATH.
+**Problema**: MSBuild no estï¿½ en PATH.
 
-**Solución**:
+**Soluciï¿½n**:
 ```powershell
-# Añadir MSBuild al PATH temporalmente
+# Aï¿½adir MSBuild al PATH temporalmente
 $env:Path += ";C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin"
 
 # Verificar
 msbuild -version
 
-# Reiniciar AutoGen Studio desde aquí
+# Reiniciar AutoGen Studio desde aquï¿½
 ```
 
 ---
 
 ### Error: "Review rejected - Include order incorrect"
 
-**Problema**: Coder no siguió estándares AAA.
+**Problema**: Coder no siguiï¿½ estï¿½ndares AAA.
 
 **Comportamiento esperado**: 
 - Reviewer detecta el problema
 - Pide a Coder que corrija
-- Coder reescribe el código
-- Loop continúa hasta que Reviewer aprueba
+- Coder reescribe el cï¿½digo
+- Loop continï¿½a hasta que Reviewer aprueba
 
-**No requiere intervención manual** (el sistema se auto-corrige).
+**No requiere intervenciï¿½n manual** (el sistema se auto-corrige).
 
 ---
 
-## ?? MÉTRICAS Y MONITOREO
+## ?? Mï¿½TRICAS Y MONITOREO
 
 ### Tiempo Esperado por Tarea
 
-| Fase | Duración | Tokens |
+| Fase | Duraciï¿½n | Tokens |
 |------|----------|--------|
 | Planner | 10-20s | ~500 |
 | Coder | 30-60s | ~1,500 |
@@ -283,10 +283,10 @@ msbuild -version
 | Tester | 60-120s | ~1,000 |
 | **Total** | **2-4 min** | **~3,800** |
 
-**Comparación**:
+**Comparaciï¿½n**:
 - Sin multi-agent: 5-10 min/tarea
 - Con multi-agent: 2-4 min/tarea
-- **Aceleración**: 2-3x más rápido
+- **Aceleraciï¿½n**: 2-3x mï¿½s rï¿½pido
 
 ---
 
@@ -297,42 +297,42 @@ msbuild -version
 - Tester SIEMPRE compila (no se olvida)
 - Planner SIEMPRE descompone tareas
 
-### 2. Auto-Corrección
+### 2. Auto-Correcciï¿½n
 - Si build falla ? Tester sugiere fix ? Coder corrige
 - Si review falla ? Reviewer pide cambios ? Coder reescribe
-- Loop automático hasta éxito
+- Loop automï¿½tico hasta ï¿½xito
 
 ### 3. Consistencia
-- Mismo Reviewer con mismos estándares
+- Mismo Reviewer con mismos estï¿½ndares
 - Mismo Tester con mismas validaciones
 - Mismo Planner con mismo formato
 
 ### 4. Trazabilidad
 - Cada agente registra su trabajo
 - Logs completos de decisiones
-- Auditable para análisis post-mortem
+- Auditable para anï¿½lisis post-mortem
 
 ---
 
-## ?? PRÓXIMOS PASOS
+## ?? PRï¿½XIMOS PASOS
 
 ### Mejoras Futuras
 
-1. **Paralelización**:
-   - Múltiples Coder Agents para tareas independientes
+1. **Paralelizaciï¿½n**:
+   - Mï¿½ltiples Coder Agents para tareas independientes
    - Reviewer revisa en batch
 
 2. **Aprendizaje Continuo**:
    - Reviewer aprende de errores pasados
    - Coder mejora con feedback acumulado
 
-3. **Integración CI/CD**:
+3. **Integraciï¿½n CI/CD**:
    - Hook de GitHub para auto-ejecutar workflow
-   - Comentarios automáticos en PRs
+   - Comentarios automï¿½ticos en PRs
 
 4. **Dashboard**:
-   - Métricas en tiempo real
-   - Gráficos de velocidad del sprint
+   - Mï¿½tricas en tiempo real
+   - Grï¿½ficos de velocidad del sprint
    - Alertas de bloqueos
 
 ---
@@ -345,14 +345,14 @@ msbuild -version
 
 ---
 
-**Versión**: 1.0  
-**Última actualización**: 2025-01-18  
-**Autor**: Joaquín Luct  
+**Versiï¿½n**: 1.0  
+**ï¿½ltima actualizaciï¿½n**: 2025-01-18  
+**Autor**: Joaquï¿½n Luct  
 **Proyecto**: Imagine Studio (C++ Game Engine)
 
 ---
 
-## ?? ¡LISTO PARA USAR!
+## ?? ï¿½LISTO PARA USAR!
 
 Ya tienes todo configurado. Simplemente:
 

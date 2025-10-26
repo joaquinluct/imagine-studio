@@ -218,6 +218,7 @@
     <None Include="scripts\close-sprint.ps1" />
     <None Include="scripts\deploy-autogen-template.ps1" />
     <None Include="scripts\install-imgui.ps1" />
+    <None Include="scripts\validate-no-tests-in-main.ps1" />
     <None Include="tools\reorder_includes.py" />
   </ItemGroup>
   <ItemGroup>

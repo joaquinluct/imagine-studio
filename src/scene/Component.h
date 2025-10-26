@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 namespace Scene {
 
@@ -14,7 +14,7 @@ public:
     virtual ~Component() = default;
     
     /// @brief Actualizar component (llamado cada frame)
-    /// @param deltaTime Tiempo transcurrido desde el último frame (en segundos)
+    /// @param deltaTime Tiempo transcurrido desde el ï¿½ltimo frame (en segundos)
     virtual void OnUpdate(float deltaTime) {}
     
     /// @brief Destruir component (llamado al eliminar entity)

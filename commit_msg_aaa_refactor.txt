@@ -1,4 +1,4 @@
-refactor(main): Refactorizacion AAA - Condicional de visibilidad UI y DockSpace
+ï»¿refactor(main): Refactorizacion AAA - Condicional de visibilidad UI y DockSpace
 
 Implementacion de arquitectura AAA siguiendo estandares Unity/Unreal/Blender
 
@@ -26,7 +26,7 @@ Solucion AAA implementada:
 
 Cambios en codigo (src/main.cpp):
 - Wrap NewFrame/Render en if (renderer.IsUIVisible())
-- Añadir DockSpaceOverViewport() ANTES de panels
+- Aï¿½adir DockSpaceOverViewport() ANTES de panels
 - Condicionalizar ShowDemoWindow() con #ifdef _DEBUG
 - Eliminar logs de debug sin ifdef
 

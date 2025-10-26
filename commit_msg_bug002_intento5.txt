@@ -1,4 +1,4 @@
-fix(Window): Corregir registro de clase y eliminar fallback STATIC - BUG-002 Intento 5
+ï»¿fix(Window): Corregir registro de clase y eliminar fallback STATIC - BUG-002 Intento 5
 
 Problema identificado en Intento 4:
 - CreateWindowExW falla con error 1400 (ERROR_INVALID_WINDOW_HANDLE)
@@ -15,7 +15,7 @@ Solucion implementada:
 
 Archivos modificados:
 - src/platform/Window.cpp: Corregir registro de clase, eliminar fallback
-- docs/sprint_bug_attempts.md: Añadir Intento 5 completado
+- docs/sprint_bug_attempts.md: Aï¿½adir Intento 5 completado
 - docs/sprint_bugs.md: Actualizar estado a Pendiente validacion usuario
 
 Compilacion limpia: CMake + MSBuild (0 errores, 0 warnings)

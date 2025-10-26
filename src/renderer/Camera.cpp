@@ -1,4 +1,4 @@
-#include "Camera.h"
+ï»¿#include "Camera.h"
 #include "core/Log.h"
 
 #include <cmath>
@@ -19,7 +19,7 @@ Camera::Camera()
     UpdateViewMatrix();
     UpdateProjectionMatrix();
     
-    CORE_LOG_INFO("Camera created: position (0, 0, -5), target (0, 0, 0), FOV 45°");
+    CORE_LOG_INFO("Camera created: position (0, 0, -5), target (0, 0, 0), FOV 45ï¿½");
 }
 
 void Camera::SetPosition(float x, float y, float z)

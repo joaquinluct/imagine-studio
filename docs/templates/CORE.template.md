@@ -1,21 +1,21 @@
-# Metodología de Desarrollo Ágil Asistido por IA - CORE
+ï»¿# Metodologï¿½a de Desarrollo ï¿½gil Asistido por IA - CORE
 
-> **Propósito**: Documento fundamental de la metodología. **Leer UNA VEZ** al inicio de colaboración con el asistente IA.
+> **Propï¿½sito**: Documento fundamental de la metodologï¿½a. **Leer UNA VEZ** al inicio de colaboraciï¿½n con el asistente IA.
 
-> **Adaptación**: Reemplazar todos los `[PLACEHOLDER]` con valores específicos de tu proyecto.
+> **Adaptaciï¿½n**: Reemplazar todos los `[PLACEHOLDER]` con valores especï¿½ficos de tu proyecto.
 
 ---
 
 ## ?? PRINCIPIOS FUNDAMENTALES
 
-Esta metodología se basa en:
+Esta metodologï¿½a se basa en:
 
-1. **Iteraciones pequeñas y funcionales**: Cada tarea deja el proyecto en estado [PLACEHOLDER: compilable/ejecutable/funcional]
-2. **Documentación continua**: Actualizar docs en cada commit
-3. **Automatización IA**: El asistente ejecuta el ciclo completo sin intervención manual innecesaria
-4. **Calidad desde el inicio**: No soluciones temporales, solo código [PLACEHOLDER: production-ready/AAA/enterprise-grade]
+1. **Iteraciones pequeï¿½as y funcionales**: Cada tarea deja el proyecto en estado [PLACEHOLDER: compilable/ejecutable/funcional]
+2. **Documentaciï¿½n continua**: Actualizar docs en cada commit
+3. **Automatizaciï¿½n IA**: El asistente ejecuta el ciclo completo sin intervenciï¿½n manual innecesaria
+4. **Calidad desde el inicio**: No soluciones temporales, solo cï¿½digo [PLACEHOLDER: production-ready/AAA/enterprise-grade]
 5. **Trazabilidad**: Versionado de sprints, commits descriptivos, historial claro
-6. **Doble validación**: [PLACEHOLDER: Compilación/Tests/Lint] limpia + validación usuario para bugs
+6. **Doble validaciï¿½n**: [PLACEHOLDER: Compilaciï¿½n/Tests/Lint] limpia + validaciï¿½n usuario para bugs
 
 ---
 
@@ -23,56 +23,56 @@ Esta metodología se basa en:
 
 ### Archivos Activos del Sprint
 
-| Archivo | Propósito | Frecuencia de consulta |
+| Archivo | Propï¿½sito | Frecuencia de consulta |
 |---------|-----------|------------------------|
 | `docs/MAIN.md` | [PLACEHOLDER: Pilares del proyecto] | Una vez (inicio) |
-| `docs/daily.md` | Última tarea + actual | Cada sesión |
+| `docs/daily.md` | ï¿½ltima tarea + actual | Cada sesiï¿½n |
 | `docs/sprint.md` | Objetivo sprint actual | Al inicio sprint |
 | `docs/sprint_histories.md` | Historias de usuario | Cuando necesario |
 | `docs/sprint_tasks.md` | Tareas detalladas | Cuando necesario |
 | `docs/sprint_commits.md` | Convenciones commits | Referencia |
 | `docs/sprint_bugs.md` | Bugs pendientes | Durante debugging |
-| `docs/sprint_bug_attempts.md` | Intentos de solución | Durante debugging |
+| `docs/sprint_bug_attempts.md` | Intentos de soluciï¿½n | Durante debugging |
 | `docs/sprint_fix.md` | Bugs resueltos | Referencia |
 | `docs/sprint_deviations.md` | Desviaciones sprint | Cuando bloqueo |
 | `docs/sprint_ia_sessions.md` | Sesiones IA (>85%) | Al 85% tokens |
-| `docs/backlog.md` | Ítems fuera sprint | Planificación |
+| `docs/backlog.md` | ï¿½tems fuera sprint | Planificaciï¿½n |
 
 ---
 
 ## ?? FLUJO DE TRABAJO COMPLETO
 
-### Ciclo por Iteración (6 Pasos)
+### Ciclo por Iteraciï¿½n (6 Pasos)
 
 ```
 ???????????????????????????????????????????????????????????????
 ? 1. LEER                                                     ?
 ?    - Consultar docs/daily.md                                ?
-?    - Ver última tarea completada + tarea actual             ?
+?    - Ver ï¿½ltima tarea completada + tarea actual             ?
 ???????????????????????????????????????????????????????????????
                             ?
 ???????????????????????????????????????????????????????????????
 ? 2. COMPARAR                                                 ?
-?    - Revisar código fuente actual                           ?
+?    - Revisar cï¿½digo fuente actual                           ?
 ?    - Entender estado del proyecto                           ?
 ???????????????????????????????????????????????????????????????
                             ?
 ???????????????????????????????????????????????????????????????
 ? 3. PROPONER                                                 ?
 ?    - Asistente propone siguiente paso                       ?
-?    - Una frase explicando qué se hará                       ?
+?    - Una frase explicando quï¿½ se harï¿½                       ?
 ???????????????????????????????????????????????????????????????
                             ?
 ???????????????????????????????????????????????????????????????
 ? 4. IMPLEMENTAR                                              ?
-?    - Si usuario confirma (o auto-ejecución)                 ?
-?    - Implementar cambio según sprint_tasks.md               ?
+?    - Si usuario confirma (o auto-ejecuciï¿½n)                 ?
+?    - Implementar cambio segï¿½n sprint_tasks.md               ?
 ???????????????????????????????????????????????????????????????
                             ?
 ???????????????????????????????????????????????????????????????
 ? 5. VALIDAR (OBLIGATORIO)                                    ?
 ?    - [PLACEHOLDER: Compilar/ejecutar/probar]                ?
-?    - Corregir errores hasta validación limpia               ?
+?    - Corregir errores hasta validaciï¿½n limpia               ?
 ?    - [PLACEHOLDER: 0 errores, 0 warnings / tests passing]   ?
 ???????????????????????????????????????????????????????????????
                             ?
@@ -86,13 +86,13 @@ Esta metodología se basa en:
                    REPETIR DESDE 1
 ```
 
-### Excepciones al Flujo Automático
+### Excepciones al Flujo Automï¿½tico
 
-El asistente PAUSARÁ si:
-- ? Bloqueo técnico (no se puede avanzar)
-- ? Decisión arquitectónica crítica requerida
+El asistente PAUSARï¿½ si:
+- ? Bloqueo tï¿½cnico (no se puede avanzar)
+- ? Decisiï¿½n arquitectï¿½nica crï¿½tica requerida
 - ? Dependencia externa no disponible
-- ? Validación de usuario necesaria (bugs)
+- ? Validaciï¿½n de usuario necesaria (bugs)
 
 ---
 
@@ -100,7 +100,7 @@ El asistente PAUSARÁ si:
 
 ### Archivos Versionados al Cerrar Sprint
 
-Al finalizar un sprint (release), el asistente archivará TODOS los ficheros:
+Al finalizar un sprint (release), el asistente archivarï¿½ TODOS los ficheros:
 
 ```[PLACEHOLDER: shell language - bash/powershell/cmd]
 # Crear carpeta si no existe
@@ -141,8 +141,8 @@ docs/
 **Contenido**:
 - Objetivo del sprint
 - Hitos principales
-- Criterios de aceptación globales
-- Comparación con versión anterior
+- Criterios de aceptaciï¿½n globales
+- Comparaciï¿½n con versiï¿½n anterior
 - Estado del sprint (historias/tareas completadas)
 - Barra de progreso visual
 
@@ -150,19 +150,19 @@ docs/
 
 **Contenido**:
 - ID de historia (H1, H2, H3...)
-- Título y descripción
-- Prioridad (Crítica/Alta/Media/Baja)
-- Criterios de aceptación
+- Tï¿½tulo y descripciï¿½n
+- Prioridad (Crï¿½tica/Alta/Media/Baja)
+- Criterios de aceptaciï¿½n
 - Lista de tareas derivadas
 
 **Formato**:
 ```markdown
-### H1 - [PLACEHOLDER: Título de Historia]
+### H1 - [PLACEHOLDER: Tï¿½tulo de Historia]
 **ID**: H1
-**Prioridad**: [PLACEHOLDER: CRÍTICA/ALTA/MEDIA/BAJA]
-**Descripción**: [PLACEHOLDER: Detalle completo]
+**Prioridad**: [PLACEHOLDER: CRï¿½TICA/ALTA/MEDIA/BAJA]
+**Descripciï¿½n**: [PLACEHOLDER: Detalle completo]
 
-**Criterios de aceptación**:
+**Criterios de aceptaciï¿½n**:
 - ? [PLACEHOLDER: Criterio 1]
 - ? [PLACEHOLDER: Criterio 2]
 
@@ -174,76 +174,76 @@ docs/
 **Contenido**:
 - ID de tarea (H1.1, H1.2...)
 - Historia asociada
-- Descripción
-- Implementación (código ejemplo, pasos)
+- Descripciï¿½n
+- Implementaciï¿½n (cï¿½digo ejemplo, pasos)
 - Archivos afectados
-- Criterio de éxito
+- Criterio de ï¿½xito
 
 **Formato**:
 ```markdown
-### H1.1 - [PLACEHOLDER: Título de Tarea]
+### H1.1 - [PLACEHOLDER: Tï¿½tulo de Tarea]
 **Estado**: ? Pendiente / ? Completada
 **Historia**: H1
-**Descripción**: [PLACEHOLDER: Detalle completo]
+**Descripciï¿½n**: [PLACEHOLDER: Detalle completo]
 
-**Implementación**:
+**Implementaciï¿½n**:
 ```[PLACEHOLDER: language]
-// [PLACEHOLDER: código ejemplo]
+// [PLACEHOLDER: cï¿½digo ejemplo]
 ```
 
 **Archivos afectados**: [PLACEHOLDER: lista]
-**Criterio de éxito**: [PLACEHOLDER: condición]
+**Criterio de ï¿½xito**: [PLACEHOLDER: condiciï¿½n]
 ```
 
 ### 4. `docs/daily.md` - Seguimiento Diario
 
-**Contenido** (2 líneas):
+**Contenido** (2 lï¿½neas):
 ```markdown
 Hecho: H1.3 - [PLACEHOLDER: Tarea completada]
-Siguiente: H1.4 - [PLACEHOLDER: Próxima tarea]
+Siguiente: H1.4 - [PLACEHOLDER: Prï¿½xima tarea]
 ```
 
 **Sin sprint activo**:
 ```markdown
-Sprint v[PLACEHOLDER: versión] cerrado. Sin sprint activo.
+Sprint v[PLACEHOLDER: versiï¿½n] cerrado. Sin sprint activo.
 ```
 
 ---
 
-## ?? FORMATO DE ITERACIÓN FINAL
+## ?? FORMATO DE ITERACIï¿½N FINAL
 
-Al final de cada iteración, reportar con **3 secciones obligatorias**:
+Al final de cada iteraciï¿½n, reportar con **3 secciones obligatorias**:
 
-### 1. Títulos (Hecho/Siguiente)
+### 1. Tï¿½tulos (Hecho/Siguiente)
 
 ```markdown
 ? Hecho: H1.3 - [PLACEHOLDER: Tarea completada]
-?? Siguiente: H1.4 - [PLACEHOLDER: Próxima tarea]
+?? Siguiente: H1.4 - [PLACEHOLDER: Prï¿½xima tarea]
 ```
 
-### 2. Visualización (OBLIGATORIO)
+### 2. Visualizaciï¿½n (OBLIGATORIO)
 
 ```markdown
-### ??? Visualización:
+### ??? Visualizaciï¿½n:
 
-**¿Algo nuevo que cambie la vista tras ejecución?**: **SÍ** ? / **NO** ?
+**ï¿½Algo nuevo que cambie la vista tras ejecuciï¿½n?**: **Sï¿½** ? / **NO** ?
 
-[SI ES "SÍ ?"]
-**Qué deberías ver al ejecutar** ([PLACEHOLDER: F5 / npm start / etc.]):
-1. ? [PLACEHOLDER: Cambio visual específico 1]
-2. ? [PLACEHOLDER: Cambio visual específico 2]
+[SI ES "Sï¿½ ?"]
+**Quï¿½ deberï¿½as ver al ejecutar** ([PLACEHOLDER: F5 / npm start / etc.]):
+1. ? [PLACEHOLDER: Cambio visual especï¿½fico 1]
+2. ? [PLACEHOLDER: Cambio visual especï¿½fico 2]
 
-**Qué ha cambiado**:
+**Quï¿½ ha cambiado**:
 - ?? [PLACEHOLDER: Componente modificado]
 
 **Ausente**:
 - ? [PLACEHOLDER: Elemento que ya no se muestra]
 
 [SI ES "NO ?"]
-**Razón**: [PLACEHOLDER: Por qué no hay cambios visuales]
+**Razï¿½n**: [PLACEHOLDER: Por quï¿½ no hay cambios visuales]
 ```
 
-**Posición**: DESPUÉS de títulos, ANTES de barra de progreso
+**Posiciï¿½n**: DESPUï¿½S de tï¿½tulos, ANTES de barra de progreso
 
 ### 3. Barra de Progreso
 
@@ -253,23 +253,23 @@ Al final de cada iteración, reportar con **3 secciones obligatorias**:
 +--------------------------------------------------------------------+
 ```
 
-**Cálculo**: `(tareas completadas / total tareas sprint) × 100`
+**Cï¿½lculo**: `(tareas completadas / total tareas sprint) ï¿½ 100`
 
 ---
 
 ## ?? PREFERENCIAS DE CALIDAD
 
-### Estándares de Código
+### Estï¿½ndares de Cï¿½digo
 
-[PLACEHOLDER: Preferencias específicas del proyecto]
+[PLACEHOLDER: Preferencias especï¿½ficas del proyecto]
 
 Ejemplos:
 1. **Hacer bien desde el principio**: Evitar partes temporales o incompletas
-2. **Cada módulo cumple estándares [PLACEHOLDER: AAA/Enterprise/Production]**: Desde su concepción
-3. **Validación antes de commit**: Siempre [PLACEHOLDER: compilar/ejecutar/probar]
+2. **Cada mï¿½dulo cumple estï¿½ndares [PLACEHOLDER: AAA/Enterprise/Production]**: Desde su concepciï¿½n
+3. **Validaciï¿½n antes de commit**: Siempre [PLACEHOLDER: compilar/ejecutar/probar]
 4. **Estilo consistente**: Seguir convenciones del proyecto
 
-### [PLACEHOLDER: Codificación de Archivos / Linting / Formatting]
+### [PLACEHOLDER: Codificaciï¿½n de Archivos / Linting / Formatting]
 
 Ejemplos:
 - **C++**: UTF-8 con BOM + CRLF (Windows)
@@ -278,50 +278,50 @@ Ejemplos:
 
 ---
 
-## ?? REGLAS CRÍTICAS
+## ?? REGLAS CRï¿½TICAS
 
 ### 1. NUNCA Modificar [PLACEHOLDER: External Dependencies Path]
 
 **Razones**:
 1. Imposibilita actualizar la biblioteca en el futuro
-2. Oculta bugs en nuestro código (tapa síntomas, no arregla causas)
+2. Oculta bugs en nuestro cï¿½digo (tapa sï¿½ntomas, no arregla causas)
 3. Rompe la reproducibilidad del proyecto
 
-**Política**:
-- TODO el código de [PLACEHOLDER: dependencias externas] debe permanecer **INTACTO**
+**Polï¿½tica**:
+- TODO el cï¿½digo de [PLACEHOLDER: dependencias externas] debe permanecer **INTACTO**
 - Si necesitas personalizar: crear **wrappers** en `src/`
-- Si encuentras bug relacionado: investigar **NUESTRO** código primero
+- Si encuentras bug relacionado: investigar **NUESTRO** cï¿½digo primero
 
-### 2. [PLACEHOLDER: Validación] Obligatoria
+### 2. [PLACEHOLDER: Validaciï¿½n] Obligatoria
 
-**Requisito**: [PLACEHOLDER: Número de validaciones] limpias antes de commit:
+**Requisito**: [PLACEHOLDER: Nï¿½mero de validaciones] limpias antes de commit:
 
 ```[PLACEHOLDER: shell language]
-# Validación 1 - [PLACEHOLDER: Nombre]
-[PLACEHOLDER: comando validación 1]
+# Validaciï¿½n 1 - [PLACEHOLDER: Nombre]
+[PLACEHOLDER: comando validaciï¿½n 1]
 
-# Validación 2 - [PLACEHOLDER: Nombre] (si aplica)
-[PLACEHOLDER: comando validación 2]
+# Validaciï¿½n 2 - [PLACEHOLDER: Nombre] (si aplica)
+[PLACEHOLDER: comando validaciï¿½n 2]
 ```
 
-**Criterio de éxito**: [PLACEHOLDER: 0 errores, 0 warnings / All tests pass]
+**Criterio de ï¿½xito**: [PLACEHOLDER: 0 errores, 0 warnings / All tests pass]
 
-### 3. Commits y Documentación
+### 3. Commits y Documentaciï¿½n
 
-**Regla**: Siempre actualizar automáticamente:
+**Regla**: Siempre actualizar automï¿½ticamente:
 - `docs/daily.md`
 - `docs/sprint_commits.md`
 - `README.md` (cuando aplique)
 
-**NO** hacer push automático (solo local commits)
+**NO** hacer push automï¿½tico (solo local commits)
 
 ---
 
 ## ?? TROUBLESHOOTING
 
-[PLACEHOLDER: Problemas comunes y soluciones específicas del proyecto]
+[PLACEHOLDER: Problemas comunes y soluciones especï¿½ficas del proyecto]
 
-### Ejemplos por Tecnología
+### Ejemplos por Tecnologï¿½a
 
 **C++/CMake**:
 1. Build fails ? Check `CMakeLists.txt`, verify files included
@@ -340,13 +340,13 @@ Ejemplos:
 ## ?? DOCUMENTOS RELACIONADOS
 
 - **Bugs**: [`docs/methodology/BUGS.md`](BUGS.md) - Bug management completo
-- **Sesiones IA**: [`docs/methodology/SESSIONS.md`](SESSIONS.md) - Gestión al 85%
+- **Sesiones IA**: [`docs/methodology/SESSIONS.md`](SESSIONS.md) - Gestiï¿½n al 85%
 - **Desviaciones**: [`docs/methodology/DEVIATIONS.md`](DEVIATIONS.md) - Sprint deviations
 - **Workflow**: [`docs/methodology/WORKFLOW.md`](WORKFLOW.md) - Flujo detallado
 
 ---
 
-**Versión**: 2.0  
-**Última actualización**: [PLACEHOLDER: Fecha]  
+**Versiï¿½n**: 2.0  
+**ï¿½ltima actualizaciï¿½n**: [PLACEHOLDER: Fecha]  
 **Proyecto**: [PLACEHOLDER: Nombre del proyecto]  
-**Tecnología**: [PLACEHOLDER: Stack principal]
+**Tecnologï¿½a**: [PLACEHOLDER: Stack principal]

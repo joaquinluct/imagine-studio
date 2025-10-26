@@ -1,32 +1,32 @@
-# Sprint Deviations - Desviaciones y Ajustes Arquitectónicos
+ï»¿# Sprint Deviations - Desviaciones y Ajustes Arquitectï¿½nicos
 
-> **Propósito**: Gestión de desviaciones arquitectónicas y tareas emergentes bloqueantes durante la ejecución del sprint.
+> **Propï¿½sito**: Gestiï¿½n de desviaciones arquitectï¿½nicas y tareas emergentes bloqueantes durante la ejecuciï¿½n del sprint.
 
 ---
 
-## ?? ¿CUÁNDO USAR SPRINT DEVIATIONS?
+## ?? ï¿½CUï¿½NDO USAR SPRINT DEVIATIONS?
 
 ### Situaciones que Califican
 
-Usa este archivo cuando **durante la ejecución** del sprint surja:
+Usa este archivo cuando **durante la ejecuciï¿½n** del sprint surja:
 
-1. **Ajuste Arquitectónico**
-   - Cambio en diseño que afecta tareas futuras
+1. **Ajuste Arquitectï¿½nico**
+   - Cambio en diseï¿½o que afecta tareas futuras
    - Viola principios AAA (docs/MAIN.md)
    - Impacta arquitectura de 3 capas
 
 2. **Tarea Emergente Bloqueante**
-   - Descubierta durante implementación
+   - Descubierta durante implementaciï¿½n
    - Bloquea progreso del sprint actual
    - No puede diferirse al siguiente sprint
 
-3. **Deuda Técnica Crítica**
-   - Código no cumple estándares AAA
+3. **Deuda Tï¿½cnica Crï¿½tica**
+   - Cï¿½digo no cumple estï¿½ndares AAA
    - Afecta estabilidad/performance
    - Debe corregirse inmediatamente
 
-4. **Refactorización AAA**
-   - Código funcional pero no profesional
+4. **Refactorizaciï¿½n AAA**
+   - Cï¿½digo funcional pero no profesional
    - Necesario para continuar con calidad
    - "Hacer bien desde el principio"
 
@@ -36,19 +36,19 @@ Usa este archivo cuando **durante la ejecución** del sprint surja:
 
 ### Diferencia Clave
 
-| Característica | Backlog | Deviations |
+| Caracterï¿½stica | Backlog | Deviations |
 |----------------|---------|------------|
-| **Timing** | Planificación futura | Durante ejecución |
+| **Timing** | Planificaciï¿½n futura | Durante ejecuciï¿½n |
 | **Urgencia** | Puede esperar | Bloqueante |
 | **Impacto** | Sprint futuro | Sprint actual |
-| **Criticidad** | Baja/Media/Alta | CRÍTICA |
+| **Criticidad** | Baja/Media/Alta | CRï¿½TICA |
 
 ### Checklist de Criticidad
 
 Usar `sprint_deviations.md` si cumple **AL MENOS UNO**:
 - ? **Bloqueante**: Impide completar tareas del sprint actual
 - ? **Viola pilares**: Contradice docs/MAIN.md o AAA_STANDARDS.md
-- ? **Impacto inmediato**: Afecta tareas en progreso o próximas inmediatas
+- ? **Impacto inmediato**: Afecta tareas en progreso o prï¿½ximas inmediatas
 
 ---
 
@@ -57,22 +57,22 @@ Usar `sprint_deviations.md` si cumple **AL MENOS UNO**:
 ### Formato de Entrada
 
 ```markdown
-## DEV-001: Refactorización AAA - Condicional de visibilidad UI
+## DEV-001: Refactorizaciï¿½n AAA - Condicional de visibilidad UI
 
-**Tipo**: Ajuste Arquitectónico
-**Detectado en**: H2.3 - Integración DX12 backend
+**Tipo**: Ajuste Arquitectï¿½nico
+**Detectado en**: H2.3 - Integraciï¿½n DX12 backend
 **Fecha**: 2025-01-18
-**Prioridad**: CRÍTICA
+**Prioridad**: CRï¿½TICA
 
 ### Contexto:
 ImGui se procesaba SIEMPRE sin respetar m_uiVisible, 
-violando estándares AAA ("hacer bien desde el principio").
+violando estï¿½ndares AAA ("hacer bien desde el principio").
 
-El código funcional pero no cumplía arquitectura de 3 capas:
+El cï¿½digo funcional pero no cumplï¿½a arquitectura de 3 capas:
 - Renderer ? Scene ? Editor
 - UI debe ser condicional (F1 toggle)
 
-### ¿Por qué NO pasó a backlog?
+### ï¿½Por quï¿½ NO pasï¿½ a backlog?
 - ? **Bloqueante para H4** (Editor Panels): 
   Los panels necesitan UI condicional funcional
 - ? **Viola pilares AAA** (docs/MAIN.md): 
@@ -80,17 +80,17 @@ El código funcional pero no cumplía arquitectura de 3 capas:
 - ? **Impacto inmediato**: 
   Afecta arquitectura de 3 capas (core del proyecto)
 
-### Decisión:
+### Decisiï¿½n:
 Pausar H4 temporalmente e implementar arquitectura AAA 
 inmediatamente antes de continuar.
 
 ### Tareas Derivadas:
-- DEV-001.1: ? Añadir condicional IsUIVisible() en main.cpp
+- DEV-001.1: ? Aï¿½adir condicional IsUIVisible() en main.cpp
 - DEV-001.2: ? Implementar DockSpaceOverViewport() correctamente
-- DEV-001.3: ? Añadir #ifdef _DEBUG para ShowDemoWindow()
-- DEV-001.4: ? Crear docs/AAA_STANDARDS.md con estándares
+- DEV-001.3: ? Aï¿½adir #ifdef _DEBUG para ShowDemoWindow()
+- DEV-001.4: ? Crear docs/AAA_STANDARDS.md con estï¿½ndares
 
-### Implementación:
+### Implementaciï¿½n:
 ```cpp
 // ANTES (incorrecto - violaba AAA)
 void RenderFrame() {
@@ -99,7 +99,7 @@ void RenderFrame() {
     Present();
 }
 
-// DESPUÉS (correcto - AAA)
+// DESPUï¿½S (correcto - AAA)
 void RenderFrame() {
     OpaquePass();
     if (m_uiVisible) { // Condicional
@@ -111,39 +111,39 @@ void RenderFrame() {
 
 ### Resultado:
 ? **Completado** (commit: 011270b)
-- Compilación limpia (CMake + MSBuild: 0 errores, 0 warnings)
-- Validación usuario: OK 100%
+- Compilaciï¿½n limpia (CMake + MSBuild: 0 errores, 0 warnings)
+- Validaciï¿½n usuario: OK 100%
 - F1 toggle funciona correctamente
 
 ### Impacto en Sprint:
 - **Progreso antes**: 62.5% (10/16 tareas)
-- **Progreso después**: 75.0% (12/16 tareas)
+- **Progreso despuï¿½s**: 75.0% (12/16 tareas)
 - **Ganancia**: +12.5% (+2 tareas: DEV-001 cuenta como tarea completada)
-- **H4.1-H4.5**: Pueden continuar sobre base sólida AAA
+- **H4.1-H4.5**: Pueden continuar sobre base sï¿½lida AAA
 
 ### Lecciones Aprendidas:
-1. **Auditoría post-tarea crítica obligatoria**
-   - Después de H2.3, revisar si cumple estándares AAA
+1. **Auditorï¿½a post-tarea crï¿½tica obligatoria**
+   - Despuï¿½s de H2.3, revisar si cumple estï¿½ndares AAA
    - No asumir que "funcional" = "correcto"
 
-2. **No esperar a H4 para detectar problemas arquitectónicos**
+2. **No esperar a H4 para detectar problemas arquitectï¿½nicos**
    - Validar arquitectura en cada hito (H1, H2, H3)
-   - Prevenir deuda técnica desde el inicio
+   - Prevenir deuda tï¿½cnica desde el inicio
 
-3. **"Hacer bien desde el principio" es más rápido**
+3. **"Hacer bien desde el principio" es mï¿½s rï¿½pido**
    - Pausar y refactorizar: 30 minutos
-   - Refactorizar después de H4: 2+ horas (código ya dependiente)
+   - Refactorizar despuï¿½s de H4: 2+ horas (cï¿½digo ya dependiente)
 
 ---
 ```
 
 ### Formato de ID
 
-- **DEV-XXX**: Desviación principal
-- **DEV-XXX.Y**: Subtarea de desviación
+- **DEV-XXX**: Desviaciï¿½n principal
+- **DEV-XXX.Y**: Subtarea de desviaciï¿½n
 
 **Ejemplos**:
-- `DEV-001`: Refactorización AAA UI
+- `DEV-001`: Refactorizaciï¿½n AAA UI
 - `DEV-001.1`: Condicional IsUIVisible()
 - `DEV-001.2`: DockSpaceOverViewport()
 
@@ -155,18 +155,18 @@ void RenderFrame() {
 
 ```
 ???????????????????
-? 1. DETECTAR     ? ? Durante implementación de HX.Y
-?    DESVIACIÓN   ?
+? 1. DETECTAR     ? ? Durante implementaciï¿½n de HX.Y
+?    DESVIACIï¿½N   ?
 ???????????????????
         ?
 ???????????????????
-? 2. EVALUAR      ? ? ¿Bloquea sprint? ¿Viola pilares?
+? 2. EVALUAR      ? ? ï¿½Bloquea sprint? ï¿½Viola pilares?
 ?    CRITICIDAD   ?
 ???????????????????
         ?
-    ¿Crítica?
+    ï¿½Crï¿½tica?
     ?       ?
-  SÍ        NO
+  Sï¿½        NO
    ?         ?
 ??????  ???????????
 ?DEV ?  ? BACKLOG ?
@@ -182,12 +182,12 @@ void RenderFrame() {
 ???????????????????
         ?
 ???????????????????
-? 5. IMPLEMENTAR  ? ? Resolver desviación primero
-?    DESVIACIÓN   ?
+? 5. IMPLEMENTAR  ? ? Resolver desviaciï¿½n primero
+?    DESVIACIï¿½N   ?
 ???????????????????
         ?
 ???????????????????
-? 6. VALIDAR      ? ? Compilar + validación usuario
+? 6. VALIDAR      ? ? Compilar + validaciï¿½n usuario
 ???????????????????
         ?
 ???????????????????
@@ -205,33 +205,33 @@ void RenderFrame() {
 
 ## ?? PROCESO PASO A PASO
 
-### 1. Detectar Desviación
+### 1. Detectar Desviaciï¿½n
 
-**Ejemplo durante implementación**:
+**Ejemplo durante implementaciï¿½n**:
 ```markdown
-Implementando H2.3 - Integración DX12 backend
+Implementando H2.3 - Integraciï¿½n DX12 backend
 
 ? Problema detectado:
 ImGui se procesa SIEMPRE, incluso si m_uiVisible = false
 
-? ¿Es esto crítico?
+? ï¿½Es esto crï¿½tico?
 - Viola pilares AAA (hacer bien desde principio)
-- Bloqueará H4 (Editor Panels necesitan UI condicional)
+- Bloquearï¿½ H4 (Editor Panels necesitan UI condicional)
 - Afecta arquitectura core del proyecto
 
-? SÍ ? Es una desviación crítica
+? Sï¿½ ? Es una desviaciï¿½n crï¿½tica
 ```
 
 ### 2. Evaluar Criticidad
 
 **Checklist**:
-- [ ] ¿Bloquea tareas del sprint actual?
-- [ ] ¿Viola docs/MAIN.md o AAA_STANDARDS.md?
-- [ ] ¿Afecta tareas en progreso o próximas inmediatas?
-- [ ] ¿Impacta arquitectura core?
-- [ ] ¿Puede diferirse al siguiente sprint?
+- [ ] ï¿½Bloquea tareas del sprint actual?
+- [ ] ï¿½Viola docs/MAIN.md o AAA_STANDARDS.md?
+- [ ] ï¿½Afecta tareas en progreso o prï¿½ximas inmediatas?
+- [ ] ï¿½Impacta arquitectura core?
+- [ ] ï¿½Puede diferirse al siguiente sprint?
 
-**Decisión**:
+**Decisiï¿½n**:
 - **SI al menos UNA** de las primeras 4: `sprint_deviations.md`
 - **SI puede esperar**: `backlog.md`
 
@@ -239,12 +239,12 @@ ImGui se procesa SIEMPRE, incluso si m_uiVisible = false
 
 **Crear entrada DEV-XXX** con:
 - Tipo (Ajuste/Emergente/Deuda/Bloqueador)
-- Detectado en (qué tarea)
+- Detectado en (quï¿½ tarea)
 - Fecha
 - Prioridad
 - Contexto del problema
-- Justificación de criticidad
-- Decisión tomada
+- Justificaciï¿½n de criticidad
+- Decisiï¿½n tomada
 - Tareas derivadas (DEV-XXX.Y)
 
 ### 4. Pausar Tarea Actual
@@ -252,10 +252,10 @@ ImGui se procesa SIEMPRE, incluso si m_uiVisible = false
 **Actualizar daily.md**:
 ```markdown
 Hecho: H2.2 - TextureImporter implementation
-Siguiente: DEV-001 - Refactorización AAA UI (pausa de H2.3)
+Siguiente: DEV-001 - Refactorizaciï¿½n AAA UI (pausa de H2.3)
 ```
 
-### 5. Implementar Desviación
+### 5. Implementar Desviaciï¿½n
 
 **Resolver ANTES de continuar sprint**:
 - Implementar fix
@@ -269,8 +269,8 @@ Siguiente: DEV-001 - Refactorización AAA UI (pausa de H2.3)
 ```markdown
 ### Resultado:
 ? Completado (commit: abc123)
-- Compilación limpia
-- Validación usuario: OK 100%
+- Compilaciï¿½n limpia
+- Validaciï¿½n usuario: OK 100%
 - [Detalle resultado]
 ```
 
@@ -278,31 +278,31 @@ Siguiente: DEV-001 - Refactorización AAA UI (pausa de H2.3)
 
 **Reflejar trabajo realizado**:
 ```markdown
-Hecho: DEV-001 - Refactorización AAA UI (resuelto)
-Siguiente: H2.3 - Integración DX12 backend (retomar)
+Hecho: DEV-001 - Refactorizaciï¿½n AAA UI (resuelto)
+Siguiente: H2.3 - Integraciï¿½n DX12 backend (retomar)
 ```
 
 ### 8. Continuar Sprint
 
-**Retomar tarea original** (H2.3) sobre base sólida.
+**Retomar tarea original** (H2.3) sobre base sï¿½lida.
 
 ---
 
 ## ?? IMPACTO EN SPRINT
 
-### Cómo Contar Desviaciones en Progreso
+### Cï¿½mo Contar Desviaciones en Progreso
 
-**Opción A** (recomendada):
+**Opciï¿½n A** (recomendada):
 - DEV-XXX cuenta como **tarea completada** del sprint
 - Incrementa progreso: +1 tarea
-- Razón: Es trabajo real realizado
+- Razï¿½n: Es trabajo real realizado
 
-**Opción B**:
+**Opciï¿½n B**:
 - DEV-XXX NO cuenta en progreso oficial
 - Se registra como "overhead" del sprint
-- Razón: No estaba planificado inicialmente
+- Razï¿½n: No estaba planificado inicialmente
 
-**Este proyecto usa Opción A**.
+**Este proyecto usa Opciï¿½n A**.
 
 ### Ejemplo de Progreso
 
@@ -315,38 +315,38 @@ DEV-001 detectada y resuelta (+1 tarea real)
 ?
 Progreso actualizado: 12/16 (75.0%)
 
-Justificación: DEV-001 fue trabajo significativo que 
-mejoró la calidad del sprint, merece ser contado.
+Justificaciï¿½n: DEV-001 fue trabajo significativo que 
+mejorï¿½ la calidad del sprint, merece ser contado.
 ```
 
 ---
 
 ## ?? TIPOS DE DESVIACIONES
 
-### 1. Ajuste Arquitectónico
+### 1. Ajuste Arquitectï¿½nico
 ```markdown
 **Ejemplo**: Cambiar arquitectura de 2 a 3 capas
-**Impacto**: Afecta múltiples tareas futuras
+**Impacto**: Afecta mï¿½ltiples tareas futuras
 **Urgencia**: Alta (bloquea progreso)
 ```
 
 ### 2. Tarea Emergente Bloqueante
 ```markdown
-**Ejemplo**: Bug crítico descubierto durante implementación
+**Ejemplo**: Bug crï¿½tico descubierto durante implementaciï¿½n
 **Impacto**: Imposible continuar sin resolverlo
-**Urgencia**: Crítica (sprint no puede avanzar)
+**Urgencia**: Crï¿½tica (sprint no puede avanzar)
 ```
 
-### 3. Deuda Técnica Crítica
+### 3. Deuda Tï¿½cnica Crï¿½tica
 ```markdown
-**Ejemplo**: Código funcional pero no escalable
+**Ejemplo**: Cï¿½digo funcional pero no escalable
 **Impacto**: Afecta performance o estabilidad
 **Urgencia**: Media-Alta (puede causar problemas)
 ```
 
-### 4. Refactorización AAA
+### 4. Refactorizaciï¿½n AAA
 ```markdown
-**Ejemplo**: Código funcional pero no cumple estándares
+**Ejemplo**: Cï¿½digo funcional pero no cumple estï¿½ndares
 **Impacto**: Calidad del proyecto
 **Urgencia**: Media (pero importante para AAA)
 ```
@@ -362,7 +362,7 @@ mejoró la calidad del sprint, merece ser contado.
 Move-Item "docs/sprint_deviations_v1.9.0.md" "docs/sprints/"
 ```
 
-**Crear nuevo** `sprint_deviations.md` vacío:
+**Crear nuevo** `sprint_deviations.md` vacï¿½o:
 ```markdown
 # Sprint Deviations - vX.Y.Z
 
@@ -380,6 +380,6 @@ Move-Item "docs/sprint_deviations_v1.9.0.md" "docs/sprints/"
 
 ---
 
-**Versión**: 2.0  
-**Última actualización**: 2025-01-18  
+**Versiï¿½n**: 2.0  
+**ï¿½ltima actualizaciï¿½n**: 2025-01-18  
 **Proyecto**: Imagine Studio (C++ Game Engine)

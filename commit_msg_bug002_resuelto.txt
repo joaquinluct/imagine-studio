@@ -1,4 +1,4 @@
-docs: BUG-002 RESUELTO - Actualizar documentacion de bugs y fixes
+ï»¿docs: BUG-002 RESUELTO - Actualizar documentacion de bugs y fixes
 
 BUG-002 resuelto exitosamente con Intento 6 (eliminar GWLP_USERDATA y usar map estatico)
 
@@ -14,9 +14,9 @@ Validacion del usuario exitosa:
 Puntuacion del usuario: 10 de 10
 
 Archivos actualizados:
-- docs/sprint_bug_attempts.md: Añadir validacion exitosa de Intento 6
+- docs/sprint_bug_attempts.md: Aï¿½adir validacion exitosa de Intento 6
 - docs/sprint_bugs.md: Limpiar bugs pendientes (sin bugs activos)
-- docs/sprint_fix.md: Añadir FIX-002 completo con causa raiz y solucion
+- docs/sprint_fix.md: Aï¿½adir FIX-002 completo con causa raiz y solucion
 - docs/daily.md: Actualizar estado a BUG-002 RESUELTO
 
 Causa raiz confirmada:

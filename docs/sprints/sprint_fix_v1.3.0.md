@@ -1,43 +1,43 @@
-# Sprint Fix (v1.3.0)
+ï»¿# Sprint Fix (v1.3.0)
 
 Bugs resueltos durante el sprint activo.
 
 ---
 
-### FIX-001 - Clics de ratón sin efecto en UI de ImGui
+### FIX-001 - Clics de ratï¿½n sin efecto en UI de ImGui
 
 **ID Original**: BUG-001
 **Prioridad**: Alta
 **Fecha de entrada**: 2025-01-18
-**Fecha de resolución**: 2025-01-18
+**Fecha de resoluciï¿½n**: 2025-01-18
 
-**Descripción del problema**: 
+**Descripciï¿½n del problema**: 
 
-Los clics de ratón no tenían efecto en la UI de ImGui:
-- No cambia de menú al hacer clic
+Los clics de ratï¿½n no tenï¿½an efecto en la UI de ImGui:
+- No cambia de menï¿½ al hacer clic
 - No abre/cierra desplegables
-- No responde a interacción con controles
+- No responde a interacciï¿½n con controles
 
-La tecla F1 (toggle UI) sí funcionaba correctamente, indicando que el problema era específico de eventos de ratón.
+La tecla F1 (toggle UI) sï¿½ funcionaba correctamente, indicando que el problema era especï¿½fico de eventos de ratï¿½n.
 
-**Causa raíz identificada**:
+**Causa raï¿½z identificada**:
 
-La lógica en `Window::WndProc()` estaba **retornando inmediatamente** si `ImGui_ImplWin32_WndProcHandler()` retornaba un valor distinto de 0:
+La lï¿½gica en `Window::WndProc()` estaba **retornando inmediatamente** si `ImGui_ImplWin32_WndProcHandler()` retornaba un valor distinto de 0:
 
 ```cpp
-// ? INCORRECTO (código anterior)
+// ? INCORRECTO (cï¿½digo anterior)
 LRESULT imgui_result = ImGui_ImplWin32_WndProcHandler(hwnd_, message, wParam, lParam);
 if (imgui_result != 0)
     return imgui_result; // Retornar inmediatamente bloquea eventos
 ```
 
-Según la documentación oficial de ImGui, **el handler retorna 0 en la mayoría de casos** PERO sigue capturando y procesando eventos internamente. El código estaba bloqueando el procesamiento normal de mensajes cuando NO debía hacerlo.
+Segï¿½n la documentaciï¿½n oficial de ImGui, **el handler retorna 0 en la mayorï¿½a de casos** PERO sigue capturando y procesando eventos internamente. El cï¿½digo estaba bloqueando el procesamiento normal de mensajes cuando NO debï¿½a hacerlo.
 
-ImGui gestiona eventos de ratón/teclado actualizando internamente `io.WantCaptureMouse` e `io.WantCaptureKeyboard`, pero **el handler DEBE ser llamado siempre** sin importar su valor de retorno.
+ImGui gestiona eventos de ratï¿½n/teclado actualizando internamente `io.WantCaptureMouse` e `io.WantCaptureKeyboard`, pero **el handler DEBE ser llamado siempre** sin importar su valor de retorno.
 
-**Solución implementada**:
+**Soluciï¿½n implementada**:
 
-Eliminar la verificación del retorno de `ImGui_ImplWin32_WndProcHandler()` y permitir que el procesamiento normal de mensajes continúe:
+Eliminar la verificaciï¿½n del retorno de `ImGui_ImplWin32_WndProcHandler()` y permitir que el procesamiento normal de mensajes continï¿½e:
 
 ```cpp
 // ? CORRECTO
@@ -53,61 +53,61 @@ switch (message)
 
 **Archivos afectados**: 
 
-- `src/platform/Window.cpp` - Eliminar condición `if (imgui_result != 0) return imgui_result`
-- `CMakeLists.txt` - Añadir linkado de ImGui a `material_test` (compilación auxiliar)
+- `src/platform/Window.cpp` - Eliminar condiciï¿½n `if (imgui_result != 0) return imgui_result`
+- `CMakeLists.txt` - Aï¿½adir linkado de ImGui a `material_test` (compilaciï¿½n auxiliar)
 
-**Commit de resolución**: 80b7b7e
+**Commit de resoluciï¿½n**: 80b7b7e
 
-**Validación**:
-- ? Compilación 1 (CMake): 0 errores, 0 warnings
-- ? Compilación 2 (MSBuild): 0 errores, 0 warnings
+**Validaciï¿½n**:
+- ? Compilaciï¿½n 1 (CMake): 0 errores, 0 warnings
+- ? Compilaciï¿½n 2 (MSBuild): 0 errores, 0 warnings
 
 **Notas importantes**:
 
-- ?? **Lección aprendida**: `ImGui_ImplWin32_WndProcHandler()` debe llamarse **SIEMPRE** en el WndProc, sin verificar su retorno
+- ?? **Lecciï¿½n aprendida**: `ImGui_ImplWin32_WndProcHandler()` debe llamarse **SIEMPRE** en el WndProc, sin verificar su retorno
 - ?? El backend Win32 de ImGui gestiona eventos de forma pasiva: actualiza estado interno (`io.WantCaptureMouse`, etc.) pero NO bloquea mensajes de Windows
-- ?? Verificar siempre la documentación oficial de backends antes de asumir comportamientos
+- ?? Verificar siempre la documentaciï¿½n oficial de backends antes de asumir comportamientos
 
 **Referencias**:
 
 - ImGui Win32 backend: `external/imgui/backends/imgui_impl_win32.h`
-- Documentación oficial: https://github.com/ocornut/imgui/blob/master/backends/imgui_impl_win32.cpp
+- Documentaciï¿½n oficial: https://github.com/ocornut/imgui/blob/master/backends/imgui_impl_win32.cpp
 
 ---
 
-### FIX-002 - Click de ratón no funciona en UI ImGui (CreateWindowExW error 1400)
+### FIX-002 - Click de ratï¿½n no funciona en UI ImGui (CreateWindowExW error 1400)
 
 **ID Original**: BUG-002
-**Prioridad**: Crítica
+**Prioridad**: Crï¿½tica
 **Fecha de entrada**: 2025-01-18
-**Fecha de resolución**: 2025-01-18
+**Fecha de resoluciï¿½n**: 2025-01-18
 
-**Descripción del problema**: 
+**Descripciï¿½n del problema**: 
 
-Los clics de ratón no tenían efecto en la UI de ImGui:
-- No cambia de menú al hacer clic
+Los clics de ratï¿½n no tenï¿½an efecto en la UI de ImGui:
+- No cambia de menï¿½ al hacer clic
 - No abre/cierra desplegables
-- No responde a interacción con controles
-- Hover SÍ funciona (cambio de color enter/exit)
+- No responde a interacciï¿½n con controles
+- Hover Sï¿½ funciona (cambio de color enter/exit)
 - F1 toggle UI funciona correctamente
 
-**Síntomas confirmados por logs**:
+**Sï¿½ntomas confirmados por logs**:
 - ? Error 1400 (`ERROR_INVALID_WINDOW_HANDLE`) en `CreateWindowExW`
 - ? Fallback a clase `STATIC` permite arranque pero sin eventos de mouse
 - ? `WndProc` **NUNCA** recibe mensajes `WM_LBUTTONDOWN`/`WM_LBUTTONUP`
 - ? `WantCaptureMouse=1` cuando mouse sobre UI (ImGui detecta hover)
 - ? `io.MouseDown[0]=0` siempre (ImGui nunca recibe clicks)
 
-**Causa raíz identificada**:
+**Causa raï¿½z identificada**:
 
-El uso de `SetWindowLongPtr(GWLP_USERDATA)` en `WM_NCCREATE` causaba que Windows rechazara la creación de la ventana con error 1400. 
+El uso de `SetWindowLongPtr(GWLP_USERDATA)` en `WM_NCCREATE` causaba que Windows rechazara la creaciï¿½n de la ventana con error 1400. 
 
-**¿Por qué fallaba?**
+**ï¿½Por quï¿½ fallaba?**
 
-En `WndProcStatic`, el código intentaba guardar el puntero `Window*` en `GWLP_USERDATA` durante el mensaje `WM_NCCREATE`:
+En `WndProcStatic`, el cï¿½digo intentaba guardar el puntero `Window*` en `GWLP_USERDATA` durante el mensaje `WM_NCCREATE`:
 
 ```cpp
-// ? PROBLEMÁTICO (código anterior)
+// ? PROBLEMï¿½TICO (cï¿½digo anterior)
 LRESULT CALLBACK Window::WndProcStatic(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     if (message == WM_NCCREATE)
@@ -120,13 +120,13 @@ LRESULT CALLBACK Window::WndProcStatic(HWND hWnd, UINT message, WPARAM wParam, L
 }
 ```
 
-**El problema**: `WM_NCCREATE` ocurre **ANTES** de que la ventana esté completamente inicializada. Al intentar modificar `GWLP_USERDATA` prematuramente, Windows detectaba un problema y rechazaba la creación con error 1400.
+**El problema**: `WM_NCCREATE` ocurre **ANTES** de que la ventana estï¿½ completamente inicializada. Al intentar modificar `GWLP_USERDATA` prematuramente, Windows detectaba un problema y rechazaba la creaciï¿½n con error 1400.
 
-**Solución implementada (Intento #6)**:
+**Soluciï¿½n implementada (Intento #6)**:
 
-Eliminar completamente el uso de `GWLP_USERDATA` y reemplazar con un `std::map<HWND, Window*>` estático:
+Eliminar completamente el uso de `GWLP_USERDATA` y reemplazar con un `std::map<HWND, Window*>` estï¿½tico:
 
-**1. En `Window.h` - Añadir map estático:**
+**1. En `Window.h` - Aï¿½adir map estï¿½tico:**
 ```cpp
 class Window {
     // ...existing code...
@@ -149,7 +149,7 @@ hwnd_ = CreateWindowExW(
     nullptr  // ?? NO pasar 'this' (evita problemas con WM_NCCREATE)
 );
 
-// Registrar asociación DESPUÉS de creación exitosa
+// Registrar asociaciï¿½n DESPUï¿½S de creaciï¿½n exitosa
 if (hwnd_) {
     s_windowMap[hwnd_] = this;  // ?
 }
@@ -170,45 +170,45 @@ LRESULT CALLBACK Window::WndProcStatic(HWND hWnd, UINT message, WPARAM wParam, L
 
 **Archivos afectados**: 
 
-- `src/platform/Window.h` - Añadir `s_windowMap` estático
+- `src/platform/Window.h` - Aï¿½adir `s_windowMap` estï¿½tico
 - `src/platform/Window.cpp` - Implementar map, eliminar `GWLP_USERDATA`, simplificar `WndProcStatic`
 - `docs/sprint_bug_attempts.md` - **Nuevo archivo** con tracking completo de todos los intentos
 - `docs/sprint_bugs.md` - Estado actualizado
 
-**Intentos de solución previos**:
+**Intentos de soluciï¿½n previos**:
 
-1. **Intento #1-3**: Corregir inicialización de ImGui y atlas de fuentes (parcial)
-2. **Intento #4**: Añadir logs detallados ? Diagnóstico exitoso (identificó que eventos no llegaban a WndProc)
-3. **Intento #5**: Corregir registro de clase y eliminar fallback STATIC (error 1400 persistió)
-4. **Intento #6**: Eliminar `GWLP_USERDATA` y usar map estático ? ? **ÉXITO**
+1. **Intento #1-3**: Corregir inicializaciï¿½n de ImGui y atlas de fuentes (parcial)
+2. **Intento #4**: Aï¿½adir logs detallados ? Diagnï¿½stico exitoso (identificï¿½ que eventos no llegaban a WndProc)
+3. **Intento #5**: Corregir registro de clase y eliminar fallback STATIC (error 1400 persistiï¿½)
+4. **Intento #6**: Eliminar `GWLP_USERDATA` y usar map estï¿½tico ? ? **ï¿½XITO**
 
-**Commits de resolución**: 
-- `07fc72c` - Intento #5 (eliminación de fallback)
-- `9cd5a85` - Intento #6 (solución final)
+**Commits de resoluciï¿½n**: 
+- `07fc72c` - Intento #5 (eliminaciï¿½n de fallback)
+- `9cd5a85` - Intento #6 (soluciï¿½n final)
 
-**Validación del usuario (2025-01-18)**:
+**Validaciï¿½n del usuario (2025-01-18)**:
 
-Usuario reportó: **"Ole ole ole!! (Aplausos). Puntuación sobre 10: 10 de 10!! ole!"**
+Usuario reportï¿½: **"Ole ole ole!! (Aplausos). Puntuaciï¿½n sobre 10: 10 de 10!! ole!"**
 
-1. ? Ejecución sin errores
+1. ? Ejecuciï¿½n sin errores
 2. ? F1/Toggle UI perfecta
-3. ? Uso del ratón sobre la UI perfecto (hover, click)
-4. ? Todos los menús y submenús funcionan correctamente
+3. ? Uso del ratï¿½n sobre la UI perfecto (hover, click)
+4. ? Todos los menï¿½s y submenï¿½s funcionan correctamente
 5. ? Click en todas las opciones funciona
-6. ? Cajas de texto funcionan (teclado también funciona)
+6. ? Cajas de texto funcionan (teclado tambiï¿½n funciona)
 7. ? Salida del programa (ESC) limpia y sin errores
 
 **Notas importantes**:
 
-- ?? **NUNCA se modificó código en `external/imgui/`** - Se siguió la política de `docs/THIRD_PARTY.md`
-- ?? **Lección aprendida CRÍTICA**: **NUNCA** usar `SetWindowLongPtr(GWLP_USERDATA)` en `WM_NCCREATE`
-- ? **SIEMPRE** usar un map/diccionario estático para asociar `HWND` con instancias de clase
-- ? Registrar la asociación **DESPUÉS** de que `CreateWindowExW` retorne exitosamente
-- ?? El map estático es más robusto y no depende del timing interno de Windows
-- ?? El proceso de debugging sistemático con logs fue CRÍTICO para identificar la causa raíz
+- ?? **NUNCA se modificï¿½ cï¿½digo en `external/imgui/`** - Se siguiï¿½ la polï¿½tica de `docs/THIRD_PARTY.md`
+- ?? **Lecciï¿½n aprendida CRï¿½TICA**: **NUNCA** usar `SetWindowLongPtr(GWLP_USERDATA)` en `WM_NCCREATE`
+- ? **SIEMPRE** usar un map/diccionario estï¿½tico para asociar `HWND` con instancias de clase
+- ? Registrar la asociaciï¿½n **DESPUï¿½S** de que `CreateWindowExW` retorne exitosamente
+- ?? El map estï¿½tico es mï¿½s robusto y no depende del timing interno de Windows
+- ?? El proceso de debugging sistemï¿½tico con logs fue CRï¿½TICO para identificar la causa raï¿½z
 
 **Referencias**:
 
-- `docs/THIRD_PARTY.md` - Política sobre bibliotecas externas
+- `docs/THIRD_PARTY.md` - Polï¿½tica sobre bibliotecas externas
 - `docs/sprint_bug_attempts.md` - Tracking completo de todos los intentos (nuevo archivo)
 - Win32 API Documentation: https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw
