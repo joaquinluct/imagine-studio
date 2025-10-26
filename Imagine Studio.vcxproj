@@ -207,6 +207,7 @@
     <None Include="docs\THIRD_PARTY.md" />
     <None Include="examples\scene1\README.md" />
     <None Include="examples\scene1\scene.json" />
+    <None Include="external\stb\README.md" />
     <None Include="mcp-server\package.json" />
     <None Include="mcp-server\QUICKSTART.md" />
     <None Include="mcp-server\README.md" />
@@ -220,9 +221,10 @@
     <None Include="tools\reorder_includes.py" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\assets\TextureImporter.cpp" />
+    <ClCompile Include="external\stb\stb_image_impl.cpp" />
     <ClCompile Include="src\assets\AssetDatabase.cpp" />
     <ClCompile Include="src\assets\AssetManager.cpp" />
+    <ClCompile Include="src\assets\TextureImporter.cpp" />
     <ClCompile Include="src\assets\VFS.cpp" />
     <ClCompile Include="src\editor\EditorUI.cpp" />
     <ClCompile Include="src\editor\Viewport.cpp" />
@@ -261,13 +263,11 @@
     <ClCompile Include="external\imgui\imgui_widgets.cpp" />
     <ClCompile Include="external\imgui\backends\imgui_impl_dx12.cpp" />
     <ClCompile Include="external\imgui\backends\imgui_impl_win32.cpp" />
-    <ClCompile Include="external\stb\stb_image_impl.cpp" />
-    <ClCompile Include="external\imgui\imgui_demo.cpp" />
-  </ItemGroup>
+    <ClCompile Include="external\imgui\imgui_demo.cpp" /></ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\assets\TextureImporter.h" />
     <ClInclude Include="src\assets\AssetDatabase.h" />
     <ClInclude Include="src\assets\AssetManager.h" />
+    <ClInclude Include="src\assets\TextureImporter.h" />
     <ClInclude Include="src\assets\VFS.h" />
     <ClInclude Include="src\core\Assert.h" />
     <ClInclude Include="src\core\Log.h" />
