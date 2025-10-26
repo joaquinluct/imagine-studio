@@ -4,12 +4,12 @@
 
 ---
 
-## ? QUICK START (Read Once)
+## 🚀 QUICK START (Read Once)
 
 **First session**: Read these **once**:
 1. [`docs/MAIN.md`](../docs/MAIN.md) - Project pillars & AAA standards  
 2. [`docs/methodology/CORE.md`](../docs/methodology/CORE.md) - Methodology fundamentals
-3. **[`.github/autogen-context.md`](autogen-context.md) - AutoGen multi-agent system** ? **NEW**
+3. **[`.github/autogen-context.md`](autogen-context.md) - AutoGen multi-agent system** 🆕 **NEW**
 
 **Every session**: Check:
 1. [`docs/daily.md`](../docs/daily.md) - Last task + current task  
@@ -17,7 +17,7 @@
 
 ---
 
-## ?? AUTOGEN MULTI-AGENT SYSTEM
+## 🤖 AUTOGEN MULTI-AGENT SYSTEM
 
 **When working with AutoGen** (tasks in `autogen/`):
 - Read: [`.github/autogen-context.md`](autogen-context.md) for complete context
@@ -122,6 +122,65 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 
 ---
 
+## 💾 GIT COMMIT WORKFLOW - **CRITICAL**
+
+### ⚠️ NEVER RETRY FAILED COMMITS WITH SAME COMMAND
+
+**PowerShell parses special characters differently than Git**. If a commit fails, **STOP IMMEDIATELY** and use the **CORRECT** method below.
+
+### ✅ CORRECT METHOD (Multiple -m flags):
+
+```powershell
+git add -A
+git commit -m "feat(scope): Short title" `
+           -m "Detail line 1" `
+           -m "Detail line 2" `
+           -m "Refs: H1 Sprint v2.0.0"
+Write-Host "Commit realizado"
+```
+
+**Why this works**:
+- Each `-m` flag is a separate argument (no parsing issues)
+- PowerShell backticks (`) allow multi-line commands
+- No special characters in strings
+
+### ❌ WRONG METHODS (DO NOT USE):
+
+```powershell
+# ❌ WRONG 1: Here-string with $msg variable
+$msg = @"
+feat(scope): Title
+- Line with (parentheses)
+"@
+git commit -m $msg  # ❌ PowerShell parses parentheses as code
+
+# ❌ WRONG 2: Single -m with line breaks
+git commit -m "Line 1
+Line 2"  # ❌ PowerShell splits on newlines
+
+# ❌ WRONG 3: Escaped quotes
+git commit -m "feat(scope): \"Title\""  # ❌ Complex escaping
+```
+
+### 📝 COMMIT FORMAT (Multiple -m):
+
+```powershell
+git commit -m "feat(materials): H1 completada - Material Core" `
+           -m "Material.h, Material.cpp, MaterialInstance created" `
+           -m "Texturas PBR copiadas (6 materiales)" `
+           -m "Compilacion limpia: 0 errores, 0 warnings" `
+           -m "Refs: H1 Sprint v2.0.0"
+```
+
+### 🔥 IF COMMIT FAILS:
+
+1. **STOP** - Do NOT retry same command
+2. Use multiple `-m` flags (method above)
+3. If still fails, use `git commit` (opens editor)
+4. **NEVER** waste tokens retrying PowerShell parsing errors
+
+---
+
 ## 🔴 CRITICAL ERRORS AND FIXES
 
 ### LNK2005: Multiple `main()` Definitions
@@ -214,7 +273,7 @@ fatal error LNK1169: se encontraron uno o más símbolos definidos simultáneame
 
 ---
 
-## ?? FILE STRUCTURE
+## 📂 FILE STRUCTURE
 
 | File | Purpose | When |
 |------|---------|------|
@@ -229,7 +288,7 @@ fatal error LNK1169: se encontraron uno o más símbolos definidos simultáneame
 
 ---
 
-## ?? CRITICAL RULES
+## ⚠️ CRITICAL RULES
 
 ### 1. Never Modify `external/`
 - Third-party libraries are **READ-ONLY**
@@ -273,21 +332,26 @@ fatal error LNK1169: se encontraron uno o más símbolos definidos simultáneame
 - **Avoid**: `BUILD_SUCCESS` in prompts (causes premature termination)
 - See: [`autogen/TERMINATION_FIX.md`](../autogen/TERMINATION_FIX.md)
 
+### 8. Git Commits with Special Characters
+- **ALWAYS** use multiple `-m` flags (see "GIT COMMIT WORKFLOW" section)
+- **NEVER** retry failed commits with same command
+- **NEVER** use here-strings or complex escaping
+
 ---
 
-## ?? ADVANCED TOPICS
+## 🔧 ADVANCED TOPICS
 
 **Only read when needed**:
-- Bug management ? [`docs/methodology/BUGS.md`](../docs/methodology/BUGS.md)
-- IA sessions (85% limit) ? [`docs/methodology/SESSIONS.md`](../docs/methodology/SESSIONS.md)
-- Sprint deviations ? [`docs/methodology/DEVIATIONS.md`](../docs/methodology/DEVIATIONS.md)
-- Full workflow ? [`docs/methodology/WORKFLOW.md`](../docs/methodology/WORKFLOW.md)
-- **AutoGen setup** ? [`autogen/SETUP.md`](../autogen/SETUP.md)
-- **AutoGen workflow** ? [`autogen/WORKFLOW_COMPLETE.md`](../autogen/WORKFLOW_COMPLETE.md)
+- Bug management → [`docs/methodology/BUGS.md`](../docs/methodology/BUGS.md)
+- IA sessions (85% limit) → [`docs/methodology/SESSIONS.md`](../docs/methodology/SESSIONS.md)
+- Sprint deviations → [`docs/methodology/DEVIATIONS.md`](../docs/methodology/DEVIATIONS.md)
+- Full workflow → [`docs/methodology/WORKFLOW.md`](../docs/methodology/WORKFLOW.md)
+- **AutoGen setup** → [`autogen/SETUP.md`](../autogen/SETUP.md)
+- **AutoGen workflow** → [`autogen/WORKFLOW_COMPLETE.md`](../autogen/WORKFLOW_COMPLETE.md)
 
 ---
 
-## ??? TROUBLESHOOTING
+## 🆘 TROUBLESHOOTING
 
 **Build fails?**
 1. Check solution exists: `Get-ChildItem *.sln`
@@ -307,9 +371,14 @@ fatal error LNK1169: se encontraron uno o más símbolos definidos simultáneame
 - Verify: AutoGen Studio running from project root
 - Check: Team has `WORKFLOW_FINISHED_OK` termination (not `BUILD_SUCCESS`)
 
+**Git commit fails?**
+- **STOP** retrying same command
+- Use multiple `-m` flags (see "GIT COMMIT WORKFLOW" section)
+- If desperate, use `git commit` (opens editor)
+
 ---
 
-## ?? PREFERENCES
+## 🎯 PREFERENCES
 
 - **Quality first**: No temporary/incomplete solutions
 - **AAA standards**: Every module production-ready from start
@@ -319,7 +388,7 @@ fatal error LNK1169: se encontraron uno o más símbolos definidos simultáneame
 
 ---
 
-## ?? SPRINT VERSIONING
+## 📦 SPRINT VERSIONING
 
 **Active sprint files**:
 - `docs/sprint.md`, `sprint_histories.md`, `sprint_tasks.md`
@@ -337,8 +406,8 @@ Copy-Item "autogen/sessions/*_success.md" "docs/sprints/sprint_v<version>_autoge
 ```
 
 ---
-**Version**: 2.1  
-**Last update**: 2025-01-18  
+**Version**: 2.2  
+**Last update**: 2025-01-21  
 **Full methodology**: [`docs/methodology/CORE.md`](../docs/methodology/CORE.md)  
 **AutoGen context**: [`.github/autogen-context.md`](autogen-context.md)  
 **Templates (for other projects)**: [`docs/templates/`](../docs/templates/)
