@@ -264,3 +264,16 @@ if (EXISTS ${TEXTURE_IMP_TEST_FILE})
         target_link_libraries(texture_importer_test PRIVATE stb_image)
     endif()
 endif()
+
+# MeshImporter Tests
+set(MESH_IMP_TEST_FILE "${CMAKE_SOURCE_DIR}/tests/mesh_importer_test.cpp")
+if (EXISTS ${MESH_IMP_TEST_FILE})
+    add_executable(mesh_importer_test ${MESH_IMP_TEST_FILE})
+    target_include_directories(mesh_importer_test PRIVATE ${CMAKE_SOURCE_DIR}/src)
+    # Include MeshImporter source
+    target_sources(mesh_importer_test PRIVATE "${CMAKE_SOURCE_DIR}/src/assets/MeshImporter.cpp")
+    target_compile_definitions(mesh_importer_test PRIVATE BUILD_TEST_EXE)
+    if (MSVC)
+        target_link_libraries(mesh_importer_test PRIVATE Msimg32)
+    endif()
+endif()
