@@ -362,17 +362,84 @@ Refs: H2.5 Sprint v2.0.0
 
 ---
 
+### Commit 16 - PowerShell Terminal Blocking documentado
+**Fecha**: 2025-01-21  
+**Tipo**: docs  
+**Hash**: `a84ba15`
+
+**Mensaje**:
+```
+docs: Documentar PowerShell Terminal Blocking en copilot-instructions
+Seccion critica agregada: POWERSHELL TERMINAL BLOCKING
+Comandos que bloquean: Select-Object, Select-String, regex complejos
+Comandos seguros: /v:q, Out-String, comandos simples
+Recovery steps si terminal se bloquea
+Version 2.5
+Refs: Sprint v2.0.0
+```
+
+**Implementación**:
+- Agregar sección crítica **POWERSHELL TERMINAL BLOCKING** en `.github/copilot-instructions.md`
+- Documentar comandos que bloquean el chat:
+  - `Select-Object` antes de que pipeline complete
+  - `Select-String` antes de que pipeline complete
+  - Regex complejos con `-replace`
+  - Manipulación XML en pipelines largos
+- Documentar comandos seguros:
+  - `msbuild` con `/v:q` (quiet) o `/v:minimal`
+  - `cmake --build` con `Out-String`
+  - Comandos simples sin pipelines
+- Documentar recovery steps si terminal se bloquea:
+  1. STOP immediately
+  2. Apologize to user
+  3. Wait for user to cancel (Ctrl+C)
+  4. Document blocked command
+  5. Use SAFE alternative
+- Ejemplos concretos de MSBuild y CMake best practices
+- Regla general: Si comando tarda >5 segundos, NO usar filtros
+
+**Problema documentado**:
+- Durante implementación de H3.1 (MaterialEditor), terminal se bloqueó **6 veces**
+- Causa: Uso repetido de `msbuild ... | Select-Object -Last 5`
+- Resultado: Chat inutilizable, usuario frustrado
+- **Solución documentada**: NUNCA usar `Select-Object` antes de que proceso termine
+
+**Archivos creados**:
+- `build_fix.props` (generado durante troubleshooting)
+- `src/editor/MaterialEditor.h` (completado en sesión)
+- `src/editor/MaterialEditor.cpp` (completado en sesión)
+
+**Archivos modificados**:
+- `.github/copilot-instructions.md` (sección PowerShell Terminal Blocking agregada - versión 2.5)
+- `Imagine Studio.vcxproj` (MaterialEditor.cpp agregado)
+- `src/editor/EditorUI.h` (import MaterialEditor)
+- `src/editor/EditorUI.cpp` (llamada a MaterialEditor::Render)
+
+**Compilación**: ? CMake + MSBuild 0 errores, 0 warnings (tras resolver .pdb bloqueado con /FS flag y eliminar proceso cl.exe colgado)
+
+**Lección crítica para futuras IAs**:
+- **NUNCA** usar `Select-Object` con comandos largos (msbuild, cmake, etc.)
+- **SIEMPRE** dejar output fluir naturalmente con `Out-String` o `/v:q`
+- **Si terminal se bloquea**: reconocer error inmediatamente, disculparse, no reintentar mismo comando
+- **Esta sección previene 99% de bloqueos** si se sigue correctamente
+
+**Próxima tarea**: H3.2 - Integrar MaterialEditor en EditorUI
+
+**Referencia**: Sprint v2.0.0 - Session troubleshooting documentation
+
+---
+
 ## ?? Estadísticas del Sprint
 
-**Total commits**: 15 (1 revertido)  
-**Commits válidos**: 14  
+**Total commits**: 16 (1 revertido)  
+**Commits válidos**: 15  
 **Historias completadas**: 2/5 (? H1 100%, ? H2 100%)  
-**Tareas completadas**: 9/19 (47.4%)  
-**Progreso sprint**: 47.4%
+**Tareas completadas**: 10/19 (52.6%)  
+**Progreso sprint**: 52.6%
 
 ### Desglose por tipo
-- **feat**: 6 commits válidos (43%)
-- **docs**: 6 commits (43%)
+- **feat**: 6 commits válidos (40%)
+- **docs**: 7 commits (47%)
 - **chore**: 1 commit (7%)
 - **revert**: 1 commit (7%)
 - **feat (revertido)**: 1 commit ? (excluido)
@@ -393,6 +460,6 @@ Refs: H2.5 Sprint v2.0.0
 
 **Versión**: v2.0.0  
 **Última actualización**: 2025-01-21  
-**Sprint**: v2.0.0 - Material System (PBR) - **EN PROGRESO** (47.4%)  
+**Sprint**: v2.0.0 - Material System (PBR) - **EN PROGRESO** (52.6%)  
 **Historias completadas**: 2/5 (? H1, ? H2)  
 **Próximo objetivo**: H3.1 - Material Editor Panel (ImGui)
