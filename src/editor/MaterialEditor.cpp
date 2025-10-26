@@ -18,12 +18,12 @@ void MaterialEditor::Render()
     // Create Material Editor window (dockable panel)
     ImGui::Begin("Material Editor", nullptr);
     
-    // Placeholder: Título y descripción
+    // Título y descripción
     ImGui::TextColored(ImVec4(0, 1, 1, 1), "Material Editor");
     ImGui::Text("Create and edit PBR materials");
     ImGui::Separator();
     
-    // Placeholder: Botón "New Material"
+    // Botón "New Material"
     if (ImGui::Button("New Material"))
     {
         CORE_LOG_INFO("MaterialEditor: New Material button clicked (placeholder)");
@@ -31,7 +31,7 @@ void MaterialEditor::Render()
     
     ImGui::SameLine();
     
-    // Placeholder: Botón "Save Material"
+    // Botón "Save Material"
     if (ImGui::Button("Save Material"))
     {
         CORE_LOG_INFO("MaterialEditor: Save Material button clicked (placeholder)");
@@ -39,34 +39,33 @@ void MaterialEditor::Render()
     
     ImGui::Separator();
     
-    // Placeholder: Material properties section
+    // Sección de propiedades del material
     if (ImGui::CollapsingHeader("Material Properties", ImGuiTreeNodeFlags_DefaultOpen))
     {
         // Albedo color picker
-        static float albedoColor[4] = {1.0f, 1.0f, 1.0f, 1.0f}; // White default
+        static float albedoColor[4] = {1.0f, 1.0f, 1.0f, 1.0f}; // Blanco por defecto
         ImGui::ColorEdit4("Albedo Color", albedoColor);
         
-        // Metallic slider
-        static float metallic = 0.0f; // Default: non-metallic
+        // Deslizadores de Metallic y Roughness
+        static float metallic = 0.0f; // Por defecto: no metálico
         ImGui::SliderFloat("Metallic", &metallic, 0.0f, 1.0f);
         
-        // Roughness slider
-        static float roughness = 0.5f; // Default: medium roughness
+        static float roughness = 0.5f; // Por defecto: rugosidad media
         ImGui::SliderFloat("Roughness", &roughness, 0.0f, 1.0f);
     }
     
     ImGui::Separator();
     
-    // Placeholder: Texture slots section
+    // Sección de slots de textura con drag & drop
     if (ImGui::CollapsingHeader("Texture Slots", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        // Helper lambda: Render texture slot with drag & drop
+        // Lambda para renderizar slot de textura con drag & drop
         auto RenderTextureSlot = [](const char* label, const char* slotID, std::string& texturePath)
         {
             ImGui::Text("%s:", label);
             ImGui::SameLine();
             
-            // Button label: show texture name or "None"
+            // Label del botón: mostrar nombre de textura o "None"
             std::string buttonLabel = texturePath.empty() ? "None" : texturePath;
             buttonLabel += "##" + std::string(slotID);
             
@@ -82,12 +81,12 @@ void MaterialEditor::Render()
                 }
             }
             
-            // Drag & Drop Target
+            // Área de Drag & Drop
             if (ImGui::BeginDragDropTarget())
             {
                 if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_BROWSER_ITEM"))
                 {
-                    // Payload contains asset path (null-terminated string)
+                    // El payload contiene la ruta del asset (cadena null-terminated)
                     const char* droppedAsset = static_cast<const char*>(payload->Data);
                     texturePath = std::string(droppedAsset);
                     
@@ -96,7 +95,7 @@ void MaterialEditor::Render()
                 ImGui::EndDragDropTarget();
             }
             
-            // Right-click context menu: Clear texture
+            // Menú contextual de clic derecho: Borrar textura
             if (ImGui::BeginPopupContextItem(slotID))
             {
                 if (ImGui::MenuItem("Clear Texture"))
@@ -111,7 +110,7 @@ void MaterialEditor::Render()
             }
         };
         
-        // Render 5 texture slots with drag & drop
+        // Renderizar 5 slots de textura con drag & drop
         RenderTextureSlot("Albedo (t0)", "Albedo", s_albedoTexture);
         RenderTextureSlot("Normal (t1)", "Normal", s_normalTexture);
         RenderTextureSlot("Roughness (t2)", "Roughness", s_roughnessTexture);
@@ -121,8 +120,60 @@ void MaterialEditor::Render()
     
     ImGui::Separator();
     
-    // Placeholder: Preview section
-    ImGui::TextColored(ImVec4(1, 1, 0, 1), "Preview: Not implemented yet (H3.4)");
+    // Sección de vista previa (H3.4) - Marcador de posición visual con info del material
+    if (ImGui::CollapsingHeader("Preview", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        // Obtener propiedades actuales del material
+        static float albedoColor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+        static float metallic = 0.0f;
+        static float roughness = 0.5f;
+        
+        // Caja de vista previa (128x128 marcador de posición)
+        ImVec2 previewSize(128.0f, 128.0f);
+        ImVec2 cursorPos = ImGui::GetCursorScreenPos();
+        
+        // Dibujar fondo (simulación de patrón de tablero de ajedrez con color)
+        ImDrawList* drawList = ImGui::GetWindowDrawList();
+        
+        // Dibujar rectángulo coloreado representando el albedo del material
+        ImU32 albedoColorU32 = ImGui::ColorConvertFloat4ToU32(
+            ImVec4(albedoColor[0], albedoColor[1], albedoColor[2], albedoColor[3])
+        );
+        drawList->AddRectFilled(cursorPos, 
+            ImVec2(cursorPos.x + previewSize.x, cursorPos.y + previewSize.y), 
+            albedoColorU32);
+        
+        // Dibujar borde
+        drawList->AddRect(cursorPos, 
+            ImVec2(cursorPos.x + previewSize.x, cursorPos.y + previewSize.y), 
+            IM_COL32(255, 255, 255, 255));
+        
+        // Avanzar cursor
+        ImGui::Dummy(previewSize);
+        
+        // Información resumen de material
+        ImGui::Text("Material Properties:");
+        ImGui::BulletText("Albedo: (%.2f, %.2f, %.2f, %.2f)", 
+            albedoColor[0], albedoColor[1], albedoColor[2], albedoColor[3]);
+        ImGui::BulletText("Metallic: %.2f", metallic);
+        ImGui::BulletText("Roughness: %.2f", roughness);
+        
+        // Resumen de slots de textura
+        int textureCount = 0;
+        if (!s_albedoTexture.empty()) textureCount++;
+        if (!s_normalTexture.empty()) textureCount++;
+        if (!s_roughnessTexture.empty()) textureCount++;
+        if (!s_metallicTexture.empty()) textureCount++;
+        if (!s_aoTexture.empty()) textureCount++;
+        
+        ImGui::BulletText("Textures: %d/5 assigned", textureCount);
+        
+        ImGui::Separator();
+        
+        // Nota sobre la vista previa real (futura implementación)
+        ImGui::TextColored(ImVec4(1, 1, 0, 1), "Note: Real-time 3D preview will be implemented in future task");
+        ImGui::TextWrapped("Full preview requires render-to-texture with PBR lighting (deferred to H4 when materials are applied to meshes)");
+    }
     
     ImGui::End();
 }
