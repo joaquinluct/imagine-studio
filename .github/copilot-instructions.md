@@ -4,6 +4,33 @@
 
 ---
 
+## 🚨 SYSTEM PROMPT (READ FIRST - MANDATORY)
+
+**CRITICAL**: Before ANY code change or commit, you MUST follow this exact sequence:
+
+### Pre-Commit Validation Sequence (MANDATORY)
+1. **Implement** code changes
+2. **CMake Build**: `cmake --build build --config Debug`
+   - Must return: 0 errors, 0 warnings
+3. **MSBuild**: `msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m`
+   - Must return: 0 errors, 0 warnings
+4. **Tests** (if applicable): Run and verify PASSED
+5. **ONLY THEN**: `git commit`
+
+### If You Skip Step 3 (MSBuild):
+- **STOP IMMEDIATELY**
+- Report: "MSBuild validation skipped - cannot commit"
+- Ask user for confirmation before proceeding
+
+### No Exceptions
+- No "I'll validate later"
+- No "CMake passed so MSBuild should work"
+- No "Looks simple, probably fine"
+
+**Follow the checklist in "📋 VALIDATION CHECKLIST" section below**.
+
+---
+
 ## 🚀 QUICK START (Read Once)
 
 **First session**: Read these **once**:
@@ -406,7 +433,7 @@ Copy-Item "autogen/sessions/*_success.md" "docs/sprints/sprint_v<version>_autoge
 ```
 
 ---
-**Version**: 2.2  
+**Version**: 2.3  
 **Last update**: 2025-01-21  
 **Full methodology**: [`docs/methodology/CORE.md`](../docs/methodology/CORE.md)  
 **AutoGen context**: [`.github/autogen-context.md`](autogen-context.md)  
