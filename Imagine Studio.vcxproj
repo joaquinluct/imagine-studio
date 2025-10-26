@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -219,6 +219,7 @@
     <None Include="scripts\deploy-autogen-template.ps1" />
     <None Include="scripts\install-imgui.ps1" />
     <None Include="scripts\validate-no-tests-in-main.ps1" />
+    <None Include="src\assets\README_MESH_FORMAT.md" />
     <None Include="tools\reorder_includes.py" />
   </ItemGroup>
   <ItemGroup>
@@ -269,6 +270,8 @@
   <ItemGroup>
     <ClInclude Include="src\assets\AssetDatabase.h" />
     <ClInclude Include="src\assets\AssetManager.h" />
+    <ClInclude Include="src\assets\MeshData.h" />
+    <ClInclude Include="src\assets\MeshImporter.h" />
     <ClInclude Include="src\assets\TextureImporter.h" />
     <ClInclude Include="src\assets\VFS.h" />
     <ClInclude Include="src\core\Assert.h" />
@@ -308,8 +311,6 @@
     <ClInclude Include="src\ui\SimpleUI.h" />
     <ClInclude Include="src\ui\TextRenderer.h" />
     <ClInclude Include="src\ui\Win32TextRenderer.h" />
-    <ClInclude Include="src\assets\MeshData.h" />
-    <ClInclude Include="src\assets\MeshImporter.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt" />

@@ -218,10 +218,66 @@ struct MeshData {
 ---
 
 ### Tarea H3.2: Implementar OBJ parser
-**Estado**: ? Pendiente  
+**Estado**: ? Completada  
+**Fecha**: 2025-01-21  
 **Archivos afectados**: `src/assets/MeshImporter.cpp` (nuevo)
 
 **Descripción**: Parser de formato OBJ (v, vn, vt, f lines) ? MeshData.
+
+**Implementación completa** (~450 líneas):
+- Parser robusto con validación de errores
+- Soporte completo de formatos OBJ estándar
+- Triangulación automática de quads y n-gons
+- Thread-safe error handling
+
+**Funcionalidades**:
+1. **ImportOBJ(path)** - Parser completo de archivos OBJ
+   - Lee líneas v (positions), vn (normals), vt (texcoords), f (faces)
+   - Convierte índices 1-based (OBJ) a 0-based (C++)
+   - Soporte índices negativos (relativos al final)
+   - Validación de índices (rango válido)
+
+2. **Triangulación automática**:
+   - Triangles (3 vértices): 1 triángulo
+   - Quads (4 vértices): 2 triángulos (fan triangulation)
+   - N-gons (>4 vértices): N-2 triángulos (fan desde primer vértice)
+
+3. **Formatos de índices soportados**:
+   - `f v1 v2 v3` - Solo posiciones
+   - `f v1/vt1 v2/vt2 v3/vt3` - Posiciones + UVs
+   - `f v1/vt1/vn1 v2/vt2/vn2 v3/vt3/vn3` - Completo
+   - `f v1//vn1 v2//vn2 v3//vn3` - Sin UVs
+
+4. **Validación y error handling**:
+   - Verificar formato .obj
+   - Validar apertura de archivo
+   - Validar índices de posiciones/normals/UVs
+   - Error messages detallados con número de línea
+   - Exceptions std::runtime_error en caso de fallo
+
+5. **Logging automático**:
+   - Información de importación (nombre, path)
+   - Estadísticas (vertices, indices, triangles, memory)
+   - Warnings para líneas no parseables
+   - Errors para faces inválidas
+
+**Características técnicas**:
+- **Thread-safe**: `thread_local s_lastError`
+- **Default values**: Normals (0,1,0), UVs (0,0) si no presentes
+- **Bounding box**: Calculado automáticamente con CalculateBounds()
+- **Memory efficient**: Un solo pass, no realloc innecesarios
+
+**Ejemplo de output log**:
+```
+MeshImporter: Importing OBJ file: assets/meshes/cube.obj
+MeshImporter: Successfully imported mesh: cube
+  Vertices: 24
+  Indices: 36
+  Triangles: 12
+  Memory: 912 bytes
+```
+
+**Compilación**: 0 errores, 0 warnings (CMake + MSBuild) ?
 
 ---
 
@@ -322,7 +378,7 @@ struct MeshData {
 | H2 | H2.3 | DX12 Texture2D | ? Completada |
 | H2 | H2.4 | Testing TextureImporter | ? Completada |
 | H3 | H3.1 | MeshImporter.h | ? Completada |
-| H3 | H3.2 | OBJ parser | ? Pendiente |
+| H3 | H3.2 | OBJ parser | ? Completada |
 | H3 | H3.3 | DX12 buffers | ? Pendiente |
 | H3 | H3.4 | Testing MeshImporter | ? Pendiente |
 | H4 | H4.1 | AssetBrowser panel | ? Pendiente |
@@ -335,11 +391,11 @@ struct MeshData {
 | H5 | H5.4 | Testing Serializer | ? Pendiente |
 
 **Total**: 20 tareas  
-**Completadas**: 9/20 (45%)  
-**Pendientes**: 11/20 (55%)
+**Completadas**: 10/20 (50%)  
+**Pendientes**: 10/20 (50%)
 
 **Historias completadas**: 2/5 (40%) - ? H1, ? H2  
-**Historias en progreso**: 1/5 (20%) - ? H3 (1/4 tareas)
+**Historias en progreso**: 1/5 (20%) - ? H3 (2/4 tareas, 50%)
 
 ---
 
