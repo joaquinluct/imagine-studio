@@ -241,3 +241,18 @@ if (EXISTS ${ASSET_DB_TEST_FILE})
         target_link_libraries(asset_database_test PRIVATE Msimg32)
     endif()
 endif()
+
+# TextureImporter Tests
+set(TEXTURE_IMP_TEST_FILE "${CMAKE_SOURCE_DIR}/tests/texture_importer_test.cpp")
+if (EXISTS ${TEXTURE_IMP_TEST_FILE})
+    add_executable(texture_importer_test ${TEXTURE_IMP_TEST_FILE})
+    target_include_directories(texture_importer_test PRIVATE ${CMAKE_SOURCE_DIR}/src)
+    # Include TextureImporter source
+    target_sources(texture_importer_test PRIVATE "${CMAKE_SOURCE_DIR}/src/assets/TextureImporter.cpp")
+    target_compile_definitions(texture_importer_test PRIVATE BUILD_TEST_EXE)
+    if (MSVC)
+        target_link_libraries(texture_importer_test PRIVATE Msimg32)
+        # Link stb_image library
+        target_link_libraries(texture_importer_test PRIVATE stb_image)
+    endif()
+endif()
