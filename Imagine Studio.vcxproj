@@ -268,7 +268,8 @@
     <ClCompile Include="external\imgui\imgui_widgets.cpp" />
     <ClCompile Include="external\imgui\backends\imgui_impl_dx12.cpp" />
     <ClCompile Include="external\imgui\backends\imgui_impl_win32.cpp" />
-    <ClCompile Include="external\imgui\imgui_demo.cpp" /></ItemGroup>
+    <ClCompile Include="external\imgui\imgui_demo.cpp" />
+  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\assets\AssetDatabase.h" />
     <ClInclude Include="src\assets\AssetManager.h" />
@@ -365,8 +366,13 @@
     <Text Include="commit_sprint_v130_plan.txt" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="shaders\quad.hlsl">
+        <FxCompile Include="shaders\quad.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VSMain</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\pbr_vs.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">main</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
