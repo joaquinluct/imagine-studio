@@ -148,32 +148,51 @@ void AssetBrowser::RenderAssetItem(const char* assetName, const char* extension,
 
     ImGui::BeginGroup();
 
-    // Asset icon/thumbnail (placeholder colored button)
-    ImVec4 iconColor(0.3f, 0.3f, 0.3f, 1.0f);
+    // Asset thumbnail/icon (colored rectangle simulating texture preview)
+    ImVec4 thumbnailColor(0.3f, 0.3f, 0.3f, 1.0f);
     
-    // Color by type (compare C-strings with strcmp or manually)
+    // Color by type (simulating texture preview)
     if (extension[1] == 'p' && extension[2] == 'n' && extension[3] == 'g') {
-        iconColor = ImVec4(0.2f, 0.5f, 0.8f, 1.0f); // Blue for textures (.png)
+        // Blue gradient for textures (simulating image preview)
+        thumbnailColor = ImVec4(0.2f, 0.5f, 0.8f, 1.0f);
     } 
     else if (extension[1] == 'o' && extension[2] == 'b' && extension[3] == 'j') {
-        iconColor = ImVec4(0.5f, 0.2f, 0.8f, 1.0f); // Purple for meshes (.obj)
+        // Purple for meshes (wireframe icon)
+        thumbnailColor = ImVec4(0.5f, 0.2f, 0.8f, 1.0f);
     } 
     else if (extension[1] == 'h' && extension[2] == 'l' && extension[3] == 's') {
-        iconColor = ImVec4(0.8f, 0.5f, 0.2f, 1.0f); // Orange for shaders (.hlsl)
+        // Orange for shaders (code icon)
+        thumbnailColor = ImVec4(0.8f, 0.5f, 0.2f, 1.0f);
     }
 
-    ImGui::PushStyleColor(ImGuiCol_Button, iconColor);
+    // Draw thumbnail as colored rectangle (simulating image preview)
+    ImVec2 thumbnailMin = ImGui::GetCursorScreenPos();
+    ImVec2 thumbnailMax(thumbnailMin.x + m_thumbnailSize, thumbnailMin.y + m_thumbnailSize);
     
-    bool clicked = ImGui::Button("##icon", ImVec2(m_thumbnailSize, m_thumbnailSize));
+    ImDrawList* drawList = ImGui::GetWindowDrawList();
     
-    ImGui::PopStyleColor();
+    // Draw filled rectangle (thumbnail background)
+    drawList->AddRectFilled(thumbnailMin, thumbnailMax, ImGui::ColorConvertFloat4ToU32(thumbnailColor));
+    
+    // Draw border (darker)
+    ImVec4 borderColor(thumbnailColor.x * 0.5f, thumbnailColor.y * 0.5f, thumbnailColor.z * 0.5f, 1.0f);
+    drawList->AddRect(thumbnailMin, thumbnailMax, ImGui::ColorConvertFloat4ToU32(borderColor), 0.0f, 0, 2.0f);
+    
+    // Invisible button for interaction (same size as thumbnail)
+    ImGui::InvisibleButton("##thumbnail", ImVec2(m_thumbnailSize, m_thumbnailSize));
+    
+    bool clicked = ImGui::IsItemClicked();
+    bool hovered = ImGui::IsItemHovered();
 
-    // Selection highlight
+    // Hover effect (lighter border)
+    if (hovered) {
+        ImVec4 hoverColor(1.0f, 1.0f, 1.0f, 0.5f);
+        drawList->AddRect(thumbnailMin, thumbnailMax, ImGui::ColorConvertFloat4ToU32(hoverColor), 0.0f, 0, 3.0f);
+    }
+
+    // Selection highlight (yellow border)
     if (m_selectedAsset == assetName) {
-        ImDrawList* drawList = ImGui::GetWindowDrawList();
-        ImVec2 min = ImGui::GetItemRectMin();
-        ImVec2 max = ImGui::GetItemRectMax();
-        drawList->AddRect(min, max, IM_COL32(255, 255, 0, 255), 0.0f, 0, 2.0f); // Yellow border
+        drawList->AddRect(thumbnailMin, thumbnailMax, IM_COL32(255, 255, 0, 255), 0.0f, 0, 3.0f);
     }
 
     // Click to select
