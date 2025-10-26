@@ -1,59 +1,67 @@
 ﻿# Daily Log
 
-Hecho: H2.1 - Integrar stb_image library (quinta tarea Sprint v1.9.0, primera de Historia H2)
-Siguiente: H2.2 - Crear TextureImporter.h/cpp
+Hecho: H2.2 - Crear TextureImporter.h/cpp (sexta tarea Sprint v1.9.0)
+Siguiente: H2.3 - Crear DX12 Texture2D desde pixel data
 
 ## Ultima Sesion (2025-01-21)
 
-### H2.1 COMPLETADA - STB_IMAGE LIBRARY INTEGRADA ✅
+### H2.2 COMPLETADA - TEXTUREIMPORTER IMPLEMENTADO ✅
 
 **Logros de la sesion**:
-1. Descargado `stb_image.h` desde repositorio oficial (https://github.com/nothings/stb)
-2. Creada carpeta `external/stb/` con estructura:
-   - `stb_image.h` - Header de la librería (single-header)
-   - `stb_image_impl.cpp` - Archivo de implementación (#define STB_IMAGE_IMPLEMENTATION)
-   - `README.md` - Documentación completa de uso y API
-3. Actualizado `CMakeLists.txt`:
-   - Añadida librería `stb_image` como target STATIC
-   - Linked a `ImagineStudio` executable
-4. Actualizado `Imagine Studio.vcxproj`:
-   - Añadido `external/stb/stb_image_impl.cpp` al proyecto
+1. Creado `src/assets/TextureImporter.h` con:
+   - `TextureData` struct (pixels, width, height, channels, path)
+   - `TextureImporter` class (static methods)
+   - API completa: ImportTexture, ImportTextureRGBA, FreeTextureData, GetTextureInfo, IsSupportedFormat, GetLastError
+2. Creado `src/assets/TextureImporter.cpp` con implementación usando stb_image:
+   - ImportTexture() - Carga textura con canales configurables
+   - ImportTextureRGBA() - Fuerza formato RGBA (4 canales)
+   - FreeTextureData() - Libera memoria pixel data
+   - GetTextureInfo() - Obtiene dimensiones sin cargar
+   - IsSupportedFormat() - Verifica extensión de archivo
+   - GetLastError() - Obtiene último error de stb_image
+3. Helper function EndsWith() compatible con C++14 (reemplazo de std::string::ends_with de C++20)
+4. Actualizado `Imagine Studio.vcxproj` con nuevos archivos
 5. Compilación limpia: 0 errores, 0 warnings ✅
 
-**Formatos de imagen soportados**:
-- PNG (8-bit, 16-bit, paletted)
-- JPG/JPEG (baseline & progressive)
-- BMP (non-RLE)
-- TGA (Truevision Targa)
-- PSD (Photoshop composited view)
-- GIF (animated support)
-- HDR (Radiance RGBE)
-- PIC (Softimage)
-
-**API principal**:
+**API implementada**:
 ```cpp
-#include "external/stb/stb_image.h"
+// Cargar textura (desiredChannels: 0=original, 4=RGBA)
+TextureData data = TextureImporter::ImportTexture("brick.png", 4);
 
-int width, height, channels;
-unsigned char* data = stbi_load("texture.png", &width, &height, &channels, 4); // Force RGBA
+// Usar pixel data
+if (data.IsValid()) {
+    // data.pixels contiene RGBA (4 bytes por pixel)
+    // data.width x data.height píxeles
+    
+    // Liberar memoria
+    TextureImporter::FreeTextureData(data);
+}
 
-if (data) {
-    // Use pixel data...
-    stbi_image_free(data);
-} else {
-    const char* error = stbi_failure_reason();
+// Obtener info sin cargar
+int w, h, ch;
+if (TextureImporter::GetTextureInfo("texture.png", w, h, ch)) {
+    // Conoces dimensiones sin cargar pixel data
+}
+
+// Verificar formato soportado
+if (TextureImporter::IsSupportedFormat("image.png")) {
+    // PNG, JPG, BMP, TGA, PSD, GIF, HDR, PIC
 }
 ```
 
-**Beneficios**:
-- Soporte completo para PNG/JPG (formatos principales)
-- Single-header, fácil de integrar
-- Thread-safe (sin estado global)
-- Public domain license (sin restricciones)
-- Base sólida para TextureImporter (H2.2)
+**Formatos soportados**:
+- PNG, JPG/JPEG, BMP, TGA, PSD, GIF, HDR, PIC
 
-**Progreso Sprint v1.9.0**: 5/20 tareas completadas (25%)
-**Historia H2** iniciada (Texture Importer - 1/4 tareas)
+**Beneficios**:
+- Carga real de texturas desde disco
+- API limpia y fácil de usar
+- Manejo de errores con excepciones
+- Soporte para múltiples formatos
+- Compatible C++14
+- Base para DX12 Texture2D (H2.3)
+
+**Progreso Sprint v1.9.0**: 6/20 tareas completadas (30%)
+**Historia H2** en progreso (Texture Importer - 2/4 tareas)
 
 ---
 
@@ -64,13 +72,13 @@ if (data) {
 
 **Historias**:
 1. H1: Asset Database Core (tracking de assets) - **✅ COMPLETADA (4/4 tareas)**
-2. H2: Texture Importer (PNG/JPG a DX12) - **EN PROGRESO (1/4 tareas)**
+2. H2: Texture Importer (PNG/JPG a DX12) - **EN PROGRESO (2/4 tareas)**
 3. H3: Mesh Importer (OBJ a buffers)
 4. H4: Asset Browser Panel (editor UI)
 5. H5: Scene Serialization (save/load JSON)
 
 **Tareas**: 20 tareas (4 por historia)
-**Progreso**: 1/5 historias (20%), 5/20 tareas (25%)
+**Progreso**: 1/5 historias (20%), 6/20 tareas (30%)
 
 ---
 
@@ -81,7 +89,7 @@ if (data) {
 | v1.6.0 | Viewport AAA | CERRADO | 100% | 6/10 |
 | v1.7.0 | Performance Optimization | CERRADO | 100% | 7/10 |
 | v1.8.0 | Scene Graph & Entity System | CERRADO | 100% | 8/10 |
-| v1.9.0 | Asset System | EN PROGRESO | 25% | - |
+| v1.9.0 | Asset System | EN PROGRESO | 30% | - |
 
 **Proxima meta**: Calificacion AAA 9/10 al completar Asset System
 
@@ -89,31 +97,30 @@ if (data) {
 
 ### Proxima Tarea Automatica
 
-**H2.2: Crear TextureImporter.h/cpp**
+**H2.3: Crear DX12 Texture2D desde pixel data**
 
-**Objetivo**: Implementar clase TextureImporter con método ImportTexture(path) usando stb_image
+**Objetivo**: Añadir método CreateTexture2DFromData() en DX12ResourceManager para crear texturas DirectX 12 desde pixel data
 
 **Archivos afectados**: 
-- `src/assets/TextureImporter.h` (nuevo)
-- `src/assets/TextureImporter.cpp` (nuevo)
-- `Imagine Studio.vcxproj` (añadir archivos)
+- `src/renderer/DX12ResourceManager.h` (añadir método)
+- `src/renderer/DX12ResourceManager.cpp` (implementar upload de pixels a GPU)
 
 **Funcionalidad**:
-- ImportTexture(const std::string& path) - Cargar textura desde disco
-- Retornar TextureData struct (width, height, channels, pixel data)
-- Manejo de errores con excepciones/códigos de error
-- Soporte para PNG, JPG, BMP, TGA
+- CreateTexture2DFromData(pixels, width, height, format) - Crear ID3D12Resource
+- Upload de pixel data a GPU texture
+- Generación de mipmaps (opcional)
+- Retornar texture handle/pointer
 
-**Beneficio**: Carga de texturas desde disco, primer paso hacia assets visuales reales
+**Beneficio**: Texturas visuales reales en el renderer DirectX 12
 
 ---
 
 **Estado del proyecto**: 
 - 3 sprints cerrados (v1.6.0, v1.7.0, v1.8.0)
-- Sprint v1.9.0 en progreso (Asset System - 25%)
+- Sprint v1.9.0 en progreso (Asset System - 30%)
 - ✅ Historia H1 completada (Asset Database Core)
-- ⏳ Historia H2 en progreso (Texture Importer - 1/4 tareas)
+- ⏳ Historia H2 en progreso (Texture Importer - 2/4 tareas)
 - Calificacion AAA: 8/10
-- stb_image integrado, listo para importer
+- TextureImporter funcional, listo para DX12 integration
 
 

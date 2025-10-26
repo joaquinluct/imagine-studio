@@ -220,6 +220,7 @@
     <None Include="tools\reorder_includes.py" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\assets\TextureImporter.cpp" />
     <ClCompile Include="src\assets\AssetDatabase.cpp" />
     <ClCompile Include="src\assets\AssetManager.cpp" />
     <ClCompile Include="src\assets\VFS.cpp" />
@@ -264,6 +265,7 @@
     <ClCompile Include="external\imgui\imgui_demo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\assets\TextureImporter.h" />
     <ClInclude Include="src\assets\AssetDatabase.h" />
     <ClInclude Include="src\assets\AssetManager.h" />
     <ClInclude Include="src\assets\VFS.h" />

@@ -163,10 +163,49 @@ HISTORIA H2 INICIADA (Texture Importer - 1/4 tareas)
 Refs: H2.1 (Sprint v1.9.0)
 ```
 
+### Commit 6 - H2.2: TextureImporter implementado
+**Fecha**: 2025-01-21  
+**Tipo**: feat  
+**Archivos**:
+- `src/assets/TextureImporter.h` (nuevo)
+- `src/assets/TextureImporter.cpp` (nuevo)
+- `Imagine Studio.vcxproj` (añadir archivos)
+
+**Mensaje**:
+```
+feat(assets): Implementar TextureImporter con stb_image
+
+TextureImporter class (static methods):
+- ImportTexture(path, desiredChannels) - Cargar con canales configurables
+- ImportTextureRGBA(path) - Forzar formato RGBA (4 canales)
+- FreeTextureData(data) - Liberar memoria pixel data
+- GetTextureInfo(path, w, h, ch) - Obtener dimensiones sin cargar
+- IsSupportedFormat(path) - Verificar extensión (PNG, JPG, BMP, TGA, etc.)
+- GetLastError() - Obtener último error
+
+TextureData struct:
+- pixels (unsigned char*)
+- width, height, channels
+- path (original file path)
+- IsValid() helper
+
+Implementación:
+- Usa stb_image API (stbi_load, stbi_info, stbi_image_free)
+- EndsWith() helper para C++14 compatibility
+- Excepciones std::runtime_error en caso de fallo
+- Soporte PNG, JPG, BMP, TGA, PSD, GIF, HDR, PIC
+
+Compilación limpia: 0 errores, 0 warnings
+
+HISTORIA H2 en progreso (Texture Importer - 2/4 tareas)
+
+Refs: H2.2 (Sprint v1.9.0)
+```
+
 ---
 
 **Versión**: v1.0  
 **Última actualización**: 2025-01-21  
-**Sprint**: v1.9.0 - Asset System - **EN PROGRESO** (25%)  
+**Sprint**: v1.9.0 - Asset System - **EN PROGRESO** (30%)  
 **Historias completadas**: 1/5 (H1 ✅)  
-**Historias en progreso**: 1/5 (H2 - 1/4 tareas)
+**Historias en progreso**: 1/5 (H2 - 2/4 tareas)
