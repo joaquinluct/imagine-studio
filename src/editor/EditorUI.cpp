@@ -1,5 +1,6 @@
 ﻿#include "EditorUI.h"
-#include "Viewport.h"  // v1.5.0 H3.1
+#include "Viewport.h"       // v1.5.0 H3.1
+#include "AssetBrowser.h"   // v1.9.0 H4.1
 #include "../scene/Scene.h"
 #include "../scene/Entity.h"
 #include "../scene/Transform.h"
@@ -10,6 +11,9 @@ namespace Editor {
 
 // v1.5.0 H3.1 - Viewport singleton
 Viewport* EditorUI::s_viewport = nullptr;
+
+// v1.9.0 H4.1 - AssetBrowser singleton
+AssetBrowser* EditorUI::s_assetBrowser = nullptr;
 
 void EditorUI::RenderHierarchy(Scene::Scene* scene)
 {
@@ -192,6 +196,16 @@ void EditorUI::RenderViewport()
     }
 }
 
+void EditorUI::RenderAssetBrowser()
+{
+    // v1.9.0 H4.1 - Use real AssetBrowser class
+    AssetBrowser* assetBrowser = GetAssetBrowser();
+    if (assetBrowser)
+    {
+        assetBrowser->Render();
+    }
+}
+
 void EditorUI::RenderAllPanels(Scene::Scene* scene)
 {
     // Render all editor panels in order (H4.5)
@@ -199,6 +213,7 @@ void EditorUI::RenderAllPanels(Scene::Scene* scene)
     RenderInspector(scene);
     RenderConsole();
     RenderViewport();
+    RenderAssetBrowser(); // v1.9.0 H4.1
 }
 
 // v1.5.0 H3.1 - Get/create viewport singleton
@@ -209,6 +224,16 @@ Viewport* EditorUI::GetViewport()
         s_viewport = new Viewport();
     }
     return s_viewport;
+}
+
+// v1.9.0 H4.1 - Get/create asset browser singleton
+AssetBrowser* EditorUI::GetAssetBrowser()
+{
+    if (!s_assetBrowser)
+    {
+        s_assetBrowser = new AssetBrowser();
+    }
+    return s_assetBrowser;
 }
 
 } // namespace Editor

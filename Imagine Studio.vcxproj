@@ -229,6 +229,7 @@
     <ClCompile Include="src\assets\MeshImporter.cpp" />
     <ClCompile Include="src\assets\TextureImporter.cpp" />
     <ClCompile Include="src\assets\VFS.cpp" />
+    <ClCompile Include="src\editor\AssetBrowser.cpp" />
     <ClCompile Include="src\editor\EditorUI.cpp" />
     <ClCompile Include="src\editor\Viewport.cpp" />
     <ClCompile Include="src\examples\ExampleRunner.cpp" />
@@ -278,6 +279,7 @@
     <ClInclude Include="src\core\Assert.h" />
     <ClInclude Include="src\core\Log.h" />
     <ClInclude Include="src\core\Types.h" />
+    <ClInclude Include="src\editor\AssetBrowser.h" />
     <ClInclude Include="src\editor\EditorUI.h" />
     <ClInclude Include="src\editor\Viewport.h" />
     <ClInclude Include="src\jobs\TaskGraph.h" />

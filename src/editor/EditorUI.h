@@ -8,8 +8,11 @@ namespace Editor {
 // Forward declaration (v1.5.0 H3.1)
 class Viewport;
 
+// Forward declaration (v1.9.0 H4.1)
+class AssetBrowser;
+
 /// <summary>
-/// EditorUI - Renders all editor panels (Hierarchy, Inspector, Console, Viewport)
+/// EditorUI - Renders all editor panels (Hierarchy, Inspector, Console, Viewport, Asset Browser)
 /// Integrated with Scene for real entity management
 /// </summary>
 class EditorUI {
@@ -35,15 +38,24 @@ public:
     static void RenderViewport();
     
     /// <summary>
+    /// Render Asset Browser panel - Navigate and manage project assets (v1.9.0 H4.1)
+    /// </summary>
+    static void RenderAssetBrowser();
+    
+    /// <summary>
     /// Render all editor panels at once (convenience method for H4.5)
     /// </summary>
     static void RenderAllPanels(Scene::Scene* scene);
     
     // v1.5.0 H3.1 - Get viewport instance (singleton pattern)
     static Viewport* GetViewport();
+    
+    // v1.9.0 H4.1 - Get asset browser instance (singleton pattern)
+    static AssetBrowser* GetAssetBrowser();
 
 private:
-    static Viewport* s_viewport; // Singleton instance (v1.5.0 H3.1)
+    static Viewport* s_viewport;           // Singleton instance (v1.5.0 H3.1)
+    static AssetBrowser* s_assetBrowser;   // Singleton instance (v1.9.0 H4.1)
 };
 
 } // namespace Editor
