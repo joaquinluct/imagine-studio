@@ -51,35 +51,122 @@ Copy-Item "autogen/prompts/_template.md" "autogen/prompts/sprint_v1.9.0/HX.Y.md"
 ```
 1. Read daily.md → 2. Check code → 3. Propose next step
       ↓
-4. Implement → 5. Validate (DOUBLE BUILD MANDATORY) → 6. Commit + Update docs
+4. Implement → 5. Validate (COMPLETE VALIDATION) → 6. Commit + Update docs
       ↓
 Repeat from 1
 ```
 
-**Validation (MANDATORY - BOTH BUILDS)**:
+---
 
-**Build 1 (CMake - Multi-platform publisher)**:
+## ✅ VALIDATION WORKFLOW (COMPLETE) - **FOLLOW ALWAYS**
+
+**CRITICAL**: This section documents the **COMPLETE** validation flow. **DO NOT SKIP ANY STEP**.
+
+### Step 1: Run Validation Script (if exists)
+```powershell
+# C++ projects: Check tests are NOT in main project
+.\scripts\validate-no-tests-in-main.ps1
+
+# Other validation scripts as needed
+```
+
+**Why**: Prevents LNK2005 errors (multiple `main()` functions) before build.
+
+---
+
+### Step 2: Build 1 (CMake - Multi-platform publisher)
 ```powershell
 cmake --build build --config Debug
 ```
 
-**Build 2 (MSBuild - Visual Studio F5 debug)**:
+**Why**: Multi-platform builds (Windows, Mac, Linux, Consoles). If this fails, game cannot be published → **blocking issue**.
+
+**Success criteria**: 0 errors, 0 warnings
+
+---
+
+### Step 3: Build 2 (MSBuild - Visual Studio F5 debug)
 ```powershell
 msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 ```
 
-**Success criteria**: **BOTH builds** must pass (0 errors, 0 warnings)
+**Why**: This is what user presses with **Ctrl+Shift+B** or **F5**. If this fails, user **CANNOT WORK**.
 
-**Why BOTH are mandatory**:
-- **MSBuild**: Daily development (F5 debugging, Ctrl+Shift+B in Visual Studio)
-- **CMake**: Multi-platform publishing (Windows, Mac, Linux, Consoles)
-- **Game engines MUST compile on all platforms for release**
-- If CMake fails, the game cannot be published → **blocking issue**
+**Success criteria**: 0 errors, 0 warnings
 
-**If CMake fails locally**:
-1. ❌ **DO NOT COMMIT** until both builds pass
-2. 🔧 **FIX the CMake configuration** (platform mismatch, missing libs, etc.)
-3. ✅ **Validate again** - only commit when BOTH are clean
+---
+
+### Step 4: Execute Tests (if task creates tests)
+```powershell
+# Example: mesh_importer_test
+.\build\Debug\mesh_importer_test.exe
+
+# Check output shows PASSED
+```
+
+**Why**: Verifying tests **COMPILE** is not enough. They must **RUN** and **PASS**.
+
+**Success criteria**: All assertions PASS (e.g., "27/27 passed")
+
+---
+
+### Step 5: Verify Application Compiles (if applicable)
+```powershell
+# Check Visual Studio Output Window for build status
+# Or run get_output_window_logs tool
+```
+
+**Why**: Some errors only appear in Visual Studio UI, not in terminal output.
+
+**Success criteria**: "Compilation: 0 errors, 0 warnings" in Output Window
+
+---
+
+## 🔴 CRITICAL ERRORS AND FIXES
+
+### LNK2005: Multiple `main()` Definitions
+
+**Symptom**:
+```
+mesh_importer_test.obj : error LNK2005: ya se definió main en main.obj
+fatal error LNK1169: se encontraron uno o más símbolos definidos simultáneamente
+```
+
+**Cause**: Test file (`tests/*.cpp`) was added to main project (`Imagine Studio.vcxproj`)
+
+**Fix**: Run validation script
+```powershell
+.\scripts\validate-no-tests-in-main.ps1
+```
+
+**Prevention**: **ALWAYS** run this script after creating new test files.
+
+---
+
+### CMake Builds OK, MSBuild Fails
+
+**Symptom**: `cmake --build` succeeds, but `msbuild "Imagine Studio.sln"` fails
+
+**Cause**: CMake and Visual Studio have separate configurations. Tests may be separate in CMake but included in MSBuild.
+
+**Fix**:
+1. Check `Imagine Studio.vcxproj` for test files
+2. Remove manually or run validation script
+3. Rebuild with MSBuild
+
+---
+
+## 📋 VALIDATION CHECKLIST (Use EVERY iteration)
+
+**Before commit**:
+- [ ] Validation scripts executed (if exist)
+- [ ] CMake build: 0 errors, 0 warnings
+- [ ] MSBuild: 0 errors, 0 warnings
+- [ ] Tests executed (if applicable): All PASSED
+- [ ] Visual Studio Output Window checked
+- [ ] Application can be launched (F5) if task affects app
+
+**Only commit when ALL checkboxes are ✅**
 
 ---
 

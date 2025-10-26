@@ -80,12 +80,140 @@
 Repeat from 1
 ```
 
-**Validation Examples by Technology**:
-- **C++/C#**: `cmake --build` + `msbuild`
-- **Web (React)**: `npm run lint && npm test && npm run build`
-- **Python**: `pytest && mypy . && black --check .`
-- **Rust**: `cargo clippy && cargo test && cargo build`
-- **Go**: `go fmt && go vet && go test && go build`
+## ?? VALIDATION WORKFLOW (COMPLETE) - **FOLLOW ALWAYS**
+
+**CRITICAL**: This section documents the **COMPLETE** validation flow. **DO NOT SKIP ANY STEP**.
+
+### Step 1: Run Validation Scripts (if exist)
+```powershell
+# Example: Check tests are NOT in main project (C++)
+.\scripts\validate-no-tests-in-main.ps1
+
+# Example: Check code formatting (Python)
+black --check .
+
+# Example: Check linting (JavaScript)
+npm run lint
+```
+
+**Why**: Catch common errors **before** compilation/execution.
+
+---
+
+### Step 2: Build/Compile (Primary)
+```powershell
+# C++: cmake --build build --config Debug
+# Python: python -m py_compile src/**/*.py
+# JavaScript: npm run build
+# Rust: cargo build
+```
+
+**Why**: Verify code compiles without errors.
+
+**Success criteria**: 0 errors, 0 warnings
+
+---
+
+### Step 3: Build/Compile (IDE/Editor - if different from Step 2)
+```powershell
+# C++: msbuild "Project.sln" /t:Build /p:Configuration=Debug
+# Unity: Verify compilation in Unity Editor
+# VS Code: Check Problems panel
+```
+
+**Why**: Ensure code compiles in **developer's daily environment** (Ctrl+Shift+B, F5, etc.)
+
+**Success criteria**: 0 errors, 0 warnings in IDE
+
+---
+
+### Step 4: Execute Tests (if task creates tests)
+```powershell
+# C++: .\build\Debug\test_executable.exe
+# Python: pytest tests/ -v
+# JavaScript: npm test
+# Rust: cargo test
+```
+
+**Why**: Verifying tests **COMPILE** is not enough. They must **RUN** and **PASS**.
+
+**Success criteria**: All assertions PASS
+
+---
+
+### Step 5: Execute Linting/Static Analysis
+```powershell
+# Python: mypy . && flake8 .
+# JavaScript: eslint src/
+# Rust: cargo clippy
+# C++: cppcheck or clang-tidy
+```
+
+**Why**: Catch style issues, potential bugs, and code smells.
+
+**Success criteria**: No warnings or errors
+
+---
+
+### Step 6: Verify Application Runs (if applicable)
+```powershell
+# Check application starts without crashes
+# Verify new feature is visible (if UI change)
+# Test new functionality manually
+```
+
+**Why**: Some issues only appear at runtime, not during compilation.
+
+**Success criteria**: Application runs, feature works as expected
+
+---
+
+## 🔴 COMMON ERRORS AND FIXES
+
+### Multiple Definitions Error (C++/C#)
+
+**Symptom**:
+```
+error LNK2005: symbol already defined
+```
+
+**Cause**: File included in multiple projects or test files in main project
+
+**Fix**: Run validation script or remove duplicates
+
+---
+
+### Tests Compile but Don't Run
+
+**Symptom**: Tests executable built successfully but crashes or fails
+
+**Cause**: Missing dependencies, incorrect test setup, or runtime errors
+
+**Fix**: Execute tests **ALWAYS** after compilation, check output
+
+---
+
+### IDE Builds OK, CLI Builds Fail (or vice versa)
+
+**Symptom**: `cmake` succeeds but IDE fails (or opposite)
+
+**Cause**: Different build configurations between CLI and IDE
+
+**Fix**: **ALWAYS validate BOTH** CLI and IDE builds
+
+---
+
+## 📋 VALIDATION CHECKLIST (Use EVERY iteration)
+
+**Before commit**:
+- [ ] Validation scripts executed (if exist)
+- [ ] Primary build: 0 errors, 0 warnings
+- [ ] IDE build: 0 errors, 0 warnings (if different)
+- [ ] Tests executed (if applicable): All PASSED
+- [ ] Linting/static analysis: Clean
+- [ ] Application runs (if applicable)
+
+**Only commit when ALL checkboxes are ✅**
 
 ---
 
