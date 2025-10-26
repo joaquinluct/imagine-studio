@@ -200,6 +200,69 @@ void AssetBrowser::RenderAssetItem(const char* assetName, const char* extension,
         m_selectedAsset = assetName;
     }
 
+    // Context menu (H4.4) - Right-click
+    if (ImGui::BeginPopupContextItem("AssetContextMenu")) {
+        // Store asset info for menu actions
+        std::string fullName = std::string(assetName) + extension;
+        
+        ImGui::TextColored(ImVec4(0.8f, 0.8f, 0.8f, 1.0f), "%s", fullName.c_str());
+        ImGui::Separator();
+        
+        // Reimport option
+        if (ImGui::MenuItem("Reimport")) {
+            // Placeholder: Reload asset from disk
+            // TODO: Call AssetDatabase::RefreshAsset(fullName)
+        }
+        
+        ImGui::Separator();
+        
+        // Delete option
+        if (ImGui::MenuItem("Delete")) {
+            // Placeholder: Remove asset
+            // TODO: Call AssetDatabase::UnregisterAsset() and delete file
+        }
+        
+        ImGui::Separator();
+        
+        // Properties option
+        if (ImGui::MenuItem("Properties")) {
+            // Open properties modal
+            ImGui::OpenPopup("AssetProperties");
+        }
+        
+        ImGui::EndPopup();
+    }
+    
+    // Properties modal (H4.4)
+    if (ImGui::BeginPopupModal("AssetProperties", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+        std::string fullName = std::string(assetName) + extension;
+        
+        ImGui::Text("Asset Properties");
+        ImGui::Separator();
+        
+        ImGui::Text("Name: %s", assetName);
+        ImGui::Text("Extension: %s", extension);
+        ImGui::Text("Type: %s", 
+            extension[1] == 'p' ? "Texture" : 
+            extension[1] == 'o' ? "Mesh" : 
+            extension[1] == 'h' ? "Shader" : "Unknown");
+        
+        ImGui::Separator();
+        
+        // Placeholder metadata
+        ImGui::Text("Size: 1.2 KB");
+        ImGui::Text("Modified: 2025-01-21");
+        ImGui::Text("Path: assets/%s/%s", m_currentFolder.c_str(), fullName.c_str());
+        
+        ImGui::Separator();
+        
+        if (ImGui::Button("Close", ImVec2(120, 0))) {
+            ImGui::CloseCurrentPopup();
+        }
+        
+        ImGui::EndPopup();
+    }
+
     // Drag & Drop Source (H4.3)
     if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
         // Set payload with asset name + extension
