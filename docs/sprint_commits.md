@@ -1,8 +1,8 @@
-﻿# Sprint Commits - vX.Y.Z (Active)
+﻿# Sprint Commits - v1.9.0 (Active)
 
 > **Referencia**: Ver [docs/sprint.md](sprint.md) para objetivo y progreso del sprint.
 
-Este archivo registra todos los commits realizados durante el **Sprint vX.Y.Z**.
+Este archivo registra todos los commits realizados durante el **Sprint v1.9.0 - Asset System**.
 
 ---
 
@@ -30,12 +30,54 @@ Refs: <issue/track-id>
 
 ---
 
-## Historial de Commits (Sprint vX.Y.Z)
+## Historial de Commits (Sprint v1.9.0)
 
-*No hay commits registrados actualmente.*
+### Commit 1 - H1.1: AssetDatabase.h creado
+**Fecha**: 2025-01-18  
+**Tipo**: feat  
+**Archivos**:
+- `src/assets/AssetDatabase.h` (nuevo)
+- `Imagine Studio.vcxproj` (modificado)
+- `Imagine Studio.vcxproj.filters` (modificado)
+
+**Mensaje**:
+```
+feat(assets): Crear AssetDatabase.h con estructuras básicas
+
+- AssetID (uint64_t) como identificador único
+- AssetType enum class (Texture, Mesh, Shader, Scene, Unknown)
+- AssetMetadata struct con metadatos completos
+- AssetDatabase singleton class con métodos de registro/consulta
+
+Refs: H1.1 (Sprint v1.9.0)
+```
+
+### Commit 2 - H1.2: AssetDatabase.cpp implementado
+**Fecha**: 2025-01-21  
+**Tipo**: feat  
+**Archivos**:
+- `src/assets/AssetDatabase.cpp` (nuevo)
+- `Imagine Studio.vcxproj` (modificado)
+- `Imagine Studio.vcxproj.filters` (modificado)
+- `src/assets/AssetDatabase.h` (encoding fix)
+
+**Mensaje**:
+```
+feat(assets): Implementar AssetDatabase.cpp con singleton thread-safe
+
+- GetInstance() con patrón Meyer's Singleton
+- RegisterAsset() con thread-safe std::mutex
+- UnregisterAsset() con validación de existencia
+- HasAsset() y GetMetadata() con protección concurrente
+- Storage interno con std::unordered_map
+
+Compilación limpia: 0 errores, 0 warnings (CMake + MSBuild)
+
+Refs: H1.2 (Sprint v1.9.0)
+```
 
 ---
 
 **Versión**: v1.0  
-**Última actualización**: [FECHA]  
-**Sprint**: vX.Y.Z - **EN PROGRESO**
+**Última actualización**: 2025-01-21  
+**Sprint**: v1.9.0 - Asset System - **EN PROGRESO**

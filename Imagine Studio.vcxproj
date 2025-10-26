@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -29,26 +29,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -125,12 +125,36 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include=".gitattributes" />
+    <None Include=".github\autogen-context.md" />
     <None Include=".github\copilot-instructions.md" />
     <None Include=".github\workflows\ci.yml" />
     <None Include=".gitignore" />
     <None Include="assets\asset_high.dat" />
     <None Include="assets\asset_normal.dat" />
     <None Include="assets\example_asset.dat" />
+    <None Include="autogen\agents\coder_agent_fixed.json" />
+    <None Include="autogen\agents\planner_agent_fixed.json" />
+    <None Include="autogen\agents\reviewer_agent_fixed.json" />
+    <None Include="autogen\agents\tester_agent_fixed.json" />
+    <None Include="autogen\coder_agent.json" />
+    <None Include="autogen\devteam_workflow.json" />
+    <None Include="autogen\log-autogen-session.ps1" />
+    <None Include="autogen\planner_agent.json" />
+    <None Include="autogen\prompts\common\simple_test.md" />
+    <None Include="autogen\prompts\sprint_v1.9.0\H1.1_assetdatabase_h.md" />
+    <None Include="autogen\prompts\_template.md" />
+    <None Include="autogen\README.md" />
+    <None Include="autogen\reviewer_agent.json" />
+    <None Include="autogen\SETUP.md" />
+    <None Include="autogen\teams\devteam_workflow.json" />
+    <None Include="autogen\teams\team_complete.json" />
+    <None Include="autogen\teams\team_selector_example.json" />
+    <None Include="autogen\teams\team_simple.json" />
+    <None Include="autogen\team_complete.json" />
+    <None Include="autogen\team_simple.json" />
+    <None Include="autogen\TERMINATION_FIX.md" />
+    <None Include="autogen\tester_agent.json" />
+    <None Include="autogen\WORKFLOW_COMPLETE.md" />
     <None Include="docs\AAA_STANDARDS.md" />
     <None Include="docs\backlog.md" />
     <None Include="docs\CLOSE_SPRINT.md" />
@@ -138,12 +162,18 @@
     <None Include="docs\daily.md" />
     <None Include="docs\IMGUI_INSTALL.md" />
     <None Include="docs\MAIN.md" />
+    <None Include="docs\methodology\BUGS.md" />
+    <None Include="docs\methodology\CORE.md" />
+    <None Include="docs\methodology\DEVIATIONS.md" />
+    <None Include="docs\methodology\SESSIONS.md" />
+    <None Include="docs\methodology\WORKFLOW.md" />
     <None Include="docs\roadmap.md" />
     <None Include="docs\roadmap_histories.md" />
     <None Include="docs\roadmap_histories_v1.0.0.md" />
     <None Include="docs\roadmap_tasks.md" />
     <None Include="docs\roadmap_tasks_v1.0.0.md" />
     <None Include="docs\roadmap_v1.0.0.md" />
+    <None Include="docs\sessions\2025-01-18_AutoGen_MCP_Setup_Complete.md" />
     <None Include="docs\sprint.md" />
     <None Include="docs\sprints\README.md" />
     <None Include="docs\sprint_benchmarking_v1.7.0.md" />
@@ -158,17 +188,38 @@
     <None Include="docs\sprints\sprint_tasks_v1.0.0.md" />
     <None Include="docs\sprints\sprint_v1.0.0.md" />
     <None Include="docs\TEMPLATE.md" />
+    <None Include="docs\templates\AUTOGEN_COMPLETE_PACKAGE.md" />
+    <None Include="docs\templates\AUTOGEN_DEPLOYMENT_CHECKLIST.md" />
+    <None Include="docs\templates\AUTOGEN_EXECUTIVE_SUMMARY.md" />
+    <None Include="docs\templates\AUTOGEN_QUICK_START.md" />
+    <None Include="docs\templates\AUTOGEN_TEMPLATE_COPILOT_CONTEXT.md" />
+    <None Include="docs\templates\AUTOGEN_TEMPLATE_INDEX.md" />
+    <None Include="docs\templates\AUTOGEN_TEMPLATE_README.md" />
+    <None Include="docs\templates\AUTOGEN_TEMPLATE_SETUP.md" />
+    <None Include="docs\templates\copilot-instructions.template.md" />
+    <None Include="docs\templates\COPILOT_DEPLOYMENT_GUIDE.md" />
+    <None Include="docs\templates\COPILOT_PROMPTS_AUTOGEN.md" />
+    <None Include="docs\templates\CORE.template.md" />
+    <None Include="docs\templates\init-autogen-project.ps1" />
+    <None Include="docs\templates\README.md" />
     <None Include="docs\TEMPLATE_SECCION_NUEVA.md" />
     <None Include="docs\THIRD_PARTY.md" />
     <None Include="examples\scene1\README.md" />
     <None Include="examples\scene1\scene.json" />
+    <None Include="mcp-server\package.json" />
+    <None Include="mcp-server\QUICKSTART.md" />
+    <None Include="mcp-server\README.md" />
+    <None Include="mcp-server\src\index.ts" />
+    <None Include="mcp-server\tsconfig.json" />
     <None Include="README.md" />
     <None Include="scripts\check-encoding.ps1" />
     <None Include="scripts\close-sprint.ps1" />
+    <None Include="scripts\deploy-autogen-template.ps1" />
     <None Include="scripts\install-imgui.ps1" />
     <None Include="tools\reorder_includes.py" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\assets\AssetDatabase.cpp" />
     <ClCompile Include="src\assets\AssetManager.cpp" />
     <ClCompile Include="src\assets\VFS.cpp" />
     <ClCompile Include="src\editor\EditorUI.cpp" />
@@ -211,6 +262,7 @@
     <ClCompile Include="external\imgui\imgui_demo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\assets\AssetDatabase.h" />
     <ClInclude Include="src\assets\AssetManager.h" />
     <ClInclude Include="src\assets\VFS.h" />
     <ClInclude Include="src\core\Assert.h" />
