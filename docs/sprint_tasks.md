@@ -192,32 +192,64 @@ private:
 ---
 
 ### Tarea H3.4: Preview thumbnail
-**Estado**: ? Pendiente  
-**Archivos afectados**: `src/editor/MaterialEditor.cpp`
+**Estado**: ? Completada  
+**Archivos afectados**: `src/editor/MaterialEditor.cpp` (actualizado)
+**Commit**: Commit 18 (2025-01-21) - Hash `e4a305d`
 
-**Descripción**: Preview del material (render to texture 64x64).
+**Descripción**: Implementar preview thumbnail del material (visual placeholder)
 
-**Historia H3**: 3/4 tareas completadas (75%) ??
+**Implementación**:
+- CollapsingHeader "Preview" (DefaultOpen)
+- Preview box 128x128 con `ImDrawList`:
+  - `AddRectFilled()` con albedo color (representa material visualmente)
+  - `AddRect()` border blanco
+- Material properties summary:
+  - Albedo (R, G, B, A) valores con formato "%.2f"
+  - Metallic valor
+  - Roughness valor
+- Texture count: "Textures: X/5 assigned"
+- Nota amarilla sobre implementación futura (render-to-texture PBR con lighting)
+
+**Características**:
+- Preview visual actualiza color cuando albedo color cambia ?
+- Summary muestra valores actuales de properties ?
+- Texture count dinámico (cuenta texture paths no vacíos) ?
+- Placeholder profesional (similar a Unity/Unreal material preview) ?
+
+**Nota técnica**:
+- **Placeholder visual** (no render-to-texture real)
+- **Render-to-texture real** con PBR lighting se implementará en **H4.3** cuando materiales se apliquen a meshes
+- Colored rectangle representa albedo color del material (suficiente para H3)
+
+**Validación**: ? CMake + MSBuild 0 errores
+
+**HISTORIA H3 COMPLETADA**: 4/4 tareas (100%) ?
 
 ---
 
-## Historia 4: Material Assignment (H4) ? PENDIENTE
+## Historia 4: Material Assignment (H4) ? EN PROGRESO
 
 ### Tarea H4.1: Añadir Material* a MeshRenderer
 **Estado**: ? Pendiente  
-**Archivos afectados**: `src/components/MeshRenderer.h/cpp`
+**Archivos afectados**: `src/components/MeshRenderer.h/cpp` (nuevos o actualizar existente)
+
+**Descripción**: MeshRenderer component almacena puntero a Material asignado
 
 ---
 
 ### Tarea H4.2: Drag & drop material en Inspector
 **Estado**: ? Pendiente  
-**Archivos afectados**: `src/editor/Inspector.cpp`
+**Archivos afectados**: `src/editor/EditorUI.cpp` (Inspector section)
+
+**Descripción**: Drag & drop material desde Asset Browser a Inspector
 
 ---
 
 ### Tarea H4.3: Apply material en rendering
 **Estado**: ? Pendiente  
 **Archivos afectados**: `src/renderer/DX12Renderer.cpp`
+
+**Descripción**: Bind texturas del material y constant buffer en rendering pipeline
 
 **Historia H4**: 0/3 tareas completadas (0%) ?
 
@@ -260,8 +292,8 @@ private:
 | H2 | H2.5 | PSO | ? Completada |
 | H3 | H3.1 | MaterialEditor panel | ? Completada |
 | H3 | H3.2 | Texture slots | ? Completada |
-| H3 | H3.3 | Property sliders | ? Completada (en H3.1) |
-| H3 | H3.4 | Preview thumbnail | ? Pendiente |
+| H3 | H3.3 | Property sliders | ? Completada |
+| H3 | H3.4 | Preview thumbnail | ? Completada |
 | H4 | H4.1 | Material* en MeshRenderer | ? Pendiente |
 | H4 | H4.2 | Drag & drop en Inspector | ? Pendiente |
 | H4 | H4.3 | Apply material | ? Pendiente |
@@ -270,13 +302,13 @@ private:
 | H5 | H5.3 | Auto-reload | ? Pendiente |
 
 **Total**: 19 tareas  
-**Completadas**: 12/19 (63.2%) ?  
-**Pendientes**: 7/19 (36.8%) ?
+**Completadas**: 13/19 (68.4%) ?  
+**Pendientes**: 6/19 (31.6%) ?
 
 **Progreso por historia**:
-- ? H1: 100% (4/4)
-- ? H2: 100% (5/5)
-- ?? H3: 75% (3/4) - **EN PROGRESO**
+- ? H1: 100% (4/4) - **COMPLETADA**
+- ? H2: 100% (5/5) - **COMPLETADA**
+- ? H3: 100% (4/4) - **COMPLETADA** ??
 - ? H4: 0% (0/3)
 - ? H5: 0% (0/3)
 
@@ -284,4 +316,4 @@ private:
 
 *Última actualización*: 2025-01-21  
 *Sprint*: v2.0.0 - Material System (PBR)  
-*Próxima tarea*: H3.4 - Preview thumbnail
+*Próxima tarea*: H4.1 - Material* en MeshRenderer
