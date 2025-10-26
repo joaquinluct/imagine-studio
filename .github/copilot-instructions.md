@@ -46,30 +46,40 @@ Copy-Item "autogen/prompts/_template.md" "autogen/prompts/sprint_v1.9.0/HX.Y.md"
 
 ---
 
-## ?? WORKFLOW (6 Steps)
+## 🔥 WORKFLOW (6 Steps)
 
 ```
 1. Read daily.md → 2. Check code → 3. Propose next step
       ↓
-4. Implement → 5. Validate (MSBuild MANDATORY) → 6. Commit + Update docs
+4. Implement → 5. Validate (DOUBLE BUILD MANDATORY) → 6. Commit + Update docs
       ↓
 Repeat from 1
 ```
 
-**Validation (MANDATORY)**:
+**Validation (MANDATORY - BOTH BUILDS)**:
 
-**Build (MSBuild - Main Solution)**:
+**Build 1 (CMake - Multi-platform publisher)**:
+```powershell
+cmake --build build --config Debug
+```
+
+**Build 2 (MSBuild - Visual Studio F5 debug)**:
 ```powershell
 msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 ```
 
-**Success criteria**: 0 errors, 0 warnings
+**Success criteria**: **BOTH builds** must pass (0 errors, 0 warnings)
 
-**Note**: 
-- **Main Solution** (`Imagine Studio.sln` in root) → Daily development (F5/Ctrl+Shift+B) **[MANDATORY]**
-- **CMake System** (`build/ImagineStudio.sln`) → CI/automation **[OPTIONAL for local dev]**
-- If CMake build fails locally with x86/x64 mismatch, it doesn't block commits
-- CMake issues should be fixed in a dedicated task, not block feature development
+**Why BOTH are mandatory**:
+- **MSBuild**: Daily development (F5 debugging, Ctrl+Shift+B in Visual Studio)
+- **CMake**: Multi-platform publishing (Windows, Mac, Linux, Consoles)
+- **Game engines MUST compile on all platforms for release**
+- If CMake fails, the game cannot be published → **blocking issue**
+
+**If CMake fails locally**:
+1. ❌ **DO NOT COMMIT** until both builds pass
+2. 🔧 **FIX the CMake configuration** (platform mismatch, missing libs, etc.)
+3. ✅ **Validate again** - only commit when BOTH are clean
 
 ---
 
