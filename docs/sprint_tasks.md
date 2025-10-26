@@ -159,10 +159,61 @@ assets/
 ## Historia 3: Mesh Importer (H3)
 
 ### Tarea H3.1: Crear MeshImporter.h con MeshData struct
-**Estado**: ? Pendiente  
-**Archivos afectados**: `src/assets/MeshImporter.h` (nuevo)
+**Estado**: ? Completada  
+**Fecha**: 2025-01-21  
+**Archivos afectados**: `src/assets/MeshData.h`, `src/assets/MeshImporter.h`, `src/assets/README_MESH_FORMAT.md` (nuevos)
 
 **Descripción**: Definir MeshData struct (vertices, indices, bounds) y MeshImporter class.
+
+**Implementación**:
+- `MeshData.h`: Estructuras Vertex, BoundingBox, MeshData completas
+- `MeshImporter.h`: API para importar OBJ con métodos ImportOBJ, IsSupportedFormat, GetMeshInfo
+- README_MESH_FORMAT.md: Documentación completa del formato OBJ soportado
+
+**Estructuras creadas**:
+```cpp
+struct Vertex {
+    float position[3];  // x, y, z
+    float normal[3];    // nx, ny, nz
+    float texCoord[2];  // u, v
+};
+
+struct BoundingBox {
+    float min[3];  // Min corner
+    float max[3];  // Max corner
+    void GetCenter(...);
+    void GetSize(...);
+};
+
+struct MeshData {
+    std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
+    BoundingBox bounds;
+    std::string name;
+    std::string sourcePath;
+    
+    bool IsValid() const;
+    unsigned int GetVertexCount() const;
+    unsigned int GetIndexCount() const;
+    unsigned int GetTriangleCount() const;
+    unsigned int GetMemorySize() const;
+    void CalculateBounds();
+};
+```
+
+**API MeshImporter**:
+- `ImportOBJ(path)` - Cargar mesh completo desde archivo OBJ
+- `IsSupportedFormat(path)` - Verificar extensión .obj
+- `GetMeshInfo(path, vertexCount, triangleCount)` - Info rápida sin cargar
+- `GetLastError()` - Último error si ImportOBJ falla
+
+**Formato OBJ soportado**:
+- Vertex positions (v x y z)
+- Vertex normals (vn nx ny nz)
+- Texture coordinates (vt u v)
+- Triangles y quads (f v1/vt1/vn1 ...)
+
+**Compilación**: 0 errores, 0 warnings (CMake + MSBuild) ?
 
 ---
 
@@ -270,7 +321,7 @@ assets/
 | H2 | H2.2 | TextureImporter | ? Completada |
 | H2 | H2.3 | DX12 Texture2D | ? Completada |
 | H2 | H2.4 | Testing TextureImporter | ? Completada |
-| H3 | H3.1 | MeshImporter.h | ? Pendiente |
+| H3 | H3.1 | MeshImporter.h | ? Completada |
 | H3 | H3.2 | OBJ parser | ? Pendiente |
 | H3 | H3.3 | DX12 buffers | ? Pendiente |
 | H3 | H3.4 | Testing MeshImporter | ? Pendiente |
@@ -284,10 +335,11 @@ assets/
 | H5 | H5.4 | Testing Serializer | ? Pendiente |
 
 **Total**: 20 tareas  
-**Completadas**: 8/20 (40%)  
-**Pendientes**: 12/20 (60%)
+**Completadas**: 9/20 (45%)  
+**Pendientes**: 11/20 (55%)
 
-**Historias completadas**: 2/5 (40%) - ? H1, ? H2
+**Historias completadas**: 2/5 (40%) - ? H1, ? H2  
+**Historias en progreso**: 1/5 (20%) - ? H3 (1/4 tareas)
 
 ---
 
