@@ -337,7 +337,7 @@ fatal error LNK1169: se encontraron uno o más símbolos definidos simultáneame
 - ❌ Progress tracking broken
 - ❌ Sprint history incomplete
 - ❌ User frustration increases
-- ❌ **UNACCEPTABLE** - User will switch to Claude Sonnet
+- ❌ **UNACCEPTABLE** - Workflow must be followed strictly
 
 ### Auto-Update Sequence (MANDATORY):
 
@@ -468,29 +468,4 @@ fatal error LNK1169: se encontraron uno o más símbolos definidos simultáneame
 - **Include order**: Project headers (`"..."`) first, then system (`<...>`), alphabetically within groups
 - **Validate before commit**: Always compile + fix errors/warnings
 - **AutoGen logging**: Always register successful sessions in `autogen/sessions/`
-
----
-
-## 📦 SPRINT VERSIONING
-
-**Active sprint files**:
-- `docs/sprint.md`, `sprint_histories.md`, `sprint_tasks.md`
-- `docs/sprint_bugs.md`, `sprint_bug_attempts.md`, `sprint_fix.md`
-- `docs/sprint_deviations.md`, `sprint_ia_sessions.md`
-
-**At sprint end**:
-```powershell
-# Archives all to docs/sprints/ with version suffix
-Move-Item "docs/sprint_v<version>.md" "docs/sprints/"
-# ... (script handles all files)
-
-# Copy AutoGen logs
-Copy-Item "autogen/sessions/*_success.md" "docs/sprints/sprint_v<version>_autogen/"
-```
-
----
-**Version**: 2.3  
-**Last update**: 2025-01-21  
-**Full methodology**: [`docs/methodology/CORE.md`](../docs/methodology/CORE.md)  
-**AutoGen context**: [`.github/autogen-context.md`](autogen-context.md)  
-**Templates (for other projects)**: [`docs/templates/`](../docs/templates/)
+- **Language**: **ALWAYS respond in Spanish** when communicating with user (code/comments can be English)
