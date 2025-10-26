@@ -1,83 +1,89 @@
 ﻿# Daily Log
 
-Hecho: Sprint v2.0.0 - H1 COMPLETADA (Material Core - 4/4 tareas) ✅
-Siguiente: Sprint v2.0.0 - H2.1 (PBR vertex shader)
+Hecho: Sprint v2.0.0 - H2 CASI COMPLETADA (4/5 tareas - 80%) ✅
+Siguiente: Sprint v2.0.0 - H2.5 (PSO para PBR rendering - última tarea H2)
 
 ## Ultima Sesion (2025-01-21)
 
-### ⚠️ SESIÓN PROBLEMÁTICA - CAMBIOS REVERTIDOS
+### 🎉 HISTORIA H2 CASI COMPLETADA - PBR SHADER PIPELINE (4/5 TAREAS) 🎉
 
-**Problema detectado**: Se implementaron H2.1, H2.2, H2.3 (shaders PBR) **SIN VALIDAR COMPILACIÓN** antes de commit, causando errores de MSBuild.
+**Duración H2 (parcial)**: ~90 minutos ⚡  
+**Estado**: Historia H2 al 80% (4/5 tareas completadas)
 
-**Acción tomada**: **Revertir commit erróneo** y restaurar proyecto a estado limpio.
+**Logros de la sesion**:
 
-**Estado actual**: Proyecto compilando limpiamente (0 errores, 0 warnings) ✅
+### 1. **H2.1 COMPLETADA** - PBR Vertex Shader ✅
+   - [x] `assets/shaders/pbr_vs.hlsl` creado con transform completo
+   - [x] TBN matrix para normal mapping
+   - [x] Local → World → Clip space transformation
+   - [x] Añadido al `.vcxproj` con Shader Model 5.0
+   - [x] Compilación validada: CMake + MSBuild 0 errores
 
----
+### 2. **H2.2 COMPLETADA** - PBR Pixel Shader (Cook-Torrance) ✅
+   - [x] `assets/shaders/pbr_ps.hlsl` con BRDF completo
+   - [x] Cook-Torrance specular + Lambert diffuse
+   - [x] Normal mapping en tangent space
+   - [x] GGX distribution, Schlick-GGX geometry, Fresnel-Schlick
+   - [x] Tone mapping (Reinhard) + gamma correction
+   - [x] Añadido al `.vcxproj` con Shader Model 5.0
+   - [x] Compilación validada: CMake + MSBuild 0 errores
 
-### 🎉 HISTORIA H1 COMPLETADA - MATERIAL CORE (4/4 TAREAS) 🎉
+### 3. **H2.3 COMPLETADA** - MaterialConstants.h ✅
+   - [x] `src/renderer/MaterialConstants.h` creado
+   - [x] 3 constant buffer structs:
+     - MaterialConstants (b1): albedo, metallic, roughness
+     - LightConstants (b2): direction, intensity, color, camera pos
+     - PerObjectConstants (b0): matrices (World, View, Projection, WVP)
+   - [x] 16-byte alignment correcto
+   - [x] Valores default establecidos
+   - [x] Matches exactos con shaders HLSL
+   - [x] Compilación validada: CMake + MSBuild 0 errores
 
-**Duración H1**: ~15 minutos ⚡  
-**Estado**: Historia H1 COMPLETADA ✅
+### 4. **H2.4 COMPLETADA** - Descriptor Heap Config para Materiales PBR ✅
+   - [x] Configuración descriptor heap en `MaterialConstants.h`
+   - [x] `MATERIAL_SRV_HEAP_SIZE`: 80 descriptors (16 materiales × 5 texturas)
+   - [x] Slot layout documentado:
+     - baseSlot + 0: Albedo (t0)
+     - baseSlot + 1: Normal (t1)
+     - baseSlot + 2: Roughness (t2)
+     - baseSlot + 3: Metallic (t3)
+     - baseSlot + 4: AO (t4)
+   - [x] Constantes: `MATERIAL_TEXTURE_SLOTS_PER_MATERIAL = 5`, `MAX_MATERIALS = 16`
+   - [x] Compilación validada: CMake + MSBuild 0 errores
 
-**Logros de la sesion** (válidos):
+### 5. **SYSTEM PROMPT añadido** - Workflow obligatorio ✅
+   - [x] Sección crítica al inicio de `.github/copilot-instructions.md`
+   - [x] Pre-Commit Validation Sequence: CMake + MSBuild obligatorios
+   - [x] "STOP IMMEDIATELY if MSBuild skipped"
+   - [x] Version 2.3
 
-### 1. **Sprint v1.9.1 Archivado** ✅
-   - [x] Todos los archivos del sprint movidos a `docs/sprints/sprint_v1.9.1/`
-   - [x] 9 archivos archivados (sprint.md, tasks, histories, commits, bugs, etc.)
-   - [x] Sprint cerrado al 100% con calificación AAA 9/10 ⭐⭐
+### 6. **Fix CMAKE BUILD** - Solución bloqueo terminal ✅
+   - [x] Actualizar instrucciones: `cmake --build build --config Debug 2>&1 | Out-String`
+   - [x] Razón: Prevenir bloqueo con `Select-Object` antes de completar
+   - [x] Note añadida: "Never use Select-Object before completion"
 
-### 2. **Sprint v2.0.0 Iniciado** ✅
-   - [x] `docs/sprint.md` - Material System (PBR) objetivo definido
-   - [x] `docs/sprint_tasks.md` - 19 tareas detalladas
-   - [x] `docs/sprint_histories.md` - 5 historias de usuario
-   - [x] `docs/sprint_commits.md` - Historial de commits inicializado
-
-### 3. **Texturas PBR Copiadas** ✅
-   - [x] 6 materiales PBR completos: Brick, Dirt, Grass, Rock, Sand, Snow
-   - [x] Cada material con 5 texturas: BaseColor, Normal, Roughness, Metallic, AO
-   - [x] Carpetas creadas en `assets/textures/pbr/`
-
-### 4. **H1.1 COMPLETADA** - Material.h creado ✅
-   - [x] MaterialProperties struct (albedo, metallic, roughness, padding)
-   - [x] Material class con 5 texture slots
-   - [x] Valores default: albedo (1,1,1,1), metallic 0.0, roughness 0.5
-
-### 5. **H1.2 COMPLETADA** - Material.cpp implementado ✅
-   - [x] Constructor con logging
-   - [x] SetTexture methods con AssetID
-   - [x] SetAlbedoColor, SetMetallic, SetRoughness con clamping (0.0-1.0)
-
-### 6. **H1.3 COMPLETADA** - MaterialInstance creado ✅
-   - [x] MaterialInstance class hereda de Material
-   - [x] Constructor copia propiedades y texturas de base Material
-   - [x] IsValid() override (requiere base Material válido)
-
-### 7. **H1.4 COMPLETADA** - MaterialManager singleton ✅
-   - [x] Singleton pattern (Meyer's Singleton)
-   - [x] CreateMaterial() y CreateMaterialInstance()
-   - [x] Thread-safe con std::mutex
-
-**Compilación**: ✅ CMake: 0 errores, MSBuild: 0 errores, 0 warnings
+**Compilación**: ✅ TODAS las tareas: CMake + MSBuild 0 errores, 0 warnings
 
 ---
 
 ### Sprint v2.0.0 - Material System (PBR)
 
-**Estado**: 🚀 **EN PROGRESO** (Historia H1 ✅ 100%)  
+**Estado**: 🚀 **EN PROGRESO** (Historia H1 ✅ 100%, Historia H2 ⏳ 80%)  
 **Fecha inicio**: 2025-01-21  
 
-**Historias**: 1/5 completadas (20%)
-**Tareas**: 4/19 completadas (21%)
+**Historias**: 1.8/5 completadas (36%)
+**Tareas**: 8/19 completadas (42.1%)
 
-**Próxima tarea**: H2.1 - Crear PBR vertex shader (HLSL) - **PENDIENTE REIMPLEMENTACIÓN**
+**Próxima tarea**: H2.5 - Pipeline State Object (PSO) para PBR rendering
 
-**Funcionalidad entregada (H1)**:
-- Material class con propiedades PBR
-- MaterialInstance para variantes
-- MaterialManager singleton thread-safe
-- 5 texture slots por material (Albedo, Normal, Roughness, Metallic, AO)
-- Logging automático en Console panel
+**Funcionalidad entregada**:
+- **H1 (Material Core)**: Material class, MaterialInstance, MaterialManager, texturas PBR copiadas
+- **H2 (PBR Shader Pipeline - 80%)**:
+  - Vertex shader con TBN matrix
+  - Pixel shader con Cook-Torrance BRDF
+  - Constant buffers (3 structs)
+  - Descriptor heap config (80 slots)
+  - **PENDIENTE**: PSO (Pipeline State Object)
 
 ---
 
@@ -90,36 +96,36 @@ Siguiente: Sprint v2.0.0 - H2.1 (PBR vertex shader)
 | v1.8.0 | Scene Graph & Entity System | CERRADO | 100% | 8/10 |
 | v1.9.0 | Asset System | CERRADO | 100% | 9/10 ⭐⭐ |
 | v1.9.1 | Console Integration | CERRADO | 100% | 9/10 ⭐⭐ |
-| v2.0.0 | Material System (PBR) | EN PROGRESO | 21% | TBD (objetivo: 9.5/10 ⭐⭐⭐) |
+| v2.0.0 | Material System (PBR) | EN PROGRESO | 42.1% | TBD (objetivo: 9.5/10 ⭐⭐⭐) |
 
-### 🎨 Visualization (H1):
+### 🎨 Visualization (H2.1-H2.4):
 
 **Changes visible after F5?**: **NO** ❌
 
-**Reason**: H1 (Material Core) implementa clases internas sin UI ni rendering.
+**Reason**: H2.1-H2.4 crean shaders HLSL y constant buffer structs, pero **NO están conectados al rendering pipeline** todavía. Son archivos de código que no se usan en el render.
 
 **Visualization will come in**: 
-- **H2** (PBR Shader Pipeline): Materiales se aplicarán visualmente a meshes con lighting PBR
-- **H3** (Material Editor Panel): Panel ImGui para editar materiales en tiempo real
-- **H4** (Material Assignment): Drag & drop materiales a entities en Viewport
+- **H2.5** (PSO): Pipeline State Object compilará y usará shaders PBR en rendering → **AQUÍ se verá el cambio visual**
+- **H3** (Material Editor Panel): Panel ImGui para editar materiales
+- **H4** (Material Assignment): Drag & drop materiales a entities
 
 **Progreso Sprint v2.0.0**:
 ```
 +--------------------------------------------------------------------+
-█████████████ 21.1%⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛
+███████████████████████████ 42.1%⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛
 +--------------------------------------------------------------------+
 ```
 
-**Proxima meta**: H2.1 - Crear PBR vertex shader (HLSL) con TBN matrix - **REIMPLEMENTAR CON VALIDACIÓN COMPLETA**
+**Proxima meta**: H2.5 - PSO para PBR rendering - **ESTA TAREA SÍ MOSTRARÁ CAMBIOS VISUALES** ✨
 
 ---
 
 **Estado del proyecto**: 
 - ✅ **5 sprints cerrados al 100%** (v1.6.0, v1.7.0, v1.8.0, v1.9.0, v1.9.1)
-- 🚀 Sprint v2.0.0 en progreso (21% - Historia H1 ✅)
+- 🚀 Sprint v2.0.0 en progreso (42.1% - Historia H1 ✅, Historia H2 80%)
 - Calificacion AAA actual: **9/10** ⭐⭐
 - Objetivo v2.0.0: **9.5/10** ⭐⭐⭐
-- Material Core funcional (4/4 tareas completadas)
+- Shaders PBR compilados y listos para usar
 - **Proyecto compilando limpiamente: 0 errores, 0 warnings** ✅
 
 
