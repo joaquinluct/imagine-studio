@@ -302,6 +302,60 @@ fatal error LNK1169: se encontraron uno o más símbolos definidos simultáneame
 
 ---
 
+## 🚨 CRITICAL: AUTO-UPDATE DOCS AFTER EVERY TASK/COMMIT
+
+**RULE**: After EVERY task completion or commit, you MUST update these files:
+
+### Files to Update (MANDATORY):
+
+1. **`docs/daily.md`** - Update progress section:
+   - ✅ Done: [Task ID] - [Description]
+   - 🔜 Next: [Next Task ID] - [Description]
+   - Add 🎨 Visualization section (MANDATORY)
+   - Update progress bar
+   - Update "Logros de la sesion" list
+
+2. **`docs/sprint_commits.md`** - Add commit entry:
+   - Commit hash
+   - Date
+   - Type (feat/fix/docs/etc.)
+   - Full description
+   - Files modified
+   - Compilation status
+   - Reference to task
+
+### When to Update:
+
+- ✅ **AFTER** every successful commit
+- ✅ **BEFORE** asking user for next action
+- ✅ **AFTER** completing a task
+- ✅ **AFTER** fixing a bug
+
+### Consequences of NOT Updating:
+
+- ❌ User loses context between sessions
+- ❌ Progress tracking broken
+- ❌ Sprint history incomplete
+- ❌ User frustration increases
+- ❌ **UNACCEPTABLE** - User will switch to Claude Sonnet
+
+### Auto-Update Sequence (MANDATORY):
+
+```
+1. Task implementation
+2. CMake build validation
+3. MSBuild validation
+4. git commit
+5. ✅ UPDATE docs/daily.md (MANDATORY)
+6. ✅ UPDATE docs/sprint_commits.md (MANDATORY)
+7. git commit (docs update)
+8. ONLY THEN: Report to user with 3 MANDATORY sections
+```
+
+**NO EXCEPTIONS**. This is not optional. This is **CRITICAL WORKFLOW**.
+
+---
+
 ## 📂 FILE STRUCTURE
 
 | File | Purpose | When |
