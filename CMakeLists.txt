@@ -126,6 +126,10 @@ add_library(stb_image STATIC
 )
 target_include_directories(stb_image PUBLIC external/stb)
 
+# nlohmann/json library (JSON Serialization - H5.1)
+add_library(json INTERFACE)
+target_include_directories(json INTERFACE external/json)
+
 # ImGui library (Dear ImGui - Editor UI Framework)
 add_library(ImGui STATIC
     external/imgui/imgui.cpp
@@ -149,10 +153,13 @@ if (MSVC)
     target_link_libraries(ImagineStudio PRIVATE ImGui)
     # Link stb_image library
     target_link_libraries(ImagineStudio PRIVATE stb_image)
+    # Link json library (H5.1)
+    target_link_libraries(ImagineStudio PRIVATE json)
 else()
     # On other platforms link adjustments can be added here if needed
     target_link_libraries(ImagineStudio PRIVATE ImGui)
     target_link_libraries(ImagineStudio PRIVATE stb_image)
+    target_link_libraries(ImagineStudio PRIVATE json)
 endif()
 
 # Benchmarks - add specific bench sources to avoid duplicate mains
