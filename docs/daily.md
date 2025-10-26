@@ -5,12 +5,22 @@ Siguiente: Sprint v2.0.0 - H2.1 (PBR vertex shader)
 
 ## Ultima Sesion (2025-01-21)
 
+### ⚠️ SESIÓN PROBLEMÁTICA - CAMBIOS REVERTIDOS
+
+**Problema detectado**: Se implementaron H2.1, H2.2, H2.3 (shaders PBR) **SIN VALIDAR COMPILACIÓN** antes de commit, causando errores de MSBuild.
+
+**Acción tomada**: **Revertir commit erróneo** y restaurar proyecto a estado limpio.
+
+**Estado actual**: Proyecto compilando limpiamente (0 errores, 0 warnings) ✅
+
+---
+
 ### 🎉 HISTORIA H1 COMPLETADA - MATERIAL CORE (4/4 TAREAS) 🎉
 
 **Duración H1**: ~15 minutos ⚡  
 **Estado**: Historia H1 COMPLETADA ✅
 
-**Logros de la sesion**:
+**Logros de la sesion** (válidos):
 
 ### 1. **Sprint v1.9.1 Archivado** ✅
    - [x] Todos los archivos del sprint movidos a `docs/sprints/sprint_v1.9.1/`
@@ -27,37 +37,26 @@ Siguiente: Sprint v2.0.0 - H2.1 (PBR vertex shader)
    - [x] 6 materiales PBR completos: Brick, Dirt, Grass, Rock, Sand, Snow
    - [x] Cada material con 5 texturas: BaseColor, Normal, Roughness, Metallic, AO
    - [x] Carpetas creadas en `assets/textures/pbr/`
-   - [x] ~7 archivos copiados desde DirectX-Voxelado
 
 ### 4. **H1.1 COMPLETADA** - Material.h creado ✅
    - [x] MaterialProperties struct (albedo, metallic, roughness, padding)
    - [x] Material class con 5 texture slots
-   - [x] Setters y getters para propiedades y texturas
-   - [x] Validation methods (IsValid, HasTexture)
    - [x] Valores default: albedo (1,1,1,1), metallic 0.0, roughness 0.5
 
 ### 5. **H1.2 COMPLETADA** - Material.cpp implementado ✅
    - [x] Constructor con logging
    - [x] SetTexture methods con AssetID
    - [x] SetAlbedoColor, SetMetallic, SetRoughness con clamping (0.0-1.0)
-   - [x] IsValid() validation
-   - [x] Logging de texturas asignadas
 
 ### 6. **H1.3 COMPLETADA** - MaterialInstance creado ✅
    - [x] MaterialInstance class hereda de Material
    - [x] Constructor copia propiedades y texturas de base Material
    - [x] IsValid() override (requiere base Material válido)
-   - [x] GetBaseMaterial() method
-   - [x] Logging de creación con base Material name
 
 ### 7. **H1.4 COMPLETADA** - MaterialManager singleton ✅
    - [x] Singleton pattern (Meyer's Singleton)
    - [x] CreateMaterial() y CreateMaterialInstance()
-   - [x] GetMaterial(), HasMaterial(), RemoveMaterial()
    - [x] Thread-safe con std::mutex
-   - [x] GetAllMaterials() para iteración
-   - [x] ClearAll() para cleanup
-   - [x] ReloadMaterial() y CheckForChanges() placeholders para hot-reload
 
 **Compilación**: ✅ CMake: 0 errores, MSBuild: 0 errores, 0 warnings
 
@@ -65,13 +64,13 @@ Siguiente: Sprint v2.0.0 - H2.1 (PBR vertex shader)
 
 ### Sprint v2.0.0 - Material System (PBR)
 
-**Estado**: 🚀 **EN PROGRESO** (Historia H1 COMPLETADA ✅)  
+**Estado**: 🚀 **EN PROGRESO** (Historia H1 ✅ 100%)  
 **Fecha inicio**: 2025-01-21  
 
 **Historias**: 1/5 completadas (20%)
 **Tareas**: 4/19 completadas (21%)
 
-**Próxima tarea**: H2.1 - Crear PBR vertex shader (HLSL)
+**Próxima tarea**: H2.1 - Crear PBR vertex shader (HLSL) - **PENDIENTE REIMPLEMENTACIÓN**
 
 **Funcionalidad entregada (H1)**:
 - Material class con propiedades PBR
@@ -97,7 +96,7 @@ Siguiente: Sprint v2.0.0 - H2.1 (PBR vertex shader)
 
 **Changes visible after F5?**: **NO** ❌
 
-**Reason**: H1 (Material Core) implementa clases internas sin UI ni rendering. Son las **bases** del sistema de materiales.
+**Reason**: H1 (Material Core) implementa clases internas sin UI ni rendering.
 
 **Visualization will come in**: 
 - **H2** (PBR Shader Pipeline): Materiales se aplicarán visualmente a meshes con lighting PBR
@@ -111,7 +110,7 @@ Siguiente: Sprint v2.0.0 - H2.1 (PBR vertex shader)
 +--------------------------------------------------------------------+
 ```
 
-**Proxima meta**: H2.1 - Crear PBR vertex shader con TBN matrix para normal mapping
+**Proxima meta**: H2.1 - Crear PBR vertex shader (HLSL) con TBN matrix - **REIMPLEMENTAR CON VALIDACIÓN COMPLETA**
 
 ---
 
@@ -121,5 +120,6 @@ Siguiente: Sprint v2.0.0 - H2.1 (PBR vertex shader)
 - Calificacion AAA actual: **9/10** ⭐⭐
 - Objetivo v2.0.0: **9.5/10** ⭐⭐⭐
 - Material Core funcional (4/4 tareas completadas)
+- **Proyecto compilando limpiamente: 0 errores, 0 warnings** ✅
 
 
