@@ -86,6 +86,17 @@ void EditorUI::RenderInspector(Scene::Scene* scene)
     if (!selected) {
         ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "No entity selected");
         ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "Select an entity in Hierarchy panel");
+        
+        // Drag & Drop Target (H4.3) - Show hint when no selection
+        if (ImGui::BeginDragDropTarget()) {
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_BROWSER_ITEM")) {
+                const char* assetPath = static_cast<const char*>(payload->Data);
+                // Cannot apply asset without selection
+                ImGui::OpenPopup("NoSelectionWarning");
+            }
+            ImGui::EndDragDropTarget();
+        }
+        
         ImGui::End();
         return;
     }
@@ -125,6 +136,20 @@ void EditorUI::RenderInspector(Scene::Scene* scene)
             DirectX::XMFLOAT3 scale = transform->GetScale();
             if (ImGui::DragFloat3("Scale", &scale.x, 0.01f, 0.01f, 10.0f)) {
                 transform->SetScale(scale);
+            }
+            
+            // Drag & Drop Target (H4.3) - Apply asset to selected entity
+            if (ImGui::BeginDragDropTarget()) {
+                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_BROWSER_ITEM")) {
+                    const char* assetPath = static_cast<const char*>(payload->Data);
+                    
+                    // Placeholder: Log drop event
+                    // TODO (future): Apply asset to entity
+                    // - Texture: Add/Update MeshRenderer material
+                    // - Mesh: Replace mesh component
+                    // - Shader: Update material shader
+                }
+                ImGui::EndDragDropTarget();
             }
         }
     }

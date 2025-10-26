@@ -200,6 +200,20 @@ void AssetBrowser::RenderAssetItem(const char* assetName, const char* extension,
         m_selectedAsset = assetName;
     }
 
+    // Drag & Drop Source (H4.3)
+    if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
+        // Set payload with asset name + extension
+        std::string payload = std::string(assetName) + extension;
+        ImGui::SetDragDropPayload("ASSET_BROWSER_ITEM", payload.c_str(), payload.size() + 1);
+        
+        // Visual feedback during drag (colored square + name)
+        ImGui::ColorButton("##dragPreview", thumbnailColor, ImGuiColorEditFlags_NoTooltip, ImVec2(40, 40));
+        ImGui::SameLine();
+        ImGui::Text("%s%s", assetName, extension);
+        
+        ImGui::EndDragDropSource();
+    }
+
     // Filename label (centered, truncated if too long)
     ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + m_thumbnailSize);
     ImGui::TextWrapped("%s", assetName);

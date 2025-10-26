@@ -47,6 +47,23 @@ void Viewport::Render()
         
         // Check if viewport is hovered (for camera controls)
         m_isHovered = ImGui::IsItemHovered();
+        
+        // Drag & Drop Target (H4.3)
+        if (ImGui::BeginDragDropTarget()) {
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_BROWSER_ITEM")) {
+                // Payload contains asset name + extension
+                const char* assetPath = static_cast<const char*>(payload->Data);
+                
+                // Placeholder: Log drop event (no actual action yet)
+                CORE_LOG_INFO("Asset dropped on Viewport: %s", assetPath);
+                
+                // TODO (future): Load asset and add to scene
+                // - If texture: apply to selected mesh
+                // - If mesh: instantiate in scene
+                // - If shader: apply to material
+            }
+            ImGui::EndDragDropTarget();
+        }
 #else
         // Fallback for non-Windows platforms (show placeholder)
         ImGui::Text("Viewport (3D rendering not available on this platform)");
