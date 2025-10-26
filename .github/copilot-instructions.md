@@ -103,12 +103,14 @@ Repeat from 1
 
 ### Step 2: Build 1 (CMake - Multi-platform publisher)
 ```powershell
-cmake --build build --config Debug
+cmake --build build --config Debug 2>&1 | Out-String
 ```
 
 **Why**: Multi-platform builds (Windows, Mac, Linux, Consoles). If this fails, game cannot be published → **blocking issue**.
 
 **Success criteria**: 0 errors, 0 warnings
+
+**Note**: Use `2>&1 | Out-String` to prevent terminal blocking. Never use `Select-Object` before completion.
 
 ---
 
