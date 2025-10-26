@@ -343,38 +343,67 @@ static int RunApp(HINSTANCE hInstance)
                     if (ImGui::MenuItem("Save Scene", "Ctrl+S"))
                     {
                         // H5.3: Save current scene to JSON
-                        std::string filepath = "assets/scenes/saved_scene.json";
-                        if (Scene::SceneSerializer::SaveScene(&scene, filepath))
+                        // CRITICAL FIX: Usar absolute path para evitar problemas de working directory
+                        std::string filepath = "saved_scene.json"; // Guardar en working directory
+                        if (Scene::SceneSerializer::SaveScene(&scene, filepath.c_str()))
                         {
-                            CORE_LOG_INFO("Scene saved successfully to %s", filepath.c_str());
+                            std::ostringstream ss;
+                            ss << "Scene saved successfully to " << filepath;
+                            CORE_LOG_INFO(ss.str());
                         }
                         else
                         {
-                            CORE_LOG_ERROR("Failed to save scene: %s", 
-                                         Scene::SceneSerializer::GetLastError().c_str());
+                            std::ostringstream ss;
+                            ss << "Failed to save scene: " << Scene::SceneSerializer::GetLastError();
+                            CORE_LOG_ERROR(ss.str());
                         }
                     }
                     
                     if (ImGui::MenuItem("Load Scene", "Ctrl+O"))
                     {
-                        // H5.3: Load scene from JSON (placeholder - no file dialog yet)
-                        std::string filepath = "assets/scenes/saved_scene.json";
-                        Scene::Scene* loadedScene = Scene::SceneSerializer::LoadScene(filepath);
+                        // H5.3: Load scene from JSON
+                        std::string filepath = "saved_scene.json"; // Cargar desde working directory
+                        Scene::Scene* loadedScene = Scene::SceneSerializer::LoadScene(filepath.c_str());
                         
                         if (loadedScene)
                         {
-                            // Replace current scene with loaded scene
-                            // Note: This is a simple replacement for demonstration
-                            // TODO (future): Proper scene management with cleanup
-                            scene = *loadedScene;
-                            delete loadedScene;
+                            // CRITICAL FIX: Clear current scene BEFORE replacing
+                            // This prevents dangling pointers from shallow copy
+                            std::vector<Scene::Entity*> entitiesToDelete = scene.GetRootEntities();
+                            for (Scene::Entity* entity : entitiesToDelete)
+                            {
+                                scene.DestroyEntity(entity->GetID()); // FIX: usar EntityID, no puntero
+                            }
                             
-                            CORE_LOG_INFO("Scene loaded successfully from %s", filepath.c_str());
+                            // Copy entities from loaded scene to current scene
+                            scene.SetName(loadedScene->GetName());
+                            for (Scene::Entity* loadedEntity : loadedScene->GetRootEntities())
+                            {
+                                // Create equivalent entity in current scene
+                                Scene::Entity* newEntity = scene.CreateEntity(loadedEntity->GetName());
+                                
+                                // Copy Transform component
+                                Scene::Transform* loadedTransform = loadedEntity->GetComponent<Scene::Transform>();
+                                Scene::Transform* newTransform = newEntity->GetComponent<Scene::Transform>();
+                                if (loadedTransform && newTransform)
+                                {
+                                    newTransform->SetPosition(loadedTransform->GetPosition());
+                                    newTransform->SetRotation(loadedTransform->GetRotation());
+                                    newTransform->SetScale(loadedTransform->GetScale());
+                                }
+                            }
+                            
+                            delete loadedScene; // Safe to delete now
+                            
+                            std::ostringstream ss;
+                            ss << "Scene loaded successfully from " << filepath;
+                            CORE_LOG_INFO(ss.str());
                         }
                         else
                         {
-                            CORE_LOG_ERROR("Failed to load scene: %s", 
-                                         Scene::SceneSerializer::GetLastError().c_str());
+                            std::ostringstream ss;
+                            ss << "Failed to load scene: " << Scene::SceneSerializer::GetLastError();
+                            CORE_LOG_ERROR(ss.str());
                         }
                     }
                     
