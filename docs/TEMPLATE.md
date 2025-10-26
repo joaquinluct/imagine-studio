@@ -124,27 +124,47 @@ Repeat from 1
 
 ---
 
-## ?? ITERATION FORMAT
+## ?? ITERATION FORMAT (MANDATORY - ALL 3 SECTIONS)
 
-**After each iteration**, report with **3 sections**:
+**After each iteration**, report with **3 MANDATORY sections**:
 
-1. **Titles**: Done + Next
-2. **Visualization**: What changed visually?
-3. **Progress Bar**: Sprint completion percentage
-
-**Example**:
+### 1. Titles (MANDATORY)
 ```markdown
-? Done: H1.3 - EntityManager implemented
-?? Next: H1.4 - Unit tests
-
-### ??? Visualization:
-**Changes visible?**: **NO** ?
-**Reason**: Internal classes without UI effect
-
-+----------------------------------------------------------+
-?????????????????????????????????? 18.8%?
-+----------------------------------------------------------+
+✅ Done: H1.3 - EntityManager implemented
+🔜 Next: H1.4 - Unit tests Entity System
 ```
+
+### 2. Visualization (MANDATORY) ⚠️ **NEVER SKIP THIS SECTION**
+```markdown
+### 🎨 Visualization:
+
+**Changes visible after F5?**: **YES** ✅ / **NO** ❌
+
+[If YES]
+**You should see**:
+1. ✅ Panel "Hierarchy" visible on left side
+2. ✅ Expandable tree with objects
+
+[If NO]
+**Reason**: This task implements internal classes without UI effect
+**Visualization will come in**: [List future tasks that will show visual changes]
+```
+
+**Position**: AFTER titles, BEFORE progress bar  
+**Why MANDATORY**: 
+- Sets clear expectations (user knows if they should see changes)
+- Prevents wasted time (user won't press F5 expecting something that isn't there)
+- Documents when visual features will be available
+- AAA standard: Professional engines always document "What will the user see?"
+
+### 3. Progress Bar (MANDATORY)
+```
++--------------------------------------------------------------------+
+███████████████████████ 18.8%⬛
++--------------------------------------------------------------------+
+```
+
+**Calculate**: `(completed tasks / total sprint tasks) × 100`
 
 ---
 

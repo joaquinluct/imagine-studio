@@ -210,46 +210,52 @@ Sprint v[PLACEHOLDER: versi�n] cerrado. Sin sprint activo.
 
 ---
 
-## ?? FORMATO DE ITERACI�N FINAL
+## ?? FORMATO DE ITERACI�N FINAL (MANDATORY - ALL 3 SECTIONS)
 
-Al final de cada iteraci�n, reportar con **3 secciones obligatorias**:
+Al final de cada iteraci�n, reportar con **3 secciones MANDATORY**:
 
-### 1. T�tulos (Hecho/Siguiente)
+### 1. T�tulos (MANDATORY)
 
 ```markdown
-? Hecho: H1.3 - [PLACEHOLDER: Tarea completada]
-?? Siguiente: H1.4 - [PLACEHOLDER: Pr�xima tarea]
+✅ Hecho: H1.3 - [PLACEHOLDER: Tarea completada]
+🔜 Siguiente: H1.4 - [PLACEHOLDER: Pr�xima tarea]
 ```
 
-### 2. Visualizaci�n (OBLIGATORIO)
+### 2. Visualizaci�n (MANDATORY) ⚠️ **NEVER SKIP THIS SECTION**
 
 ```markdown
-### ??? Visualizaci�n:
+### 🎨 Visualizaci�n:
 
-**�Algo nuevo que cambie la vista tras ejecuci�n?**: **S�** ? / **NO** ?
+**�Algo nuevo que cambie la vista tras ejecuci�n?**: **S�** ✅ / **NO** ❌
 
-[SI ES "S� ?"]
+[SI ES "S� ✅"]
 **Qu� deber�as ver al ejecutar** ([PLACEHOLDER: F5 / npm start / etc.]):
-1. ? [PLACEHOLDER: Cambio visual espec�fico 1]
-2. ? [PLACEHOLDER: Cambio visual espec�fico 2]
+1. ✅ [PLACEHOLDER: Cambio visual espec�fico 1]
+2. ✅ [PLACEHOLDER: Cambio visual espec�fico 2]
 
 **Qu� ha cambiado**:
-- ?? [PLACEHOLDER: Componente modificado]
+- 🔄 [PLACEHOLDER: Componente modificado]
 
 **Ausente**:
-- ? [PLACEHOLDER: Elemento que ya no se muestra]
+- ❌ [PLACEHOLDER: Elemento que ya no se muestra]
 
-[SI ES "NO ?"]
+[SI ES "NO ❌"]
 **Raz�n**: [PLACEHOLDER: Por qu� no hay cambios visuales]
+**Visualizaci�n vendr� en**: [PLACEHOLDER: Futuras tareas que mostrar�n cambios]
 ```
 
-**Posici�n**: DESPU�S de t�tulos, ANTES de barra de progreso
+**Posici�n**: DESPU�S de t�tulos, ANTES de barra de progreso  
+**Why MANDATORY**: 
+- Sets clear expectations (user knows if they should see changes)
+- Prevents wasted time (user won't execute expecting something that isn't there)
+- Documents when visual features will be available
+- [PLACEHOLDER: AAA/Professional] standard: Always document "What will the user see?"
 
-### 3. Barra de Progreso
+### 3. Barra de Progreso (MANDATORY)
 
 ```
 +--------------------------------------------------------------------+
-?????????????????????????????????????????????????????? 18.8%?
+███████████████████████ 18.8%⬛
 +--------------------------------------------------------------------+
 ```
 

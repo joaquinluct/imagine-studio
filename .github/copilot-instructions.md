@@ -83,6 +83,50 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 
 ---
 
+## 🔥 ITERATION FORMAT (MANDATORY - ALL 3 SECTIONS)
+
+**After each iteration**, report with **3 MANDATORY sections**:
+
+### 1. Titles (MANDATORY)
+```markdown
+✅ Done: H1.3 - EntityManager implemented
+🔜 Next: H1.4 - Unit tests Entity System
+```
+
+### 2. Visualization (MANDATORY) ⚠️ **NEVER SKIP THIS SECTION**
+```markdown
+### 🎨 Visualization:
+
+**Changes visible after F5?**: **YES** ✅ / **NO** ❌
+
+[If YES]
+**You should see**:
+1. ✅ Panel "Hierarchy" visible on left side
+2. ✅ Expandable tree with objects
+
+[If NO]
+**Reason**: This task implements internal classes without UI effect
+**Visualization will come in**: [List future tasks that will show visual changes]
+```
+
+**Position**: AFTER titles, BEFORE progress bar  
+**Why MANDATORY**: 
+- Sets clear expectations (user knows if they should see changes)
+- Prevents wasted time (user won't press F5 expecting something that isn't there)
+- Documents when visual features will be available
+- AAA standard: Professional engines always document "What will the user see?"
+
+### 3. Progress Bar (MANDATORY)
+```
++--------------------------------------------------------------------+
+███████████████████████ 18.8%⬛
++--------------------------------------------------------------------+
+```
+
+**Calculate**: `(completed tasks / total sprint tasks) × 100`
+
+---
+
 ## ?? FILE STRUCTURE
 
 | File | Purpose | When |
@@ -141,43 +185,6 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 - **Use**: `WORKFLOW_FINISHED_OK` (Tester Agent when builds pass)
 - **Avoid**: `BUILD_SUCCESS` in prompts (causes premature termination)
 - See: [`autogen/TERMINATION_FIX.md`](../autogen/TERMINATION_FIX.md)
-
----
-
-## ?? ITERATION FORMAT
-
-**After each iteration**, report with **3 sections**:
-
-### 1. Titles
-```markdown
-? Done: H1.3 - EntityManager implemented
-?? Next: H1.4 - Unit tests Entity System
-```
-
-### 2. Visualization (MANDATORY)
-```markdown
-### ??? Visualization:
-
-**Changes visible after F5?**: **YES** ? / **NO** ?
-
-[If YES]
-**You should see**:
-1. ? Panel "Hierarchy" visible on left side
-2. ? Expandable tree with objects
-
-[If NO]
-**Reason**: This task implements internal classes without UI effect
-```
-
-**Position**: AFTER titles, BEFORE progress bar
-
-### 3. Progress Bar
-```
-+--------------------------------------------------------------------+
-?????????????????????????????????????????????????????? 18.8%?
-+--------------------------------------------------------------------+```
-
-**Calculate**: `(completed tasks / total sprint tasks) � 100`
 
 ---
 
