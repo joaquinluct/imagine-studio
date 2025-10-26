@@ -112,6 +112,12 @@ set_target_properties(ImagineStudio PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )
 
+# stb_image library (Image Loading)
+add_library(stb_image STATIC
+    external/stb/stb_image_impl.cpp
+)
+target_include_directories(stb_image PUBLIC external/stb)
+
 # ImGui library (Dear ImGui - Editor UI Framework)
 add_library(ImGui STATIC
     external/imgui/imgui.cpp
@@ -133,9 +139,12 @@ if (MSVC)
     target_link_libraries(ImagineStudio PRIVATE d3d12 dxgi d3dcompiler)
     # Link ImGui library
     target_link_libraries(ImagineStudio PRIVATE ImGui)
+    # Link stb_image library
+    target_link_libraries(ImagineStudio PRIVATE stb_image)
 else()
     # On other platforms link adjustments can be added here if needed
     target_link_libraries(ImagineStudio PRIVATE ImGui)
+    target_link_libraries(ImagineStudio PRIVATE stb_image)
 endif()
 
 # Benchmarks - add specific bench sources to avoid duplicate mains

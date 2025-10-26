@@ -1,51 +1,59 @@
 ﻿# Daily Log
 
-Hecho: H1.4 - Testing AssetDatabase (cuarta tarea Sprint v1.9.0 - Historia H1 COMPLETADA ✅)
-Siguiente: H2.1 - Integrar stb_image library (iniciar Historia H2 - Texture Importer)
+Hecho: H2.1 - Integrar stb_image library (quinta tarea Sprint v1.9.0, primera de Historia H2)
+Siguiente: H2.2 - Crear TextureImporter.h/cpp
 
 ## Ultima Sesion (2025-01-21)
 
-### H1.4 COMPLETADA - TESTING ASSETDATABASE ✅
+### H2.1 COMPLETADA - STB_IMAGE LIBRARY INTEGRADA ✅
 
 **Logros de la sesion**:
-1. Creado `tests/asset_database_test.cpp` con 7 test suites completas:
-   - `TestSingletonInstance` - Verifica patrón Singleton
-   - `TestRegisterAsset` - Prueba registro de assets (Texture, Mesh, Shader, Scene)
-   - `TestHasAsset` - Verifica consultas de existencia
-   - `TestGetMetadata` - Valida recuperación de metadata
-   - `TestUnregisterAsset` - Prueba eliminación de assets
-   - `TestAssetTypes` - Valida todos los tipos de assets
-   - `TestThreadSafety` - Verifica diseño thread-safe
-2. Tests ejecutados exitosamente: **27 assertions passed** ✅
-3. Actualizado `CMakeLists.txt` con target `asset_database_test`
-4. Excluido test del proyecto principal (evitar conflicto de `main`)
-5. **Historia H1 COMPLETADA** (Asset Database Core - 4/4 tareas) 🎉
+1. Descargado `stb_image.h` desde repositorio oficial (https://github.com/nothings/stb)
+2. Creada carpeta `external/stb/` con estructura:
+   - `stb_image.h` - Header de la librería (single-header)
+   - `stb_image_impl.cpp` - Archivo de implementación (#define STB_IMAGE_IMPLEMENTATION)
+   - `README.md` - Documentación completa de uso y API
+3. Actualizado `CMakeLists.txt`:
+   - Añadida librería `stb_image` como target STATIC
+   - Linked a `ImagineStudio` executable
+4. Actualizado `Imagine Studio.vcxproj`:
+   - Añadido `external/stb/stb_image_impl.cpp` al proyecto
+5. Compilación limpia: 0 errores, 0 warnings ✅
 
-**Resultados de tests**:
-```
-========================================
-   AssetDatabase Unit Tests
-========================================
-[PASS] TestSingletonInstance (2 assertions)
-[PASS] TestRegisterAsset (4 assertions)
-[PASS] TestHasAsset (7 assertions)
-[PASS] TestGetMetadata (10 assertions)
-[PASS] TestUnregisterAsset (4 assertions)
-[PASS] TestAssetTypes (3 assertions)
-[PASS] TestThreadSafety (1 assertion)
-========================================
-   ALL TESTS PASSED ✓
-========================================
+**Formatos de imagen soportados**:
+- PNG (8-bit, 16-bit, paletted)
+- JPG/JPEG (baseline & progressive)
+- BMP (non-RLE)
+- TGA (Truevision Targa)
+- PSD (Photoshop composited view)
+- GIF (animated support)
+- HDR (Radiance RGBE)
+- PIC (Softimage)
+
+**API principal**:
+```cpp
+#include "external/stb/stb_image.h"
+
+int width, height, channels;
+unsigned char* data = stbi_load("texture.png", &width, &height, &channels, 4); // Force RGBA
+
+if (data) {
+    // Use pixel data...
+    stbi_image_free(data);
+} else {
+    const char* error = stbi_failure_reason();
+}
 ```
 
 **Beneficios**:
-- Validación automática del Asset Database core
-- Confianza en la funcionalidad antes de implementar importers
-- Cobertura completa: Singleton, CRUD operations, thread-safety
-- Base sólida para tests de H2, H3 (Texture/Mesh Importers)
+- Soporte completo para PNG/JPG (formatos principales)
+- Single-header, fácil de integrar
+- Thread-safe (sin estado global)
+- Public domain license (sin restricciones)
+- Base sólida para TextureImporter (H2.2)
 
-**Progreso Sprint v1.9.0**: 4/20 tareas completadas (20%)
-**HISTORIA H1 COMPLETADA** ✅ (Primera de 5 historias del sprint)
+**Progreso Sprint v1.9.0**: 5/20 tareas completadas (25%)
+**Historia H2** iniciada (Texture Importer - 1/4 tareas)
 
 ---
 
@@ -56,13 +64,13 @@ Siguiente: H2.1 - Integrar stb_image library (iniciar Historia H2 - Texture Impo
 
 **Historias**:
 1. H1: Asset Database Core (tracking de assets) - **✅ COMPLETADA (4/4 tareas)**
-2. H2: Texture Importer (PNG/JPG a DX12) - **⏳ SIGUIENTE**
+2. H2: Texture Importer (PNG/JPG a DX12) - **EN PROGRESO (1/4 tareas)**
 3. H3: Mesh Importer (OBJ a buffers)
 4. H4: Asset Browser Panel (editor UI)
 5. H5: Scene Serialization (save/load JSON)
 
 **Tareas**: 20 tareas (4 por historia)
-**Progreso**: 1/5 historias (20%), 4/20 tareas (20%)
+**Progreso**: 1/5 historias (20%), 5/20 tareas (25%)
 
 ---
 
@@ -73,7 +81,7 @@ Siguiente: H2.1 - Integrar stb_image library (iniciar Historia H2 - Texture Impo
 | v1.6.0 | Viewport AAA | CERRADO | 100% | 6/10 |
 | v1.7.0 | Performance Optimization | CERRADO | 100% | 7/10 |
 | v1.8.0 | Scene Graph & Entity System | CERRADO | 100% | 8/10 |
-| v1.9.0 | Asset System | EN PROGRESO | 20% | - |
+| v1.9.0 | Asset System | EN PROGRESO | 25% | - |
 
 **Proxima meta**: Calificacion AAA 9/10 al completar Asset System
 
@@ -81,23 +89,31 @@ Siguiente: H2.1 - Integrar stb_image library (iniciar Historia H2 - Texture Impo
 
 ### Proxima Tarea Automatica
 
-**H2.1: Integrar stb_image library**
+**H2.2: Crear TextureImporter.h/cpp**
 
-**Objetivo**: Descargar e integrar stb_image.h para cargar imágenes PNG/JPG
+**Objetivo**: Implementar clase TextureImporter con método ImportTexture(path) usando stb_image
 
 **Archivos afectados**: 
-- `external/stb/stb_image.h` (nuevo)
-- `CMakeLists.txt` (añadir include path)
+- `src/assets/TextureImporter.h` (nuevo)
+- `src/assets/TextureImporter.cpp` (nuevo)
+- `Imagine Studio.vcxproj` (añadir archivos)
 
-**Beneficio**: Soporte para carga de texturas desde archivos de imagen estándar
+**Funcionalidad**:
+- ImportTexture(const std::string& path) - Cargar textura desde disco
+- Retornar TextureData struct (width, height, channels, pixel data)
+- Manejo de errores con excepciones/códigos de error
+- Soporte para PNG, JPG, BMP, TGA
+
+**Beneficio**: Carga de texturas desde disco, primer paso hacia assets visuales reales
 
 ---
 
 **Estado del proyecto**: 
 - 3 sprints cerrados (v1.6.0, v1.7.0, v1.8.0)
-- Sprint v1.9.0 en progreso (Asset System - 20%)
-- ✅ **Historia H1 completada** (Asset Database Core - 100%)
+- Sprint v1.9.0 en progreso (Asset System - 25%)
+- ✅ Historia H1 completada (Asset Database Core)
+- ⏳ Historia H2 en progreso (Texture Importer - 1/4 tareas)
 - Calificacion AAA: 8/10
-- Asset tracking + tests completos, listo para importers
+- stb_image integrado, listo para importer
 
 

@@ -260,6 +260,7 @@
     <ClCompile Include="external\imgui\imgui_widgets.cpp" />
     <ClCompile Include="external\imgui\backends\imgui_impl_dx12.cpp" />
     <ClCompile Include="external\imgui\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="external\stb\stb_image_impl.cpp" />
     <ClCompile Include="external\imgui\imgui_demo.cpp" />
   </ItemGroup>
   <ItemGroup>

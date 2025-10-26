@@ -38,7 +38,6 @@ Refs: <issue/track-id>
 **Archivos**:
 - `src/assets/AssetDatabase.h` (nuevo)
 - `Imagine Studio.vcxproj` (modificado)
-- `Imagine Studio.vcxproj.filters` (modificado)
 
 **Mensaje**:
 ```
@@ -58,7 +57,6 @@ Refs: H1.1 (Sprint v1.9.0)
 **Archivos**:
 - `src/assets/AssetDatabase.cpp` (nuevo)
 - `Imagine Studio.vcxproj` (modificado)
-- `Imagine Studio.vcxproj.filters` (modificado)
 - `src/assets/AssetDatabase.h` (encoding fix)
 
 **Mensaje**:
@@ -81,10 +79,7 @@ Refs: H1.2 (Sprint v1.9.0)
 **Tipo**: chore  
 **Archivos**:
 - `assets/` (carpeta nueva)
-- `assets/textures/` (carpeta nueva)
-- `assets/meshes/` (carpeta nueva)
-- `assets/shaders/` (carpeta nueva)
-- `assets/scenes/` (carpeta nueva)
+- `assets/textures/`, `meshes/`, `shaders/`, `scenes/` (carpetas)
 - `assets/README.md` (nuevo)
 - `assets/*/.gitkeep` (4 archivos)
 
@@ -133,9 +128,45 @@ Primera historia del Sprint v1.9.0 completada (20% del sprint)
 Refs: H1.4 (Sprint v1.9.0)
 ```
 
+### Commit 5 - H2.1: stb_image library integrada (Historia H2 iniciada)
+**Fecha**: 2025-01-21  
+**Tipo**: chore  
+**Archivos**:
+- `external/stb/stb_image.h` (descargado de nothings/stb)
+- `external/stb/stb_image_impl.cpp` (nuevo)
+- `external/stb/README.md` (nuevo)
+- `CMakeLists.txt` (añadir librería stb_image)
+- `Imagine Studio.vcxproj` (añadir stb_image_impl.cpp)
+
+**Mensaje**:
+```
+chore(external): Integrar stb_image library para carga de imágenes
+
+Librería stb_image (nothings/stb):
+- Single-header C library (Public Domain)
+- Formatos: PNG, JPG, BMP, TGA, PSD, GIF, HDR, PIC
+- Thread-safe, sin dependencias externas
+
+Archivos:
+- stb_image.h (header)
+- stb_image_impl.cpp (implementation)
+- README.md (documentación API completa)
+
+Integración:
+- CMakeLists.txt: target stb_image STATIC library
+- Linked a ImagineStudio executable
+
+Compilación limpia: 0 errores, 0 warnings
+
+HISTORIA H2 INICIADA (Texture Importer - 1/4 tareas)
+
+Refs: H2.1 (Sprint v1.9.0)
+```
+
 ---
 
 **Versión**: v1.0  
 **Última actualización**: 2025-01-21  
-**Sprint**: v1.9.0 - Asset System - **EN PROGRESO** (20%)  
-**Historias completadas**: 1/5 (H1 ✅)
+**Sprint**: v1.9.0 - Asset System - **EN PROGRESO** (25%)  
+**Historias completadas**: 1/5 (H1 ✅)  
+**Historias en progreso**: 1/5 (H2 - 1/4 tareas)
