@@ -202,10 +202,52 @@ HISTORIA H2 en progreso (Texture Importer - 2/4 tareas)
 Refs: H2.2 (Sprint v1.9.0)
 ```
 
+### Commit 7 - H2.3: DX12 Texture2D from data implementado
+**Fecha**: 2025-01-21  
+**Tipo**: feat  
+**Archivos**:
+- `src/renderer/DX12ResourceManager.h` (añadir método CreateTexture2DFromData)
+- `src/renderer/DX12ResourceManager.cpp` (implementación)
+
+**Mensaje**:
+```
+feat(renderer): Implementar CreateTexture2DFromData para upload GPU
+
+Método CreateTexture2DFromData en DX12ResourceManager:
+- Create texture en default heap (GPU-only memory)
+- Create upload buffer en upload heap (staging)
+- GetCopyableFootprints para calcular subresource layout
+- Map upload buffer y copy pixel data con row pitch alignment
+- CopyTextureRegion para transferir staging → GPU
+- Resource barrier: COPY_DEST → PIXEL_SHADER_RESOURCE
+- Retornar upload buffer al caller para deferred release
+
+Características:
+- Soporte DXGI_FORMAT_R8G8B8A8_UNORM (RGBA)
+- Row pitch alignment correcto (D3D12_PLACED_SUBRESOURCE_FOOTPRINT)
+- Upload buffer NO se libera hasta GPU finish (evita errors)
+- Logging con dimensiones de textura
+
+Flujo completo:
+1. Create texture (default heap) + upload buffer (staging)
+2. Map upload buffer → copy pixel data row by row
+3. Unmap upload buffer
+4. CopyTextureRegion (staging → GPU)
+5. Resource barrier (COPY_DEST → PIXEL_SHADER_RESOURCE)
+6. Retornar texture + upload buffer
+7. Caller: ExecuteCommandList → Wait fence → Release upload buffer
+
+Compilación limpia: 0 errores, 0 warnings
+
+HISTORIA H2 en progreso (Texture Importer - 3/4 tareas, 75%)
+
+Refs: H2.3 (Sprint v1.9.0)
+```
+
 ---
 
 **Versión**: v1.0  
 **Última actualización**: 2025-01-21  
-**Sprint**: v1.9.0 - Asset System - **EN PROGRESO** (30%)  
+**Sprint**: v1.9.0 - Asset System - **EN PROGRESO** (35%)  
 **Historias completadas**: 1/5 (H1 ✅)  
-**Historias en progreso**: 1/5 (H2 - 2/4 tareas)
+**Historias en progreso**: 1/5 (H2 - 3/4 tareas, 75%)

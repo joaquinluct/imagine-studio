@@ -302,6 +302,167 @@ void* DX12ResourceManager::CreateTexture2D(
 }
 
 #if defined(_WIN32) && defined(_MSC_VER)
+ID3D12Resource* DX12ResourceManager::CreateTexture2DFromData(
+    const unsigned char* pixels,
+    unsigned int width,
+    unsigned int height,
+    DXGI_FORMAT format,
+    ID3D12GraphicsCommandList* uploadCommandList,
+    ID3D12Resource** outUploadBuffer
+)
+#else
+void* DX12ResourceManager::CreateTexture2DFromData(
+    const void* pixels,
+    unsigned int width,
+    unsigned int height,
+    unsigned int format,
+    void* uploadCommandList,
+    void** outUploadBuffer
+)
+#endif
+{
+#if defined(_WIN32) && defined(_MSC_VER)
+    if (!m_device || !pixels || width == 0 || height == 0 || !uploadCommandList)
+    {
+        CORE_LOG_ERROR("DX12ResourceManager::CreateTexture2DFromData: Invalid parameters");
+        return nullptr;
+    }
+
+    // Calculate texture size (bytes per pixel depends on format)
+    unsigned int bytesPerPixel = 4; // RGBA = 4 bytes
+    if (format == DXGI_FORMAT_R8G8B8A8_UNORM)
+    {
+        bytesPerPixel = 4;
+    }
+    // Add more formats as needed
+
+    // Create texture resource in default heap (GPU-only, optimal performance)
+    D3D12_HEAP_PROPERTIES defaultHeapProps = {};
+    defaultHeapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
+    defaultHeapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+    defaultHeapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+    defaultHeapProps.CreationNodeMask = 1;
+    defaultHeapProps.VisibleNodeMask = 1;
+
+    D3D12_RESOURCE_DESC textureDesc = {};
+    textureDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+    textureDesc.Alignment = 0;
+    textureDesc.Width = width;
+    textureDesc.Height = height;
+    textureDesc.DepthOrArraySize = 1;
+    textureDesc.MipLevels = 1;
+    textureDesc.Format = format;
+    textureDesc.SampleDesc.Count = 1;
+    textureDesc.SampleDesc.Quality = 0;
+    textureDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+    textureDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+
+    ID3D12Resource* texture = nullptr;
+    HRESULT hr = m_device->CreateCommittedResource(
+        &defaultHeapProps,
+        D3D12_HEAP_FLAG_NONE,
+        &textureDesc,
+        D3D12_RESOURCE_STATE_COPY_DEST, // Start in copy destination state
+        nullptr,
+        IID_PPV_ARGS(&texture)
+    );
+
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12ResourceManager::CreateTexture2DFromData: Failed to create texture resource");
+        return nullptr;
+    }
+
+    // Get upload buffer size from device
+    UINT64 uploadBufferSize = 0;
+    m_device->GetCopyableFootprints(&textureDesc, 0, 1, 0, nullptr, nullptr, nullptr, &uploadBufferSize);
+
+    // Create upload buffer (staging heap for CPU-to-GPU transfer)
+    ID3D12Resource* uploadBuffer = CreateUploadBuffer(static_cast<unsigned int>(uploadBufferSize));
+    if (!uploadBuffer)
+    {
+        CORE_LOG_ERROR("DX12ResourceManager::CreateTexture2DFromData: Failed to create upload buffer");
+        texture->Release();
+        return nullptr;
+    }
+
+    // Map upload buffer and copy pixel data
+    void* pMappedData = nullptr;
+    D3D12_RANGE readRange = { 0, 0 }; // We won't read from this resource on CPU
+    hr = uploadBuffer->Map(0, &readRange, &pMappedData);
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12ResourceManager::CreateTexture2DFromData: Failed to map upload buffer");
+        uploadBuffer->Release();
+        texture->Release();
+        return nullptr;
+    }
+
+    // Get placed footprint for subresource layout
+    D3D12_PLACED_SUBRESOURCE_FOOTPRINT footprint = {};
+    UINT numRows = 0;
+    UINT64 rowSizeInBytes = 0;
+    UINT64 totalBytes = 0;
+    m_device->GetCopyableFootprints(&textureDesc, 0, 1, 0, &footprint, &numRows, &rowSizeInBytes, &totalBytes);
+
+    // Copy pixel data row by row (respecting D3D12 row pitch alignment)
+    unsigned char* destPtr = static_cast<unsigned char*>(pMappedData);
+    const unsigned char* srcPtr = pixels;
+    unsigned int srcRowPitch = width * bytesPerPixel;
+
+    for (unsigned int row = 0; row < height; ++row)
+    {
+        memcpy(destPtr + row * footprint.Footprint.RowPitch, 
+               srcPtr + row * srcRowPitch, 
+               srcRowPitch);
+    }
+
+    uploadBuffer->Unmap(0, nullptr);
+
+    // Record copy command from upload buffer to texture
+    D3D12_TEXTURE_COPY_LOCATION destLocation = {};
+    destLocation.pResource = texture;
+    destLocation.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+    destLocation.SubresourceIndex = 0;
+
+    D3D12_TEXTURE_COPY_LOCATION srcLocation = {};
+    srcLocation.pResource = uploadBuffer;
+    srcLocation.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
+    srcLocation.PlacedFootprint = footprint;
+
+    uploadCommandList->CopyTextureRegion(&destLocation, 0, 0, 0, &srcLocation, nullptr);
+
+    // Transition texture from COPY_DEST to PIXEL_SHADER_RESOURCE
+    D3D12_RESOURCE_BARRIER barrier = {};
+    barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    barrier.Transition.pResource = texture;
+    barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+    barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+    barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+    uploadCommandList->ResourceBarrier(1, &barrier);
+
+    // Return upload buffer to caller for deferred release
+    if (outUploadBuffer)
+    {
+        *outUploadBuffer = uploadBuffer;
+        CORE_LOG_INFO("DX12ResourceManager: Texture2D created from data (" + std::to_string(width) + "x" + std::to_string(height) + ", upload buffer returned to caller)");
+    }
+    else
+    {
+        // Legacy path: release immediately (DEPRECATED - may cause GPU errors)
+        uploadBuffer->Release();
+        CORE_LOG_WARN("DX12ResourceManager: Upload buffer released immediately (DEPRECATED - may cause errors)");
+    }
+
+    return texture;
+#else
+    return nullptr;
+#endif
+}
+
+#if defined(_WIN32) && defined(_MSC_VER)
 ID3D12DescriptorHeap* DX12ResourceManager::CreateDescriptorHeap(
     D3D12_DESCRIPTOR_HEAP_TYPE type,
     unsigned int numDescriptors,

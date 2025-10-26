@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #if defined(_WIN32) && defined(_MSC_VER)
 #include <d3d12.h>
@@ -9,7 +9,7 @@
 namespace Renderer {
 
 // v1.7.0 H3 - Deferred Release Queue
-// Estructura para trackear recursos temporales pendientes de liberación
+// Estructura para trackear recursos temporales pendientes de liberaciï¿½n
 #if defined(_WIN32) && defined(_MSC_VER)
 struct PendingRelease {
     ID3D12Resource* resource;
@@ -84,6 +84,31 @@ public:
         unsigned int flags = 0,
         unsigned int initialState = 0,
         const void* clearValue = nullptr
+    );
+#endif
+
+    // Create 2D texture from pixel data (upload to GPU)
+    // Returns nullptr on failure
+    // pixels: RGBA pixel data (4 bytes per pixel)
+    // uploadCommandList: command list for upload commands
+    // outUploadBuffer: staging buffer to keep alive until GPU finishes (caller must release)
+#if defined(_WIN32) && defined(_MSC_VER)
+    ID3D12Resource* CreateTexture2DFromData(
+        const unsigned char* pixels,
+        unsigned int width,
+        unsigned int height,
+        DXGI_FORMAT format,
+        ID3D12GraphicsCommandList* uploadCommandList,
+        ID3D12Resource** outUploadBuffer
+    );
+#else
+    void* CreateTexture2DFromData(
+        const void* pixels,
+        unsigned int width,
+        unsigned int height,
+        unsigned int format,
+        void* uploadCommandList,
+        void** outUploadBuffer
     );
 #endif
 
