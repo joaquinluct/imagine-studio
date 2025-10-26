@@ -2,6 +2,10 @@
 #include "../core/Log.h"
 #include <algorithm>
 
+// Prevent Windows.h min/max macros from interfering
+#undef min
+#undef max
+
 namespace Materials {
 
 Material::Material(const std::string& name)

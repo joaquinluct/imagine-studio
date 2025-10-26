@@ -17,8 +17,8 @@ public:
     // Get base Material (shader source)
     Material* GetBaseMaterial() const { return m_baseMaterial; }
 
-    // Override validation (must have valid base Material)
-    bool IsValid() const override;
+    // Validation (must have valid base Material)
+    bool IsValid() const;
 
 private:
     Material* m_baseMaterial; // Base Material that defines shader/PSO
