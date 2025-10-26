@@ -1,6 +1,10 @@
 #include "AssetBrowser.h"
 #include <imgui.h>
 
+#if defined(_WIN32)
+#include <windows.h>
+#endif
+
 namespace Editor {
 
 AssetBrowser::AssetBrowser()
@@ -137,7 +141,36 @@ void AssetBrowser::RenderAssetGrid()
         RenderAssetItem("basic_pixel", ".hlsl", assetCount++);
     }
     else if (m_currentFolder == "assets/scenes/") {
-        ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), "No scenes yet. Create one in Scene menu.");
+        // v1.9.1 FIX: Mostrar archivos .json reales en lugar de placeholder
+        // Buscar archivos .json en directorio assets/scenes/
+        WIN32_FIND_DATAA findData;
+        HANDLE hFind = FindFirstFileA("assets/scenes/*.json", &findData);
+        
+        if (hFind != INVALID_HANDLE_VALUE) {
+            do {
+                // Ignorar .gitkeep y directorios
+                if (!(findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+                    std::string filename = findData.cFileName;
+                    
+                    // Remover extensión .json para el nombre mostrado
+                    size_t dotPos = filename.find_last_of('.');
+                    std::string assetName = (dotPos != std::string::npos) 
+                        ? filename.substr(0, dotPos) 
+                        : filename;
+                    
+                    RenderAssetItem(assetName.c_str(), ".json", assetCount++);
+                    if (assetCount % columnCount != 0) ImGui::SameLine();
+                }
+            } while (FindNextFileA(hFind, &findData));
+            
+            FindClose(hFind);
+        }
+        
+        // Si no hay archivos, mostrar mensaje
+        if (assetCount == 0) {
+            ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), 
+                             "No scenes yet. Create one in Scene menu.");
+        }
     }
 }
 
@@ -163,6 +196,10 @@ void AssetBrowser::RenderAssetItem(const char* assetName, const char* extension,
     else if (extension[1] == 'h' && extension[2] == 'l' && extension[3] == 's') {
         // Orange for shaders (code icon)
         thumbnailColor = ImVec4(0.8f, 0.5f, 0.2f, 1.0f);
+    }
+    else if (extension[1] == 'j' && extension[2] == 's' && extension[3] == 'o') {
+        // Green for JSON scenes
+        thumbnailColor = ImVec4(0.2f, 0.8f, 0.2f, 1.0f);
     }
 
     // Draw thumbnail as colored rectangle (simulating image preview)
