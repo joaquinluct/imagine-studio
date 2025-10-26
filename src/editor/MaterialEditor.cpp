@@ -12,6 +12,7 @@ std::string MaterialEditor::s_normalTexture = "";
 std::string MaterialEditor::s_roughnessTexture = "";
 std::string MaterialEditor::s_metallicTexture = "";
 std::string MaterialEditor::s_aoTexture = "";
+std::string MaterialEditor::s_currentMaterialName = "Default_Material";  // H4.2
 
 void MaterialEditor::Render()
 {
@@ -21,6 +22,29 @@ void MaterialEditor::Render()
     // Título y descripción
     ImGui::TextColored(ImVec4(0, 1, 1, 1), "Material Editor");
     ImGui::Text("Create and edit PBR materials");
+    ImGui::Separator();
+    
+    // Material name input (H4.2)
+    static char materialNameBuffer[256] = "Default_Material";
+    if (ImGui::InputText("Material Name", materialNameBuffer, sizeof(materialNameBuffer))) {
+        s_currentMaterialName = std::string(materialNameBuffer);
+    }
+    
+    // Drag source for material (H4.2)
+    if (ImGui::Button("Drag Material to Inspector")) {
+        // This button acts as drag source
+    }
+    
+    if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
+        // Set payload to material name
+        ImGui::SetDragDropPayload("MATERIAL_EDITOR_ITEM", s_currentMaterialName.c_str(), s_currentMaterialName.size() + 1);
+        
+        // Preview while dragging
+        ImGui::Text("Material: %s", s_currentMaterialName.c_str());
+        
+        ImGui::EndDragDropSource();
+    }
+    
     ImGui::Separator();
     
     // Botón "New Material"

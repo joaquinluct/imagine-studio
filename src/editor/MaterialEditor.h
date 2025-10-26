@@ -21,6 +21,9 @@ private:
     static std::string s_roughnessTexture;
     static std::string s_metallicTexture;
     static std::string s_aoTexture;
+    
+    // Current material name (H4.2)
+    static std::string s_currentMaterialName;
 };
 
 } // namespace Editor

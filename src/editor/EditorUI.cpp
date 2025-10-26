@@ -5,6 +5,8 @@
 #include "../scene/Scene.h"
 #include "../scene/Entity.h"
 #include "../scene/Transform.h"
+#include "../components/MeshRenderer.h"  // H4.2
+#include "../renderer/Material.h"        // H4.2 (corrected path)
 #include "../core/Log.h"    // v1.9.1 H2.1 - Console logs reales
 
 #include "imgui.h"
@@ -139,20 +141,64 @@ void EditorUI::RenderInspector(Scene::Scene* scene)
             if (ImGui::DragFloat3("Scale", &scale.x, 0.01f, 0.01f, 10.0f)) {
                 transform->SetScale(scale);
             }
+        }
+    }
+    
+    // MeshRenderer component (H4.2)
+    Components::MeshRenderer* meshRenderer = selected->GetComponent<Components::MeshRenderer>();
+    if (meshRenderer) {
+        if (ImGui::CollapsingHeader("MeshRenderer", ImGuiTreeNodeFlags_DefaultOpen)) {
+            // Mesh path
+            std::string meshPath = meshRenderer->GetMesh();
+            ImGui::Text("Mesh: %s", meshPath.empty() ? "None" : meshPath.c_str());
             
-            // Drag & Drop Target (H4.3) - Apply asset to selected entity
+            // Material assignment (H4.2)
+            Renderer::Material* material = meshRenderer->GetMaterial();
+            if (material) {
+                ImGui::Text("Material: %s", material->name.c_str());
+                
+                // Show material properties (read-only)
+                ImGui::Indent();
+                ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "Properties:");
+                for (const auto& prop : material->properties) {
+                    ImGui::BulletText("%s: %s", prop.first.c_str(), prop.second.c_str());
+                }
+                ImGui::Unindent();
+            } else {
+                ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Material: None (drag from Material Editor)");
+            }
+            
+            // Drag & Drop Target for materials (H4.2)
             if (ImGui::BeginDragDropTarget()) {
-                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_BROWSER_ITEM")) {
-                    const char* assetPath = static_cast<const char*>(payload->Data);
+                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("MATERIAL_EDITOR_ITEM")) {
+                    const char* materialName = static_cast<const char*>(payload->Data);
                     
-                    // Placeholder: Log drop event
-                    // TODO (future): Apply asset to entity
-                    // - Texture: Add/Update MeshRenderer material
-                    // - Mesh: Replace mesh component
-                    // - Shader: Update material shader
+                    // TODO (H4.3): Get material from MaterialManager
+                    // For now, create placeholder material
+                    Renderer::Material* newMaterial = new Renderer::Material();
+                    newMaterial->name = std::string(materialName);
+                    newMaterial->properties["type"] = "PBR";
+                    
+                    meshRenderer->SetMaterial(newMaterial);
+                    
+                    CORE_LOG_INFO("Inspector: Material assigned to MeshRenderer: %s", materialName);
                 }
                 ImGui::EndDragDropTarget();
             }
+            
+            ImGui::Separator();
+            
+            // Button to add MeshRenderer if not present
+            if (ImGui::Button("Clear Material")) {
+                meshRenderer->SetMaterial(nullptr);
+                CORE_LOG_INFO("Inspector: Material cleared from MeshRenderer");
+            }
+        }
+    } else {
+        // Button to add MeshRenderer component (H4.2)
+        if (ImGui::Button("Add MeshRenderer Component")) {
+            Components::MeshRenderer* newMeshRenderer = selected->AddComponent<Components::MeshRenderer>();
+            CORE_LOG_INFO("Inspector: MeshRenderer component added to entity: %s", selected->GetName().c_str());
         }
     }
     
