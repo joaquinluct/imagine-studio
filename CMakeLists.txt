@@ -1,6 +1,14 @@
 cmake_minimum_required(VERSION 3.15)
 project(ImagineStudio VERSION 1.0.0 LANGUAGES CXX)
 
+# Force x64 architecture (required for DirectX 12 and publishing)
+if(MSVC)
+    set(CMAKE_GENERATOR_PLATFORM x64)
+    # Ensure libraries link as x64
+    link_directories("C:/Program Files (x86)/Windows Kits/10/Lib/10.0.26100.0/um/x64")
+    link_directories("C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/lib/x64")
+endif()
+
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Prefer no compiler extensions so behavior is standard-conforming
