@@ -256,6 +256,7 @@
     <ClCompile Include="src\scene\Entity.cpp" />
     <ClCompile Include="src\scene\EntityManager.cpp" />
     <ClCompile Include="src\scene\Scene.cpp" />
+    <ClCompile Include="src\scene\SceneSerializer.cpp" />
     <ClCompile Include="src\scene\Transform.cpp" />
     <ClCompile Include="src\tools\Profiler.cpp" />
     <ClCompile Include="src\ui\DirectWriteTextRenderer.cpp" />
@@ -267,8 +268,7 @@
     <ClCompile Include="external\imgui\imgui_widgets.cpp" />
     <ClCompile Include="external\imgui\backends\imgui_impl_dx12.cpp" />
     <ClCompile Include="external\imgui\backends\imgui_impl_win32.cpp" />
-    <ClCompile Include="external\imgui\imgui_demo.cpp" />
-  </ItemGroup>
+    <ClCompile Include="external\imgui\imgui_demo.cpp" /></ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\assets\AssetDatabase.h" />
     <ClInclude Include="src\assets\AssetManager.h" />
@@ -307,6 +307,7 @@
     <ClInclude Include="src\scene\Entity.h" />
     <ClInclude Include="src\scene\EntityManager.h" />
     <ClInclude Include="src\scene\Scene.h" />
+    <ClInclude Include="src\scene\SceneSerializer.h" />
     <ClInclude Include="src\scene\Transform.h" />
     <ClInclude Include="src\tools\Profiler.h" />
     <ClInclude Include="src\ui\DirectWriteTextRenderer.h" />

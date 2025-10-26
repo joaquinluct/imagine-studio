@@ -1,0 +1,49 @@
+{
+  "scene": {
+    "entities": [
+      {
+        "id": 1,
+        "name": "Load Entity 1",
+        "transform": {
+          "position": [
+            10.0,
+            20.0,
+            30.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      {
+        "id": 2,
+        "name": "Load Entity 2",
+        "transform": {
+          "position": [
+            40.0,
+            50.0,
+            60.0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      }
+    ],
+    "name": "Load Test Scene"
+  }
+}

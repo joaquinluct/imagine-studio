@@ -1,129 +1,133 @@
-﻿# Sprint Histories - v1.9.0 (Active)
+# Sprint Histories - v2.0.0 (Active)
 
 > **Referencia**: Ver [`docs/sprint_tasks.md`](sprint_tasks.md) para tareas detalladas del sprint.
 
-Este archivo contiene las historias de usuario (alto nivel) del sprint activo v1.9.0 - Asset System & Resource Management.
+Este archivo contiene las historias de usuario (alto nivel) del sprint activo v2.0.0 - Material System (PBR).
 
 ---
 
-## Historia 1: Asset Database Core (H1)
+## Historia 1: Material Core (H1)
 
-### H1 - Asset Database Core
+### H1 - Material Core
 **ID**: H1  
-**Prioridad**: 🔴 Crítica  
-**Estado**: ⏳ Pendiente  
+**Prioridad**: ?? Cr�tica  
+**Estado**: ? Pendiente  
 
-**Descripción**: Implementar Asset Database para tracking de assets en disco con metadatos, dependencies y hot-reload.
+**Descripci�n**: Implementar clases base del sistema de materiales (Material, MaterialInstance, MaterialManager) con propiedades PBR est�ndar.
 
-**Criterios de aceptación**:
-- [ ] AssetDatabase class con tracking de assets (path → AssetID)
-- [ ] AssetMetadata struct (type, size, lastModified, dependencies)
-- [ ] ImportAsset() detecta tipo automáticamente (extensión)
-- [ ] RefreshAssets() detecta cambios en disco (FileSystemWatcher)
-- [ ] GetAsset() retorna metadata por AssetID
-- [ ] Soporte para carpetas recursivas (assets/textures/, assets/meshes/)
+**Criterios de aceptaci�n**:
+- [ ] Material class con MaterialProperties struct (albedo, metallic, roughness)
+- [ ] 5 texture slots: Albedo, Normal, Roughness, Metallic, AO
+- [ ] Valores default: albedo (1,1,1,1), metallic (0.0), roughness (0.5)
+- [ ] MaterialInstance para crear variantes sin duplicar shaders
+- [ ] MaterialManager singleton con cache de materiales
+- [ ] Thread-safe access a materiales
 
 **Tareas derivadas**: H1.1, H1.2, H1.3, H1.4
 
 ---
 
-## Historia 2: Texture Importer (H2)
+## Historia 2: PBR Shader Pipeline (H2)
 
-### H2 - Texture Importer
+### H2 - PBR Shader Pipeline
 **ID**: H2  
-**Prioridad**: 🔴 Crítica  
-**Estado**: ⏳ Pendiente  
+**Prioridad**: ?? Cr�tica  
+**Estado**: ? Pendiente  
 
-**Descripción**: Implementar TextureImporter para cargar PNG/JPG desde disco y convertir a DX12 Texture con mipmaps.
+**Descripci�n**: Implementar shaders PBR en DirectX 12 con Cook-Torrance BRDF y soporte de texturas.
 
-**Criterios de aceptación**:
-- [ ] TextureImporter class con ImportTexture(path)
-- [ ] Soporte PNG/JPG con stb_image (single-header library)
-- [ ] CreateTexture2D() crea ID3D12Resource con formato correcto
-- [ ] Upload de datos pixel a GPU (staging buffer)
-- [ ] GenerateMipmaps() opcional para texturas
-- [ ] Texturas usables en shaders (SRV descriptor)
+**Criterios de aceptaci�n**:
+- [ ] PBR vertex shader con TBN matrix para normal mapping
+- [ ] PBR pixel shader con Cook-Torrance BRDF
+- [ ] Constant buffers: Material CB (properties), Light CB (directional light)
+- [ ] Descriptor heap con SRVs para 5 texturas por material
+- [ ] PSO (Pipeline State Object) configurado correctamente
+- [ ] Fallback a valores default si textura no presente
+- [ ] Performance: <1ms render time para 1000 objetos
 
-**Tareas derivadas**: H2.1, H2.2, H2.3, H2.4
+**Tareas derivadas**: H2.1, H2.2, H2.3, H2.4, H2.5
 
 ---
 
-## Historia 3: Mesh Importer (H3)
+## Historia 3: Material Editor Panel (H3)
 
-### H3 - Mesh Importer
+### H3 - Material Editor Panel
 **ID**: H3  
-**Prioridad**: 🟡 Alta  
-**Estado**: ⏳ Pendiente  
+**Prioridad**: ?? Alta  
+**Estado**: ? Pendiente  
 
-**Descripción**: Implementar MeshImporter para cargar OBJ desde disco y convertir a Vertex/Index buffers.
+**Descripci�n**: Implementar panel ImGui para editar materiales en tiempo real con drag & drop de texturas.
 
-**Criterios de aceptación**:
-- [ ] MeshImporter class con ImportOBJ(path)
-- [ ] Parser de formato OBJ (vertices, normals, UVs, faces)
-- [ ] MeshData struct (vertices, indices, bounds)
-- [ ] CreateVertexBuffer() y CreateIndexBuffer() en DX12
-- [ ] Meshes renderizables con DrawIndexedInstanced()
-- [ ] Cálculo de bounding box (AABB) para culling
+**Criterios de aceptaci�n**:
+- [ ] MaterialEditor panel visible en editor
+- [ ] 5 texture slots con thumbnails 64x64
+- [ ] Drag & drop texturas desde Asset Browser funcional
+- [ ] Sliders 0.0-1.0 para metallic/roughness
+- [ ] Color picker para albedo tint
+- [ ] Preview thumbnail del material actualizado en real-time
+- [ ] Bot�n "Save Material" guarda .mat file
 
 **Tareas derivadas**: H3.1, H3.2, H3.3, H3.4
 
 ---
 
-## Historia 4: Asset Browser Panel (H4)
+## Historia 4: Material Assignment (H4)
 
-### H4 - Asset Browser Panel
+### H4 - Material Assignment
 **ID**: H4  
-**Prioridad**: 🟡 Alta  
-**Estado**: ⏳ Pendiente  
+**Prioridad**: ?? Alta  
+**Estado**: ? Pendiente  
 
-**Descripción**: Implementar Asset Browser panel en editor para navegar, preview y usar assets.
+**Descripci�n**: Conectar sistema de materiales con Entity System para aplicar materiales a meshes.
 
-**Criterios de aceptación**:
-- [ ] AssetBrowser panel con ImGui (navegación de carpetas)
-- [ ] Thumbnails para texturas (preview)
-- [ ] Íconos para meshes/shaders (tipo de asset)
-- [ ] Double-click abre asset en Inspector
-- [ ] Drag & drop de assets al Viewport
-- [ ] Context menu (Reimport, Delete, Properties)
+**Criterios de aceptaci�n**:
+- [ ] MeshRenderer component almacena Material* pointer
+- [ ] Inspector muestra material asignado (nombre + preview thumbnail)
+- [ ] Drag & drop material desde Asset Browser a Inspector
+- [ ] Rendering pipeline aplica texturas del material (bind SRVs)
+- [ ] Constant buffer actualizado con MaterialProperties
+- [ ] Cambiar material actualiza rendering inmediatamente
 
-**Tareas derivadas**: H4.1, H4.2, H4.3, H4.4
+**Tareas derivadas**: H4.1, H4.2, H4.3
 
 ---
 
-## Historia 5: Scene Serialization (H5)
+## Historia 5: Material Serialization & Hot-Reload (H5)
 
-### H5 - Scene Serialization
+### H5 - Material Serialization & Hot-Reload
 **ID**: H5  
-**Prioridad**: 🟡 Alta  
-**Estado**: ⏳ Pendiente  
+**Prioridad**: ?? Media  
+**Estado**: ? Pendiente  
 
-**Descripción**: Implementar SceneSerializer para save/load escenas completas en formato JSON.
+**Descripci�n**: Guardar materiales en formato JSON y hot-reload autom�tico al cambiar texturas en disco.
 
-**Criterios de aceptación**:
-- [ ] SceneSerializer class con SaveScene() y LoadScene()
-- [ ] Formato JSON con entities, transforms, components
-- [ ] Referencias a assets (AssetID, no paths absolutos)
-- [ ] File → Save Scene / Load Scene en editor
-- [ ] Preserva jerarquía padre-hijo
-- [ ] Extensible para custom components
+**Criterios de aceptaci�n**:
+- [ ] SaveMaterial() guarda .mat file en assets/materials/
+- [ ] LoadMaterial() carga .mat desde JSON
+- [ ] Formato JSON con texture paths y properties
+- [ ] FileWatcher detecta cambios en texturas (Win32 API)
+- [ ] Auto-reload material en <100ms
+- [ ] Log en Console: "Material reloaded: brick.mat"
+- [ ] Hot-reload sin restart de aplicaci�n
 
-**Tareas derivadas**: H5.1, H5.2, H5.3, H5.4
+**Tareas derivadas**: H5.1, H5.2, H5.3
 
 ---
 
-## 📊 Resumen de Historias
+## ?? Resumen de Historias
 
 | ID | Historia | Tareas | Completadas | Estado |
 |----|----------|--------|-------------|--------|
-| H1 | Asset Database Core | 4 | 0 | ⏳ Pendiente |
-| H2 | Texture Importer | 4 | 0 | ⏳ Pendiente |
-| H3 | Mesh Importer | 4 | 0 | ⏳ Pendiente |
-| H4 | Asset Browser Panel | 4 | 0 | ⏳ Pendiente |
-| H5 | Scene Serialization | 4 | 0 | ⏳ Pendiente |
+| H1 | Material Core | 4 | 0 | ? Pendiente |
+| H2 | PBR Shader Pipeline | 5 | 0 | ? Pendiente |
+| H3 | Material Editor Panel | 4 | 0 | ? Pendiente |
+| H4 | Material Assignment | 3 | 0 | ? Pendiente |
+| H5 | Material Serialization & Hot-Reload | 3 | 0 | ? Pendiente |
 
-**Total historias**: 5 (0 completadas, 5 pendientes)
+**Total historias**: 5 (0 completadas, 5 pendientes)  
+**Total tareas**: 19 (0 completadas, 19 pendientes)
 
 ---
 
-*Última actualización*: 2025-01-18  
-*Sprint*: v1.9.0 - Asset System & Resource Management
+*�ltima actualizaci�n*: 2025-01-21  
+*Sprint*: v2.0.0 - Material System (PBR)
