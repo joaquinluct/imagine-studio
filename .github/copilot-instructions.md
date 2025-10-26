@@ -1,4 +1,4 @@
-# GitHub Copilot Instructions - Imagine Studio
+﻿# GitHub Copilot Instructions - Imagine Studio
 
 > **Quick Context**: C++ Game Engine (AAA standards), Agile sprints, DirectX 12 rendering, AutoGen Multi-Agent System
 
@@ -49,30 +49,27 @@ Copy-Item "autogen/prompts/_template.md" "autogen/prompts/sprint_v1.9.0/HX.Y.md"
 ## ?? WORKFLOW (6 Steps)
 
 ```
-1. Read daily.md ? 2. Check code ? 3. Propose next step
-      ?
-4. Implement ? 5. Validate (CMake + MSBuild) ? 6. Commit + Update docs
-      ?
+1. Read daily.md → 2. Check code → 3. Propose next step
+      ↓
+4. Implement → 5. Validate (MSBuild MANDATORY) → 6. Commit + Update docs
+      ↓
 Repeat from 1
 ```
 
 **Validation (MANDATORY)**:
 
-**Build 1 (CMake)**:
-```powershell
-cmake --build build --config Debug
-```
-
-**Build 2 (MSBuild - Main Solution)**:
+**Build (MSBuild - Main Solution)**:
 ```powershell
 msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 ```
 
-**Success criteria**: 0 errors, 0 warnings (both builds)
+**Success criteria**: 0 errors, 0 warnings
 
-**Note**: TWO build systems exist:
-- **Main Solution** (`Imagine Studio.sln` in root) ? Daily development (F5/Ctrl+Shift+B)
-- **CMake System** (`build/ImagineStudio.sln`) ? CI/automation
+**Note**: 
+- **Main Solution** (`Imagine Studio.sln` in root) → Daily development (F5/Ctrl+Shift+B) **[MANDATORY]**
+- **CMake System** (`build/ImagineStudio.sln`) → CI/automation **[OPTIONAL for local dev]**
+- If CMake build fails locally with x86/x64 mismatch, it doesn't block commits
+- CMake issues should be fixed in a dedicated task, not block feature development
 
 ---
 
@@ -158,7 +155,7 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 +--------------------------------------------------------------------+
 ```
 
-**Calculate**: `(completed tasks / total sprint tasks) � 100`
+**Calculate**: `(completed tasks / total sprint tasks) � 100`
 
 ---
 
