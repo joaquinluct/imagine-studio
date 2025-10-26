@@ -226,6 +226,7 @@
     <ClCompile Include="external\stb\stb_image_impl.cpp" />
     <ClCompile Include="src\assets\AssetDatabase.cpp" />
     <ClCompile Include="src\assets\AssetManager.cpp" />
+    <ClCompile Include="src\assets\MeshImporter.cpp" />
     <ClCompile Include="src\assets\TextureImporter.cpp" />
     <ClCompile Include="src\assets\VFS.cpp" />
     <ClCompile Include="src\editor\EditorUI.cpp" />

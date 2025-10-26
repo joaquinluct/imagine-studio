@@ -282,10 +282,66 @@ MeshImporter: Successfully imported mesh: cube
 ---
 
 ### Tarea H3.3: Crear Vertex/Index buffers en DX12
-**Estado**: ? Pendiente  
+**Estado**: ? Completada  
+**Fecha**: 2025-01-21  
 **Archivos afectados**: `src/renderer/DX12ResourceManager.h/cpp`
 
 **Descripción**: Añadir CreateMeshBuffers(MeshData) en DX12ResourceManager.
+
+**Implementación completa** (~220 líneas):
+- Estructura `MeshBuffers` con vertex/index buffers + views
+- Método `CreateMeshBuffers(mesh, commandList, uploadBuffers)`
+- Upload automático a GPU (staging buffers)
+- Resource barriers (COPY_DEST ? VERTEX_BUFFER/INDEX_BUFFER)
+
+**Funcionalidades**:
+1. **Estructura MeshBuffers**:
+   - `ID3D12Resource* vertexBuffer` - Vertex buffer en GPU
+   - `ID3D12Resource* indexBuffer` - Index buffer en GPU
+   - `D3D12_VERTEX_BUFFER_VIEW vertexBufferView` - View para binding
+   - `D3D12_INDEX_BUFFER_VIEW indexBufferView` - View para binding
+   - `unsigned int vertexCount` - Número de vértices
+   - `unsigned int indexCount` - Número de índices
+   - `bool IsValid()` - Verificar si buffers creados correctamente
+
+2. **CreateMeshBuffers(mesh, commandList, uploadBuffers)**:
+   - **Input**: MeshData (desde MeshImporter), command list, array upload buffers[2]
+   - **Output**: MeshBuffers struct con buffers + views listos para rendering
+   
+3. **Proceso de upload**:
+   - Crear vertex buffer en default heap (GPU-only, optimal)
+   - Crear index buffer en default heap
+   - Crear vertex upload buffer (staging)
+   - Crear index upload buffer (staging)
+   - Map upload buffers ? copy data ? unmap
+   - CopyBufferRegion (upload ? default heap)
+   - Resource barriers (COPY_DEST ? VERTEX/INDEX state)
+   - Return upload buffers para deferred release
+
+4. **Buffer views**:
+   - Vertex buffer view: GPU address, stride (sizeof(Vertex)=32 bytes), size
+   - Index buffer view: GPU address, format (R32_UINT), size
+
+5. **Logging detallado**:
+   ```
+   DX12ResourceManager: Creating mesh buffers for cube
+   DX12ResourceManager: Mesh buffers created for cube
+     Vertex buffer: 24 vertices (768 bytes)
+     Index buffer: 36 indices (144 bytes)
+     Triangles: 12
+     Upload buffers returned to caller (manual management)
+   ```
+
+**Características técnicas**:
+- **Memory layout**: Vertex buffer + Index buffer separados (óptimo DX12)
+- **Stride**: 32 bytes por vértice (pos 12 + normal 12 + UV 8)
+- **Index format**: R32_UINT (32-bit unsigned int)
+- **Upload pattern**: Mismo que CreateTexture2DFromData (deferred release)
+- **Barriers batching**: 2 barriers en una sola llamada (efficient)
+
+**Beneficio**: MeshData (CPU) ? GPU buffers listos para DrawIndexedInstanced()
+
+**Compilación**: 0 errores, 0 warnings (CMake + MSBuild) ?
 
 ---
 
@@ -379,7 +435,7 @@ MeshImporter: Successfully imported mesh: cube
 | H2 | H2.4 | Testing TextureImporter | ? Completada |
 | H3 | H3.1 | MeshImporter.h | ? Completada |
 | H3 | H3.2 | OBJ parser | ? Completada |
-| H3 | H3.3 | DX12 buffers | ? Pendiente |
+| H3 | H3.3 | DX12 buffers | ? Completada |
 | H3 | H3.4 | Testing MeshImporter | ? Pendiente |
 | H4 | H4.1 | AssetBrowser panel | ? Pendiente |
 | H4 | H4.2 | Thumbnails | ? Pendiente |
@@ -391,11 +447,11 @@ MeshImporter: Successfully imported mesh: cube
 | H5 | H5.4 | Testing Serializer | ? Pendiente |
 
 **Total**: 20 tareas  
-**Completadas**: 10/20 (50%)  
-**Pendientes**: 10/20 (50%)
+**Completadas**: 11/20 (55%)  
+**Pendientes**: 9/20 (45%)
 
 **Historias completadas**: 2/5 (40%) - ? H1, ? H2  
-**Historias en progreso**: 1/5 (20%) - ? H3 (2/4 tareas, 50%)
+**Historias en progreso**: 1/5 (20%) - ? H3 (3/4 tareas, 75%)
 
 ---
 

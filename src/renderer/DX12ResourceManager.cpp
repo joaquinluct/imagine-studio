@@ -1,5 +1,18 @@
 #include "DX12ResourceManager.h"
 #include "core/Log.h"
+#include "assets/MeshData.h"  // v1.9.0 H3.3 - MeshData for CreateMeshBuffers
+
+#if defined(_WIN32) && defined(_MSC_VER)
+#include <d3d12.h>
+#include <dxgi1_4.h>
+
+// Link DirectX 12 libraries
+#pragma comment(lib, "d3d12.lib")
+#pragma comment(lib, "dxgi.lib")
+#endif
+
+#include <iostream>
+#include <sstream>
 
 namespace Renderer {
 
@@ -457,6 +470,240 @@ void* DX12ResourceManager::CreateTexture2DFromData(
     }
 
     return texture;
+#else
+    return nullptr;
+#endif
+}
+
+#if defined(_WIN32) && defined(_MSC_VER)
+MeshBuffers DX12ResourceManager::CreateMeshBuffers(
+    const Assets::MeshData& mesh,
+    ID3D12GraphicsCommandList* uploadCommandList,
+    ID3D12Resource** outUploadBuffers  // Array[2]: [0]=vertexUpload, [1]=indexUpload
+)
+#else
+void* DX12ResourceManager::CreateMeshBuffers(
+    const void* mesh,
+    void* uploadCommandList,
+    void** outUploadBuffers
+)
+#endif
+{
+#if defined(_WIN32) && defined(_MSC_VER)
+    MeshBuffers meshBuffers;
+    
+    if (!m_device || !mesh.IsValid() || !uploadCommandList)
+    {
+        CORE_LOG_ERROR("DX12ResourceManager::CreateMeshBuffers: Invalid parameters");
+        return meshBuffers;
+    }
+    
+    CORE_LOG_INFO("DX12ResourceManager: Creating mesh buffers for " + mesh.name);
+    
+    // === CREATE VERTEX BUFFER ===
+    
+    unsigned int vertexBufferSize = mesh.GetVertexCount() * sizeof(Assets::Vertex);
+    
+    // Create vertex buffer in default heap (GPU-only)
+    D3D12_HEAP_PROPERTIES defaultHeapProps = {};
+    defaultHeapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
+    defaultHeapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+    defaultHeapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+    defaultHeapProps.CreationNodeMask = 1;
+    defaultHeapProps.VisibleNodeMask = 1;
+    
+    D3D12_RESOURCE_DESC vertexBufferDesc = {};
+    vertexBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+    vertexBufferDesc.Alignment = 0;
+    vertexBufferDesc.Width = vertexBufferSize;
+    vertexBufferDesc.Height = 1;
+    vertexBufferDesc.DepthOrArraySize = 1;
+    vertexBufferDesc.MipLevels = 1;
+    vertexBufferDesc.Format = DXGI_FORMAT_UNKNOWN;
+    vertexBufferDesc.SampleDesc.Count = 1;
+    vertexBufferDesc.SampleDesc.Quality = 0;
+    vertexBufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+    vertexBufferDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+    
+    HRESULT hr = m_device->CreateCommittedResource(
+        &defaultHeapProps,
+        D3D12_HEAP_FLAG_NONE,
+        &vertexBufferDesc,
+        D3D12_RESOURCE_STATE_COPY_DEST,
+        nullptr,
+        IID_PPV_ARGS(&meshBuffers.vertexBuffer)
+    );
+    
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12ResourceManager::CreateMeshBuffers: Failed to create vertex buffer");
+        return meshBuffers;
+    }
+    
+    // === CREATE INDEX BUFFER ===
+    
+    unsigned int indexBufferSize = mesh.GetIndexCount() * sizeof(unsigned int);
+    
+    D3D12_RESOURCE_DESC indexBufferDesc = {};
+    indexBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+    indexBufferDesc.Alignment = 0;
+    indexBufferDesc.Width = indexBufferSize;
+    indexBufferDesc.Height = 1;
+    indexBufferDesc.DepthOrArraySize = 1;
+    indexBufferDesc.MipLevels = 1;
+    indexBufferDesc.Format = DXGI_FORMAT_UNKNOWN;
+    indexBufferDesc.SampleDesc.Count = 1;
+    indexBufferDesc.SampleDesc.Quality = 0;
+    indexBufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+    indexBufferDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+    
+    hr = m_device->CreateCommittedResource(
+        &defaultHeapProps,
+        D3D12_HEAP_FLAG_NONE,
+        &indexBufferDesc,
+        D3D12_RESOURCE_STATE_COPY_DEST,
+        nullptr,
+        IID_PPV_ARGS(&meshBuffers.indexBuffer)
+    );
+    
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12ResourceManager::CreateMeshBuffers: Failed to create index buffer");
+        meshBuffers.vertexBuffer->Release();
+        meshBuffers.vertexBuffer = nullptr;
+        return meshBuffers;
+    }
+    
+    // === UPLOAD VERTEX DATA ===
+    
+    // Create vertex upload buffer
+    ID3D12Resource* vertexUploadBuffer = CreateUploadBuffer(vertexBufferSize);
+    if (!vertexUploadBuffer)
+    {
+        CORE_LOG_ERROR("DX12ResourceManager::CreateMeshBuffers: Failed to create vertex upload buffer");
+        meshBuffers.vertexBuffer->Release();
+        meshBuffers.indexBuffer->Release();
+        meshBuffers.vertexBuffer = nullptr;
+        meshBuffers.indexBuffer = nullptr;
+        return meshBuffers;
+    }
+    
+    // Map and copy vertex data
+    void* vertexMappedData = nullptr;
+    D3D12_RANGE readRange = { 0, 0 };
+    hr = vertexUploadBuffer->Map(0, &readRange, &vertexMappedData);
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12ResourceManager::CreateMeshBuffers: Failed to map vertex upload buffer");
+        vertexUploadBuffer->Release();
+        meshBuffers.vertexBuffer->Release();
+        meshBuffers.indexBuffer->Release();
+        meshBuffers.vertexBuffer = nullptr;
+        meshBuffers.indexBuffer = nullptr;
+        return meshBuffers;
+    }
+    
+    memcpy(vertexMappedData, mesh.vertices.data(), vertexBufferSize);
+    vertexUploadBuffer->Unmap(0, nullptr);
+    
+    // === UPLOAD INDEX DATA ===
+    
+    // Create index upload buffer
+    ID3D12Resource* indexUploadBuffer = CreateUploadBuffer(indexBufferSize);
+    if (!indexUploadBuffer)
+    {
+        CORE_LOG_ERROR("DX12ResourceManager::CreateMeshBuffers: Failed to create index upload buffer");
+        vertexUploadBuffer->Release();
+        meshBuffers.vertexBuffer->Release();
+        meshBuffers.indexBuffer->Release();
+        meshBuffers.vertexBuffer = nullptr;
+        meshBuffers.indexBuffer = nullptr;
+        return meshBuffers;
+    }
+    
+    // Map and copy index data
+    void* indexMappedData = nullptr;
+    hr = indexUploadBuffer->Map(0, &readRange, &indexMappedData);
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12ResourceManager::CreateMeshBuffers: Failed to map index upload buffer");
+        indexUploadBuffer->Release();
+        vertexUploadBuffer->Release();
+        meshBuffers.vertexBuffer->Release();
+        meshBuffers.indexBuffer->Release();
+        meshBuffers.vertexBuffer = nullptr;
+        meshBuffers.indexBuffer = nullptr;
+        return meshBuffers;
+    }
+    
+    memcpy(indexMappedData, mesh.indices.data(), indexBufferSize);
+    indexUploadBuffer->Unmap(0, nullptr);
+    
+    // === COPY TO GPU ===
+    
+    // Copy vertex buffer
+    CopyBufferRegion(meshBuffers.vertexBuffer, vertexUploadBuffer, vertexBufferSize, uploadCommandList);
+    
+    // Copy index buffer
+    CopyBufferRegion(meshBuffers.indexBuffer, indexUploadBuffer, indexBufferSize, uploadCommandList);
+    
+    // === RESOURCE BARRIERS ===
+    
+    D3D12_RESOURCE_BARRIER barriers[2] = {};
+    
+    // Vertex buffer: COPY_DEST ? VERTEX_AND_CONSTANT_BUFFER
+    barriers[0].Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    barriers[0].Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    barriers[0].Transition.pResource = meshBuffers.vertexBuffer;
+    barriers[0].Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+    barriers[0].Transition.StateAfter = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
+    barriers[0].Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    
+    // Index buffer: COPY_DEST ? INDEX_BUFFER
+    barriers[1].Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    barriers[1].Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    barriers[1].Transition.pResource = meshBuffers.indexBuffer;
+    barriers[1].Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+    barriers[1].Transition.StateAfter = D3D12_RESOURCE_STATE_INDEX_BUFFER;
+    barriers[1].Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    
+    uploadCommandList->ResourceBarrier(2, barriers);
+    
+    // === CREATE BUFFER VIEWS ===
+    
+    meshBuffers.vertexBufferView.BufferLocation = meshBuffers.vertexBuffer->GetGPUVirtualAddress();
+    meshBuffers.vertexBufferView.StrideInBytes = sizeof(Assets::Vertex);
+    meshBuffers.vertexBufferView.SizeInBytes = vertexBufferSize;
+    
+    meshBuffers.indexBufferView.BufferLocation = meshBuffers.indexBuffer->GetGPUVirtualAddress();
+    meshBuffers.indexBufferView.Format = DXGI_FORMAT_R32_UINT;  // 32-bit unsigned int indices
+    meshBuffers.indexBufferView.SizeInBytes = indexBufferSize;
+    
+    meshBuffers.vertexCount = mesh.GetVertexCount();
+    meshBuffers.indexCount = mesh.GetIndexCount();
+    
+    // === RETURN UPLOAD BUFFERS ===
+    
+    if (outUploadBuffers)
+    {
+        outUploadBuffers[0] = vertexUploadBuffer;
+        outUploadBuffers[1] = indexUploadBuffer;
+        
+        CORE_LOG_INFO("DX12ResourceManager: Mesh buffers created for " + mesh.name);
+        CORE_LOG_INFO("  Vertex buffer: " + std::to_string(mesh.GetVertexCount()) + " vertices (" + std::to_string(vertexBufferSize) + " bytes)");
+        CORE_LOG_INFO("  Index buffer: " + std::to_string(mesh.GetIndexCount()) + " indices (" + std::to_string(indexBufferSize) + " bytes)");
+        CORE_LOG_INFO("  Triangles: " + std::to_string(mesh.GetTriangleCount()));
+        CORE_LOG_INFO("  Upload buffers returned to caller (manual management)");
+    }
+    else
+    {
+        // Legacy path: release immediately (DEPRECATED)
+        vertexUploadBuffer->Release();
+        indexUploadBuffer->Release();
+        CORE_LOG_WARN("DX12ResourceManager: Upload buffers released immediately (DEPRECATED)");
+    }
+    
+    return meshBuffers;
 #else
     return nullptr;
 #endif
