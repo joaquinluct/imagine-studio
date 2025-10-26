@@ -106,25 +106,38 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 - Create wrappers in `src/` if needed
 - See [`docs/THIRD_PARTY.md`](../docs/THIRD_PARTY.md)
 
-### 2. Validation Before Commit
+### 2. Never Add Tests to Main Project
+- **Test files** (`tests/*.cpp`) are **SEPARATE EXECUTABLES**
+- They **MUST NOT** be included in `Imagine Studio.vcxproj`
+- If tests appear in main project → **LNK2005 error** (multiple `main()`)
+- **Solution**: Remove tests from `.vcxproj` immediately:
+  ```powershell
+  $vcxproj = "Imagine Studio.vcxproj"
+  $content = Get-Content $vcxproj -Raw
+  $content = $content -replace '\s*<ClCompile Include="tests\\[^"]+\.cpp" />\s*', ''
+  Set-Content $vcxproj $content -NoNewline
+  ```
+- Tests are compiled separately by CMake as standalone executables
+
+### 3. Validation Before Commit
 - **BOTH** builds must be clean (CMake + MSBuild)
 - Auto-fix errors when possible
 - Retry until clean
 
-### 3. Bug Workflow
+### 4. Bug Workflow
 - Register attempts in `sprint_bug_attempts.md` **BEFORE** coding
 - User validation **REQUIRED** (don't auto-resolve)
 - See [`docs/methodology/BUGS.md`](../docs/methodology/BUGS.md)
 
-### 4. Auto-Update Docs
+### 5. Auto-Update Docs
 - `daily.md` + `sprint_commits.md` after **every** commit
 - No push to remote (only local commits)
 
-### 5. File Encoding
+### 6. File Encoding
 - **UTF-8 with BOM** + **CRLF** line endings (Windows)
 - Run `.\scripts\check-encoding.ps1 -Fix` if issues detected
 
-### 6. AutoGen Termination Keywords (NEW)
+### 7. AutoGen Termination Keywords
 - **Use**: `WORKFLOW_FINISHED_OK` (Tester Agent when builds pass)
 - **Avoid**: `BUILD_SUCCESS` in prompts (causes premature termination)
 - See: [`autogen/TERMINATION_FIX.md`](../autogen/TERMINATION_FIX.md)
@@ -162,8 +175,7 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 ```
 +--------------------------------------------------------------------+
 ?????????????????????????????????????????????????????? 18.8%?
-+--------------------------------------------------------------------+
-```
++--------------------------------------------------------------------+```
 
 **Calculate**: `(completed tasks / total sprint tasks) � 100`
 
