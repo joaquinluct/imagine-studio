@@ -11,8 +11,11 @@ class Viewport;
 // Forward declaration (v1.9.0 H4.1)
 class AssetBrowser;
 
+// Forward declaration (v2.0.0 H3.1)
+class MaterialEditor;
+
 /// <summary>
-/// EditorUI - Renders all editor panels (Hierarchy, Inspector, Console, Viewport, Asset Browser)
+/// EditorUI - Renders all editor panels (Hierarchy, Inspector, Console, Viewport, Asset Browser, Material Editor)
 /// Integrated with Scene for real entity management
 /// </summary>
 class EditorUI {
@@ -41,6 +44,11 @@ public:
     /// Render Asset Browser panel - Navigate and manage project assets (v1.9.0 H4.1)
     /// </summary>
     static void RenderAssetBrowser();
+    
+    /// <summary>
+    /// Render Material Editor panel - Create/edit PBR materials (v2.0.0 H3.1)
+    /// </summary>
+    static void RenderMaterialEditor();
     
     /// <summary>
     /// Render all editor panels at once (convenience method for H4.5)

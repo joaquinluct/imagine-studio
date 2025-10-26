@@ -31,6 +31,119 @@
 
 ---
 
+## 🚫 POWERSHELL TERMINAL BLOCKING - **CRITICAL RULES**
+
+### ⚠️ COMMANDS THAT BLOCK THE CHAT (NEVER USE):
+
+**These commands will HANG the terminal and force user to cancel**:
+
+```powershell
+# ❌ NEVER USE Select-Object BEFORE pipeline completes
+msbuild "Imagine Studio.sln" /t:Build 2>&1 | Select-Object -Last 5
+
+# ❌ NEVER USE Select-String BEFORE pipeline completes
+cmake --build build 2>&1 | Select-String "error"
+
+# ❌ NEVER USE complex regex with -replace in multi-line commands
+$content = Get-Content file.txt -Raw
+$content = $content -replace '(?s)<ComplexRegex>.*?</ComplexRegex>', 'replacement'
+Set-Content file.txt $content -NoNewline  # ❌ Can hang
+
+# ❌ NEVER USE XML manipulation inside long pipelines
+$xml = [xml](Get-Content file.vcxproj); $xml.Project.ItemDefinitionGroup | Where-Object { ... }
+```
+
+**Why they block**:
+- `Select-Object` waits for entire stream before selecting
+- `Select-String` buffers output before filtering
+- Complex regex can cause parsing hangs
+- XML manipulation can lock files
+
+---
+
+### ✅ COMMANDS THAT ARE SAFE:
+
+```powershell
+# ✅ CORRECT: Use /v:q (quiet) or /v:minimal for msbuild
+msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /v:q
+
+# ✅ CORRECT: Let output flow naturally with Out-String
+cmake --build build --config Debug 2>&1 | Out-String
+
+# ✅ CORRECT: Simple commands without pipelines
+Remove-Item "file.pdb" -Force -ErrorAction SilentlyContinue
+
+# ✅ CORRECT: Short operations with immediate output
+Test-Path "Imagine Studio.vcxproj"
+
+# ✅ CORRECT: Process manipulation (kill hanging processes)
+Get-Process | Where-Object { $_.ProcessName -eq "cl" }
+Stop-Process -Id 12345 -Force
+```
+
+---
+
+### 🔧 IF TERMINAL GETS BLOCKED:
+
+**Symptoms**:
+- Command shows `>>` prompt indefinitely
+- No output for 30+ seconds
+- User reports "te has quedado colgado/pillado/parado/bloqueado"
+
+**Recovery**:
+1. **STOP IMMEDIATELY** - Don't try more commands
+2. Apologize to user
+3. Wait for user to cancel (`Ctrl+C` in terminal)
+4. **Document the blocked command** (add to this section if not listed)
+5. Use SAFE alternative from list above
+
+---
+
+### 📝 MSBUILD BEST PRACTICES:
+
+```powershell
+# ✅ Option 1: Quiet output (minimal logs)
+msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /v:q
+
+# ✅ Option 2: Minimal output (only errors/warnings)
+msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /v:minimal
+
+# ✅ Option 3: Normal output with Out-String (if logs needed)
+msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 2>&1 | Out-String
+
+# ❌ NEVER: Filter with Select-Object
+msbuild ... 2>&1 | Select-Object -Last 5  # BLOCKS CHAT
+```
+
+---
+
+### 🔍 CMAKE BEST PRACTICES:
+
+```powershell
+# ✅ CORRECT: Simple command (no filtering)
+cmake --build build --config Debug
+
+# ✅ CORRECT: With Out-String if logs needed
+cmake --build build --config Debug 2>&1 | Out-String
+
+# ❌ NEVER: Filter with Select-Object
+cmake --build build 2>&1 | Select-Object -Last 10  # BLOCKS CHAT
+```
+
+---
+
+### 💡 GENERAL RULE:
+
+**If command takes >5 seconds to complete**:
+- ✅ DO: Let it run naturally (no filtering)
+- ✅ DO: Use `/v:q` or `/v:minimal` flags
+- ❌ DON'T: Add `Select-Object`, `Select-String`, or complex pipelines
+- ❌ DON'T: Try to "optimize" output with filters
+
+**Remember**: User would rather see full output than have chat blocked for 5+ minutes.
+
+---
+
 ## 🚀 QUICK START (Read Once)
 
 **First session**: Read these **once**:

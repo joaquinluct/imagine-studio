@@ -1,6 +1,7 @@
 ﻿#include "EditorUI.h"
 #include "Viewport.h"       // v1.5.0 H3.1
 #include "AssetBrowser.h"   // v1.9.0 H4.1
+#include "MaterialEditor.h" // v2.0.0 H3.1
 #include "../scene/Scene.h"
 #include "../scene/Entity.h"
 #include "../scene/Transform.h"
@@ -211,6 +212,12 @@ void EditorUI::RenderAssetBrowser()
     }
 }
 
+void EditorUI::RenderMaterialEditor()
+{
+    // v2.0.0 H3.1 - Use MaterialEditor class
+    MaterialEditor::Render();
+}
+
 void EditorUI::RenderAllPanels(Scene::Scene* scene)
 {
     // Render all editor panels in order (H4.5)
@@ -219,6 +226,7 @@ void EditorUI::RenderAllPanels(Scene::Scene* scene)
     RenderConsole();
     RenderViewport();
     RenderAssetBrowser(); // v1.9.0 H4.1
+    RenderMaterialEditor(); // v2.0.0 H3.1
 }
 
 // v1.5.0 H3.1 - Get/create viewport singleton
