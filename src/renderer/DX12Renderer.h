@@ -126,6 +126,10 @@ private:
     ID3D12Resource* m_vertexBuffer = nullptr;
     D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView = {};
     
+    // === H2.5 - PBR Pipeline State Object ===
+    ID3D12RootSignature* m_pbrRootSignature = nullptr;
+    ID3D12PipelineState* m_pbrPipelineState = nullptr;
+    
     // MVP matrix
     float m_mvpMatrix[16] = {};
 #endif
