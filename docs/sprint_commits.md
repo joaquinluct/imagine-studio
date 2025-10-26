@@ -76,6 +76,34 @@ Compilación limpia: 0 errores, 0 warnings (CMake + MSBuild)
 Refs: H1.2 (Sprint v1.9.0)
 ```
 
+### Commit 3 - H1.3: Asset folder structure creada
+**Fecha**: 2025-01-21  
+**Tipo**: chore  
+**Archivos**:
+- `assets/` (carpeta nueva)
+- `assets/textures/` (carpeta nueva)
+- `assets/meshes/` (carpeta nueva)
+- `assets/shaders/` (carpeta nueva)
+- `assets/scenes/` (carpeta nueva)
+- `assets/README.md` (nuevo)
+- `assets/*/.gitkeep` (4 archivos)
+
+**Mensaje**:
+```
+chore(assets): Crear estructura de carpetas para assets
+
+- assets/textures/ para PNG, JPG, DDS
+- assets/meshes/ para OBJ, FBX
+- assets/shaders/ para HLSL
+- assets/scenes/ para JSON
+- .gitkeep en cada carpeta para Git tracking
+- assets/README.md con convenciones y documentación
+
+Organización tipo Unity/Unreal para workflow profesional
+
+Refs: H1.3 (Sprint v1.9.0)
+```
+
 ---
 
 **Versión**: v1.0  

@@ -1,44 +1,47 @@
 ﻿# Daily Log
 
-Hecho: H1.2 - Implementar AssetDatabase.cpp (segunda tarea Sprint v1.9.0)
-Siguiente: H1.3 - Crear asset folder structure
+Hecho: H1.3 - Crear asset folder structure (tercera tarea Sprint v1.9.0)
+Siguiente: H1.4 - Testing AssetDatabase
 
 ## Ultima Sesion (2025-01-21)
 
-### H1.2 COMPLETADA - ASSETDATABASE.CPP IMPLEMENTADO
+### H1.3 COMPLETADA - ASSET FOLDER STRUCTURE CREADA
 
 **Logros de la sesion**:
-1. Creado src/assets/AssetDatabase.cpp con implementación completa
-2. Implementado patrón Singleton thread-safe (Meyer's Singleton)
-3. Implementados métodos RegisterAsset, UnregisterAsset, HasAsset, GetMetadata
-4. Storage interno con std::unordered_map<AssetID, AssetMetadata>
-5. Thread-safety con std::mutex para protección concurrente
-6. Compilación limpia (0 errores, 0 warnings - CMake + MSBuild)
-7. Archivo añadido al proyecto Visual Studio (.vcxproj y .vcxproj.filters)
-8. Fix de encoding en AssetDatabase.h (BOM corrupto removido)
+1. Creada estructura de carpetas `assets/` con subcarpetas:
+   - `assets/textures/` - Para archivos PNG, JPG, DDS
+   - `assets/meshes/` - Para archivos OBJ, FBX
+   - `assets/shaders/` - Para archivos HLSL
+   - `assets/scenes/` - Para archivos JSON de escenas
+2. Archivos `.gitkeep` en cada carpeta (Git tracking)
+3. `assets/README.md` con documentación completa:
+   - Convenciones de nombres de archivos
+   - Formatos soportados
+   - Guía de uso para desarrolladores
+4. Estructura tipo Unity/Unreal para organización profesional
 
-**Implementación**:
-```cpp
-AssetDatabase& AssetDatabase::GetInstance() {
-    static AssetDatabase instance; // Meyer's Singleton
-    return instance;
-}
-
-void AssetDatabase::RegisterAsset(const AssetMetadata& metadata) {
-    std::lock_guard<std::mutex> lock(s_registryMutex);
-    s_assetRegistry[metadata.id] = metadata;
-}
-
-// ... UnregisterAsset, HasAsset, GetMetadata
+**Estructura creada**:
+```
+assets/
+├── README.md           # Documentación de assets
+├── textures/
+│   └── .gitkeep
+├── meshes/
+│   └── .gitkeep
+├── shaders/
+│   └── .gitkeep
+└── scenes/
+    └── .gitkeep
 ```
 
 **Beneficios**:
-- Singleton thread-safe garantiza acceso único desde múltiples threads
-- std::mutex protege acceso concurrente al registro de assets
-- Búsqueda O(1) con std::unordered_map
-- Base sólida para tracking de assets en disco
+- Organización clara y profesional de assets
+- Convenciones de nombres documentadas
+- Git tracking de carpetas vacías
+- Base para Asset Browser (H4)
+- Listo para importers (H2, H3)
 
-**Progreso Sprint v1.9.0**: 2/20 tareas completadas (10%)
+**Progreso Sprint v1.9.0**: 3/20 tareas completadas (15%)
 
 ---
 
@@ -48,14 +51,14 @@ void AssetDatabase::RegisterAsset(const AssetMetadata& metadata) {
 **Duracion estimada**: 1-2 semanas
 
 **Historias**:
-1. H1: Asset Database Core (tracking de assets) - **EN PROGRESO (2/4 tareas)**
+1. H1: Asset Database Core (tracking de assets) - **EN PROGRESO (3/4 tareas)**
 2. H2: Texture Importer (PNG/JPG a DX12)
 3. H3: Mesh Importer (OBJ a buffers)
 4. H4: Asset Browser Panel (editor UI)
 5. H5: Scene Serialization (save/load JSON)
 
 **Tareas**: 20 tareas (4 por historia)
-**Progreso**: 0/5 historias (0%), 2/20 tareas (10%)
+**Progreso**: 0/5 historias (0%), 3/20 tareas (15%)
 
 ---
 
@@ -66,7 +69,7 @@ void AssetDatabase::RegisterAsset(const AssetMetadata& metadata) {
 | v1.6.0 | Viewport AAA | CERRADO | 100% | 6/10 |
 | v1.7.0 | Performance Optimization | CERRADO | 100% | 7/10 |
 | v1.8.0 | Scene Graph & Entity System | CERRADO | 100% | 8/10 |
-| v1.9.0 | Asset System | EN PROGRESO | 10% | - |
+| v1.9.0 | Asset System | EN PROGRESO | 15% | - |
 
 **Proxima meta**: Calificacion AAA 9/10 al completar Asset System
 
@@ -74,26 +77,23 @@ void AssetDatabase::RegisterAsset(const AssetMetadata& metadata) {
 
 ### Proxima Tarea Automatica
 
-**H1.3: Crear asset folder structure**
+**H1.4: Testing AssetDatabase**
 
-**Objetivo**: Crear estructura de carpetas para organizar assets en disco
+**Objetivo**: Crear tests unitarios para AssetDatabase (RegisterAsset, UnregisterAsset, HasAsset, GetMetadata)
 
 **Archivos afectados**: 
-- `assets/` (carpeta raíz nueva)
-- `assets/textures/` (carpeta nueva)
-- `assets/meshes/` (carpeta nueva)
-- `assets/shaders/` (carpeta nueva)
-- `assets/scenes/` (carpeta nueva)
+- `tests/asset_database_test.cpp` (nuevo)
+- `CMakeLists.txt` (añadir test executable)
 
-**Beneficio**: Organización profesional de assets (similar a Unity/Unreal)
+**Beneficio**: Validación automática de funcionalidad core del Asset System
 
 ---
 
 **Estado del proyecto**: 
 - 3 sprints cerrados (v1.6.0, v1.7.0, v1.8.0)
-- Sprint v1.9.0 en progreso (Asset System - 10%)
-- H1.1, H1.2 completadas (AssetDatabase funcional)
+- Sprint v1.9.0 en progreso (Asset System - 15%)
+- H1.1, H1.2, H1.3 completadas (AssetDatabase + folder structure)
 - Calificacion AAA: 8/10
-- Asset tracking base completo (singleton thread-safe)
+- Asset tracking base completo + organización profesional
 
 
