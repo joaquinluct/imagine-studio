@@ -157,10 +157,29 @@ private:
 ---
 
 ### Tarea H3.2: Texture slots con drag & drop
-**Estado**: ? Pendiente  
-**Archivos afectados**: `src/editor/MaterialEditor.cpp`
+**Estado**: ? Completada  
+**Archivos afectados**: `src/editor/MaterialEditor.h/cpp` (actualizados)
+**Commit**: Commit 17 (2025-01-21) - Hash `8655658`
 
-**Descripción**: 5 texture slots con drag & drop desde Asset Browser. Implementar `ImGui::BeginDragDropTarget()` en cada slot.
+**Descripción**: Implementar drag & drop en 5 texture slots desde Asset Browser
+
+**Implementación**:
+- Miembros estáticos en `MaterialEditor.h`:
+  - `s_albedoTexture`, `s_normalTexture`, `s_roughnessTexture`, `s_metallicTexture`, `s_aoTexture`
+- Lambda helper `RenderTextureSlot()` para DRY:
+  - Button con label dinámico (None o texture filename)
+  - `ImGui::BeginDragDropTarget()` + `ImGui::AcceptDragDropPayload("ASSET_BROWSER_ITEM")`
+  - Context menu (right-click) con "Clear Texture"
+- Actualizar label de botón cuando texture es asignada
+- Logs detallados: texture dropped, texture clicked, texture cleared
+
+**Características**:
+- Drag texture desde Asset Browser ? Drop en texture slot ?
+- Label actualizado: "None##SlotID" ? "texture_filename.dds##SlotID" ?
+- Right-click ? Context menu "Clear Texture" ?
+- Logs en Console para feedback visual ?
+
+**Validación**: ? CMake + MSBuild 0 errores, solo warnings (C4002 en CORE_LOG macros)
 
 ---
 
@@ -178,7 +197,7 @@ private:
 
 **Descripción**: Preview del material (render to texture 64x64).
 
-**Historia H3**: 2/4 tareas completadas (50%) ??
+**Historia H3**: 3/4 tareas completadas (75%) ??
 
 ---
 
@@ -240,7 +259,7 @@ private:
 | H2 | H2.4 | Descriptor heap | ? Completada |
 | H2 | H2.5 | PSO | ? Completada |
 | H3 | H3.1 | MaterialEditor panel | ? Completada |
-| H3 | H3.2 | Texture slots | ? Pendiente |
+| H3 | H3.2 | Texture slots | ? Completada |
 | H3 | H3.3 | Property sliders | ? Completada (en H3.1) |
 | H3 | H3.4 | Preview thumbnail | ? Pendiente |
 | H4 | H4.1 | Material* en MeshRenderer | ? Pendiente |
@@ -251,13 +270,13 @@ private:
 | H5 | H5.3 | Auto-reload | ? Pendiente |
 
 **Total**: 19 tareas  
-**Completadas**: 11/19 (57.9%) ?  
-**Pendientes**: 8/19 (42.1%) ?
+**Completadas**: 12/19 (63.2%) ?  
+**Pendientes**: 7/19 (36.8%) ?
 
 **Progreso por historia**:
 - ? H1: 100% (4/4)
 - ? H2: 100% (5/5)
-- ?? H3: 50% (2/4) - **EN PROGRESO**
+- ?? H3: 75% (3/4) - **EN PROGRESO**
 - ? H4: 0% (0/3)
 - ? H5: 0% (0/3)
 
@@ -265,4 +284,4 @@ private:
 
 *Última actualización*: 2025-01-21  
 *Sprint*: v2.0.0 - Material System (PBR)  
-*Próxima tarea*: H3.2 - Texture slots con drag & drop
+*Próxima tarea*: H3.4 - Preview thumbnail
