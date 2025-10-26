@@ -132,6 +132,7 @@
     <None Include="assets\asset_high.dat" />
     <None Include="assets\asset_normal.dat" />
     <None Include="assets\example_asset.dat" />
+    <None Include="assets\README.md" />
     <None Include="autogen\agents\coder_agent_fixed.json" />
     <None Include="autogen\agents\planner_agent_fixed.json" />
     <None Include="autogen\agents\reviewer_agent_fixed.json" />
