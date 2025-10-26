@@ -19,7 +19,7 @@ MeshRenderer::~MeshRenderer()
 void MeshRenderer::SetMesh(const std::string& meshPath)
 {
     m_meshPath = meshPath;
-    CORE_LOG_INFO("MeshRenderer: Mesh set to %s", meshPath.c_str());
+    CORE_LOG_INFO("MeshRenderer: Mesh set to: %s", meshPath.c_str());
 }
 
 const std::string& MeshRenderer::GetMesh() const
@@ -27,13 +27,13 @@ const std::string& MeshRenderer::GetMesh() const
     return m_meshPath;
 }
 
-void MeshRenderer::SetMaterial(Renderer::Material* material)
+void MeshRenderer::SetMaterial(Materials::Material* material)
 {
     m_material = material;
     
     if (material)
     {
-        CORE_LOG_INFO("MeshRenderer: Material assigned: %s", material->name.c_str());
+        CORE_LOG_INFO("MeshRenderer: Material assigned: %s", material->GetName().c_str());
     }
     else
     {
@@ -41,7 +41,7 @@ void MeshRenderer::SetMaterial(Renderer::Material* material)
     }
 }
 
-Renderer::Material* MeshRenderer::GetMaterial() const
+Materials::Material* MeshRenderer::GetMaterial() const
 {
     return m_material;
 }

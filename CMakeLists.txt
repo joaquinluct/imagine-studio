@@ -87,6 +87,14 @@ list(APPEND SRC_FILES ${EDITOR_SRC})
 file(GLOB_RECURSE SCENE_SRC "${CMAKE_SOURCE_DIR}/src/scene/*.cpp")
 list(APPEND SRC_FILES ${SCENE_SRC})
 
+# Ensure Components sources are included (H4.1 - MeshRenderer Component)
+file(GLOB_RECURSE COMPONENTS_SRC "${CMAKE_SOURCE_DIR}/src/components/*.cpp")
+list(APPEND SRC_FILES ${COMPONENTS_SRC})
+
+# Ensure Materials sources are included (H1 - Material System)
+file(GLOB_RECURSE MATERIALS_SRC "${CMAKE_SOURCE_DIR}/src/materials/*.cpp")
+list(APPEND SRC_FILES ${MATERIALS_SRC})
+
 # Explicitly ensure renderer stubs added by recent iterations are included
 list(APPEND SRC_FILES "${CMAKE_SOURCE_DIR}/src/renderer/Fence.cpp")
 # Ensure TaskGraph is included

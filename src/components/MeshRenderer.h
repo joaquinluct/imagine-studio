@@ -4,7 +4,7 @@
 #include <string>
 
 // Forward declarations
-namespace Renderer {
+namespace Materials {
     class Material;
 }
 
@@ -24,8 +24,8 @@ public:
     const std::string& GetMesh() const;
     
     // Material (H4.1)
-    void SetMaterial(Renderer::Material* material);
-    Renderer::Material* GetMaterial() const;
+    void SetMaterial(Materials::Material* material);
+    Materials::Material* GetMaterial() const;
     
     // Component lifecycle
     void OnUpdate(float deltaTime) override;
@@ -33,7 +33,7 @@ public:
     
 private:
     std::string m_meshPath;              // Path to mesh asset (e.g., "assets/meshes/sphere.obj")
-    Renderer::Material* m_material;      // Material pointer (H4.1)
+    Materials::Material* m_material;     // Material pointer (H4.1)
 };
 
 } // namespace Components

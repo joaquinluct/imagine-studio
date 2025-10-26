@@ -6,7 +6,7 @@
 #include "../scene/Entity.h"
 #include "../scene/Transform.h"
 #include "../components/MeshRenderer.h"  // H4.2
-#include "../renderer/Material.h"        // H4.2 (corrected path)
+#include "../materials/Material.h"       // H4.2 - PBR Material System
 #include "../core/Log.h"    // v1.9.1 H2.1 - Console logs reales
 
 #include "imgui.h"
@@ -153,16 +153,22 @@ void EditorUI::RenderInspector(Scene::Scene* scene)
             ImGui::Text("Mesh: %s", meshPath.empty() ? "None" : meshPath.c_str());
             
             // Material assignment (H4.2)
-            Renderer::Material* material = meshRenderer->GetMaterial();
+            Materials::Material* material = meshRenderer->GetMaterial();
             if (material) {
-                ImGui::Text("Material: %s", material->name.c_str());
+                ImGui::Text("Material: %s", material->GetName().c_str());
                 
                 // Show material properties (read-only)
                 ImGui::Indent();
                 ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "Properties:");
-                for (const auto& prop : material->properties) {
-                    ImGui::BulletText("%s: %s", prop.first.c_str(), prop.second.c_str());
-                }
+                
+                // Display albedo color
+                const Materials::MaterialProperties& props = material->GetProperties();
+                ImGui::BulletText("Albedo Color: (%.2f, %.2f, %.2f, %.2f)", 
+                    props.albedoColor[0], props.albedoColor[1], 
+                    props.albedoColor[2], props.albedoColor[3]);
+                ImGui::BulletText("Metallic: %.2f", props.metallic);
+                ImGui::BulletText("Roughness: %.2f", props.roughness);
+                
                 ImGui::Unindent();
             } else {
                 ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Material: None (drag from Material Editor)");
@@ -174,10 +180,11 @@ void EditorUI::RenderInspector(Scene::Scene* scene)
                     const char* materialName = static_cast<const char*>(payload->Data);
                     
                     // TODO (H4.3): Get material from MaterialManager
-                    // For now, create placeholder material
-                    Renderer::Material* newMaterial = new Renderer::Material();
-                    newMaterial->name = std::string(materialName);
-                    newMaterial->properties["type"] = "PBR";
+                    // For now, create placeholder material from Materials namespace
+                    Materials::Material* newMaterial = new Materials::Material(std::string(materialName));
+                    newMaterial->SetAlbedoColor(1.0f, 1.0f, 1.0f, 1.0f);
+                    newMaterial->SetMetallic(0.0f);
+                    newMaterial->SetRoughness(0.5f);
                     
                     meshRenderer->SetMaterial(newMaterial);
                     
