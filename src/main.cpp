@@ -10,6 +10,7 @@
 #include "renderer/Camera.h"     // v1.5.0 H2.3 - Camera controls
 #include "renderer/DX12Renderer.h"
 #include "scene/Scene.h"
+#include "scene/SceneSerializer.h"  // H5.3 - Scene save/load
 #include "scene/Transform.h"     // v1.8.0 H3.2 - Transform Component
 #include "tools/Profiler.h"
 #include "ui/SimpleUI.h"
@@ -334,6 +335,63 @@ static int RunApp(HINSTANCE hInstance)
         // ✅ Only render UI panels if visible (AAA standard - Unity/Unreal style)
         if (renderer.IsUIVisible())
         {
+            // H5.3: Main menu bar (File -> Save/Load Scene)
+            if (ImGui::BeginMainMenuBar())
+            {
+                if (ImGui::BeginMenu("File"))
+                {
+                    if (ImGui::MenuItem("Save Scene", "Ctrl+S"))
+                    {
+                        // H5.3: Save current scene to JSON
+                        std::string filepath = "assets/scenes/saved_scene.json";
+                        if (Scene::SceneSerializer::SaveScene(&scene, filepath))
+                        {
+                            CORE_LOG_INFO("Scene saved successfully to %s", filepath.c_str());
+                        }
+                        else
+                        {
+                            CORE_LOG_ERROR("Failed to save scene: %s", 
+                                         Scene::SceneSerializer::GetLastError().c_str());
+                        }
+                    }
+                    
+                    if (ImGui::MenuItem("Load Scene", "Ctrl+O"))
+                    {
+                        // H5.3: Load scene from JSON (placeholder - no file dialog yet)
+                        std::string filepath = "assets/scenes/saved_scene.json";
+                        Scene::Scene* loadedScene = Scene::SceneSerializer::LoadScene(filepath);
+                        
+                        if (loadedScene)
+                        {
+                            // Replace current scene with loaded scene
+                            // Note: This is a simple replacement for demonstration
+                            // TODO (future): Proper scene management with cleanup
+                            scene = *loadedScene;
+                            delete loadedScene;
+                            
+                            CORE_LOG_INFO("Scene loaded successfully from %s", filepath.c_str());
+                        }
+                        else
+                        {
+                            CORE_LOG_ERROR("Failed to load scene: %s", 
+                                         Scene::SceneSerializer::GetLastError().c_str());
+                        }
+                    }
+                    
+                    ImGui::Separator();
+                    
+                    if (ImGui::MenuItem("Exit", "Alt+F4"))
+                    {
+                        // Exit application
+                        PostQuitMessage(0);
+                    }
+                    
+                    ImGui::EndMenu();
+                }
+                
+                ImGui::EndMainMenuBar();
+            }
+            
             // ✅ AAA STANDARD: Dockspace principal ANTES de panels (Unity/Unreal style)
             // Permite docking flexible de todos los panels del editor
             ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
