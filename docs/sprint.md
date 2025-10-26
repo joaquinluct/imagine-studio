@@ -1,164 +1,45 @@
-﻿# Sprint v1.9.0 - Asset System & Resource Management
+﻿# Sprint v1.9.1 - Console Integration (Logs Reales)
 
-> **Estado**: 🟢 En progreso  
-> **Fecha inicio**: 2025-01-18  
-> **Fecha fin estimada**: 2025-02-01
+> **Referencia**: Ver [`docs/MAIN.md`](MAIN.md) para los pilares fundamentales del proyecto.
 
 ---
 
 ## 🎯 Objetivo del Sprint
 
-**Meta**: Implementar Asset System completo para cargar contenido real (texturas, meshes, shaders) desde disco, con Asset Browser panel en editor y flujo de trabajo profesional (importar → usar → guardar).
+**Meta**: Conectar el panel Console del editor con el sistema de logging real (`CORE_LOG_*`). Actualmente Console muestra logs hardcoded placeholder. Este sprint corrige ese problema para que **todos los logs del engine aparezcan en tiempo real** en el panel Console.
 
-**Resultado esperado**: Al finalizar el sprint, el editor tendrá:
-- Asset Database funcional con tracking de archivos ✅
-- Importers para Textures ✅, Meshes y Shaders
-- Asset Browser panel para navegar contenido
-- Drag & drop de assets al Viewport/Inspector
-- Scene serialization (save/load JSON)
+**Resultado esperado**: Al ejecutar la aplicación, el panel Console mostrará logs reales del sistema (inicialización, asset loading, scene operations, etc.). Los logs de "Save Scene" y "Load Scene" aparecerán correctamente.
 
 ---
 
-## 📋 Historias de Usuario
+## 🏁 Criterios de Aceptación
 
-Ver [`docs/sprint_histories.md`](sprint_histories.md) para historias detalladas.
-
-| ID | Historia | Prioridad | Estado |
-|----|----------|-----------|--------|
-| H1 | Asset Database Core | 🔴 Crítica | ✅ **Completada** |
-| H2 | Texture Importer | 🔴 Crítica | ✅ **Completada** |
-| H3 | Mesh Importer | 🟡 Alta | ⏳ Pendiente |
-| H4 | Asset Browser Panel | 🟡 Alta | ⏳ Pendiente |
-| H5 | Scene Serialization | 🟡 Alta | ⏳ Pendiente |
+1. ✅ `CORE_LOG_INFO(...)` aparece en Console panel con color verde
+2. ✅ `CORE_LOG_WARN(...)` aparece en Console panel con color amarillo
+3. ✅ `CORE_LOG_ERROR(...)` aparece en Console panel con color rojo
+4. ✅ Logs de "Scene saved successfully" visibles en Console al guardar
+5. ✅ Auto-scroll mantiene logs recientes visibles
+6. ✅ Thread-safe (logs desde cualquier thread)
+7. ✅ Compilación limpia (0 errores, 0 warnings)
 
 ---
 
-## 📊 Métricas de Éxito
+## 📝 Historias de Usuario
 
-| Métrica | Objetivo | Estado |
-|---------|----------|--------|
-| **Formatos soportados (texturas)** | PNG, JPG | ✅ Completado |
-| **Formatos soportados (meshes)** | OBJ | ⏳ Pendiente |
-| **Formatos soportados (shaders)** | HLSL | ⏳ Pendiente |
-| **Asset Browser** | Navegación de carpetas funcional | ⏳ Pendiente |
-| **Drag & drop** | Texturas y meshes al Viewport | ⏳ Pendiente |
-| **Serialization** | Save/load escenas completas | ⏳ Pendiente |
-| **Performance** | Carga de assets sin bloqueo UI (<100ms) | ⏳ Pendiente |
-| **Compilación limpia** | 0 errores, 0 warnings | ✅ Completado |
+### **H1: Log Capture System** (3 tareas)
+- H1.1: Añadir ring buffer thread-safe a Log.h
+- H1.2: Capturar mensajes en Log() con timestamp  
+- H1.3: Implementar GetLogs() para Console
 
----
+### **H2: Console Panel Integration** (3 tareas)
+- H2.1: Refactorizar RenderConsole() para logs reales
+- H2.2: Reemplazar hardcoded logs por GetLogs()
+- H2.3: Testing visual
 
-## 📈 Progreso
-
-**Historias completadas**: 2/5 (40%)  
-**Tareas completadas**: 8/20 (40%)
-
-```
-┌────────────────────────────────────────────────────────────────────┐
-│🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛ 40.0%│
-└────────────────────────────────────────────────────────────────────┘
-```
-
-### Desglose por Historia
-
-| Historia | Tareas | Completadas | Progreso |
-|----------|--------|-------------|----------|
-| **H1: Asset Database Core** | 4 | 4/4 | ✅ 100% |
-| **H2: Texture Importer** | 4 | 4/4 | ✅ 100% |
-| **H3: Mesh Importer** | 4 | 0/4 | ⏳ 0% |
-| **H4: Asset Browser Panel** | 4 | 0/4 | ⏳ 0% |
-| **H5: Scene Serialization** | 4 | 0/4 | ⏳ 0% |
+**Total**: 6 tareas, ~30 minutos
 
 ---
 
-## 🏗️ Arquitectura Propuesta
-
-```cpp
-// Asset Database (tracking de assets en disco) ✅ COMPLETADO
-class AssetDatabase {
-    std::unordered_map<AssetID, AssetMetadata> m_assets;
-    std::unordered_map<std::string, AssetID> m_pathToID;
-    
-    AssetID ImportAsset(const std::string& path);
-    AssetMetadata* GetAsset(AssetID id);
-    void RefreshAssets(); // Detecta cambios en disco
-};
-
-// Asset Importers (PNG/JPG → DX12 Texture) ✅ COMPLETADO
-class TextureImporter {
-    TextureData ImportTexture(const std::string& path);
-    TextureData ImportTextureRGBA(const std::string& path);
-    bool GetTextureInfo(const std::string& path, int& w, int& h, int& ch);
-    bool IsSupportedFormat(const std::string& path);
-};
-
-// DX12 Texture Upload ✅ COMPLETADO
-class DX12ResourceManager {
-    ID3D12Resource* CreateTexture2DFromData(
-        unsigned char* data, int width, int height,
-        ID3D12Resource** uploadBuffer);
-};
-
-// Mesh Importer (OBJ → buffers) ⏳ PENDIENTE
-class MeshImporter {
-    MeshData ImportOBJ(const std::string& path);
-};
-
-// Asset Browser Panel (UI para navegar assets) ⏳ PENDIENTE
-class AssetBrowser {
-    void RenderAssetBrowser();
-    void OnAssetSelected(AssetID id);
-    void OnAssetDoubleClick(AssetID id);
-};
-
-// Scene Serialization (save/load JSON) ⏳ PENDIENTE
-class SceneSerializer {
-    void SaveScene(Scene* scene, const std::string& path);
-    Scene* LoadScene(const std::string& path);
-};
-```
-
----
-
-## 🎯 Comparación con v1.8.0
-
-| Aspecto | v1.8.0 | v1.9.0 (Este Sprint) |
-|---------|--------|----------------------|
-| **Assets** | Hardcoded (quad geometry) | ✅ Tracking con AssetDatabase |
-| **Texturas** | No disponibles | ✅ PNG/JPG → DX12 Texture |
-| **Meshes** | Quad hardcoded | ⏳ OBJ → Vertex/Index buffers |
-| **Asset Browser** | No disponible | ⏳ Panel funcional con preview |
-| **Serialization** | No disponible | ⏳ Save/load escenas JSON |
-| **Workflow** | Manual (código) | ⏳ Profesional (importar → usar) |
-
----
-
-## ✅ Logros del Sprint (hasta ahora)
-
-### Historia H1: Asset Database Core ✅
-- AssetDatabase singleton thread-safe implementado
-- AssetID, AssetType, AssetMetadata structures
-- Métodos: Register, Unregister, HasAsset, GetMetadata
-- Asset folder structure creada (textures/, meshes/, shaders/, scenes/)
-- Tests unitarios: 27 assertions passed ✓
-
-### Historia H2: Texture Importer ✅
-- stb_image library integrada (PNG, JPG, BMP, TGA, PSD, GIF, HDR, PIC)
-- TextureImporter class con métodos ImportTexture, GetTextureInfo, IsSupportedFormat
-- DX12ResourceManager::CreateTexture2DFromData() implementado
-- Upload buffer, row pitch alignment, resource barriers
-- Tests unitarios: 27 assertions passed ✓
-- Imagen de prueba creada: `assets/textures/test_4x4.png`
-
----
-
-## 📚 Referencias
-
-- **Prerequisitos**: Sprint v1.8.0 completado ✅
-- **Backlog**: BACK-005 (Asset System & Resource Management)
-- **Inspiración**: Unity Asset Database, Unreal Asset Manager
-
----
-
-*Última actualización*: 2025-01-21  
-*Sprint*: v1.9.0 - Asset System & Resource Management - 🟢 **EN PROGRESO (40%)**
+**Estado**: 🚀 **EN PROGRESO**  
+**Versión**: v1.9.1  
+**Fecha inicio**: 2025-01-21

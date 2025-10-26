@@ -4,6 +4,7 @@
 #include "../scene/Scene.h"
 #include "../scene/Entity.h"
 #include "../scene/Transform.h"
+#include "../core/Log.h"    // v1.9.1 H2.1 - Console logs reales
 
 #include "imgui.h"
 
@@ -161,50 +162,29 @@ void EditorUI::RenderConsole()
 {
     ImGui::Begin("Console");
     
-    // Placeholder: Logs hardcoded (TODO: integrar con Log.h en futuro)
-    // Formato: [NIVEL] Mensaje
+    // v1.9.1 H2.1-H2.2: Get logs from Log.h (real logs, not hardcoded)
+    std::vector<Core::LogEntry> logs = Core::GetLogs();
     
-    // INFO logs (verde)
-    ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "[INFO]");
-    ImGui::SameLine();
-    ImGui::Text("Application started successfully");
+    // Render each log entry with color by level
+    for (const Core::LogEntry& entry : logs) {
+        ImVec4 color;
+        const char* levelStr = Core::ToString(entry.level);
+        
+        // Set color by log level
+        switch (entry.level) {
+            case Core::LogLevel::Info:  color = ImVec4(0.0f, 1.0f, 0.0f, 1.0f); break; // Green
+            case Core::LogLevel::Warn:  color = ImVec4(1.0f, 1.0f, 0.0f, 1.0f); break; // Yellow
+            case Core::LogLevel::Error: color = ImVec4(1.0f, 0.0f, 0.0f, 1.0f); break; // Red
+            default:                    color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f); break; // White
+        }
+        
+        // Render: [LEVEL] Message
+        ImGui::TextColored(color, "[%s]", levelStr);
+        ImGui::SameLine();
+        ImGui::Text("%s", entry.message.c_str());
+    }
     
-    ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "[INFO]");
-    ImGui::SameLine();
-    ImGui::Text("DX12Renderer initialized");
-    
-    ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "[INFO]");
-    ImGui::SameLine();
-    ImGui::Text("ImGui context created (v1.3.0)");
-    
-    // WARNING logs (amarillo)
-    ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "[WARNING]");
-    ImGui::SameLine();
-    ImGui::Text("Asset streaming: Low priority task cancelled");
-    
-    ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "[WARNING]");
-    ImGui::SameLine();
-    ImGui::Text("Shader cache not found, compiling from source");
-    
-    // ERROR logs (rojo)
-    ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "[ERROR]");
-    ImGui::SameLine();
-    ImGui::Text("Failed to load texture: missing_file.png");
-    
-    ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "[ERROR]");
-    ImGui::SameLine();
-    ImGui::Text("Network connection timeout (retrying...)");
-    
-    // M�s INFO logs para demostrar scroll
-    ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "[INFO]");
-    ImGui::SameLine();
-    ImGui::Text("Editor UI panels loaded: Hierarchy, Inspector, Console");
-    
-    ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "[INFO]");
-    ImGui::SameLine();
-    ImGui::Text("Frame rendering at 220 FPS");
-    
-    // Auto-scroll al final (mantiene los logs m�s recientes visibles)
+    // Auto-scroll to bottom (keeps recent logs visible)
     if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
         ImGui::SetScrollHereY(1.0f);
     
