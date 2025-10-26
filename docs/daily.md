@@ -1,58 +1,71 @@
 ﻿# Daily Log
 
-Hecho: Sprint v2.0.0 - HISTORIA H3 COMPLETADA (Material Editor Panel - 4/4 tareas) ✅
-Siguiente: Sprint v2.0.0 - H4.1 (Material Assignment - Material* en MeshRenderer)
+Hecho: Sprint v2.0.0 - H4.1 COMPLETADA (MeshRenderer component con Material*) ✅
+Siguiente: Sprint v2.0.0 - H4.2 (Drag & drop material en Inspector)
 
 ## Ultima Sesion (2025-01-21)
 
-### 🎉 HISTORIA H3 COMPLETADA - MATERIAL EDITOR PANEL (4/4 TAREAS) 🎉
+### 🎉 TAREA H4.1 COMPLETADA - MESHRENDERER COMPONENT 🎉
 
-**Duración H3 completa**: ~45 minutos ⚡  
-**Estado**: H3 completada al 100% (13/19 tareas sprint totales - 68.4%)
+**Duración H4.1**: ~15 minutos ⚡  
+**Estado**: H4 en progreso (1/3 tareas - 33.3%)
 
 **Logros de la sesion**:
 
-### 1. **H3.1 COMPLETADA** - Material Editor Panel (ImGui) ✅
-   - [x] MaterialEditor.h y MaterialEditor.cpp creados
-   - [x] Panel ImGui dockable con secciones colapsables
-   - [x] Botones "New Material" y "Save Material"
-   - [x] Material Properties: albedo color picker, metallic slider, roughness slider
-
-### 2. **H3.2 COMPLETADA** - Texture Slots con Drag & Drop ✅
-   - [x] Miembros estáticos para texture paths (5 slots)
-   - [x] BeginDragDropTarget + AcceptDragDropPayload("ASSET_BROWSER_ITEM")
-   - [x] Label dinámico: "None" → "texture_filename.dds"
-   - [x] Lambda helper RenderTextureSlot() para DRY
-   - [x] Context menu (right-click) → "Clear Texture"
-
-### 3. **H3.3 COMPLETADA** - Property Sliders ✅
-   - [x] Ya implementado en H3.1 (color picker + sliders)
-
-### 4. **H3.4 COMPLETADA** - Preview Thumbnail ✅
-   - [x] CollapsingHeader "Preview" con preview box 128x128
-   - [x] Colored rectangle con albedo color (visual representation)
-   - [x] Border blanco alrededor de preview
-   - [x] Material properties summary:
-     - Albedo (R, G, B, A) valores
-     - Metallic valor
-     - Roughness valor
-   - [x] Texture count: "Textures: X/5 assigned"
-   - [x] Nota sobre implementación futura (render-to-texture PBR en H4)
+### 1. **H4.1 COMPLETADA** - MeshRenderer Component con Material* ✅
+   - [x] `src/components/MeshRenderer.h` creado
+   - [x] `src/components/MeshRenderer.cpp` implementado
+   - [x] MeshRenderer hereda de Component (Scene::Component)
+   - [x] Miembros: `m_meshPath` (string), `m_material` (Renderer::Material*)
+   - [x] Métodos:
+     - SetMesh/GetMesh (mesh asset path)
+     - SetMaterial/GetMaterial (material pointer)
+   - [x] OnUpdate() vacío (rendering manejado por DX12Renderer en render loop)
+   - [x] OnDestroy() limpia referencias (NO delete m_material - owned by MaterialManager)
+   - [x] Forward declaration `Renderer::Material` (evita include circular)
+   - [x] Logging con CORE_LOG_INFO cuando se asigna mesh/material
    - [x] Compilación validada: CMake + MSBuild 0 errores
 
-**Compilación**: ✅ CMake + MSBuild 0 errores, solo warnings (C4002 en CORE_LOG macros)
+**Implementación técnica**:
+```cpp
+// Constructor
+MeshRenderer() : m_meshPath(""), m_material(nullptr) {}
+
+// Material assignment
+void SetMaterial(Renderer::Material* material) {
+    m_material = material;
+    if (material) {
+        CORE_LOG_INFO("MeshRenderer: Material assigned: %s", material->name.c_str());
+    }
+}
+
+// Destructor (IMPORTANTE)
+~MeshRenderer() {
+    // Material is owned by MaterialManager, NOT by MeshRenderer
+    // Do NOT delete m_material here
+}
+```
+
+**Características**:
+- ✅ Ownership correcto: MaterialManager posee materials, MeshRenderer solo guarda puntero
+- ✅ Logging para feedback visual cuando se asigna mesh/material
+- ✅ Forward declaration evita include de Material.h completo
+- ✅ Component lifecycle: OnUpdate/OnDestroy implementados
+- ✅ Estructura compatible con arquitectura ECS (Entity-Component-System)
+
+**Compilación**: ✅ CMake + MSBuild 0 errores
 
 ---
 
 ### Sprint v2.0.0 - Material System (PBR)
 
-**Estado**: 🚀 **EN PROGRESO** (Historia H1 ✅ 100%, Historia H2 ✅ 100%, Historia H3 ✅ 100%)  
+**Estado**: 🚀 **EN PROGRESO** (Historia H1 ✅ 100%, Historia H2 ✅ 100%, Historia H3 ✅ 100%, Historia H4 🚀 33.3%)  
 **Fecha inicio**: 2025-01-21  
 
-**Historias**: 3/5 completadas (60%)  
-**Tareas**: 13/19 completadas (68.4%)
+**Historias**: 3/5 completadas (60%), H4 en progreso (33.3%)  
+**Tareas**: 14/19 completadas (73.7%)
 
-**Próxima tarea**: H4.1 - Material Assignment (Material* en MeshRenderer)
+**Próxima tarea**: H4.2 - Drag & drop material en Inspector
 
 **Funcionalidad entregada**:
 - **H1 (Material Core - 100%)**: Material class, MaterialInstance, MaterialManager, texturas PBR copiadas
@@ -61,12 +74,16 @@ Siguiente: Sprint v2.0.0 - H4.1 (Material Assignment - Material* en MeshRenderer
   - Pixel shader con Cook-Torrance BRDF
   - Constant buffers (3 structs)
   - Descriptor heap config (80 slots)
-  - PSO preparado (se integrará en H4)
-- **H3 (Material Editor Panel - 100%)**: ✅ **HISTORIA COMPLETADA**
-  - ✅ H3.1: MaterialEditor panel (botones, properties, texture slots)
-  - ✅ H3.2: Texture slots con drag & drop (ASSET_BROWSER_ITEM)
-  - ✅ H3.3: Property sliders (albedo, metallic, roughness)
-  - ✅ H3.4: Preview thumbnail (colored rectangle + summary)
+  - PSO preparado (se integrará en H4.3)
+- **H3 (Material Editor Panel - 100%)**:
+  - MaterialEditor panel (botones, properties, texture slots)
+  - Texture slots con drag & drop (ASSET_BROWSER_ITEM)
+  - Property sliders (albedo, metallic, roughness)
+  - Preview thumbnail (colored rectangle + summary)
+- **H4 (Material Assignment - 33.3%)**:
+  - ✅ H4.1: MeshRenderer component con Material* pointer
+  - ⏳ H4.2: Drag & drop material en Inspector (pendiente)
+  - ⏳ H4.3: Apply material en rendering (pendiente)
 
 ---
 
@@ -79,46 +96,46 @@ Siguiente: Sprint v2.0.0 - H4.1 (Material Assignment - Material* en MeshRenderer
 | v1.8.0 | Scene Graph & Entity System | CERRADO | 100% | 8/10 |
 | v1.9.0 | Asset System | CERRADO | 100% | 9/10 ⭐⭐ |
 | v1.9.1 | Console Integration | CERRADO | 100% | 9/10 ⭐⭐ |
-| v2.0.0 | Material System (PBR) | EN PROGRESO | 68.4% | TBD (objetivo: 9.5/10 ⭐⭐⭐) |
+| v2.0.0 | Material System (PBR) | EN PROGRESO | 73.7% | TBD (objetivo: 9.5/10 ⭐⭐⭐) |
 
-### 🎨 Visualization (H3 completo):
+### 🎨 Visualization (H4.1 completo):
 
-**Changes visible after F5?**: **YES** ✅
+**Changes visible after F5?**: **NO** ❌
 
-**You should see**:
-1. ✅ Material Editor panel completo con todas las secciones
-2. ✅ Material Properties: color picker + sliders funcionales
-3. ✅ Texture Slots: drag & drop funcional desde Asset Browser
-4. ✅ Preview section con:
-   - Preview box 128x128 (colored rectangle con albedo color)
-   - Border blanco
-   - Material properties summary (Albedo, Metallic, Roughness valores)
-   - Texture count "X/5 assigned"
-   - Nota amarilla sobre implementación futura
+**Reason**: H4.1 crea el component `MeshRenderer` pero **NO está añadido a ninguna entity** todavía. Es infraestructura para H4.2/H4.3.
 
-**Interaction tested** (verificado en sesión anterior):
-- Color picker cambia albedo → Preview box actualiza color ✅
-- Drag texture desde Asset Browser → Drop en slot ✅
-- Right-click slot → Clear Texture ✅
-- Preview muestra summary de propiedades ✅
+**Visualization will come in**: 
+- **H4.2** (Drag & drop material): Drag material desde Material Editor → Inspector → asignar a MeshRenderer
+- **H4.3** (Apply material): **AQUÍ se verán cambios visuales** ✨ - Material PBR renderizado en meshes
+
+**Qué NO verás al presionar F5 ahora**:
+- ❌ NO verás MeshRenderer component en Inspector (todavía no añadido a entities)
+- ❌ NO verás materiales asignados a meshes
+- ❌ NO verás PBR rendering
+
+**Qué SÍ verás al presionar F5 después de H4.3**:
+- ✅ MeshRenderer component visible en Inspector
+- ✅ Material asignado visible (nombre + propiedades)
+- ✅ Drag & drop material funcional
+- ✅ PBR rendering con texturas y lighting
 
 **Progreso Sprint v2.0.0**:
 ```
 +--------------------------------------------------------------------+
-██████████████████████████████████████████████████████████████████ 68.4%⬛⬛⬛⬛⬛
+███████████████████████████████████████████████████████████████████████ 73.7%⬛⬛⬛
 +--------------------------------------------------------------------+
 ```
 
-**Proxima meta**: H4.1 - Material Assignment - **Añadir Material* a MeshRenderer component**
+**Proxima meta**: H4.2 - Drag & drop material en Inspector - **Conectar Material Editor con entities**
 
 ---
 
 **Estado del proyecto**: 
 - ✅ **5 sprints cerrados al 100%** (v1.6.0, v1.7.0, v1.8.0, v1.9.0, v1.9.1)
-- 🚀 Sprint v2.0.0 en progreso (68.4% - Historia H1 ✅, Historia H2 ✅, Historia H3 ✅)
+- 🚀 Sprint v2.0.0 en progreso (73.7% - Historia H1 ✅, Historia H2 ✅, Historia H3 ✅, Historia H4 🚀 33.3%)
 - Calificacion AAA actual: **9/10** ⭐⭐
 - Objetivo v2.0.0: **9.5/10** ⭐⭐⭐
-- Material Editor completo y funcional
+- MeshRenderer component creado y listo para usar
 - **Proyecto compilando limpiamente: 0 errores** ✅
 
 

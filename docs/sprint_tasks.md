@@ -230,10 +230,33 @@ private:
 ## Historia 4: Material Assignment (H4) ? EN PROGRESO
 
 ### Tarea H4.1: Añadir Material* a MeshRenderer
-**Estado**: ? Pendiente  
-**Archivos afectados**: `src/components/MeshRenderer.h/cpp` (nuevos o actualizar existente)
+**Estado**: ? Completada  
+**Archivos afectados**: `src/components/MeshRenderer.h/cpp` (creados)
+**Commit**: Commit 19 (2025-01-21) - Hash `cd9432c`
 
-**Descripción**: MeshRenderer component almacena puntero a Material asignado
+**Descripción**: Crear MeshRenderer component con soporte para Material* pointer
+
+**Implementación**:
+- Crear `src/components/MeshRenderer.h` con interfaz MeshRenderer
+- Crear `src/components/MeshRenderer.cpp` con implementación
+- MeshRenderer hereda de `Scene::Component`
+- Miembros:
+  - `std::string m_meshPath`: path to mesh asset
+  - `Renderer::Material* m_material`: material pointer (owned by MaterialManager)
+- Métodos:
+  - `SetMesh(path)` / `GetMesh()`: mesh asset management
+  - `SetMaterial(Material*)` / `GetMaterial()`: material assignment
+  - `OnUpdate(deltaTime)`: vacío (rendering manejado por DX12Renderer)
+  - `OnDestroy()`: limpia referencias (NO delete m_material)
+
+**Características**:
+- ? Forward declaration `Renderer::Material` (evita include circular)
+- ? Ownership correcto: MaterialManager posee materials
+- ? MeshRenderer solo guarda puntero (no delete en destructor)
+- ? Logging con CORE_LOG_INFO cuando se asigna mesh/material
+- ? Component lifecycle implementado (OnUpdate/OnDestroy)
+
+**Validación**: ? CMake + MSBuild 0 errores
 
 ---
 
@@ -251,7 +274,7 @@ private:
 
 **Descripción**: Bind texturas del material y constant buffer en rendering pipeline
 
-**Historia H4**: 0/3 tareas completadas (0%) ?
+**Historia H4**: 1/3 tareas completadas (33.3%) ?
 
 ---
 
@@ -294,7 +317,7 @@ private:
 | H3 | H3.2 | Texture slots | ? Completada |
 | H3 | H3.3 | Property sliders | ? Completada |
 | H3 | H3.4 | Preview thumbnail | ? Completada |
-| H4 | H4.1 | Material* en MeshRenderer | ? Pendiente |
+| H4 | H4.1 | Material* en MeshRenderer | ? Completada |
 | H4 | H4.2 | Drag & drop en Inspector | ? Pendiente |
 | H4 | H4.3 | Apply material | ? Pendiente |
 | H5 | H5.1 | SaveMaterial/LoadMaterial | ? Pendiente |
@@ -302,18 +325,18 @@ private:
 | H5 | H5.3 | Auto-reload | ? Pendiente |
 
 **Total**: 19 tareas  
-**Completadas**: 13/19 (68.4%) ?  
-**Pendientes**: 6/19 (31.6%) ?
+**Completadas**: 14/19 (73.7%) ?  
+**Pendientes**: 5/19 (26.3%) ?
 
 **Progreso por historia**:
 - ? H1: 100% (4/4) - **COMPLETADA**
 - ? H2: 100% (5/5) - **COMPLETADA**
 - ? H3: 100% (4/4) - **COMPLETADA** ??
-- ? H4: 0% (0/3)
+- ? H4: 33.3% (1/3)
 - ? H5: 0% (0/3)
 
 ---
 
 *Última actualización*: 2025-01-21  
 *Sprint*: v2.0.0 - Material System (PBR)  
-*Próxima tarea*: H4.1 - Material* en MeshRenderer
+*Próxima tarea*: H4.2 - Drag & drop material en Inspector
