@@ -623,26 +623,85 @@ Refs: Sprint v2.0.0
 
 ---
 
+### Commit 22 - H4.2 completada: Drag & drop material en Inspector
+**Fecha**: 2025-01-22  
+**Tipo**: feat  
+**Hash**: `b724e16`
+
+**Mensaje**:
+```
+feat(editor): H4.2 completada - Drag & drop material en Inspector
+Material Editor: Drag source desde material name
+Inspector: Drop target en MeshRenderer component
+Payload MATERIAL_EDITOR_ITEM funcional
+Refs: H4.2 Sprint v2.0.0
+```
+
+**Implementación**:
+1. **MaterialEditor.cpp**:
+   - Drag source desde material name input field (after ImGui::InputText)
+   - Payload `MATERIAL_EDITOR_ITEM` con nombre del material
+   - `ImGuiDragDropFlags_SourceAllowNullID` permite drag desde cualquier item
+   - Log cuando se arrastra material: "Dragging material '%s' to Inspector"
+   - Texto hint "(Drag material name to Inspector to assign)"
+
+2. **Inspector (EditorUI.cpp)**:
+   - Ya tenía drop target en MeshRenderer component (implementado previamente)
+   - Acepta payload `MATERIAL_EDITOR_ITEM` (string con nombre)
+   - Crea material placeholder: `new Materials::Material(materialName)`
+   - Configura properties default: albedo (1,1,1,1), metallic (0.0), roughness (0.5)
+   - Llama a `meshRenderer->SetMaterial(newMaterial)`
+   - Muestra material properties en Inspector (read-only):
+     - Albedo Color (R, G, B, A) con formato "%.2f"
+     - Metallic valor
+     - Roughness valor
+   - Botón "Clear Material" para remover material (SetMaterial(nullptr))
+
+**Workflow completo**:
+1. Usuario abre Material Editor
+2. Escribe nombre de material en "Material Name" input
+3. Arrastra desde input ? Inspector ? MeshRenderer component
+4. Material se asigna automáticamente
+5. Inspector muestra material properties
+6. Console log: "Inspector: Material assigned to MeshRenderer: <name>"
+
+**Archivos modificados**:
+- `src/editor/MaterialEditor.cpp` (drag source mejorado)
+- `src/editor/EditorUI.cpp` (ya tenía drop target)
+
+**Compilación**:
+- ? CMake (ROOT): 0 errores, solo warnings C4002 (CORE_LOG - conocidos)
+- ? MSBuild (ROOT): 0 errores, 0 warnings
+
+**Lección aprendida**:
+- Inspector ya tenía drop target implementado (H4.1)
+- Solo faltaba mejorar drag source en MaterialEditor
+- Drag desde input field es más intuitivo que botón separado
+
+**Historia H4**: 2/3 tareas completadas (66.7%) ??
+
+---
+
 ## ?? Estadísticas del Sprint
 
-**Total commits**: 21  
-**Commits válidos**: 20 (1 revertido)  
+**Total commits**: 22  
+**Commits válidos**: 21 (1 revertido)  
 **Historias completadas**: 3/5 (? H1 100%, ? H2 100%, ? H3 100%)  
-**Tareas completas**: 14/19 (73.7%)  
-**Progreso sprint**: 73.7%
+**Tareas completas**: 15/19 (78.9%)  
+**Progreso sprint**: 78.9%
 
 ### Desglose por tipo
-- **feat**: 9 commits válidos (43%)
-- **docs**: 8 commits (38%)
-- **fix**: 1 commit (5%)
+- **feat**: 10 commits válidos (45%)
+- **docs**: 8 commits (36%)
+- **fix**: 2 commits (9%)
 - **chore**: 1 commit (5%)
 - **revert**: 1 commit (5%)
 - **feat (revertido)**: 1 commit ? (excluido)
 
 ### Compilación
 - **Estado actual**: ? 0 errores, solo warnings C4002 (CORE_LOG - conocidos)
-- **Commits con build limpio**: 19/20 (95%)
-- **Commits con errores (revertidos)**: 1/20 (5%)
+- **Commits con build limpio**: 20/21 (95.2%)
+- **Commits con errores (revertidos)**: 1/21 (4.8%)
 
 ### Historia H1 - Material Core (4/4 tareas - 100%) ?
 - ? H1.1: Material.h con MaterialProperties
@@ -663,15 +722,15 @@ Refs: Sprint v2.0.0
 - ? H3.3: Property sliders
 - ? H3.4: Preview thumbnail
 
-### Historia H4 - Material Assignment (1/3 tareas - 33.3%) ??
+### Historia H4 - Material Assignment (2/3 tareas - 66.7%) ??
 - ? H4.1: MeshRenderer component con Material*
-- ? H4.2: Drag & drop material en Inspector (pendiente)
+- ? H4.2: Drag & drop material en Inspector
 - ? H4.3: Apply material en rendering (pendiente)
 
 ---
 
 **Versión**: v2.0.0  
 **Última actualización**: 2025-01-22  
-**Sprint**: v2.0.0 - Material System (PBR) - **EN PROGRESO** (75%)  
+**Sprint**: v2.0.0 - Material System (PBR) - **EN PROGRESO** (80%)  
 **Historias completadas**: 3/5 (? H1, ? H2, ? H3)  
-**Próximo objetivo**: H4.2 - Drag & drop material en Inspector
+**Próximo objetivo**: H4.3 - Apply material en rendering
