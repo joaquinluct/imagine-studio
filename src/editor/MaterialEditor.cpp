@@ -30,12 +30,8 @@ void MaterialEditor::Render()
         s_currentMaterialName = std::string(materialNameBuffer);
     }
     
-    // Drag source for material (H4.2)
-    if (ImGui::Button("Drag Material to Inspector")) {
-        // This button acts as drag source
-    }
-    
-    if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
+    // H4.2 - Drag source for material (can drag from material name)
+    if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
         // Set payload to material name
         ImGui::SetDragDropPayload("MATERIAL_EDITOR_ITEM", s_currentMaterialName.c_str(), s_currentMaterialName.size() + 1);
         
@@ -43,7 +39,11 @@ void MaterialEditor::Render()
         ImGui::Text("Material: %s", s_currentMaterialName.c_str());
         
         ImGui::EndDragDropSource();
+        
+        CORE_LOG_INFO("MaterialEditor: Dragging material '%s' to Inspector", s_currentMaterialName.c_str());
     }
+    
+    ImGui::Text("(Drag material name to Inspector to assign)");
     
     ImGui::Separator();
     
