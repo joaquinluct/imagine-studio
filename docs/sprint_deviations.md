@@ -1,8 +1,8 @@
 ﻿# Sprint Deviations - vX.Y.Z (Active)
 
-> **Referencia**: Ver [docs/backlog.md](backlog.md) para ítems diferidos a sprints futuros.
+> **Referencia**: Ver [docs/backlog.md](backlog.md) para �tems diferidos a sprints futuros.
 
-Este archivo contiene las desviaciones, ajustes arquitectónicos y tareas emergentes que surgen durante la ejecución del sprint activo vX.Y.Z.
+Este archivo contiene las desviaciones, ajustes arquitect�nicos y tareas emergentes que surgen durante la ejecuci�n del sprint activo vX.Y.Z.
 
 ---
 
@@ -12,4 +12,4 @@ Este archivo contiene las desviaciones, ajustes arquitectónicos y tareas emerge
 
 ---
 
-**Nota**: Solo se registran aquí desviaciones CRÍTICAS que NO pueden diferirse al backlog.
+**Nota**: Solo se registran aqu� desviaciones CR�TICAS que NO pueden diferirse al backlog.

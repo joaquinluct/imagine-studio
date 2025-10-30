@@ -1,8 +1,8 @@
 ﻿# Sprint Bugs - vX.Y.Z (Active)
 
-> **Referencia**: Ver [docs/sprint_bug_attempts.md](sprint_bug_attempts.md) para intentos de solución detallados.
+> **Referencia**: Ver [docs/sprint_bug_attempts.md](sprint_bug_attempts.md) para intentos de soluci�n detallados.
 
-Este archivo contiene los bugs reportados durante el sprint activo vX.Y.Z que están pendientes de resolución.
+Este archivo contiene los bugs reportados durante el sprint activo vX.Y.Z que est�n pendientes de resoluci�n.
 
 ---
 
@@ -12,4 +12,4 @@ Este archivo contiene los bugs reportados durante el sprint activo vX.Y.Z que es
 
 ---
 
-**Total bugs**: 0 (0 reportados, 0 en progreso, 0 pendientes validación)
+**Total bugs**: 0 (0 reportados, 0 en progreso, 0 pendientes validaci�n)
