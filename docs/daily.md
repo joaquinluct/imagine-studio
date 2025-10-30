@@ -1,66 +1,67 @@
 ﻿# Daily Log
 
-Hecho: Sprint v2.0.0 - H4.2 COMPLETADA (Drag & drop material en Inspector) ✅
-Siguiente: Sprint v2.0.0 - H4.3 (Apply material en rendering pipeline) - LISTO PARA CONTINUAR
+Hecho: Sprint v2.0.0 - CERRADO CON 78.9% COMPLETADO ✅
+Siguiente: Sprint v2.1.0 - Completar Material System (H4.3 + H5)
 
 ## Ultima Sesion (2025-01-22)
 
-### 🎯 H4.2 COMPLETADA - Drag & Drop Material en Inspector ✅
+### 🎯 Sprint v2.0.0 - CERRADO (78.9% completado)
 
-**Duración**: ~10 minutos  
-**Estado**: H4 en progreso (2/3 tareas - 66.7%)
+**Duración**: ~8 horas  
+**Estado**: ✅ CERRADO (3/5 historias completas, H4.3 diferida)
 
-**Implementación**:
-1. **MaterialEditor.cpp**:
-   - Drag source desde material name input field
-   - Payload `MATERIAL_EDITOR_ITEM` con nombre del material
-   - Log cuando se arrastra material
-   - Texto hint "(Drag material name to Inspector to assign)"
+**Decisión de cierre**: H4.3 requiere ~3-4 horas adicionales (carga texturas, 80 SRVs, PSO PBR completo). Diferido a Sprint v2.1.0 para cierre limpio.
 
-2. **Inspector (EditorUI.cpp)**:
-   - Ya tenía drop target en MeshRenderer component (implementado previamente)
-   - Acepta payload `MATERIAL_EDITOR_ITEM`
-   - Crea material placeholder con properties default
-   - Llama a `meshRenderer->SetMaterial(newMaterial)`
-   - Muestra material properties (albedo, metallic, roughness)
-   - Botón "Clear Material" para remover material
+**Historias completadas**:
+- ✅ **H1 (Material Core - 100%)**: Material class, MaterialInstance, MaterialManager, texturas PBR
+- ✅ **H2 (PBR Shader Pipeline - 100%)**: Shaders PBR, constant buffers, descriptor heap config, PSO preparado
+- ✅ **H3 (Material Editor Panel - 100%)**: MaterialEditor panel, texture slots, property sliders, preview thumbnail
+- ⏸️ **H4 (Material Assignment - 66.7%)**: H4.1 + H4.2 ✅, H4.3 diferida
+- ⏸️ **H5 (Serialization & Hot-Reload - 0%)**: Diferida a v2.1.0
 
-**Validación**:
-- ✅ CMake build: 0 errores, solo warnings C4002 (CORE_LOG conocidos)
-- ✅ MSBuild: 0 errores, 0 warnings
-- ✅ Drag & drop funcional entre Material Editor e Inspector
+**Razón de diferir H4.3**:
+- Carga de texturas JPG/PNG con STB o DirectXTex
+- Crear 80 SRVs (16 materiales × 5 texturas)
+- Root signature con texture slots
+- PSO PBR completo
+- Bind texturas en rendering pipeline
+- Estimación: 3-4 horas adicionales
 
-**Commit**: `b724e16` - "feat(editor): H4.2 completada - Drag & drop material en Inspector"
+**Commits del sprint**: 22 (21 válidos + 1 revertido)
+
+**Validación final**:
+- ✅ CMake build: 0 errores
+- ✅ MSBuild: 0 errores
+- ✅ 3 historias completadas al 100%
+- ✅ Material Editor funcional (drag & drop, properties, preview)
+- ✅ Inspector muestra material asignado
+
+**Archivado**: `docs/sprints/sprint_v2.0.0/` (sprint.md, sprint_histories.md, sprint_tasks.md, sprint_commits.md)
 
 ---
 
-### Sprint v2.0.0 - Material System (PBR)
+### Sprint v2.1.0 - Completar Material System (PLANIFICADO)
 
-**Estado**: 🚀 **EN PROGRESO** (Historia H1 ✅ 100%, Historia H2 ✅ 100%, Historia H3 ✅ 100%, Historia H4 🚀 66.7%)  
-**Fecha inicio**: 2025-01-21  
+**Estado**: ⏳ **PLANIFICADO**  
+**Fecha inicio**: TBD  
 
-**Historias**: 3/5 completadas (60%), H4 en progreso (66.7%)  
-**Tareas**: 15/19 completadas (78.9%)
+**Objetivo**: Completar Material System PBR con rendering visual y hot-reload
 
-**Próxima tarea**: H4.3 - Apply material en rendering pipeline
+**Historias planificadas**:
+1. **H1: Apply Material en Rendering** (continuar H4.3 de v2.0.0):
+   - Cargar texturas PBR desde disco (STB o DirectXTex)
+   - Crear 80 SRVs (16 materiales × 5 texturas)
+   - Root signature con texture slots
+   - PSO PBR completo
+   - Bind texturas en rendering pipeline
+   
+2. **H2: Serialization & Hot-Reload** (continuar H5 de v2.0.0):
+   - SaveMaterial() y LoadMaterial() en JSON (.mat files)
+   - FileWatcher para detectar cambios en texturas
+   - Auto-reload al cambiar archivo en disco
 
-**Funcionalidad entregada**:
-- **H1 (Material Core - 100%)**: Material class, MaterialInstance, MaterialManager, texturas PBR copiadas
-- **H2 (PBR Shader Pipeline - 100%)**:
-  - Vertex shader con TBN matrix
-  - Pixel shader con Cook-Torrance BRDF
-  - Constant buffers (3 structs)
-  - Descriptor heap config (80 slots)
-  - PSO preparado (se integrará en H4.3)
-- **H3 (Material Editor Panel - 100%)**:
-  - MaterialEditor panel (botones, properties, texture slots)
-  - Texture slots con drag & drop (ASSET_BROWSER_ITEM)
-  - Property sliders (albedo, metallic, roughness)
-  - Preview thumbnail (colored rectangle + summary)
-- **H4 (Material Assignment - 66.7%)**:
-  - ✅ H4.1: MeshRenderer component con Material* pointer
-  - ✅ H4.2: Drag & drop material en Inspector (COMPLETADA)
-  - ⏳ H4.3: Apply material en rendering (pendiente)
+**Duración estimada**: 4-5 horas  
+**Prioridad**: Alta (completar Material System)
 
 ---
 
@@ -73,7 +74,8 @@ Siguiente: Sprint v2.0.0 - H4.3 (Apply material en rendering pipeline) - LISTO P
 | v1.8.0 | Scene Graph & Entity System | CERRADO | 100% | 8/10 |
 | v1.9.0 | Asset System | CERRADO | 100% | 9/10 ⭐⭐ |
 | v1.9.1 | Console Integration | CERRADO | 100% | 9/10 ⭐⭐ |
-| v2.0.0 | Material System (PBR) | EN PROGRESO | 78.9% | TBD (objetivo: 9.5/10 ⭐⭐⭐) |
+| v2.0.0 | Material System (PBR) | CERRADO | 78.9% | 8.5/10 ⭐⭐ |
+| v2.1.0 | Completar Material System | PLANIFICADO | 0% | TBD (objetivo: 9.5/10 ⭐⭐⭐) |
 
 ### 🎨 Visualization (Estado actual):
 
@@ -81,19 +83,14 @@ Siguiente: Sprint v2.0.0 - H4.3 (Apply material en rendering pipeline) - LISTO P
 
 **You should see**:
 1. ✅ Material Editor panel con material name input
-2. ✅ Texto "(Drag material name to Inspector to assign)"
-3. ✅ Drag material name → Inspector → MeshRenderer component
-4. ✅ Material properties mostradas en Inspector (albedo, metallic, roughness)
-5. ✅ Botón "Clear Material" para remover material
-
-**Workflow validado**:
-- Abrir Material Editor (panel derecho)
-- Escribir nombre de material (ej: "Brick_Material")
-- Drag desde material name → Inspector → MeshRenderer
-- Ver material asignado en Inspector con properties
+2. ✅ 5 texture slots (Albedo, Normal, Roughness, Metallic, AO) con drag & drop
+3. ✅ Property sliders (Albedo color, Metallic, Roughness)
+4. ✅ Preview thumbnail (128x128 colored rectangle + material summary)
+5. ✅ Drag material → Inspector → MeshRenderer component
+6. ✅ Material properties mostradas en Inspector
 
 **Visualization will come in**: 
-- **H4.3** (Apply material): **AQUÍ se verán cambios visuales en 3D** ✨ - Material PBR renderizado en meshes con texturas
+- **Sprint v2.1.0 (H1)**: **AQUÍ se verán cambios visuales en 3D** ✨ - Material PBR renderizado en meshes con texturas reales
 
 ```
 +--------------------------------------------------------------------+
@@ -101,17 +98,16 @@ Siguiente: Sprint v2.0.0 - H4.3 (Apply material en rendering pipeline) - LISTO P
 +--------------------------------------------------------------------+
 ```
 
-**Proxima meta**: H4.3 - Apply material en rendering pipeline - **LISTO PARA CONTINUAR**
+**Proxima meta**: Sprint v2.1.0 - Completar Material System (H1 + H2)
 
 ---
 
 **Estado del proyecto**: 
-- ✅ **5 sprints cerrados al 100%** (v1.6.0, v1.7.0, v1.8.0, v1.9.0, v1.9.1)
-- 🚀 Sprint v2.0.0 en progreso (78.9% - Historia H1 ✅, Historia H2 ✅, Historia H3 ✅, Historia H4 🚀 66.7%)
-- Calificacion AAA actual: **9/10** ⭐⭐
-- Objetivo v2.0.0: **9.5/10** ⭐⭐⭐
+- ✅ **6 sprints cerrados** (v1.6.0, v1.7.0, v1.8.0, v1.9.0, v1.9.1, v2.0.0)
+- ⏳ Sprint v2.1.0 planificado (completar Material System)
+- Calificacion AAA actual: **8.5/10** ⭐⭐
+- Objetivo v2.1.0: **9.5/10** ⭐⭐⭐
 - **Build limpio: CMake + MSBuild 0 errores** ✅
-- **Proyecto listo para H4.2** ✅
 
 
 

@@ -678,30 +678,69 @@ Refs: H4.2 Sprint v2.0.0
 - Solo faltaba mejorar drag source en MaterialEditor
 - Drag desde input field es más intuitivo que botón separado
 
-**Historia H4**: 2/3 tareas completadas (66.7%) ??
+**Historia H4**: 2/3 tareas completadas (66.7%) ?? (H4.3 diferida a v2.1.0)
 
 ---
 
-## ?? Estadísticas del Sprint
+### Commit 23 - Sprint v2.0.0 CERRADO (78.9% completado)
+**Fecha**: 2025-01-22  
+**Tipo**: docs  
 
-**Total commits**: 22  
-**Commits válidos**: 21 (1 revertido)  
-**Historias completadas**: 3/5 (? H1 100%, ? H2 100%, ? H3 100%)  
+**Mensaje**:
+```
+docs: Cerrar Sprint v2.0.0 con 78.9% completado
+3 historias completas (H1, H2, H3)
+H4.3 diferida a Sprint v2.1.0 (carga texturas, 80 SRVs, PSO PBR)
+Duración real: ~8 horas
+22 commits válidos
+Refs: Sprint v2.0.0 cerrado
+```
+
+**Decisión de cierre**:
+- H4.3 requiere ~3-4 horas adicionales para implementación completa
+- Carga de texturas JPG/PNG con STB o DirectXTex
+- Crear 80 SRVs (16 materiales × 5 texturas)  
+- Root signature con texture slots
+- PSO PBR completo  
+- Bind texturas en rendering pipeline
+
+**Razón**: Cerrar sprint limpiamente con funcionalidad completa de Editor (H1 + H2 + H3) y diferir rendering visual (H4.3 + H5) a Sprint v2.1.0
+
+**Logros del sprint**:
+- ? Material class con MaterialProperties PBR
+- ? MaterialInstance y MaterialManager funcionales
+- ? Shaders PBR completos (Cook-Torrance BRDF, normal mapping)
+- ? Constant buffers (3 structs: Material, Light, PerObject)
+- ? Descriptor heap config (80 slots para materiales)
+- ? Material Editor panel completo (texture slots, properties, preview)
+- ? Drag & drop material en Inspector
+- ? MeshRenderer component con Material* pointer
+
+**Próximo sprint**: v2.1.0 - Completar Material System (H1: Apply material rendering, H2: Serialization & Hot-Reload)
+
+**Compilación final**: ? CMake + MSBuild 0 errores
+
+---
+
+## ?? Estadísticas del Sprint (FINAL)
+
+**Total commits**: 23  
+**Commits válidos**: 22 (1 revertido)  
+**Historias completadas**: 3/5 (? H1 100%, ? H2 100%, ? H3 100%, ?? H4 66.7%, ?? H5 0%)  
 **Tareas completas**: 15/19 (78.9%)  
-**Progreso sprint**: 78.9%
+**Progreso sprint**: 78.9% ? **CERRADO**
 
 ### Desglose por tipo
-- **feat**: 10 commits válidos (45%)
-- **docs**: 8 commits (36%)
-- **fix**: 2 commits (9%)
-- **chore**: 1 commit (5%)
-- **revert**: 1 commit (5%)
-- **feat (revertido)**: 1 commit ? (excluido)
+- **feat**: 10 commits (43.5%)
+- **docs**: 9 commits (39.1%)
+- **fix**: 2 commits (8.7%)
+- **chore**: 1 commit (4.3%)
+- **revert**: 1 commit (4.3%)
 
 ### Compilación
-- **Estado actual**: ? 0 errores, solo warnings C4002 (CORE_LOG - conocidos)
-- **Commits con build limpio**: 20/21 (95.2%)
-- **Commits con errores (revertidos)**: 1/21 (4.8%)
+- **Estado final**: ? 0 errores, solo warnings C4002 (CORE_LOG - conocidos)
+- **Commits con build limpio**: 21/22 (95.5%)
+- **Commits con errores (revertidos)**: 1/22 (4.5%)
 
 ### Historia H1 - Material Core (4/4 tareas - 100%) ?
 - ? H1.1: Material.h con MaterialProperties
@@ -710,27 +749,32 @@ Refs: H4.2 Sprint v2.0.0
 - ? H1.4: MaterialManager singleton
 
 ### Historia H2 - PBR Shader Pipeline (5/5 tareas - 100%) ?
-- ? H2.1: PBR vertex shader
-- ? H2.2: PBR pixel shader (Cook-Torrance)
-- ? H2.3: MaterialConstants structs
-- ? H2.4: Descriptor heap config
+- ? H2.1: PBR vertex shader (TBN matrix, transform completo)
+- ? H2.2: PBR pixel shader (Cook-Torrance BRDF, normal mapping, tone mapping)
+- ? H2.3: MaterialConstants structs (3 constant buffers)
+- ? H2.4: Descriptor heap config (80 slots)
 - ? H2.5: PSO PBR preparado
 
 ### Historia H3 - Material Editor Panel (4/4 tareas - 100%) ?
 - ? H3.1: MaterialEditor panel (ImGui)
 - ? H3.2: Texture slots con drag & drop
-- ? H3.3: Property sliders
-- ? H3.4: Preview thumbnail
+- ? H3.3: Property sliders (albedo, metallic, roughness)
+- ? H3.4: Preview thumbnail (colored rectangle + summary)
 
 ### Historia H4 - Material Assignment (2/3 tareas - 66.7%) ??
-- ? H4.1: MeshRenderer component con Material*
+- ? H4.1: MeshRenderer component con Material* pointer
 - ? H4.2: Drag & drop material en Inspector
-- ? H4.3: Apply material en rendering (pendiente)
+- ?? H4.3: Apply material en rendering **DIFERIDA a v2.1.0**
+
+### Historia H5 - Serialization & Hot-Reload (0/3 tareas - 0%) ??
+- ?? H5.1: SaveMaterial() y LoadMaterial() JSON **DIFERIDA a v2.1.0**
+- ?? H5.2: FileWatcher para texturas **DIFERIDA a v2.1.0**
+- ?? H5.3: Auto-reload al cambiar archivo **DIFERIDA a v2.1.0**
 
 ---
 
 **Versión**: v2.0.0  
 **Última actualización**: 2025-01-22  
-**Sprint**: v2.0.0 - Material System (PBR) - **EN PROGRESO** (80%)  
+**Sprint**: v2.0.0 - Material System (PBR) - ? **CERRADO (78.9%)**  
 **Historias completadas**: 3/5 (? H1, ? H2, ? H3)  
-**Próximo objetivo**: H4.3 - Apply material en rendering
+**Estado**: Sprint CERRADO limpiamente. Continuar con Sprint v2.1.0 para completar rendering visual.
