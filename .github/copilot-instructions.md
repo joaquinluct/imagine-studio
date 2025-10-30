@@ -255,8 +255,11 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 - ✅ **User workflow**: Open `Imagine Studio.sln` in Visual Studio → Press F5 or Ctrl+Shift+B → Builds `ImagineStudio.vcxproj` (ROOT)
 - ⚠️ **CMake configuration**: `cmake -S . -B .` (generates files in ROOT directory, same location as source)
 - ⚠️ **Single .vcxproj file**: `ImagineStudio.vcxproj` in ROOT (used by both CMake and Visual Studio)
+- ⚠️ **FIRST TIME SETUP**: After opening solution, right-click `ImagineStudio` → "Set as StartUp Project" (proyecto de inicio debe estar en NEGRITA)
 
 **Success criteria**: 0 errors, 0 warnings
+
+**Note**: Solution contains 17 projects (tests, CMake helpers, libraries). This is **NORMAL** for CMake projects. Only `ImagineStudio` is the main executable.
 
 ---
 
