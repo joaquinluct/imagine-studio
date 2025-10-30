@@ -113,6 +113,9 @@ set_target_properties(ImagineStudio PROPERTIES VERSION ${PROJECT_VERSION})
 # Set VS debugger working directory to repository root for consistent F5 runs
 set_target_properties(ImagineStudio PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
 
+# Set ImagineStudio as the default startup project in Visual Studio
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ImagineStudio)
+
 # Propagate IMAGINE_START_MAXIMIZED option as a compile definition
 if(IMAGINE_START_MAXIMIZED)
     target_compile_definitions(ImagineStudio PRIVATE IMAGINE_START_MAXIMIZED=1)
