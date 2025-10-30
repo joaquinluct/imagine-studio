@@ -563,17 +563,77 @@ fix(build): Corregir errores de linkado MeshRenderer - CMake + MSBuild
 
 ---
 
+### Commit 21 - Corregir documentación build system
+**Fecha**: 2025-01-22  
+**Tipo**: docs  
+**Hash**: `31c8cc4`
+
+**Mensaje**:
+```
+docs(build): Corregir documentacion build system
+- CMake build desde ROOT (cmake --build . --config Debug)
+- MSBuild usa Imagine Studio.sln en ROOT
+- ImagineStudio.vcxproj (sin espacio) es el proyecto correcto
+- Eliminado src\renderer\Material.cpp antiguo del proyecto
+Refs: Sprint v2.0.0
+```
+
+**Problema detectado**:
+- ? Documentación confusa sobre ubicación de builds
+- ? Doble archivo `.vcxproj` (con y sin espacio)
+- ? Archivo antiguo `src\renderer\Material.cpp` todavía en proyecto
+- ? Usuario pensaba que CMake usaba `build/` pero usa ROOT
+
+**Solución implementada**:
+1. **Documentación corregida** en `.github/copilot-instructions.md`:
+   - CMake build: `cmake --build . --config Debug` (desde ROOT, no `build/`)
+   - MSBuild: `msbuild "Imagine Studio.sln"` (usa `ImagineStudio.vcxproj` en ROOT)
+   - Configuración CMake: `cmake -S . -B .` (genera archivos en ROOT)
+   - Un solo archivo `.vcxproj`: `ImagineStudio.vcxproj` (sin espacio)
+   
+2. **Limpieza de proyecto**:
+   - Eliminado `src\renderer\Material.cpp` (sistema antiguo) de `ImagineStudio.vcxproj`
+   - Namespace correcto: `Materials::Material` (PBR) usado en todo el código
+   - Archivo antiguo de renderer ya no compilado
+
+3. **Validación completa**:
+   - ? CMake build desde ROOT: 0 errores
+   - ? MSBuild desde ROOT con `Imagine Studio.sln`: 0 errores
+   - ? Usuario puede presionar **Ctrl+Shift+B** o **F5** sin problemas
+
+**Archivos modificados**:
+- `.github/copilot-instructions.md` (secciones corregidas):
+  - Step 2: Build 1 (CMake) - ROOT directory
+  - Step 3: Build 2 (MSBuild) - ROOT directory
+  - MSBUILD BEST PRACTICES - arquitectura correcta
+  - CMAKE BEST PRACTICES - build desde ROOT
+- `ImagineStudio.vcxproj` (eliminado `src\renderer\Material.cpp`)
+
+**Compilación**:
+- ? CMake (ROOT): 0 errores, 0 warnings
+- ? MSBuild (ROOT): 0 errores, 0 warnings
+- ? Visual Studio F5: Usuario puede trabajar normalmente
+
+**Lección aprendida**:
+- **Doble compilación correcta**:
+  1. CMake: `cmake --build . --config Debug` (multi-platform)
+  2. MSBuild: Usuario presiona **Ctrl+Shift+B** en Visual Studio (ROOT)
+- Ambos deben funcionar para que usuario pueda trabajar
+- CMake configurado con `cmake -S . -B .` (genera en ROOT, no en `build/`)
+
+---
+
 ## ?? Estadísticas del Sprint
 
-**Total commits**: 20  
-**Commits válidos**: 19 (1 revertido)  
+**Total commits**: 21  
+**Commits válidos**: 20 (1 revertido)  
 **Historias completadas**: 3/5 (? H1 100%, ? H2 100%, ? H3 100%)  
 **Tareas completas**: 14/19 (73.7%)  
 **Progreso sprint**: 73.7%
 
 ### Desglose por tipo
-- **feat**: 9 commits válidos (47%)
-- **docs**: 7 commits (37%)
+- **feat**: 9 commits válidos (43%)
+- **docs**: 8 commits (38%)
 - **fix**: 1 commit (5%)
 - **chore**: 1 commit (5%)
 - **revert**: 1 commit (5%)
@@ -581,8 +641,8 @@ fix(build): Corregir errores de linkado MeshRenderer - CMake + MSBuild
 
 ### Compilación
 - **Estado actual**: ? 0 errores, solo warnings C4002 (CORE_LOG - conocidos)
-- **Commits con build limpio**: 18/19 (95%)
-- **Commits con errores (revertidos)**: 1/19 (5%)
+- **Commits con build limpio**: 19/20 (95%)
+- **Commits con errores (revertidos)**: 1/20 (5%)
 
 ### Historia H1 - Material Core (4/4 tareas - 100%) ?
 - ? H1.1: Material.h con MaterialProperties
@@ -612,6 +672,6 @@ fix(build): Corregir errores de linkado MeshRenderer - CMake + MSBuild
 
 **Versión**: v2.0.0  
 **Última actualización**: 2025-01-22  
-**Sprint**: v2.0.0 - Material System (PBR) - **EN PROGRESO** (73.7%)  
+**Sprint**: v2.0.0 - Material System (PBR) - **EN PROGRESO** (75%)  
 **Historias completadas**: 3/5 (? H1, ? H2, ? H3)  
 **Próximo objetivo**: H4.2 - Drag & drop material en Inspector
