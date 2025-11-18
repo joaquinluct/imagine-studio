@@ -286,3 +286,4 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 **Why**: Some errors only appear in Visual Studio UI, not in terminal output.
 
 **Success criteria**: "Compilation: 0 errors, 0 warnings" in Output Window
+xº

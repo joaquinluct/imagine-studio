@@ -82,6 +82,22 @@ public:
     void* GetDevice() const { return nullptr; }
 #endif
 
+    // === PUBLIC ACCESSORS (v2.1.0 H1.3) ===
+    
+    // Get material SRV heap for binding during rendering
+    ID3D12DescriptorHeap* GetMaterialSrvHeap() const { return m_materialSrvHeap; }
+    
+    // Allocate next available SRV slot in material heap (returns GPU handle)
+    // Returns: GPU descriptor handle for the allocated SRV slot
+    // Returns: .ptr = 0 if heap is full (80 slots exhausted)
+    D3D12_GPU_DESCRIPTOR_HANDLE AllocateMaterialSrv();
+    
+    // Get CPU descriptor handle for writing SRV at specific index
+    D3D12_CPU_DESCRIPTOR_HANDLE GetMaterialSrvCpuHandle(unsigned int index) const;
+    
+    // Reset material SRV allocator (for scene unload/reload)
+    void ResetMaterialSrvAllocator() { m_nextMaterialSrvIndex = 0; }
+
 private:
     // === AAA SUBSYSTEMS (v1.6.0 DEV-002) ===
     DX12Device* m_device = nullptr;
@@ -136,6 +152,11 @@ private:
     
     // UI visibility state
     bool m_uiVisible = true;
+    
+    // === DESCRIPTOR HEAPS (v2.1.0 H1.3) ===
+    ID3D12DescriptorHeap* m_materialSrvHeap; // 80 descriptors (material textures: albedo, normal, metallic, roughness, ao)
+    unsigned int m_materialSrvDescriptorSize;
+    unsigned int m_nextMaterialSrvIndex; // Track next available SRV slot (0-79)
     
     // Helper methods
 #if defined(_WIN32) && defined(_MSC_VER)

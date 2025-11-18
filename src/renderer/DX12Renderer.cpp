@@ -138,6 +138,26 @@ void DX12Renderer::Initialize(HWND hwnd)
     
     CORE_LOG_INFO("DX12Renderer: Descriptor heaps created (RTV + ImGui SRV)");
     
+    // === v2.1.0 H1.3: Material SRV Heap (80 texture slots) ===
+    // Cada material tiene 5 texturas (albedo, normal, metallic, roughness, ao)
+    // 16 materiales únicos ? 5 texturas = 80 SRVs
+    D3D12_DESCRIPTOR_HEAP_DESC materialSrvHeapDesc = {};
+    materialSrvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+    materialSrvHeapDesc.NumDescriptors = 80; // 16 materials ? 5 texturas
+    materialSrvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+    
+    hr = d3dDevice->CreateDescriptorHeap(&materialSrvHeapDesc, IID_PPV_ARGS(&m_materialSrvHeap));
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to create Material SRV heap");
+        return;
+    }
+    
+    m_materialSrvDescriptorSize = m_resourceManager->GetDescriptorSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    m_nextMaterialSrvIndex = 0; // Start at slot 0
+    
+    CORE_LOG_INFO("DX12Renderer: Material SRV heap created (80 texture slots, descriptor size: " + std::to_string(m_materialSrvDescriptorSize) + ")");
+    
     // === STEP 3: Initialize AAA Subsystems ===
     
     // SwapChain
@@ -683,6 +703,7 @@ void DX12Renderer::Shutdown()
         m_resourceManager->ReleaseResource(m_sceneRenderTarget);
         m_resourceManager->ReleaseDescriptorHeap(m_rtvHeap);
         m_resourceManager->ReleaseDescriptorHeap(m_imguiSrvHeap);
+        m_resourceManager->ReleaseDescriptorHeap(m_materialSrvHeap); // v2.1.0 H1.3
     }
     
     // Shutdown subsystems
@@ -724,6 +745,54 @@ void DX12Renderer::Shutdown()
     if (fence_) { delete fence_; fence_ = nullptr; }
     
     CORE_LOG_INFO("DX12Renderer: Shutdown complete");
+}
+
+// === v2.1.0 H1.3: Material SRV Allocation ===
+
+D3D12_GPU_DESCRIPTOR_HANDLE DX12Renderer::AllocateMaterialSrv()
+{
+#if defined(_WIN32) && defined(_MSC_VER)
+    if (m_nextMaterialSrvIndex >= 80)
+    {
+        CORE_LOG_ERROR("DX12Renderer::AllocateMaterialSrv: Material SRV heap exhausted (80/80 slots used)");
+        D3D12_GPU_DESCRIPTOR_HANDLE nullHandle = {};
+        nullHandle.ptr = 0;
+        return nullHandle;
+    }
+    
+    D3D12_GPU_DESCRIPTOR_HANDLE handle = m_materialSrvHeap->GetGPUDescriptorHandleForHeapStart();
+    handle.ptr += m_nextMaterialSrvIndex * m_materialSrvDescriptorSize;
+    
+    CORE_LOG_INFO("DX12Renderer: Allocated material SRV slot " + std::to_string(m_nextMaterialSrvIndex) + " (GPU handle: " + std::to_string(handle.ptr) + ")");
+    
+    m_nextMaterialSrvIndex++;
+    return handle;
+#else
+    D3D12_GPU_DESCRIPTOR_HANDLE nullHandle = {};
+    nullHandle.ptr = 0;
+    return nullHandle;
+#endif
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE DX12Renderer::GetMaterialSrvCpuHandle(unsigned int index) const
+{
+#if defined(_WIN32) && defined(_MSC_VER)
+    if (index >= 80)
+    {
+        CORE_LOG_ERROR("DX12Renderer::GetMaterialSrvCpuHandle: Index out of bounds (" + std::to_string(index) + " >= 80)");
+        D3D12_CPU_DESCRIPTOR_HANDLE nullHandle = {};
+        nullHandle.ptr = 0;
+        return nullHandle;
+    }
+    
+    D3D12_CPU_DESCRIPTOR_HANDLE handle = m_materialSrvHeap->GetCPUDescriptorHandleForHeapStart();
+    handle.ptr += index * m_materialSrvDescriptorSize;
+    return handle;
+#else
+    D3D12_CPU_DESCRIPTOR_HANDLE nullHandle = {};
+    nullHandle.ptr = 0;
+    return nullHandle;
+#endif
 }
 
 } // namespace Renderer
