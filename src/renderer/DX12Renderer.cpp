@@ -140,10 +140,10 @@ void DX12Renderer::Initialize(HWND hwnd)
     
     // === v2.1.0 H1.3: Material SRV Heap (80 texture slots) ===
     // Cada material tiene 5 texturas (albedo, normal, metallic, roughness, ao)
-    // 16 materiales únicos ? 5 texturas = 80 SRVs
+    // 16 materiales únicos × 5 texturas = 80 SRVs
     D3D12_DESCRIPTOR_HEAP_DESC materialSrvHeapDesc = {};
     materialSrvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-    materialSrvHeapDesc.NumDescriptors = 80; // 16 materials ? 5 texturas
+    materialSrvHeapDesc.NumDescriptors = 80; // 16 materials × 5 texturas
     materialSrvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
     
     hr = d3dDevice->CreateDescriptorHeap(&materialSrvHeapDesc, IID_PPV_ARGS(&m_materialSrvHeap));
@@ -153,10 +153,10 @@ void DX12Renderer::Initialize(HWND hwnd)
         return;
     }
     
-    m_materialSrvDescriptorSize = m_resourceManager->GetDescriptorSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    // NOTE: Descriptor size will be set AFTER ResourceManager is initialized (line ~188)
     m_nextMaterialSrvIndex = 0; // Start at slot 0
     
-    CORE_LOG_INFO("DX12Renderer: Material SRV heap created (80 texture slots, descriptor size: " + std::to_string(m_materialSrvDescriptorSize) + ")");
+    CORE_LOG_INFO("DX12Renderer: Material SRV heap created (80 texture slots)");
     
     // === STEP 3: Initialize AAA Subsystems ===
     
@@ -183,6 +183,10 @@ void DX12Renderer::Initialize(HWND hwnd)
         CORE_LOG_ERROR("DX12Renderer: Failed to initialize ResourceManager");
         return;
     }
+    
+    // v2.1.0 H1.3: NOW it's safe to get descriptor size (ResourceManager is initialized)
+    m_materialSrvDescriptorSize = m_resourceManager->GetDescriptorSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    CORE_LOG_INFO("DX12Renderer: Material SRV descriptor size: " + std::to_string(m_materialSrvDescriptorSize));
     
     // PipelineManager
     m_pipelineManager = new DX12PipelineManager();
