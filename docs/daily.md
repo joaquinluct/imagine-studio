@@ -7,7 +7,7 @@ Siguiente: Sprint v2.1.0 - H1.5 (Crear PSO PBR completo)
 
 ### 🎯 H1.1 + H1.2 + H1.3 + H1.4 COMPLETADAS ✅
 
-**Duración**: ~50 minutos  
+**Duración**: ~60 minutos  
 **Estado**: H1 en progreso (4/6 tareas - 66.7%)
 
 **Implementación H1.1**:
@@ -37,16 +37,19 @@ Siguiente: Sprint v2.1.0 - H1.5 (Crear PSO PBR completo)
 - ✅ Static sampler: linear filtering, wrap addressing, register(s0)
 - ✅ Descriptor range: t0-t4 para 5 texturas PBR
 - ✅ Shader visibility: VERTEX para MVP, PIXEL para texturas
+- ✅ **BUG FIX**: Corregido nullptr crash en GetDescriptorSize (orden de inicialización)
 
 **Validación**:
 - ✅ CMake build: 0 errores
 - ✅ MSBuild: 0 errores
+- ✅ **Execution test**: Application starts without crash (Responding: True)
 
 **Commits**:
 - `cba096a` - "feat(assets): H1.1 completada - TextureLoader con STB"
 - `49ad573` - "feat(assets): H1.2 completada - TextureManager para materiales PBR"
 - `deabfe5` - "feat(renderer): H1.3 completada - 80 SRVs descriptor heap para materiales"
-- `PENDING` - "feat(renderer): H1.4 completada - Root signature PBR con texturas"
+- `d5bda48` - "feat(renderer): H1.4 completada - Root signature PBR con texturas"
+- `e225def` - "fix(renderer): H1.4 - Corregir nullptr crash en GetDescriptorSize" **BUG FIX** ✅
 
 ---
 
@@ -108,6 +111,7 @@ Siguiente: Sprint v2.1.0 - H1.5 (Crear PSO PBR completo)
 - Calificacion AAA actual: **8.5/10** ⭐⭐
 - Objetivo v2.1.0: **9.5/10** ⭐⭐⭐
 - **Build limpio: CMake + MSBuild 0 errores** ✅
+- **Execution test: Application runs without crash** ✅
 
 
 
