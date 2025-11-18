@@ -1,14 +1,14 @@
 ﻿# Daily Log
 
-Hecho: Sprint v2.1.0 - H1.3 COMPLETADA (Crear 80 SRVs en descriptor heap) ✅
-Siguiente: Sprint v2.1.0 - H1.4 (Actualizar root signature PBR)
+Hecho: Sprint v2.1.0 - H1.4 COMPLETADA (Actualizar root signature PBR) ✅
+Siguiente: Sprint v2.1.0 - H1.5 (Crear PSO PBR completo)
 
 ## Ultima Sesion (2025-01-22)
 
-### 🎯 H1.1 + H1.2 + H1.3 COMPLETADAS ✅
+### 🎯 H1.1 + H1.2 + H1.3 + H1.4 COMPLETADAS ✅
 
-**Duración**: ~40 minutos  
-**Estado**: H1 en progreso (3/6 tareas - 50.0%)
+**Duración**: ~50 minutos  
+**Estado**: H1 en progreso (4/6 tareas - 66.7%)
 
 **Implementación H1.1**:
 - ✅ TextureLoader con STB
@@ -30,6 +30,14 @@ Siguiente: Sprint v2.1.0 - H1.4 (Actualizar root signature PBR)
 - ✅ Tracking de slots: `m_nextMaterialSrvIndex` (0-79)
 - ✅ Reset allocator: `ResetMaterialSrvAllocator()` para scene unload
 
+**Implementación H1.4**:
+- ✅ Root signature actualizada para PBR (2 root parameters)
+- ✅ Root param 0: MVP matrix (root constants, 16 floats, vertex shader)
+- ✅ Root param 1: Descriptor table con 5 SRVs (albedo, normal, metallic, roughness, ao, pixel shader)
+- ✅ Static sampler: linear filtering, wrap addressing, register(s0)
+- ✅ Descriptor range: t0-t4 para 5 texturas PBR
+- ✅ Shader visibility: VERTEX para MVP, PIXEL para texturas
+
 **Validación**:
 - ✅ CMake build: 0 errores
 - ✅ MSBuild: 0 errores
@@ -37,22 +45,23 @@ Siguiente: Sprint v2.1.0 - H1.4 (Actualizar root signature PBR)
 **Commits**:
 - `cba096a` - "feat(assets): H1.1 completada - TextureLoader con STB"
 - `49ad573` - "feat(assets): H1.2 completada - TextureManager para materiales PBR"
-- `PENDING` - "feat(renderer): H1.3 completada - 80 SRVs descriptor heap para materiales"
+- `deabfe5` - "feat(renderer): H1.3 completada - 80 SRVs descriptor heap para materiales"
+- `PENDING` - "feat(renderer): H1.4 completada - Root signature PBR con texturas"
 
 ---
 
 ### Sprint v2.1.0 - Completar Material System
 
-**Estado**: 🚀 **EN PROGRESO** (H1 en progreso - 50.0%)  
+**Estado**: 🚀 **EN PROGRESO** (H1 en progreso - 66.7%)  
 **Fecha inicio**: 2025-01-22  
 
 **Historias**:
-1. **H1: Apply Material en Rendering** (3/6 tareas):
+1. **H1: Apply Material en Rendering** (4/6 tareas):
    - ✅ H1.1: Crear TextureLoader con STB
    - ✅ H1.2: Cargar texturas de Brick (TextureManager)
-   - ✅ H1.3: Crear 80 SRVs en descriptor heap **COMPLETADA** ✅
-   - ⏳ H1.4: Actualizar root signature PBR **SIGUIENTE**
-   - ⏳ H1.5: Crear PSO PBR completo
+   - ✅ H1.3: Crear 80 SRVs en descriptor heap
+   - ✅ H1.4: Actualizar root signature PBR **COMPLETADA** ✅
+   - ⏳ H1.5: Crear PSO PBR completo **SIGUIENTE**
    - ⏳ H1.6: Bind texturas en rendering
    
 2. **H2: Serialization & Hot-Reload** (0/3 tareas):
@@ -60,7 +69,7 @@ Siguiente: Sprint v2.1.0 - H1.4 (Actualizar root signature PBR)
    - ⏳ H2.2: FileWatcher para texturas
    - ⏳ H2.3: Hot-reload al cambiar archivo
 
-**Progreso total**: 3/9 tareas (33.3%)
+**Progreso total**: 4/9 tareas (44.4%)
 
 ---
 
@@ -74,7 +83,7 @@ Siguiente: Sprint v2.1.0 - H1.4 (Actualizar root signature PBR)
 | v1.9.0 | Asset System | CERRADO | 100% | 9/10 ⭐⭐ |
 | v1.9.1 | Console Integration | CERRADO | 100% | 9/10 ⭐⭐ |
 | v2.0.0 | Material System (PBR) | CERRADO | 78.9% | 8.5/10 ⭐⭐ |
-| v2.1.0 | Completar Material System | EN PROGRESO | 33.3% | TBD (objetivo: 9.5/10 ⭐⭐⭐) |
+| v2.1.0 | Completar Material System | EN PROGRESO | 44.4% | TBD (objetivo: 9.5/10 ⭐⭐⭐) |
 
 ### 🎨 Visualization (Estado actual):
 
@@ -85,17 +94,17 @@ Siguiente: Sprint v2.1.0 - H1.4 (Actualizar root signature PBR)
 
 ```
 +--------------------------------------------------------------------+
-██████████████████████████████⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛ 33.3%
+████████████████████████████████████████⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛ 44.4%
 +--------------------------------------------------------------------+
 ```
 
-**Proxima meta**: H1.4 - Actualizar root signature PBR
+**Proxima meta**: H1.5 - Crear PSO PBR completo
 
 ---
 
 **Estado del proyecto**: 
 - ✅ **6 sprints cerrados** (v1.6.0 → v2.0.0)
-- 🚀 Sprint v2.1.0 en progreso (H1.4 siguiente)
+- 🚀 Sprint v2.1.0 en progreso (H1.5 siguiente)
 - Calificacion AAA actual: **8.5/10** ⭐⭐
 - Objetivo v2.1.0: **9.5/10** ⭐⭐⭐
 - **Build limpio: CMake + MSBuild 0 errores** ✅

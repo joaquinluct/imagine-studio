@@ -209,19 +209,51 @@ void DX12Renderer::Initialize(HWND hwnd)
     
     CORE_LOG_INFO("DX12Renderer: Created " + std::to_string(BACK_BUFFER_COUNT) + " back buffer RTVs");
     
-    // === STEP 5: Create Root Signature ===
-    D3D12_ROOT_PARAMETER rootParam = {};
-    rootParam.ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
-    rootParam.Constants.ShaderRegister = 0; // register(b0)
-    rootParam.Constants.RegisterSpace = 0;
-    rootParam.Constants.Num32BitValues = 16; // 4x4 MVP matrix
-    rootParam.ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+    // === STEP 5: Create Root Signature (v2.1.0 H1.4 - PBR with textures) ===
+    
+    // Root parameter 0: Root constants (MVP matrix) - Vertex shader
+    D3D12_ROOT_PARAMETER rootParams[2] = {};
+    rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
+    rootParams[0].Constants.ShaderRegister = 0; // register(b0)
+    rootParams[0].Constants.RegisterSpace = 0;
+    rootParams[0].Constants.Num32BitValues = 16; // 4x4 MVP matrix
+    rootParams[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+    
+    // Root parameter 1: Descriptor table (5 SRVs for PBR textures) - Pixel shader
+    // Textures: albedo, normal, metallic, roughness, ao
+    D3D12_DESCRIPTOR_RANGE descriptorRange = {};
+    descriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+    descriptorRange.NumDescriptors = 5; // 5 textures
+    descriptorRange.BaseShaderRegister = 0; // register(t0) to register(t4)
+    descriptorRange.RegisterSpace = 0;
+    descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+    
+    rootParams[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+    rootParams[1].DescriptorTable.NumDescriptorRanges = 1;
+    rootParams[1].DescriptorTable.pDescriptorRanges = &descriptorRange;
+    rootParams[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+    
+    // Static sampler (linear filtering, wrap addressing)
+    D3D12_STATIC_SAMPLER_DESC staticSampler = {};
+    staticSampler.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+    staticSampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    staticSampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    staticSampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    staticSampler.MipLODBias = 0.0f;
+    staticSampler.MaxAnisotropy = 16;
+    staticSampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+    staticSampler.BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE;
+    staticSampler.MinLOD = 0.0f;
+    staticSampler.MaxLOD = D3D12_FLOAT32_MAX;
+    staticSampler.ShaderRegister = 0; // register(s0)
+    staticSampler.RegisterSpace = 0;
+    staticSampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
     
     D3D12_ROOT_SIGNATURE_DESC rootSigDesc = {};
-    rootSigDesc.NumParameters = 1;
-    rootSigDesc.pParameters = &rootParam;
-    rootSigDesc.NumStaticSamplers = 0;
-    rootSigDesc.pStaticSamplers = nullptr;
+    rootSigDesc.NumParameters = 2; // MVP + textures
+    rootSigDesc.pParameters = rootParams;
+    rootSigDesc.NumStaticSamplers = 1;
+    rootSigDesc.pStaticSamplers = &staticSampler;
     rootSigDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
     
     m_rootSignature = m_pipelineManager->CreateRootSignature(rootSigDesc);
@@ -230,6 +262,8 @@ void DX12Renderer::Initialize(HWND hwnd)
         CORE_LOG_ERROR("DX12Renderer: Failed to create root signature");
         return;
     }
+    
+    CORE_LOG_INFO("DX12Renderer: Root signature created (PBR: MVP + 5 textures + sampler)");
     
     // === STEP 6: Compile Shaders ===
     ID3DBlob* vertexShaderBlob = m_pipelineManager->CompileShaderFromFile(

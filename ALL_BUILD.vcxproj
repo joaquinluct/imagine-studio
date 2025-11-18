@@ -165,8 +165,13 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\assets\TextureLoader.h" />
+    <ClInclude Include="src\assets\TextureManager.h" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ClCompile Include="src\assets\TextureLoader.cpp" />
+    <ClCompile Include="src\assets\TextureManager.cpp" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="C:\Users\joaqu\source\repos\Imagine Studio\ZERO_CHECK.vcxproj">
       <Project>{398F4C1B-E96D-3F53-ADD6-31B3AEC2517D}</Project>
