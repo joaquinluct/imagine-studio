@@ -1,13 +1,13 @@
 ﻿# Daily Log
 
-Hecho: Sprint v2.1.0 - H1.5 COMPLETADA (Crear PSO PBR completo) ✅
+Hecho: Sprint v2.1.0 - H1.5 COMPLETADA + BUG FIX (pixel shader sin texturas) ✅
 Siguiente: Sprint v2.1.0 - H1.6 (Bind texturas en rendering)
 
 ## Ultima Sesion (2025-01-22)
 
 ### 🎯 H1.1 + H1.2 + H1.3 + H1.4 + H1.5 COMPLETADAS ✅
 
-**Duración**: ~100 minutos  
+**Duración**: ~110 minutos  
 **Estado**: H1 casi completa (5/6 tareas - 83.3%)
 
 **Implementación H1.1**:
@@ -39,7 +39,7 @@ Siguiente: Sprint v2.1.0 - H1.6 (Bind texturas en rendering)
 - ✅ Shader visibility: VERTEX para MVP, PIXEL para texturas
 - ✅ **BUG FIX**: Corregido nullptr crash en GetDescriptorSize (orden de inicialización)
 
-**Implementación H1.5 (COMPLETADA)**:
+**Implementación H1.5 (COMPLETADA + BUG FIX)**:
 - ✅ **Parte 1**: Input layout PBR + shaders simples creados
   - Input layout PBR: Position + Color + TEXCOORD0 (36 bytes stride)
   - Método `CreatePBRInputLayout()` en DX12PipelineManager
@@ -50,10 +50,15 @@ Siguiente: Sprint v2.1.0 - H1.6 (Bind texturas en rendering)
   - Compilación de shaders cambiada a pbr_simple_vs.hlsl y pbr_simple_ps.hlsl
   - Entry points: VSMain (vertex shader) y PSMain (pixel shader)
   - Stride total: 36 bytes por vértice (12 + 16 + 8)
+- ✅ **BUG FIX**: Pixel shader simplificado para no requerir texturas hasta H1.6
+  - **Problema**: Pixel shader intentaba samplear texturas no cargadas → UI crasheaba
+  - **Solución**: Pixel shader retorna vertex color temporalmente (`return input.col`)
+  - **TODO H1.6**: Samplear texturas PBR reales cuando se carguen y bindeen
 
 **Validación**:
 - ✅ CMake build: Error FXC offline (ignorable, compilamos en runtime)
 - ✅ MSBuild: 0 errores (lo que importa, simula F5 en Visual Studio)
+- ✅ **Execution test**: Application runs without crash, UI visible ✅
 - ✅ **PUSH exitoso**: 6 commits a GitHub (H1.1 - H1.4 + bug fix + docs)
 
 **Commits**:
@@ -65,6 +70,8 @@ Siguiente: Sprint v2.1.0 - H1.6 (Bind texturas en rendering)
 - `82d3f7c` - "docs: Actualizar daily.md con bug fix H1.4" **(PUSHED)**
 - `COMMIT_ID` - "feat(renderer): H1.5 (1/2) - Input layout PBR + shaders simples"
 - `COMMIT_ID` - "feat(renderer): H1.5 (2/2) - Actualizar PSO con input layout PBR"
+- `7872363` - "docs: Actualizar daily.md con H1.5 completada"
+- `bf31f01` - "fix(shaders): Simplificar pbr_simple_ps.hlsl sin texturas hasta H1.6"
 
 ---
 
@@ -126,6 +133,7 @@ Siguiente: Sprint v2.1.0 - H1.6 (Bind texturas en rendering)
 - Calificacion AAA actual: **8.5/10** ⭐⭐
 - Objetivo v2.1.0: **9.5/10** ⭐⭐⭐
 - **Build limpio: MSBuild 0 errores** ✅
+- **Execution: UI visible, app estable** ✅
 - **PUSH exitoso: 6 commits a GitHub** ✅
 
 
