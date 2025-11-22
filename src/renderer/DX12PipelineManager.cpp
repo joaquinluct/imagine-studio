@@ -243,6 +243,54 @@ unsigned int DX12PipelineManager::CreateStandardInputLayout(void* outElements, u
 #endif
 }
 
+// v2.1.0 H1.5: Create PBR input layout (Position + Color + UV)
+#if defined(_WIN32) && defined(_MSC_VER)
+unsigned int DX12PipelineManager::CreatePBRInputLayout(
+    D3D12_INPUT_ELEMENT_DESC* outElements,
+    unsigned int maxElements
+)
+{
+    if (!outElements || maxElements < 3)
+    {
+        CORE_LOG_ERROR("DX12PipelineManager::CreatePBRInputLayout: Invalid parameters");
+        return 0;
+    }
+
+    // PBR layout: POSITION (float3) + COLOR (float4) + TEXCOORD0 (float2)
+    outElements[0].SemanticName = "POSITION";
+    outElements[0].SemanticIndex = 0;
+    outElements[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+    outElements[0].InputSlot = 0;
+    outElements[0].AlignedByteOffset = 0;
+    outElements[0].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+    outElements[0].InstanceDataStepRate = 0;
+
+    outElements[1].SemanticName = "COLOR";
+    outElements[1].SemanticIndex = 0;
+    outElements[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+    outElements[1].InputSlot = 0;
+    outElements[1].AlignedByteOffset = 12; // After 3 floats (position)
+    outElements[1].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+    outElements[1].InstanceDataStepRate = 0;
+
+    outElements[2].SemanticName = "TEXCOORD";
+    outElements[2].SemanticIndex = 0;
+    outElements[2].Format = DXGI_FORMAT_R32G32_FLOAT;
+    outElements[2].InputSlot = 0;
+    outElements[2].AlignedByteOffset = 28; // After 3 floats (pos) + 4 floats (color)
+    outElements[2].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+    outElements[2].InstanceDataStepRate = 0;
+
+    CORE_LOG_INFO("DX12PipelineManager: PBR input layout created (POSITION + COLOR + TEXCOORD0)");
+    return 3; // Number of input elements
+}
+#else
+unsigned int DX12PipelineManager::CreatePBRInputLayout(void* outElements, unsigned int maxElements)
+{
+    return 0;
+}
+#endif
+
 #if defined(_WIN32) && defined(_MSC_VER)
 D3D12_RASTERIZER_DESC DX12PipelineManager::CreateDefaultRasterizerState()
 {

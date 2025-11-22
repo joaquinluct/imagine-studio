@@ -76,8 +76,16 @@ public:
         D3D12_INPUT_ELEMENT_DESC* outElements,
         unsigned int maxElements
     );
+
+    // v2.1.0 H1.5: Create PBR input layout (Position + Color + UV)
+    // Returns input element count
+    unsigned int CreatePBRInputLayout(
+        D3D12_INPUT_ELEMENT_DESC* outElements,
+        unsigned int maxElements
+    );
 #else
     unsigned int CreateStandardInputLayout(void* outElements, unsigned int maxElements);
+    unsigned int CreatePBRInputLayout(void* outElements, unsigned int maxElements);
 #endif
 
     // === HELPER: RASTERIZER STATE ===
