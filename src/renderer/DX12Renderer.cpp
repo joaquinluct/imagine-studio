@@ -269,27 +269,29 @@ void DX12Renderer::Initialize(HWND hwnd)
     
     CORE_LOG_INFO("DX12Renderer: Root signature created (PBR: MVP + 5 textures + sampler)");
     
-    // === STEP 6: Compile Shaders ===
+    // === STEP 6: Compile Shaders (v2.1.0 H1.5 - PBR simple shaders) ===
     ID3DBlob* vertexShaderBlob = m_pipelineManager->CompileShaderFromFile(
-        L"shaders/quad.hlsl", "VSMain", "vs_5_0"
+        L"shaders/pbr_simple_vs.hlsl", "VSMain", "vs_5_0"
     );
     
     ID3DBlob* pixelShaderBlob = m_pipelineManager->CompileShaderFromFile(
-        L"shaders/quad.hlsl", "PSMain", "ps_5_0"
+        L"shaders/pbr_simple_ps.hlsl", "PSMain", "ps_5_0"
     );
     
     if (!vertexShaderBlob || !pixelShaderBlob)
     {
-        CORE_LOG_ERROR("DX12Renderer: Failed to compile shaders");
+        CORE_LOG_ERROR("DX12Renderer: Failed to compile PBR shaders");
         return;
     }
     
-    // === STEP 7: Create Pipeline State ===
-    D3D12_INPUT_ELEMENT_DESC inputElements[2];
-    m_pipelineManager->CreateStandardInputLayout(inputElements, 2);
+    CORE_LOG_INFO("DX12Renderer: PBR shaders compiled (pbr_simple_vs.hlsl + pbr_simple_ps.hlsl)");
     
+    // === STEP 7: Create Pipeline State (v2.1.0 H1.5 - PBR input layout) ===
+    D3D12_INPUT_ELEMENT_DESC inputElements[3];
+    m_pipelineManager->CreatePBRInputLayout(inputElements, 3); // Position + Color + UV
+
     D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-    psoDesc.InputLayout = { inputElements, 2 };
+    psoDesc.InputLayout = { inputElements, 3 }; // v2.1.0 H1.5: 3 elements (Position + Color + UV)
     psoDesc.pRootSignature = m_rootSignature;
     psoDesc.VS = { vertexShaderBlob->GetBufferPointer(), vertexShaderBlob->GetBufferSize() };
     psoDesc.PS = { pixelShaderBlob->GetBufferPointer(), pixelShaderBlob->GetBufferSize() };
@@ -315,7 +317,7 @@ void DX12Renderer::Initialize(HWND hwnd)
     m_pipelineManager->ReleaseShaderBlob(vertexShaderBlob);
     m_pipelineManager->ReleaseShaderBlob(pixelShaderBlob);
     
-    CORE_LOG_INFO("DX12Renderer: Pipeline state created (root signature + shaders + PSO)");
+    CORE_LOG_INFO("DX12Renderer: PBR pipeline state created (root signature + pbr_simple shaders + PSO with UVs)");
     
     // === STEP 8: Create Vertex Buffer ===
     struct Vertex {

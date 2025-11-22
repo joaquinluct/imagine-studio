@@ -240,6 +240,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Name>transform_test</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="shaders\pbr_simple_ps.hlsl" />
+    <FxCompile Include="shaders\pbr_simple_vs.hlsl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
