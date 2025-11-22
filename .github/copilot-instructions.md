@@ -31,6 +31,129 @@
 
 ---
 
+## 🏗️ AAA ARCHITECTURE STANDARDS - **MANDATORY**
+
+**CRITICAL**: This is **AAA software**. Code must be structured correctly from the beginning.
+
+### 🚫 **PROHIBITED** (AAA violations):
+
+1. **❌ MONSTER FILES** (>1000 lines)
+   - Split into multiple files with clear responsibilities
+   - Use forward declarations to reduce dependencies
+   - Create separate `.h` and `.cpp` files
+
+2. **❌ MIXING RESPONSIBILITIES**
+   - One class = One responsibility (Single Responsibility Principle)
+   - Separate concerns: Rendering, Logic, UI, Assets, etc.
+   - Use composition over inheritance
+
+3. **❌ GOD CLASSES** (classes that do everything)
+   - Break down into smaller, focused classes
+   - Use manager/subsystem pattern for coordination
+
+4. **❌ POOR FOLDER STRUCTURE**
+   - Follow existing structure: `src/renderer/`, `src/assets/`, `src/scene/`, etc.
+   - Group related files in subdirectories
+   - Keep header/source pairs together
+
+5. **❌ HARDCODED MAGIC NUMBERS**
+   - Use constants with meaningful names
+   - Group related constants in header files
+   - Document why values are chosen
+
+6. **❌ LACK OF COMMENTS**
+   - Document WHY, not WHAT
+   - Explain algorithms and non-obvious choices
+   - Add file headers with purpose and version
+
+### ✅ **REQUIRED** (AAA standards):
+
+1. **✅ MODULAR DESIGN**
+   - Clear separation of concerns
+   - Subsystem pattern (Device, SwapChain, CommandContext, etc.)
+   - Plugin-like architecture where possible
+
+2. **✅ PROPER ABSTRACTION**
+   - Interfaces for platform-specific code
+   - Virtual methods for extensibility
+   - Template patterns where appropriate
+
+3. **✅ CLEAN CODE**
+   - Consistent naming conventions (PascalCase, camelCase, m_prefix)
+   - Self-documenting code with clear variable names
+   - RAII for resource management
+
+4. **✅ FORWARD DECLARATIONS**
+   - Minimize header dependencies
+   - Use forward declarations in headers
+   - Only include what you need
+
+5. **✅ NAMESPACE ORGANIZATION**
+   - Use namespaces to group related code
+   - Avoid `using namespace` in headers
+   - Consistent namespace hierarchy
+
+### 📏 **SIZE LIMITS** (hard rules):
+
+| File Type | Max Lines | Action if Exceeded |
+|-----------|-----------|-------------------|
+| `.h` (header) | 500 | Split into multiple headers |
+| `.cpp` (implementation) | 1000 | Split into multiple `.cpp` files or subsystems |
+| Class | 30 methods | Break into smaller classes |
+| Function | 100 lines | Extract helper functions |
+| Namespace | N/A | Group logically, avoid dumping everything in one |
+
+### 🔧 **REFACTORING RULES**:
+
+**When you encounter a monster file**:
+1. **Analyze**: Identify distinct responsibilities
+2. **Plan**: Design new file structure
+3. **Propose**: Show user before implementing
+4. **Implement**: Split gradually, test after each step
+5. **Validate**: Ensure builds pass after each split
+
+**Example refactoring**:
+```
+BEFORE:
+src/renderer/Renderer.cpp (3000 lines) ❌
+
+AFTER:
+src/renderer/DX12Device.cpp (300 lines) ✅
+src/renderer/DX12SwapChain.cpp (250 lines) ✅
+src/renderer/DX12CommandContext.cpp (400 lines) ✅
+src/renderer/DX12ResourceManager.cpp (500 lines) ✅
+src/renderer/DX12Renderer.cpp (orchestrator, 200 lines) ✅
+```
+
+---
+
+## 🚨 SYSTEM PROMPT (READ FIRST - MANDATORY)
+
+**CRITICAL**: Before ANY code change or commit, you MUST follow this exact sequence:
+
+### Pre-Commit Validation Sequence (MANDATORY)
+1. **Implement** code changes
+2. **CMake Build**: `cmake --build build --config Debug`
+   - Must return: 0 errors, 0 warnings
+3. **MSBuild**: `msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m`
+   - Must return: 0 errors, 0 warnings
+4. **Tests** (if applicable): Run and verify PASSED
+5. **ONLY THEN**: `git commit`
+
+### If You Skip Step 3 (MSBuild):
+- **STOP IMMEDIATELY**
+- Report: "MSBuild validation skipped - cannot commit"
+- Ask user for confirmation before proceeding
+
+### No Exceptions
+- No "I'll validate later"
+- No "CMake passed so MSBuild should work"
+- No "Looks simple, probably fine"
+
+**Follow the checklist in "📋 VALIDATION CHECKLIST" section below**.
+
+---
+
 ## 🚫 POWERSHELL TERMINAL BLOCKING - **CRITICAL RULES**
 
 ### ⚠️ COMMANDS THAT BLOCK THE CHAT (NEVER USE):
@@ -286,4 +409,3 @@ msbuild "Imagine Studio.sln" /t:Build /p:Configuration=Debug /p:Platform=x64 /m
 **Why**: Some errors only appear in Visual Studio UI, not in terminal output.
 
 **Success criteria**: "Compilation: 0 errors, 0 warnings" in Output Window
-xº
