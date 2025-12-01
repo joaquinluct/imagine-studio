@@ -196,4 +196,79 @@ void TextureManager::Clear()
     CORE_LOG_INFO("TextureManager: Cleared all textures");
 }
 
+// v2.1.0 H2.3: Hot-reload support
+
+void TextureManager::EnableHotReload(bool enable)
+{
+    m_hotReloadEnabled = enable;
+    
+    if (enable)
+    {
+        // Start watching all loaded textures
+        for (const auto& pair : m_textureCache)
+        {
+            const std::string& filepath = pair.first;
+            m_fileWatcher.WatchFile(filepath, [this](const std::string& path) {
+                this->OnTextureFileChanged(path);
+            });
+        }
+        
+        CORE_LOG_INFO("TextureManager: Hot-reload enabled");
+    }
+    else
+    {
+        // Stop watching all files
+        m_fileWatcher.Clear();
+        
+        CORE_LOG_INFO("TextureManager: Hot-reload disabled");
+    }
+}
+
+void TextureManager::Update()
+{
+    if (m_hotReloadEnabled)
+    {
+        m_fileWatcher.Update();
+    }
+}
+
+void TextureManager::OnTextureFileChanged(const std::string& filepath)
+{
+    CORE_LOG_INFO("TextureManager: Texture file modified detected: " + filepath);
+    
+    // Find texture in cache
+    auto it = m_textureCache.find(filepath);
+    if (it == m_textureCache.end())
+    {
+        CORE_LOG_WARN("TextureManager: File modified but not in cache: " + filepath);
+        return;
+    }
+    
+    // Reload texture from disk
+    CORE_LOG_INFO("TextureManager: Reloading texture: " + filepath);
+    
+    LoadedTexture& loadedTexture = it->second;
+    
+    // Free old CPU data (RAII will handle this automatically)
+    // Load new CPU data
+    TextureData newData = TextureLoader::LoadTexture(filepath);
+    
+    if (!newData.IsValid())
+    {
+        CORE_LOG_ERROR("TextureManager: Failed to reload texture: " + filepath);
+        return;
+    }
+    
+    // Update CPU data (RAII handles old data cleanup)
+    loadedTexture.cpuData = std::move(newData);
+    
+    // TODO: Upload to GPU and recreate SRV (requires DX12ResourceManager integration)
+    // For now, just update CPU data
+    // Full GPU hot-reload will be implemented when DX12ResourceManager supports it
+    
+    CORE_LOG_INFO("TextureManager: Texture reloaded successfully (CPU): " + filepath);
+    CORE_LOG_INFO("  New size: " + std::to_string(loadedTexture.cpuData.width) + "x" + 
+                  std::to_string(loadedTexture.cpuData.height));
+}
+
 } // namespace Assets

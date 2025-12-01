@@ -347,6 +347,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\joaqu\source\repos\Imagine Studio\src\renderer\RenderTarget.cpp" />
     <ClCompile Include="C:\Users\joaqu\source\repos\Imagine Studio\src\assets\AssetDatabase.cpp" />
     <ClCompile Include="C:\Users\joaqu\source\repos\Imagine Studio\src\assets\AssetManager.cpp" />
+    <ClCompile Include="C:\Users\joaqu\source\repos\Imagine Studio\src\assets\FileWatcher.cpp" />
     <ClCompile Include="C:\Users\joaqu\source\repos\Imagine Studio\src\assets\MeshImporter.cpp" />
     <ClCompile Include="C:\Users\joaqu\source\repos\Imagine Studio\src\assets\TextureImporter.cpp" />
     <ClCompile Include="C:\Users\joaqu\source\repos\Imagine Studio\src\assets\TextureLoader.cpp" />

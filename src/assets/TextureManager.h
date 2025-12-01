@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TextureLoader.h"
+#include "FileWatcher.h" // v2.1.0 H2.3
 #include <string>
 #include <unordered_map>
 
@@ -88,8 +89,19 @@ public:
     // Free all loaded textures
     void Clear();
     
+    // v2.1.0 H2.3: Hot-reload support
+    void EnableHotReload(bool enable);
+    void Update(); // Call every frame to check for file changes
+    
 private:
     std::unordered_map<std::string, LoadedTexture> m_textureCache;
+    
+    // v2.1.0 H2.3: File watcher for hot-reload
+    FileWatcher m_fileWatcher;
+    bool m_hotReloadEnabled = false;
+    
+    // v2.1.0 H2.3: Reload texture callback
+    void OnTextureFileChanged(const std::string& filepath);
 };
 
 } // namespace Assets
