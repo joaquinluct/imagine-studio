@@ -123,19 +123,45 @@ void AssetBrowser::RenderAssetGrid()
     
     // Placeholder assets per folder
     if (m_currentFolder == "assets/textures/") {
-        // v2.2.0 H2: Read textures from AssetDatabase
-        // TODO: AssetDatabase needs GetAssetsByType() method for efficient querying
-        // For now, show hardcoded + message about real assets
+        // v2.3.0 H6: Show real textures from AssetDatabase
+        Assets::AssetDatabase& db = Assets::AssetDatabase::GetInstance();
         
-        // Hardcoded (old placeholder)
-        RenderAssetItem("test_4x4", ".png", assetCount++);
-        if (assetCount % columnCount != 0) ImGui::SameLine();
+        // Get all texture assets
+        std::vector<Assets::AssetID> textureIDs = db.GetAssetsByType(Assets::AssetType::Texture);
         
-        // Show integration message
-        ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), 
-                         "[v2.2.0] Real textures loaded - check Console for registered assets");
-        ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), 
-                         "Note: Thumbnail preview requires GPU SRV integration (H3)");
+        if (textureIDs.empty()) {
+            // Show placeholder if no textures registered yet
+            ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), 
+                             "No textures loaded yet. Load a scene or material to see textures.");
+        }
+        else {
+            // Render real texture assets
+            for (Assets::AssetID assetID : textureIDs) {
+                const Assets::AssetMetadata* metadata = db.GetMetadata(assetID);
+                if (metadata) {
+                    // Extract filename without extension
+                    std::string filename = metadata->name;
+                    
+                    // Determine extension from path
+                    size_t dotPos = metadata->path.find_last_of('.');
+                    std::string extension = (dotPos != std::string::npos) 
+                        ? metadata->path.substr(dotPos) 
+                        : ".png";
+                    
+                    RenderAssetItem(filename.c_str(), extension.c_str(), assetCount++);
+                    
+                    // Layout in grid
+                    if (assetCount % columnCount != 0) {
+                        ImGui::SameLine();
+                    }
+                }
+            }
+            
+            // Show count
+            ImGui::Separator();
+            ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), 
+                             "Loaded textures: %d", static_cast<int>(textureIDs.size()));
+        }
     }
     else if (m_currentFolder == "assets/meshes/") {
         RenderAssetItem("test_triangle", ".obj", assetCount++);

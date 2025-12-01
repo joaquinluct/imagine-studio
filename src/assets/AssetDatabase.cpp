@@ -40,4 +40,30 @@ const AssetMetadata* AssetDatabase::GetMetadata(AssetID id) const {
     return nullptr;
 }
 
+// v2.3.0 H5: Get all assets of a specific type
+std::vector<AssetID> AssetDatabase::GetAssetsByType(AssetType type) const {
+    std::lock_guard<std::mutex> lock(s_registryMutex);
+    std::vector<AssetID> result;
+    
+    for (const auto& pair : s_assetRegistry) {
+        if (pair.second.type == type) {
+            result.push_back(pair.first);
+        }
+    }
+    
+    return result;
+}
+
+// v2.3.0 H5: Get all assets metadata
+std::vector<const AssetMetadata*> AssetDatabase::GetAllAssets() const {
+    std::lock_guard<std::mutex> lock(s_registryMutex);
+    std::vector<const AssetMetadata*> result;
+    
+    for (const auto& pair : s_assetRegistry) {
+        result.push_back(&pair.second);
+    }
+    
+    return result;
+}
+
 } // namespace Assets

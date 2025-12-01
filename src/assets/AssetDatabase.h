@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <string>
+#include <vector> // v2.3.0 H5
 
 namespace Assets {
 
@@ -39,6 +40,10 @@ public:
     // Asset queries
     bool HasAsset(AssetID id) const;
     const AssetMetadata* GetMetadata(AssetID id) const;
+    
+    // v2.3.0 H5: Query assets by type
+    std::vector<AssetID> GetAssetsByType(AssetType type) const;
+    std::vector<const AssetMetadata*> GetAllAssets() const;
     
 private:
     AssetDatabase() = default;
