@@ -1,7 +1,7 @@
 ﻿# Daily Log
 
-Hecho: Sprint v2.2.0 - CERRADO ✅ (H1+H2 completadas, 50% funcionalidad básica)
-Siguiente: Cerrar sesión o continuar con mejoras opcionales
+Hecho: Sprint v2.3.0 - COMPLETADO ✅ (H5+H6 - Query eficiente + mostrar assets reales)
+Siguiente: Cerrar sesión o planificar v2.4.0 (Thumbnail Preview GPU)
 
 ### 🎉 Sprint v2.2.0 - CERRADO (50% - Funcionalidad Básica) ✅
 
@@ -381,7 +381,8 @@ textures.albedo = loaded;       // COPIA 2 (shallow copy)
 | v1.9.1 | Console Integration | CERRADO | 100% | 9/10 ⭐⭐ |
 | v2.0.0 | Material System (PBR) | CERRADO | 78.9% | 8.5/10 ⭐⭐ |
 | v2.1.0 | Completar Material System | CERRADO | 100% | 9.5/10 ⭐⭐⭐ |
-| **v2.2.0** | **Asset Browser Integration** | **CERRADO** | **50%** | **9.0/10** ⭐⭐
+| v2.2.0 | Asset Browser Integration | CERRADO | 50% | 9.0/10 ⭐⭐ |
+| **v2.3.0** | **Asset Browser Advanced** | **CERRADO** | **100%** | **9.0/10** ⭐⭐
 
 ### 🎨 Visualization (Estado actual):
 
