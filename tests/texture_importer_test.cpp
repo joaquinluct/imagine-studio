@@ -12,11 +12,11 @@ void TestImportTextureValid()
     // If file doesn't exist, test will fail (expected behavior)
     
     try {
-        TextureData tex = TextureImporter::ImportTextureRGBA("assets/textures/test_4x4.png");
+        TextureDataLegacy tex = TextureImporter::ImportTextureRGBA("assets/textures/test_4x4.png");
         
         // Test 1: IsValid returns true
         assert(tex.IsValid());
-        std::cout << "  [PASS] TextureData IsValid() returns true" << std::endl;
+        std::cout << "  [PASS] TextureDataLegacy IsValid() returns true" << std::endl;
         
         // Test 2: Pixels pointer is not null
         assert(tex.pixels != nullptr);
@@ -46,7 +46,7 @@ void TestImportTextureValid()
         assert(tex.width == 0);
         assert(tex.height == 0);
         assert(tex.channels == 0);
-        std::cout << "  [PASS] FreeTextureData clears all fields" << std::endl;
+        std::cout << "  [PASS] FreeTextureDataLegacy clears all fields" << std::endl;
         
         std::cout << "[TEST] TestImportTextureValid - PASSED (7 tests)" << std::endl;
     }
@@ -64,7 +64,7 @@ void TestImportTextureInvalid()
     // Test 1: Import non-existent file throws exception
     bool exceptionThrown = false;
     try {
-        TextureData tex = TextureImporter::ImportTexture("nonexistent_file.png");
+        TextureDataLegacy tex = TextureImporter::ImportTexture("nonexistent_file.png");
     }
     catch (const std::runtime_error& e) {
         exceptionThrown = true;
@@ -184,14 +184,14 @@ void TestImportTextureChannels()
     
     try {
         // Test 1: Import with original channels (desiredChannels = 0)
-        TextureData tex1 = TextureImporter::ImportTexture("assets/textures/test_4x4.png", 0);
+        TextureDataLegacy tex1 = TextureImporter::ImportTexture("assets/textures/test_4x4.png", 0);
         assert(tex1.IsValid());
         assert(tex1.pixels != nullptr);
         std::cout << "  [PASS] ImportTexture with original channels (desiredChannels=0)" << std::endl;
         TextureImporter::FreeTextureData(tex1);
         
         // Test 2: Import with RGBA forced (desiredChannels = 4)
-        TextureData tex2 = TextureImporter::ImportTexture("assets/textures/test_4x4.png", 4);
+        TextureDataLegacy tex2 = TextureImporter::ImportTexture("assets/textures/test_4x4.png", 4);
         assert(tex2.IsValid());
         assert(tex2.pixels != nullptr);
         assert(tex2.channels == 4);
@@ -199,7 +199,7 @@ void TestImportTextureChannels()
         TextureImporter::FreeTextureData(tex2);
         
         // Test 3: ImportTextureRGBA is equivalent to desiredChannels=4
-        TextureData tex3 = TextureImporter::ImportTextureRGBA("assets/textures/test_4x4.png");
+        TextureDataLegacy tex3 = TextureImporter::ImportTextureRGBA("assets/textures/test_4x4.png");
         assert(tex3.IsValid());
         assert(tex3.channels == 4);
         std::cout << "  [PASS] ImportTextureRGBA forces 4 channels" << std::endl;

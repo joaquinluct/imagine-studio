@@ -11,6 +11,9 @@
 #include "DX12UIPass.h"
 #include "Camera.h"
 
+// v2.1.0 H1.6: Texture Manager
+#include "../assets/TextureManager.h"
+
 // Legacy stubs
 #include "CommandAllocator.h"
 #include "CommandBuffer.h"
@@ -45,6 +48,7 @@ DX12Renderer::DX12Renderer()
     , m_opaquePass(nullptr)
     , m_uiPass(nullptr)
     , m_camera(nullptr)
+    , m_textureManager(nullptr) // v2.1.0 H1.6
     , rt_(nullptr)
     , allocator_(nullptr)
     , fence_(nullptr)
@@ -323,15 +327,16 @@ void DX12Renderer::Initialize(HWND hwnd)
     struct Vertex {
         float pos[3];
         float col[4];
+        float uv[2];  // v2.1.0 H1.6: UV coordinates for texture sampling
     };
     
     Vertex vertices[] = {
-        {{-0.75f, -0.75f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}}, // Bottom-left, red
-        {{-0.75f,  0.75f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}, // Top-left, blue
-        {{ 0.75f, -0.75f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}}, // Bottom-right, green
-        {{ 0.75f, -0.75f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}}, // Bottom-right, green
-        {{-0.75f,  0.75f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}, // Top-left, blue
-        {{ 0.75f,  0.75f, 0.0f}, {1.0f, 1.0f, 0.0f, 1.0f}}, // Top-right, yellow
+        {{-0.75f, -0.75f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}}, // Bottom-left
+        {{-0.75f,  0.75f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}, {0.0f, 0.0f}}, // Top-left
+        {{ 0.75f, -0.75f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}, {1.0f, 1.0f}}, // Bottom-right
+        {{ 0.75f, -0.75f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}, {1.0f, 1.0f}}, // Bottom-right
+        {{-0.75f,  0.75f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}, {0.0f, 0.0f}}, // Top-left
+        {{ 0.75f,  0.75f, 0.0f}, {1.0f, 1.0f, 0.0f, 1.0f}, {1.0f, 0.0f}}, // Top-right
     };
     
     const unsigned int vertexBufferSize = sizeof(vertices);
@@ -367,10 +372,185 @@ void DX12Renderer::Initialize(HWND hwnd)
     
     // Configure vertex buffer view
     m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
-    m_vertexBufferView.StrideInBytes = sizeof(Vertex);
+    m_vertexBufferView.StrideInBytes = sizeof(Vertex);  // 36 bytes (12 + 16 + 8)
     m_vertexBufferView.SizeInBytes = vertexBufferSize;
     
-    CORE_LOG_INFO("DX12Renderer: Vertex buffer created (6 vertices, 28 bytes stride)");
+    CORE_LOG_INFO("DX12Renderer: Vertex buffer created (6 vertices, 36 bytes stride)");
+    
+    // === v2.1.0 H1.6: Load and Upload Brick Material Textures ===
+    
+    // Create TextureManager
+    m_textureManager = new Assets::TextureManager();
+    
+    // Load Brick textures from disk (CPU pixel data)
+    CORE_LOG_INFO("DX12Renderer: Loading Brick material textures from disk...");
+    m_brickTextures = m_textureManager->LoadMaterialTextures(
+        "assets/textures/pbr/brick/Poliigon_BrickWallReclaimed_8320_BaseColor.jpg",
+        "assets/textures/pbr/brick/Poliigon_BrickWallReclaimed_8320_Normal.png",
+        "assets/textures/pbr/brick/Poliigon_BrickWallReclaimed_8320_Roughness.jpg",
+        "assets/textures/pbr/brick/Poliigon_BrickWallReclaimed_8320_Metallic.jpg",
+        "assets/textures/pbr/brick/Poliigon_BrickWallReclaimed_8320_AmbientOcclusion.jpg"
+    );
+    
+    if (!m_brickTextures.IsFullyLoaded())
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to load Brick material textures");
+        return;
+    }
+    
+    CORE_LOG_INFO("DX12Renderer: Brick material textures loaded (5/5)");
+    
+    // Upload textures to GPU (requires command list)
+    m_commandContext->BeginFrame(nullptr);
+    ID3D12GraphicsCommandList* uploadCommandList = m_commandContext->GetCommandList();
+    
+    // Upload buffers (keep alive until GPU finishes)
+    ID3D12Resource* uploadBuffers[5] = {nullptr, nullptr, nullptr, nullptr, nullptr};
+    
+    // Upload Albedo texture
+    CORE_LOG_INFO("DX12Renderer: Uploading Albedo texture to GPU (" + 
+        std::to_string(m_brickTextures.albedo.cpuData.width) + "x" + 
+        std::to_string(m_brickTextures.albedo.cpuData.height) + ")");
+    m_brickAlbedoGPU = m_resourceManager->CreateTexture2DFromData(
+        m_brickTextures.albedo.cpuData.pixels,
+        m_brickTextures.albedo.cpuData.width,
+        m_brickTextures.albedo.cpuData.height,
+        DXGI_FORMAT_R8G8B8A8_UNORM,
+        uploadCommandList,
+        &uploadBuffers[0]
+    );
+    
+    if (!m_brickAlbedoGPU)
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to upload Albedo texture to GPU");
+        return;
+    }
+    
+    // Upload Normal texture
+    CORE_LOG_INFO("DX12Renderer: Uploading Normal texture to GPU (" + 
+        std::to_string(m_brickTextures.normal.cpuData.width) + "x" + 
+        std::to_string(m_brickTextures.normal.cpuData.height) + ")");
+    m_brickNormalGPU = m_resourceManager->CreateTexture2DFromData(
+        m_brickTextures.normal.cpuData.pixels,
+        m_brickTextures.normal.cpuData.width,
+        m_brickTextures.normal.cpuData.height,
+        DXGI_FORMAT_R8G8B8A8_UNORM,
+        uploadCommandList,
+        &uploadBuffers[1]
+    );
+    
+    if (!m_brickNormalGPU)
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to upload Normal texture to GPU");
+        return;
+    }
+    
+    // Upload Roughness texture
+    CORE_LOG_INFO("DX12Renderer: Uploading Roughness texture to GPU (" + 
+        std::to_string(m_brickTextures.roughness.cpuData.width) + "x" + 
+        std::to_string(m_brickTextures.roughness.cpuData.height) + ")");
+    m_brickRoughnessGPU = m_resourceManager->CreateTexture2DFromData(
+        m_brickTextures.roughness.cpuData.pixels,
+        m_brickTextures.roughness.cpuData.width,
+        m_brickTextures.roughness.cpuData.height,
+        DXGI_FORMAT_R8G8B8A8_UNORM,
+        uploadCommandList,
+        &uploadBuffers[2]
+    );
+    
+    if (!m_brickRoughnessGPU)
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to upload Roughness texture to GPU");
+        return;
+    }
+    
+    // Upload Metallic texture
+    CORE_LOG_INFO("DX12Renderer: Uploading Metallic texture to GPU (" + 
+        std::to_string(m_brickTextures.metallic.cpuData.width) + "x" + 
+        std::to_string(m_brickTextures.metallic.cpuData.height) + ")");
+    m_brickMetallicGPU = m_resourceManager->CreateTexture2DFromData(
+        m_brickTextures.metallic.cpuData.pixels,
+        m_brickTextures.metallic.cpuData.width,
+        m_brickTextures.metallic.cpuData.height,
+        DXGI_FORMAT_R8G8B8A8_UNORM,
+        uploadCommandList,
+        &uploadBuffers[3]
+    );
+    
+    if (!m_brickMetallicGPU)
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to upload Metallic texture to GPU");
+        return;
+    }
+    
+    // Upload AO texture
+    CORE_LOG_INFO("DX12Renderer: Uploading AO texture to GPU (" + 
+        std::to_string(m_brickTextures.ao.cpuData.width) + "x" + 
+        std::to_string(m_brickTextures.ao.cpuData.height) + ")");
+    m_brickAoGPU = m_resourceManager->CreateTexture2DFromData(
+        m_brickTextures.ao.cpuData.pixels,
+        m_brickTextures.ao.cpuData.width,
+        m_brickTextures.ao.cpuData.height,
+        DXGI_FORMAT_R8G8B8A8_UNORM,
+        uploadCommandList,
+        &uploadBuffers[4]
+    );
+    
+    if (!m_brickAoGPU)
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to upload AO texture to GPU");
+        return;
+    }
+    
+    // Execute upload commands and wait for GPU
+    m_commandContext->EndFrame();
+    m_commandContext->Execute();
+    m_commandContext->WaitForGPU();
+    
+    // NOW it's safe to release upload buffers (GPU finished copying)
+    for (int i = 0; i < 5; ++i)
+    {
+        if (uploadBuffers[i])
+        {
+            uploadBuffers[i]->Release();
+        }
+    }
+    
+    CORE_LOG_INFO("DX12Renderer: Brick material textures uploaded to GPU (5/5)");
+    
+    // Create SRVs in material descriptor heap
+    CORE_LOG_INFO("DX12Renderer: Creating SRVs for Brick material textures...");
+    
+    // Allocate 5 consecutive SRV slots (indices 0-4)
+    m_brickAlbedoSRV = AllocateMaterialSrv();
+    m_brickNormalSRV = AllocateMaterialSrv();
+    m_brickRoughnessSRV = AllocateMaterialSrv();
+    m_brickMetallicSRV = AllocateMaterialSrv();
+    m_brickAoSRV = AllocateMaterialSrv();
+    
+    // Create SRV descriptors
+    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MipLevels = 1;
+    
+    // Albedo SRV
+    d3dDevice->CreateShaderResourceView(m_brickAlbedoGPU, &srvDesc, GetMaterialSrvCpuHandle(0));
+    
+    // Normal SRV
+    d3dDevice->CreateShaderResourceView(m_brickNormalGPU, &srvDesc, GetMaterialSrvCpuHandle(1));
+    
+    // Roughness SRV
+    d3dDevice->CreateShaderResourceView(m_brickRoughnessGPU, &srvDesc, GetMaterialSrvCpuHandle(2));
+    
+    // Metallic SRV
+    d3dDevice->CreateShaderResourceView(m_brickMetallicGPU, &srvDesc, GetMaterialSrvCpuHandle(3));
+    
+    // AO SRV
+    d3dDevice->CreateShaderResourceView(m_brickAoGPU, &srvDesc, GetMaterialSrvCpuHandle(4));
+    
+    CORE_LOG_INFO("DX12Renderer: Brick material SRVs created (5 textures, slots 0-4)");
     
     // === STEP 9: Initialize Camera ===
     m_camera = new Camera();
@@ -390,6 +570,9 @@ void DX12Renderer::Initialize(HWND hwnd)
     m_opaquePass->SetPipeline(m_pipelineState, m_rootSignature);
     m_opaquePass->SetVertexBuffer(m_vertexBufferView);
     m_opaquePass->SetCamera(m_camera);
+    
+    // v2.1.0 H1.6: Set material textures (Brick material)
+    m_opaquePass->SetMaterialTextures(m_materialSrvHeap, m_brickAlbedoSRV);
     
     m_uiPass = new DX12UIPass();
     m_uiPass->Initialize();
@@ -741,9 +924,24 @@ void DX12Renderer::Shutdown()
     {
         m_resourceManager->ReleaseResource(m_vertexBuffer);
         m_resourceManager->ReleaseResource(m_sceneRenderTarget);
+        
+        // v2.1.0 H1.6: Release brick textures
+        m_resourceManager->ReleaseResource(m_brickAlbedoGPU);
+        m_resourceManager->ReleaseResource(m_brickNormalGPU);
+        m_resourceManager->ReleaseResource(m_brickRoughnessGPU);
+        m_resourceManager->ReleaseResource(m_brickMetallicGPU);
+        m_resourceManager->ReleaseResource(m_brickAoGPU);
+        
         m_resourceManager->ReleaseDescriptorHeap(m_rtvHeap);
         m_resourceManager->ReleaseDescriptorHeap(m_imguiSrvHeap);
         m_resourceManager->ReleaseDescriptorHeap(m_materialSrvHeap); // v2.1.0 H1.3
+    }
+    
+    // v2.1.0 H1.6: Cleanup TextureManager
+    if (m_textureManager)
+    {
+        delete m_textureManager;
+        m_textureManager = nullptr;
     }
     
     // Shutdown subsystems

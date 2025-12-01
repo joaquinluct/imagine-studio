@@ -1,6 +1,15 @@
-// v2.1.0 H1.5 - Simple PBR Pixel Shader (TEMPORAL - sin texturas)
-// Outputs vertex color until H1.6 implements texture binding
-// TODO H1.6: Samplear texturas PBR reales (t0-t4)
+// v2.1.0 H1.6 - PBR Pixel Shader with Texture Sampling
+// Samples 5 PBR textures: Albedo, Normal, Roughness, Metallic, AO
+
+// Textures (bound via root parameter 1 - descriptor table)
+Texture2D AlbedoTexture    : register(t0);
+Texture2D NormalTexture    : register(t1);
+Texture2D RoughnessTexture : register(t2);
+Texture2D MetallicTexture  : register(t3);
+Texture2D AOTexture        : register(t4);
+
+// Sampler (static sampler in root signature)
+SamplerState LinearSampler : register(s0);
 
 struct PSInput
 {
@@ -11,10 +20,10 @@ struct PSInput
 
 float4 PSMain(PSInput input) : SV_TARGET
 {
-    // TEMPORAL H1.5: Return vertex color (texturas en H1.6)
-    // TODO H1.6: Sample albedo texture and return it
-    // float4 albedo = AlbedoTexture.Sample(LinearSampler, input.uv);
-    // return albedo;
+    // Sample albedo texture
+    float4 albedo = AlbedoTexture.Sample(LinearSampler, input.uv);
     
-    return input.col; // Return vertex color for now
+    // For H1.6, we just return the albedo texture
+    // Full PBR lighting will be implemented in H2.x
+    return albedo;
 }

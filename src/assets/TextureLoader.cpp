@@ -9,6 +9,8 @@
 
 namespace Assets {
 
+// TextureLoader implementation
+
 TextureData TextureLoader::LoadTexture(const std::string& filepath)
 {
     TextureData data;
@@ -57,14 +59,10 @@ TextureData TextureLoader::LoadTexture(const std::string& filepath)
 
 void TextureLoader::FreeTextureData(TextureData& data)
 {
-    if (data.pixels)
-    {
-        stbi_image_free(data.pixels);
-        data.pixels = nullptr;
-        data.width = 0;
-        data.height = 0;
-        data.channels = 0;
-    }
+    // No-op: TextureData now manages its own memory via destructor
+    // This function is kept for backward compatibility but does nothing
+    // The destructor will handle freeing when the object goes out of scope
+    (void)data;  // Suppress unused parameter warning
 }
 
 bool TextureLoader::IsSupportedFormat(const std::string& filepath)

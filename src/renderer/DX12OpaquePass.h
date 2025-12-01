@@ -65,6 +65,17 @@ public:
     // Set camera (for MVP calculation)
     void SetCamera(class Camera* camera);
 
+    // v2.1.0 H1.6: Set material textures (descriptor table)
+    void SetMaterialTextures(
+#if defined(_WIN32) && defined(_MSC_VER)
+        ID3D12DescriptorHeap* materialSrvHeap,
+        D3D12_GPU_DESCRIPTOR_HANDLE firstTextureSrv
+#else
+        void* materialSrvHeap,
+        void* firstTextureSrv
+#endif
+    );
+
 private:
 #if defined(_WIN32) && defined(_MSC_VER)
     ID3D12Resource* m_renderTarget = nullptr;
@@ -72,12 +83,18 @@ private:
     ID3D12PipelineState* m_pipelineState = nullptr;
     ID3D12RootSignature* m_rootSignature = nullptr;
     D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView = {};
+    
+    // v2.1.0 H1.6: Material textures
+    ID3D12DescriptorHeap* m_materialSrvHeap = nullptr;
+    D3D12_GPU_DESCRIPTOR_HANDLE m_materialFirstTextureSrv = {};
 #else
     void* m_renderTarget = nullptr;
     void* m_rtv = nullptr;
     void* m_pipelineState = nullptr;
     void* m_rootSignature = nullptr;
     void* m_vertexBufferView = nullptr;
+    void* m_materialSrvHeap = nullptr;
+    void* m_materialFirstTextureSrv = nullptr;
 #endif
 
     float m_mvpMatrix[16] = {}; // MVP matrix for rendering

@@ -84,6 +84,21 @@ void DX12OpaquePass::Execute(DX12CommandContext& ctx)
     // Set root constants (MVP matrix)
     commandList->SetGraphicsRoot32BitConstants(0, 16, m_mvpMatrix, 0);
 
+    // v2.1.0 H1.6: Bind material textures (descriptor table - root parameter 1)
+    if (m_materialSrvHeap && m_materialFirstTextureSrv.ptr != 0)
+    {
+        // Set descriptor heap (must be set before SetGraphicsRootDescriptorTable)
+        ID3D12DescriptorHeap* heaps[] = { m_materialSrvHeap };
+        commandList->SetDescriptorHeaps(1, heaps);
+        
+        // Bind descriptor table (5 consecutive SRVs starting at firstTextureSrv)
+        commandList->SetGraphicsRootDescriptorTable(1, m_materialFirstTextureSrv);
+    }
+    else
+    {
+        CORE_LOG_WARN("DX12OpaquePass::Execute: Material textures not set (rendering without textures)");
+    }
+
     // DRAW CALL - 6 vertices (2 triangles forming a quad)
     commandList->DrawInstanced(6, 1, 0, 0);
 #endif
@@ -148,6 +163,23 @@ void DX12OpaquePass::SetMVPMatrix(const float* mvpMatrix)
 void DX12OpaquePass::SetCamera(Camera* camera)
 {
     m_camera = camera;
+}
+
+// v2.1.0 H1.6: Set material textures
+void DX12OpaquePass::SetMaterialTextures(
+#if defined(_WIN32) && defined(_MSC_VER)
+    ID3D12DescriptorHeap* materialSrvHeap,
+    D3D12_GPU_DESCRIPTOR_HANDLE firstTextureSrv
+#else
+    void* materialSrvHeap,
+    void* firstTextureSrv
+#endif
+)
+{
+    m_materialSrvHeap = materialSrvHeap;
+#if defined(_WIN32) && defined(_MSC_VER)
+    m_materialFirstTextureSrv = firstTextureSrv;
+#endif
 }
 
 } // namespace Renderer

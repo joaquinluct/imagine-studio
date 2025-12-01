@@ -13,9 +13,9 @@ static bool EndsWith(const std::string& str, const std::string& suffix) {
     return str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
 }
 
-TextureData TextureImporter::ImportTexture(const std::string& path, int desiredChannels)
+TextureDataLegacy TextureImporter::ImportTexture(const std::string& path, int desiredChannels)
 {
-    TextureData data;
+    TextureDataLegacy data;
     data.path = path;
     
     // Load image using stb_image
@@ -34,13 +34,13 @@ TextureData TextureImporter::ImportTexture(const std::string& path, int desiredC
     return data;
 }
 
-TextureData TextureImporter::ImportTextureRGBA(const std::string& path)
+TextureDataLegacy TextureImporter::ImportTextureRGBA(const std::string& path)
 {
     // Force 4 channels (RGBA)
     return ImportTexture(path, 4);
 }
 
-void TextureImporter::FreeTextureData(TextureData& data)
+void TextureImporter::FreeTextureData(TextureDataLegacy& data)
 {
     if (data.pixels) {
         stbi_image_free(data.pixels);

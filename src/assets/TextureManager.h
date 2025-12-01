@@ -5,24 +5,42 @@
 #include <unordered_map>
 
 #if defined(_WIN32) && defined(_MSC_VER)
-struct ID3D12Resource;
-struct D3D12_GPU_DESCRIPTOR_HANDLE;
+#include <d3d12.h>  // For D3D12_GPU_DESCRIPTOR_HANDLE and ID3D12Resource
 #endif
 
 namespace Assets {
 
 // v2.1.0 H1.2 - Texture cache for loaded PBR textures
 // Stores CPU pixel data + GPU resource handle
+// RAII: Rule of Five implemented to prevent double-free
 struct LoadedTexture {
-    TextureData cpuData;  // CPU pixel data (RGBA8)
+    TextureData cpuData;  // CPU pixel data (RGBA8) - owns memory via RAII
     
 #if defined(_WIN32) && defined(_MSC_VER)
-    ID3D12Resource* gpuResource = nullptr;  // GPU texture resource (uploaded)
+    ID3D12Resource* gpuResource = nullptr;  // GPU texture resource (uploaded) - NOT owned
     D3D12_GPU_DESCRIPTOR_HANDLE srvHandle = {};  // SRV descriptor handle (for shader binding)
 #else
     void* gpuResource = nullptr;
     void* srvHandle = nullptr;
 #endif
+    
+    // Constructor
+    LoadedTexture() = default;
+    
+    // Destructor - cpuData handles its own cleanup, GPU resources are managed externally
+    ~LoadedTexture() = default;
+    
+    // Copy constructor - Deep copy via TextureData copy constructor
+    LoadedTexture(const LoadedTexture& other) = default;
+    
+    // Copy assignment - Deep copy via TextureData copy assignment
+    LoadedTexture& operator=(const LoadedTexture& other) = default;
+    
+    // Move constructor - Transfer ownership via TextureData move constructor
+    LoadedTexture(LoadedTexture&& other) noexcept = default;
+    
+    // Move assignment - Transfer ownership via TextureData move assignment
+    LoadedTexture& operator=(LoadedTexture&& other) noexcept = default;
     
     bool IsValid() const { return cpuData.IsValid(); }
     bool IsUploadedToGPU() const { return gpuResource != nullptr; }

@@ -185,14 +185,11 @@ LoadedTexture* TextureManager::GetTexture(const std::string& path)
 
 void TextureManager::Clear()
 {
-    // Free CPU pixel data for all textures
-    for (auto& pair : m_textureCache)
-    {
-        TextureLoader::FreeTextureData(pair.second.cpuData);
-        
-        // Note: GPU resources are NOT released here
-        // They should be released by DX12ResourceManager when no longer needed
-    }
+    // TextureData now uses RAII - memory is automatically freed when m_textureCache is cleared
+    // No need to manually call FreeTextureData
+    
+    // Note: GPU resources are NOT released here
+    // They should be released by DX12ResourceManager when no longer needed
     
     m_textureCache.clear();
     

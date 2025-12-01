@@ -30,9 +30,13 @@ class Fence;
 // v1.8.0 H3.1 - Scene Graph forward declaration
 namespace Scene { class Scene; }
 
+// v2.1.0 H1.6 - Assets includes (need full definition for MaterialTextures member variable)
+namespace Assets { class TextureManager; }  // Forward declare TextureManager (pointer only)
+#include "../assets/TextureManager.h"  // Include for MaterialTextures struct (full definition needed)
+
 namespace Renderer {
 
-// v1.6.0 DEV-002.6 - DX12Renderer (AAA Architecture - Orchestrator)
+// v1.6.0 DEV-002 - DirectX 12 Renderer (AAA Architecture)
 // Orchestrates render passes and coordinates subsystems
 // Reduced from 1100+ lines to ~300 lines
 class DX12Renderer : public IRenderer {
@@ -153,10 +157,32 @@ private:
     // UI visibility state
     bool m_uiVisible = true;
     
+#if defined(_WIN32) && defined(_MSC_VER)
     // === DESCRIPTOR HEAPS (v2.1.0 H1.3) ===
-    ID3D12DescriptorHeap* m_materialSrvHeap; // 80 descriptors (material textures: albedo, normal, metallic, roughness, ao)
-    unsigned int m_materialSrvDescriptorSize;
-    unsigned int m_nextMaterialSrvIndex; // Track next available SRV slot (0-79)
+    ID3D12DescriptorHeap* m_materialSrvHeap = nullptr; // 80 descriptors (material textures: albedo, normal, metallic, roughness, ao)
+    unsigned int m_materialSrvDescriptorSize = 0;
+    unsigned int m_nextMaterialSrvIndex = 0; // Track next available SRV slot (0-79)
+    
+    // === PBR TEXTURES (v2.1.0 H1.6) ===
+    
+    // GPU resources for brick textures (uploaded to GPU)
+    ID3D12Resource* m_brickAlbedoGPU = nullptr;
+    ID3D12Resource* m_brickNormalGPU = nullptr;
+    ID3D12Resource* m_brickRoughnessGPU = nullptr;
+    ID3D12Resource* m_brickMetallicGPU = nullptr;
+    ID3D12Resource* m_brickAoGPU = nullptr;
+    
+    // GPU descriptor handles for brick textures (SRVs in material heap)
+    D3D12_GPU_DESCRIPTOR_HANDLE m_brickAlbedoSRV = {};
+    D3D12_GPU_DESCRIPTOR_HANDLE m_brickNormalSRV = {};
+    D3D12_GPU_DESCRIPTOR_HANDLE m_brickRoughnessSRV = {};
+    D3D12_GPU_DESCRIPTOR_HANDLE m_brickMetallicSRV = {};
+    D3D12_GPU_DESCRIPTOR_HANDLE m_brickAoSRV = {};
+#endif
+    
+    // v2.1.0 H1.6: Texture Manager and Brick Material Textures (cross-platform)
+    Assets::TextureManager* m_textureManager = nullptr;
+    Assets::MaterialTextures m_brickTextures;
     
     // Helper methods
 #if defined(_WIN32) && defined(_MSC_VER)
