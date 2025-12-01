@@ -1,5 +1,6 @@
 #include "AssetBrowser.h"
 #include "../assets/AssetDatabase.h" // v2.2.0 H2 - Integration
+#include "../assets/TextureManager.h" // v2.4.0 H3 - Thumbnails
 #include <imgui.h>
 
 #if defined(_WIN32)

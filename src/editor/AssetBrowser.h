@@ -2,6 +2,9 @@
 
 #include <string>
 
+// Forward declarations
+namespace Assets { class TextureManager; }
+
 namespace Editor {
 
 /**
@@ -45,6 +48,12 @@ public:
      * @return true if asset selected, false otherwise
      */
     bool HasSelection() const { return !m_selectedAsset.empty(); }
+    
+    /**
+     * @brief Set TextureManager reference for thumbnail rendering (v2.4.0 H3)
+     * @param textureManager Pointer to TextureManager instance
+     */
+    void SetTextureManager(Assets::TextureManager* textureManager) { m_textureManager = textureManager; }
 
 private:
     /**
@@ -71,8 +80,9 @@ private:
      * @param assetName Asset name
      * @param extension File extension (for icon color)
      * @param index Item index (for layout)
+     * @param fullPath Full asset path (for thumbnail lookup) - v2.4.0 H3
      */
-    void RenderAssetItem(const char* assetName, const char* extension, int index);
+    void RenderAssetItem(const char* assetName, const char* extension, int index, const char* fullPath = "");
 
 private:
     std::string m_currentFolder;       ///< Current folder being viewed
@@ -80,6 +90,9 @@ private:
     
     float m_thumbnailSize = 80.0f;     ///< Size of asset thumbnails/icons in grid
     float m_padding = 10.0f;           ///< Padding between grid items
+    
+    // v2.4.0 H3: TextureManager reference for thumbnail rendering
+    Assets::TextureManager* m_textureManager = nullptr;
 };
 
 } // namespace Editor

@@ -21,9 +21,19 @@ struct LoadedTexture {
 #if defined(_WIN32) && defined(_MSC_VER)
     ID3D12Resource* gpuResource = nullptr;  // GPU texture resource (uploaded) - NOT owned
     D3D12_GPU_DESCRIPTOR_HANDLE srvHandle = {};  // SRV descriptor handle (for shader binding)
+    
+    // v2.4.0 H3: Thumbnail GPU resources (128x128 downsampled for ImGui preview)
+    ID3D12Resource* thumbnailGpuResource = nullptr;  // GPU thumbnail texture (128x128)
+    D3D12_GPU_DESCRIPTOR_HANDLE thumbnailSrvHandle = {};  // SRV for ImGui::Image()
+    uint32_t thumbnailWidth = 0;
+    uint32_t thumbnailHeight = 0;
 #else
     void* gpuResource = nullptr;
     void* srvHandle = nullptr;
+    void* thumbnailGpuResource = nullptr;
+    void* thumbnailSrvHandle = nullptr;
+    uint32_t thumbnailWidth = 0;
+    uint32_t thumbnailHeight = 0;
 #endif
     
     // Constructor
@@ -46,6 +56,7 @@ struct LoadedTexture {
     
     bool IsValid() const { return cpuData.IsValid(); }
     bool IsUploadedToGPU() const { return gpuResource != nullptr; }
+    bool HasThumbnail() const { return thumbnailGpuResource != nullptr; }
 };
 
 // v2.1.0 H1.2 - Material textures (5 PBR textures)
@@ -96,6 +107,10 @@ public:
     
     // v2.2.0 H1: Get loaded textures (for AssetBrowser integration)
     const std::unordered_map<std::string, LoadedTexture>& GetLoadedTextures() const { return m_textureCache; }
+    
+    // v2.4.0 H3: Create GPU thumbnails for Asset Browser preview
+    // Requires DX12 device and command list (pass from renderer)
+    void CreateThumbnails(void* device, void* commandList, void* descriptorHeap, uint32_t descriptorSize);
     
 private:
     std::unordered_map<std::string, LoadedTexture> m_textureCache;
