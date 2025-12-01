@@ -1,9 +1,77 @@
 ﻿# Daily Log
 
-Hecho: Sprint v2.1.0 - H1.5 COMPLETADA + BUG FIX (pixel shader sin texturas) ✅
+Hecho: Sprint v2.1.0 - BUG FIX CRÍTICO (RAII double-free resuelto) ✅
 Siguiente: Sprint v2.1.0 - H1.6 (Bind texturas en rendering)
 
 ## Ultima Sesion (2025-01-22)
+
+### 🔥 BUG FIX CRÍTICO: RAII (Rule of Five) - Heap Corruption Resuelto ✅
+
+**Duración**: ~45 minutos  
+**Estado**: BLOCKER resuelto - Sprint puede continuar
+
+**Problema detectado**:
+- 🔴 **Heap corruption (0xc0000374)** al cargar texturas
+- Exception en `_free_dbg()` → `__debugbreak()` (double-free)
+- **Causa raíz**: `TextureData` con raw pointer (`unsigned char* pixels`) sin gestión de ownership
+- Copias shallow → múltiples objetos intentan liberar el mismo puntero
+
+**Secuencia del problema**:
+```cpp
+// TextureManager::LoadMaterialTextures()
+LoadedTexture loaded;
+loaded.cpuData = TextureLoader::LoadTexture(path);  // pixels = stbi_load()
+m_textureCache[path] = loaded;  // COPIA 1 (shallow copy)
+textures.albedo = loaded;       // COPIA 2 (shallow copy)
+// Al salir de scope:
+// 1. `loaded` se destruye → stbi_image_free(pixels)
+// 2. `m_textureCache[path]` se destruye → stbi_image_free(pixels) ❌ DOUBLE-FREE
+// 3. `textures.albedo` se destruye → stbi_image_free(pixels) ❌ TRIPLE-FREE
+```
+
+**Solución implementada - RAII (Rule of Five)**:
+
+1. **TextureData** (TextureLoader.h):
+   - ✅ Destructor: Libera `pixels` automáticamente con `stbi_image_free()`
+   - ✅ Copy constructor: Deep copy (malloc + memcpy)
+   - ✅ Copy assignment: Deep copy (free existing + malloc + memcpy)
+   - ✅ Move constructor: Transfer ownership (nullifica source)
+   - ✅ Move assignment: Transfer ownership (nullifica source)
+   - ✅ Todos inline para evitar ODR violations
+
+2. **LoadedTexture** (TextureManager.h):
+   - ✅ Constructores defaulted (delega RAII a `TextureData`)
+   - ✅ GPU resources NO owned (managed externally por DX12ResourceManager)
+
+3. **TextureManager::Clear()**:
+   - ✅ Removido `TextureLoader::FreeTextureData()` manual
+   - ✅ RAII automático al hacer `m_textureCache.clear()`
+
+4. **TextureImporter** (conflict resolution):
+   - ✅ Renombrado `TextureData` → `TextureDataLegacy` para evitar ODR violation
+   - ✅ Tests actualizados (`texture_importer_test.cpp`)
+
+**Validación**:
+- ✅ CMake build: 0 errores, 0 warnings
+- ✅ MSBuild: 0 errores, 0 warnings
+- ✅ **Execution test**: App runs without crash ✅
+- ✅ **Texturas cargan sin heap corruption** ✅
+- ✅ **COMMIT exitoso**: `71a9832` (RAII bug fix)
+
+**Archivos modificados**:
+- `src/assets/TextureLoader.h` - Rule of Five inline
+- `src/assets/TextureLoader.cpp` - Removido implementaciones (ahora inline)
+- `src/assets/TextureManager.h` - LoadedTexture defaulted constructors
+- `src/assets/TextureManager.cpp` - Clear() sin FreeTextureData manual
+- `src/assets/TextureImporter.h` - Renombrado a TextureDataLegacy
+- `src/assets/TextureImporter.cpp` - Actualizado con TextureDataLegacy
+- `tests/texture_importer_test.cpp` - Tests actualizados
+
+**Lección aprendida (AAA Standard)**:
+> **NEVER use raw pointers without RAII in structs that will be copied**  
+> Siempre implementar Rule of Five o usar `std::unique_ptr` / `std::shared_ptr`
+
+---
 
 ### 🎯 H1.1 + H1.2 + H1.3 + H1.4 + H1.5 COMPLETADAS ✅
 
