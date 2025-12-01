@@ -60,6 +60,10 @@ public:
     bool HasRoughnessTexture() const { return m_roughnessTexture != 0; }
     bool HasMetallicTexture() const { return m_metallicTexture != 0; }
     bool HasAOTexture() const { return m_aoTexture != 0; }
+    
+    // v2.1.0 H2.1: Serialization (JSON)
+    bool SaveToFile(const std::string& filepath) const;
+    bool LoadFromFile(const std::string& filepath);
 
 protected:
     std::string m_name;
