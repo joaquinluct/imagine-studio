@@ -2,6 +2,7 @@
 
 #include "TextureLoader.h"
 #include "FileWatcher.h" // v2.1.0 H2.3
+#include "AssetDatabase.h" // v2.2.0 H1 - Integration
 #include <string>
 #include <unordered_map>
 
@@ -93,6 +94,9 @@ public:
     void EnableHotReload(bool enable);
     void Update(); // Call every frame to check for file changes
     
+    // v2.2.0 H1: Get loaded textures (for AssetBrowser integration)
+    const std::unordered_map<std::string, LoadedTexture>& GetLoadedTextures() const { return m_textureCache; }
+    
 private:
     std::unordered_map<std::string, LoadedTexture> m_textureCache;
     
@@ -102,6 +106,9 @@ private:
     
     // v2.1.0 H2.3: Reload texture callback
     void OnTextureFileChanged(const std::string& filepath);
+    
+    // v2.2.0 H1: Register texture in AssetDatabase
+    void RegisterTextureAsset(const std::string& path, const TextureData& data);
 };
 
 } // namespace Assets

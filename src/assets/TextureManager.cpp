@@ -1,5 +1,7 @@
 #include "TextureManager.h"
 #include "core/Log.h"
+#include <sys/stat.h> // For file size
+#include <functional> // For std::hash
 
 namespace Assets {
 
@@ -45,6 +47,9 @@ MaterialTextures TextureManager::LoadMaterialTextures(
                 CORE_LOG_INFO("  Albedo: " + albedoPath + " (" + 
                     std::to_string(loaded.cpuData.width) + "x" + 
                     std::to_string(loaded.cpuData.height) + ")");
+                
+                // v2.2.0 H1: Register in AssetDatabase
+                RegisterTextureAsset(albedoPath, loaded.cpuData);
             }
             else
             {
@@ -73,6 +78,9 @@ MaterialTextures TextureManager::LoadMaterialTextures(
                 CORE_LOG_INFO("  Normal: " + normalPath + " (" + 
                     std::to_string(loaded.cpuData.width) + "x" + 
                     std::to_string(loaded.cpuData.height) + ")");
+                
+                // v2.2.0 H1: Register in AssetDatabase
+                RegisterTextureAsset(normalPath, loaded.cpuData);
             }
             else
             {
@@ -101,6 +109,9 @@ MaterialTextures TextureManager::LoadMaterialTextures(
                 CORE_LOG_INFO("  Roughness: " + roughnessPath + " (" + 
                     std::to_string(loaded.cpuData.width) + "x" + 
                     std::to_string(loaded.cpuData.height) + ")");
+                
+                // v2.2.0 H1: Register in AssetDatabase
+                RegisterTextureAsset(roughnessPath, loaded.cpuData);
             }
             else
             {
@@ -129,6 +140,9 @@ MaterialTextures TextureManager::LoadMaterialTextures(
                 CORE_LOG_INFO("  Metallic: " + metallicPath + " (" + 
                     std::to_string(loaded.cpuData.width) + "x" + 
                     std::to_string(loaded.cpuData.height) + ")");
+                
+                // v2.2.0 H1: Register in AssetDatabase
+                RegisterTextureAsset(metallicPath, loaded.cpuData);
             }
             else
             {
@@ -157,6 +171,9 @@ MaterialTextures TextureManager::LoadMaterialTextures(
                 CORE_LOG_INFO("  AO: " + aoPath + " (" + 
                     std::to_string(loaded.cpuData.width) + "x" + 
                     std::to_string(loaded.cpuData.height) + ")");
+                
+                // v2.2.0 H1: Register in AssetDatabase
+                RegisterTextureAsset(aoPath, loaded.cpuData);
             }
             else
             {
@@ -269,6 +286,48 @@ void TextureManager::OnTextureFileChanged(const std::string& filepath)
     CORE_LOG_INFO("TextureManager: Texture reloaded successfully (CPU): " + filepath);
     CORE_LOG_INFO("  New size: " + std::to_string(loadedTexture.cpuData.width) + "x" + 
                   std::to_string(loadedTexture.cpuData.height));
+}
+
+// v2.2.0 H1: Register texture in AssetDatabase
+void TextureManager::RegisterTextureAsset(const std::string& path, const TextureData& data)
+{
+    // Get file size for metadata
+    struct stat fileStat;
+    uint64_t fileSize = 0;
+    uint64_t lastModified = 0;
+    
+    if (stat(path.c_str(), &fileStat) == 0)
+    {
+        fileSize = static_cast<uint64_t>(fileStat.st_size);
+        lastModified = static_cast<uint64_t>(fileStat.st_mtime);
+    }
+    
+    // Generate AssetID from path hash (simple hash function)
+    AssetID assetID = std::hash<std::string>{}(path);
+    
+    // Extract filename from path for asset name
+    size_t lastSlash = path.find_last_of("/\\");
+    std::string filename = (lastSlash != std::string::npos) ? path.substr(lastSlash + 1) : path;
+    
+    // Remove extension for clean name
+    size_t lastDot = filename.find_last_of('.');
+    std::string assetName = (lastDot != std::string::npos) ? filename.substr(0, lastDot) : filename;
+    
+    // Create metadata struct
+    AssetMetadata metadata;
+    metadata.id = assetID;
+    metadata.type = AssetType::Texture;
+    metadata.path = path;
+    metadata.name = assetName;
+    metadata.fileSize = fileSize;
+    metadata.lastModified = lastModified;
+    
+    // Register in AssetDatabase
+    AssetDatabase& db = AssetDatabase::GetInstance();
+    db.RegisterAsset(metadata);
+    
+    CORE_LOG_INFO("TextureManager: Registered in AssetDatabase: " + path + 
+                  " (ID: " + std::to_string(assetID) + ", Name: " + assetName + ")");
 }
 
 } // namespace Assets

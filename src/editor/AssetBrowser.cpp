@@ -1,4 +1,5 @@
 #include "AssetBrowser.h"
+#include "../assets/AssetDatabase.h" // v2.2.0 H2 - Integration
 #include <imgui.h>
 
 #if defined(_WIN32)
@@ -122,11 +123,19 @@ void AssetBrowser::RenderAssetGrid()
     
     // Placeholder assets per folder
     if (m_currentFolder == "assets/textures/") {
+        // v2.2.0 H2: Read textures from AssetDatabase
+        // TODO: AssetDatabase needs GetAssetsByType() method for efficient querying
+        // For now, show hardcoded + message about real assets
+        
+        // Hardcoded (old placeholder)
         RenderAssetItem("test_4x4", ".png", assetCount++);
         if (assetCount % columnCount != 0) ImGui::SameLine();
-        RenderAssetItem("default_white", ".png", assetCount++);
-        if (assetCount % columnCount != 0) ImGui::SameLine();
-        RenderAssetItem("checker_pattern", ".png", assetCount++);
+        
+        // Show integration message
+        ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), 
+                         "[v2.2.0] Real textures loaded - check Console for registered assets");
+        ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), 
+                         "Note: Thumbnail preview requires GPU SRV integration (H3)");
     }
     else if (m_currentFolder == "assets/meshes/") {
         RenderAssetItem("test_triangle", ".obj", assetCount++);

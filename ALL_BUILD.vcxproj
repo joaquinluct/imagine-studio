@@ -165,8 +165,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\assets\FileWatcher.h" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ClCompile Include="src\assets\FileWatcher.cpp" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="C:\Users\joaqu\source\repos\Imagine Studio\ZERO_CHECK.vcxproj">
       <Project>{398F4C1B-E96D-3F53-ADD6-31B3AEC2517D}</Project>
