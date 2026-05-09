@@ -1,7 +1,7 @@
 ﻿# Daily Log
 
-Hecho: Sprint v2.4.0 - COMPLETADO ✅ (H3 infraestructura thumbnails GPU)
-Siguiente: Cerrar sesión o planificar v2.5.0 (ImGui rendering + Drag & Drop)
+Hecho: Sprint v2.4.0 - COMPLETADO ✅ (H3 infraestructura thumbnails + MaterialEditor refactor)
+Siguiente: Sprint v2.5.0 H4 - ImGui::Image() thumbnail rendering
 
 ### 🎉 Sprint v2.2.0 - CERRADO (50% - Funcionalidad Básica) ✅
 
@@ -383,7 +383,8 @@ textures.albedo = loaded;       // COPIA 2 (shallow copy)
 | v2.1.0 | Completar Material System | CERRADO | 100% | 9.5/10 ⭐⭐⭐ |
 | v2.2.0 | Asset Browser Integration | CERRADO | 50% | 9.0/10 ⭐⭐ |
 | v2.3.0 | Asset Browser Advanced | CERRADO | 100% | 9.0/10 ⭐⭐ |
-| **v2.4.0** | **Thumbnail Infrastructure** | **CERRADO** | **100%** | **8.5/10** ⭐⭐
+| v2.4.0 | Thumbnail Infrastructure | CERRADO | 100% | 8.5/10 ⭐⭐ |
+| **v2.5.0** | **Thumbnail Preview Complete** | **EN PROGRESO** | **0%** | **TBD (objetivo: 9.0/10)** ⭐⭐
 
 ### 🎨 Visualization (Estado actual):
 
