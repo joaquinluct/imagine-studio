@@ -546,4 +546,22 @@ void TextureManager::CreateThumbnails(void* devicePtr, void* commandListPtr, voi
 #endif
 }
 
+// v2.5.0 H4.3: Get thumbnail SRV handle for ImGui::Image()
+void* TextureManager::GetThumbnailHandle(const std::string& path) const
+{
+    auto it = m_textureCache.find(path);
+    if (it != m_textureCache.end() && it->second.HasThumbnail())
+    {
+#if defined(_WIN32) && defined(_MSC_VER)
+        // Return GPU descriptor handle as void* (cast to ImTextureID for ImGui)
+        return reinterpret_cast<void*>(it->second.thumbnailSrvHandle.ptr);
+#else
+        return nullptr;
+#endif
+    }
+    
+    // No thumbnail available
+    return nullptr;
+}
+
 } // namespace Assets

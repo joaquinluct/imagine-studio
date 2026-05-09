@@ -112,6 +112,10 @@ public:
     // Requires DX12 device and command list (pass from renderer)
     void CreateThumbnails(void* device, void* commandList, void* descriptorHeap, uint32_t descriptorSize);
     
+    // v2.5.0 H4.3: Get thumbnail SRV handle for ImGui::Image() rendering
+    // Returns GPU descriptor handle if thumbnail exists, otherwise returns handle with .ptr = 0
+    void* GetThumbnailHandle(const std::string& path) const;
+    
 private:
     std::unordered_map<std::string, LoadedTexture> m_textureCache;
     
