@@ -210,7 +210,7 @@ void AssetBrowser::RenderAssetGrid()
     }
 }
 
-void AssetBrowser::RenderAssetItem(const char* assetName, const char* extension, int index)
+void AssetBrowser::RenderAssetItem(const char* assetName, const char* extension, int index, const char* fullPath)
 {
     // Unique ID for ImGui
     ImGui::PushID(index);

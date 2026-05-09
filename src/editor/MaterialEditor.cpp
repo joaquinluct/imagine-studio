@@ -6,13 +6,18 @@
 
 namespace Editor {
 
-// Static member initialization
+// Static member initialization - Texture paths
 std::string MaterialEditor::s_albedoTexture = "";
 std::string MaterialEditor::s_normalTexture = "";
 std::string MaterialEditor::s_roughnessTexture = "";
 std::string MaterialEditor::s_metallicTexture = "";
 std::string MaterialEditor::s_aoTexture = "";
 std::string MaterialEditor::s_currentMaterialName = "Default_Material";  // H4.2
+
+// Static member initialization - Material properties
+float MaterialEditor::s_albedoColor[4] = {1.0f, 1.0f, 1.0f, 1.0f};  // White default
+float MaterialEditor::s_metallic = 0.0f;   // Non-metallic default
+float MaterialEditor::s_roughness = 0.5f;  // Medium roughness default
 
 void MaterialEditor::Render()
 {
@@ -66,16 +71,12 @@ void MaterialEditor::Render()
     // Sección de propiedades del material
     if (ImGui::CollapsingHeader("Material Properties", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        // Albedo color picker
-        static float albedoColor[4] = {1.0f, 1.0f, 1.0f, 1.0f}; // Blanco por defecto
-        ImGui::ColorEdit4("Albedo Color", albedoColor);
+        // Albedo color picker - USES CLASS MEMBER
+        ImGui::ColorEdit4("Albedo Color", s_albedoColor);
         
-        // Deslizadores de Metallic y Roughness
-        static float metallic = 0.0f; // Por defecto: no metálico
-        ImGui::SliderFloat("Metallic", &metallic, 0.0f, 1.0f);
-        
-        static float roughness = 0.5f; // Por defecto: rugosidad media
-        ImGui::SliderFloat("Roughness", &roughness, 0.0f, 1.0f);
+        // Deslizadores de Metallic y Roughness - USE CLASS MEMBERS
+        ImGui::SliderFloat("Metallic", &s_metallic, 0.0f, 1.0f);
+        ImGui::SliderFloat("Roughness", &s_roughness, 0.0f, 1.0f);
     }
     
     ImGui::Separator();
@@ -144,14 +145,9 @@ void MaterialEditor::Render()
     
     ImGui::Separator();
     
-    // Sección de vista previa (H3.4) - Marcador de posición visual con info del material
+    // Sección de vista previa (H3.4) - NOW USES CLASS MEMBERS (NO REDECLARATION)
     if (ImGui::CollapsingHeader("Preview", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        // Obtener propiedades actuales del material
-        static float albedoColor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-        static float metallic = 0.0f;
-        static float roughness = 0.5f;
-        
         // Caja de vista previa (128x128 marcador de posición)
         ImVec2 previewSize(128.0f, 128.0f);
         ImVec2 cursorPos = ImGui::GetCursorScreenPos();
@@ -161,7 +157,7 @@ void MaterialEditor::Render()
         
         // Dibujar rectángulo coloreado representando el albedo del material
         ImU32 albedoColorU32 = ImGui::ColorConvertFloat4ToU32(
-            ImVec4(albedoColor[0], albedoColor[1], albedoColor[2], albedoColor[3])
+            ImVec4(s_albedoColor[0], s_albedoColor[1], s_albedoColor[2], s_albedoColor[3])
         );
         drawList->AddRectFilled(cursorPos, 
             ImVec2(cursorPos.x + previewSize.x, cursorPos.y + previewSize.y), 
@@ -175,12 +171,12 @@ void MaterialEditor::Render()
         // Avanzar cursor
         ImGui::Dummy(previewSize);
         
-        // Información resumen de material
+        // Información resumen de material - USES CLASS MEMBERS
         ImGui::Text("Material Properties:");
         ImGui::BulletText("Albedo: (%.2f, %.2f, %.2f, %.2f)", 
-            albedoColor[0], albedoColor[1], albedoColor[2], albedoColor[3]);
-        ImGui::BulletText("Metallic: %.2f", metallic);
-        ImGui::BulletText("Roughness: %.2f", roughness);
+            s_albedoColor[0], s_albedoColor[1], s_albedoColor[2], s_albedoColor[3]);
+        ImGui::BulletText("Metallic: %.2f", s_metallic);
+        ImGui::BulletText("Roughness: %.2f", s_roughness);
         
         // Resumen de slots de textura
         int textureCount = 0;
