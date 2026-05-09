@@ -95,6 +95,9 @@ public:
     ID3D12DescriptorHeap* GetThumbnailSrvHeap() const { return m_thumbnailSrvHeap; }
     unsigned int GetThumbnailSrvDescriptorSize() const { return m_thumbnailSrvDescriptorSize; }
     
+    // v2.5.0 H4.3: Get TextureManager for Asset Browser thumbnail access
+    Assets::TextureManager* GetTextureManager() const { return m_textureManager; }
+    
     // Allocate next available SRV slot in material heap (returns GPU handle)
     // Returns: GPU descriptor handle for the allocated SRV slot
     // Returns: .ptr = 0 if heap is full (80 slots exhausted)

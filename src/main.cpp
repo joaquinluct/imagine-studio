@@ -3,6 +3,7 @@
 #include "core/Log.h"
 #include "editor/EditorUI.h"
 #include "editor/Viewport.h"    // v1.5.0 H3.1 - Viewport panel
+#include "editor/AssetBrowser.h" // v2.5.0 H4.3 - Asset Browser for TextureManager connection
 #include "jobs/TaskGraph.h"
 #include "jobs/ThreadPool.h"
 #include "platform/InputManager.h"
@@ -155,6 +156,14 @@ static int RunApp(HINSTANCE hInstance)
     UI::SimpleUI ui;
 
     renderer.Initialize(hwnd);
+    
+    // v2.5.0 H4.3: Connect TextureManager to AssetBrowser for thumbnail rendering
+    Editor::AssetBrowser* assetBrowser = Editor::EditorUI::GetAssetBrowser();
+    if (assetBrowser && renderer.GetTextureManager())
+    {
+        assetBrowser->SetTextureManager(renderer.GetTextureManager());
+        CORE_LOG_INFO("AssetBrowser: TextureManager connected for thumbnail rendering");
+    }
     
     // Create Scene (H4 - Editor Integration with Scene Graph)
     Scene::Scene scene("Main Scene");
