@@ -36,12 +36,12 @@
   - Shader-visible para ImGui::Image() ?
   - Public accessors: GetThumbnailSrvHeap(), GetThumbnailSrvDescriptorSize() ?
 
-- ? **H4.2**: Llamar CreateThumbnails() después de cargar material **SIGUIENTE**
-  - En DX12Renderer::Initialize() después de cargar brick textures
-  - Pasar device, commandList, descriptor heap
-  - Esperar GPU completion con fence
+- ? **H4.2**: Llamar CreateThumbnails() después de cargar material **COMPLETADA**
+  - En DX12Renderer::Initialize() después de cargar brick textures ?
+  - Pasar device, commandList, descriptor heap ?
+  - Esperar GPU completion con fence ?
 
-- ? **H4.3**: Pasar thumbnail SRV handles a AssetBrowser
+- ? **H4.3**: Pasar thumbnail SRV handles a AssetBrowser **SIGUIENTE**
   - AssetBrowser::SetTextureManager() ya implementado
   - Añadir método GetThumbnailHandle(path) en TextureManager
   - AssetBrowser almacena handles para rendering
@@ -120,12 +120,12 @@
 ## ?? Progreso Sprint
 
 **Total tareas**: 3 historias (H4, H5, H6) con 11 sub-tareas  
-**Completadas**: 1/11 (9%)  
-**Historias**: H4 ? (1/4), H5 ??, H6 ??
+**Completadas**: 2/11 (18%)  
+**Historias**: H4 ? (2/4), H5 ??, H6 ??
 
 ```
 +--------------------------------------------------------------------+
-??????????????????????????????????????????????????????? 9%
+???????????????????????????????????????????????????????????? 18%
 +--------------------------------------------------------------------+
 ```
 
@@ -202,6 +202,7 @@ ImGui::SetDragDropPayload("ASSET_BROWSER_ITEM", payload.c_str(), payload.size() 
 
 1. `449d428` - docs: Planificar Sprint v2.5.0
 2. `4064a15` - feat(renderer): H4.1 completada - Thumbnail SRV heap (100 slots)
+3. `1f8f81a` - feat(renderer): H4.2 completada - Llamar CreateThumbnails()
 
 ---
 
