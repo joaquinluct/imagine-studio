@@ -1,7 +1,7 @@
 ﻿# Daily Log
 
-Hecho: Sprint v2.4.0 - COMPLETADO ✅ (H3 infraestructura thumbnails + MaterialEditor refactor)
-Siguiente: Sprint v2.5.0 H4 - ImGui::Image() thumbnail rendering
+Hecho: Sprint v2.5.0 H4 - COMPLETADO ✅ (Thumbnail Preview Complete - ImGui::Image() rendering)
+Siguiente: Sprint v2.5.0 H5 - Drag & Drop Visual Feedback
 
 ### 🎉 Sprint v2.2.0 - CERRADO (50% - Funcionalidad Básica) ✅
 
