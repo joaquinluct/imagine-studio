@@ -30,12 +30,13 @@
 **Objetivo**: Renderizar thumbnails GPU reales en Asset Browser con ImGui::Image()
 
 **Tareas:**
-- ? **H4.1**: Crear descriptor heap para ImGui thumbnails en DX12Renderer
-  - Separado del heap principal de ImGui (evitar conflictos)
-  - Capacidad: 100 descriptors (reserva para futuras texturas)
-  - Shader-visible para ImGui::Image()
+- ? **H4.1**: Crear descriptor heap para ImGui thumbnails en DX12Renderer **COMPLETADA**
+  - Separado del heap principal de ImGui (evitar conflictos) ?
+  - Capacidad: 100 descriptors (reserva para futuras texturas) ?
+  - Shader-visible para ImGui::Image() ?
+  - Public accessors: GetThumbnailSrvHeap(), GetThumbnailSrvDescriptorSize() ?
 
-- ? **H4.2**: Llamar CreateThumbnails() después de cargar material
+- ? **H4.2**: Llamar CreateThumbnails() después de cargar material **SIGUIENTE**
   - En DX12Renderer::Initialize() después de cargar brick textures
   - Pasar device, commandList, descriptor heap
   - Esperar GPU completion con fence
@@ -118,13 +119,13 @@
 
 ## ?? Progreso Sprint
 
-**Total tareas**: 3 historias (H4, H5, H6)  
-**Completadas**: 0/3 (0%)  
-**Historias**: H4 ?, H5 ??, H6 ??
+**Total tareas**: 3 historias (H4, H5, H6) con 11 sub-tareas  
+**Completadas**: 1/11 (9%)  
+**Historias**: H4 ? (1/4), H5 ??, H6 ??
 
 ```
 +--------------------------------------------------------------------+
-?????????????????????????????????????????????????? 0%
+??????????????????????????????????????????????????????? 9%
 +--------------------------------------------------------------------+
 ```
 
@@ -199,7 +200,8 @@ ImGui::SetDragDropPayload("ASSET_BROWSER_ITEM", payload.c_str(), payload.size() 
 
 ## ?? Commits Realizados
 
-_(Se actualizará durante el sprint)_
+1. `449d428` - docs: Planificar Sprint v2.5.0
+2. `4064a15` - feat(renderer): H4.1 completada - Thumbnail SRV heap (100 slots)
 
 ---
 
