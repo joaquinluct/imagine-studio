@@ -136,7 +136,7 @@ void AssetBrowser::RenderAssetGrid()
                              "No textures loaded yet. Load a scene or material to see textures.");
         }
         else {
-            // Render real texture assets
+                // Render real texture assets
             for (Assets::AssetID assetID : textureIDs) {
                 const Assets::AssetMetadata* metadata = db.GetMetadata(assetID);
                 if (metadata) {
@@ -149,7 +149,8 @@ void AssetBrowser::RenderAssetGrid()
                         ? metadata->path.substr(dotPos) 
                         : ".png";
                     
-                    RenderAssetItem(filename.c_str(), extension.c_str(), assetCount++);
+                    // v2.5.0 H4.4: Pass full path for thumbnail lookup
+                    RenderAssetItem(filename.c_str(), extension.c_str(), assetCount++, metadata->path.c_str());
                     
                     // Layout in grid
                     if (assetCount % columnCount != 0) {
@@ -238,21 +239,40 @@ void AssetBrowser::RenderAssetItem(const char* assetName, const char* extension,
         thumbnailColor = ImVec4(0.2f, 0.8f, 0.2f, 1.0f);
     }
 
-    // Draw thumbnail as colored rectangle (simulating image preview)
+    // v2.5.0 H4.4: Try to get GPU thumbnail handle from TextureManager
+    void* thumbnailHandle = nullptr;
+    if (m_textureManager && fullPath && fullPath[0] != '\0') {
+        thumbnailHandle = m_textureManager->GetThumbnailHandle(fullPath);
+    }
+    
+    // Get cursor position for drawing
     ImVec2 thumbnailMin = ImGui::GetCursorScreenPos();
     ImVec2 thumbnailMax(thumbnailMin.x + m_thumbnailSize, thumbnailMin.y + m_thumbnailSize);
     
     ImDrawList* drawList = ImGui::GetWindowDrawList();
     
-    // Draw filled rectangle (thumbnail background)
-    drawList->AddRectFilled(thumbnailMin, thumbnailMax, ImGui::ColorConvertFloat4ToU32(thumbnailColor));
-    
-    // Draw border (darker)
-    ImVec4 borderColor(thumbnailColor.x * 0.5f, thumbnailColor.y * 0.5f, thumbnailColor.z * 0.5f, 1.0f);
-    drawList->AddRect(thumbnailMin, thumbnailMax, ImGui::ColorConvertFloat4ToU32(borderColor), 0.0f, 0, 2.0f);
-    
-    // Invisible button for interaction (same size as thumbnail)
-    ImGui::InvisibleButton("##thumbnail", ImVec2(m_thumbnailSize, m_thumbnailSize));
+    // v2.5.0 H4.4: Render GPU thumbnail with ImGui::Image() if available
+    if (thumbnailHandle != nullptr) {
+        // Draw GPU thumbnail using ImGui::Image()
+        ImGui::Image(
+            (ImTextureID)thumbnailHandle,           // GPU descriptor handle
+            ImVec2(m_thumbnailSize, m_thumbnailSize), // Size (80x80 or 128x128)
+            ImVec2(0, 0),                            // UV top-left
+            ImVec2(1, 1),                            // UV bottom-right
+            ImVec4(1, 1, 1, 1),                      // Tint color (white = no tint)
+            ImVec4(0, 0, 0, 0)                       // Border color (transparent)
+        );
+    } else {
+        // Fallback: Draw colored rectangle (placeholder when no thumbnail)
+        drawList->AddRectFilled(thumbnailMin, thumbnailMax, ImGui::ColorConvertFloat4ToU32(thumbnailColor));
+        
+        // Draw border (darker)
+        ImVec4 borderColor(thumbnailColor.x * 0.5f, thumbnailColor.y * 0.5f, thumbnailColor.z * 0.5f, 1.0f);
+        drawList->AddRect(thumbnailMin, thumbnailMax, ImGui::ColorConvertFloat4ToU32(borderColor), 0.0f, 0, 2.0f);
+        
+        // Invisible button for interaction (same size as thumbnail)
+        ImGui::InvisibleButton("##thumbnail", ImVec2(m_thumbnailSize, m_thumbnailSize));
+    }
     
     bool clicked = ImGui::IsItemClicked();
     bool hovered = ImGui::IsItemHovered();
