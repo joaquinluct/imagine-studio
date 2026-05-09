@@ -26,37 +26,20 @@
 
 ## ?? Historias de Usuario
 
-### **H4: ImGui::Image() Thumbnail Rendering** ? **EN PROGRESO**
+### **H4: ImGui::Image() Thumbnail Rendering** ? **COMPLETADA**
 **Objetivo**: Renderizar thumbnails GPU reales en Asset Browser con ImGui::Image()
 
 **Tareas:**
 - ? **H4.1**: Crear descriptor heap para ImGui thumbnails en DX12Renderer **COMPLETADA**
-  - Separado del heap principal de ImGui (evitar conflictos) ?
-  - Capacidad: 100 descriptors (reserva para futuras texturas) ?
-  - Shader-visible para ImGui::Image() ?
-  - Public accessors: GetThumbnailSrvHeap(), GetThumbnailSrvDescriptorSize() ?
-
 - ? **H4.2**: Llamar CreateThumbnails() después de cargar material **COMPLETADA**
-  - En DX12Renderer::Initialize() después de cargar brick textures ?
-  - Pasar device, commandList, descriptor heap ?
-  - Esperar GPU completion con fence ?
-
 - ? **H4.3**: Pasar thumbnail SRV handles a AssetBrowser **COMPLETADA**
-  - AssetBrowser::SetTextureManager() ya implementado ?
-  - Añadido GetThumbnailHandle(path) en TextureManager ?
-  - AssetBrowser conectado en main.cpp ?
-  - Añadido GetTextureManager() accessor en DX12Renderer ?
-
-- ? **H4.4**: Renderizar con ImGui::Image() en RenderAssetItem() **SIGUIENTE**
-  - Reemplazar AddRectFilled con ImGui::Image()
-  - Usar thumbnail SRV handle si disponible
-  - Fallback a colored rectangle si no hay thumbnail
+- ? **H4.4**: Renderizar con ImGui::Image() en RenderAssetItem() **COMPLETADA**
 
 **Criterios**:
-- Thumbnails visibles en Asset Browser (128x128)
-- ImGui::Image() con GPU SRV handles
-- Performance <1ms por thumbnail
-- Fallback graceful si thumbnail no disponible
+- ? Thumbnails visibles en Asset Browser (128x128)
+- ? ImGui::Image() con GPU SRV handles
+- ? Performance <1ms por thumbnail
+- ? Fallback graceful si thumbnail no disponible
 
 ---
 
@@ -121,12 +104,12 @@
 ## ?? Progreso Sprint
 
 **Total tareas**: 3 historias (H4, H5, H6) con 11 sub-tareas  
-**Completadas**: 3/11 (27%)  
-**Historias**: H4 ? (3/4), H5 ??, H6 ??
+**Completadas**: 4/11 (36%)  
+**Historias**: H4 ? (4/4), H5 ??, H6 ??
 
 ```
 +--------------------------------------------------------------------+
-????????????????????????????????????????????????????????????? 27%
+?????????????????????????????????????????????????????????????? 36%
 +--------------------------------------------------------------------+
 ```
 
@@ -206,6 +189,9 @@ ImGui::SetDragDropPayload("ASSET_BROWSER_ITEM", payload.c_str(), payload.size() 
 3. `1f8f81a` - feat(renderer): H4.2 completada - Llamar CreateThumbnails()
 4. `08090cc` - feat(assets): H4.3 (1/2) - Add GetThumbnailHandle()
 5. `e077606` - feat(editor): H4.3 completada - Connect TextureManager to AssetBrowser
+6. `8a95e91` - feat(editor): H4.4 completada - Render thumbnails con ImGui::Image()
+
+**Historia H4 COMPLETADA** ? - Thumbnail Preview & Drag-Drop (4/4 tareas)
 
 ---
 
