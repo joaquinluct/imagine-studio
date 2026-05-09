@@ -41,12 +41,13 @@
   - Pasar device, commandList, descriptor heap ?
   - Esperar GPU completion con fence ?
 
-- ? **H4.3**: Pasar thumbnail SRV handles a AssetBrowser **SIGUIENTE**
-  - AssetBrowser::SetTextureManager() ya implementado
-  - Añadir método GetThumbnailHandle(path) en TextureManager
-  - AssetBrowser almacena handles para rendering
+- ? **H4.3**: Pasar thumbnail SRV handles a AssetBrowser **COMPLETADA**
+  - AssetBrowser::SetTextureManager() ya implementado ?
+  - Añadido GetThumbnailHandle(path) en TextureManager ?
+  - AssetBrowser conectado en main.cpp ?
+  - Añadido GetTextureManager() accessor en DX12Renderer ?
 
-- ? **H4.4**: Renderizar con ImGui::Image() en RenderAssetItem()
+- ? **H4.4**: Renderizar con ImGui::Image() en RenderAssetItem() **SIGUIENTE**
   - Reemplazar AddRectFilled con ImGui::Image()
   - Usar thumbnail SRV handle si disponible
   - Fallback a colored rectangle si no hay thumbnail
@@ -120,12 +121,12 @@
 ## ?? Progreso Sprint
 
 **Total tareas**: 3 historias (H4, H5, H6) con 11 sub-tareas  
-**Completadas**: 2/11 (18%)  
-**Historias**: H4 ? (2/4), H5 ??, H6 ??
+**Completadas**: 3/11 (27%)  
+**Historias**: H4 ? (3/4), H5 ??, H6 ??
 
 ```
 +--------------------------------------------------------------------+
-???????????????????????????????????????????????????????????? 18%
+????????????????????????????????????????????????????????????? 27%
 +--------------------------------------------------------------------+
 ```
 
@@ -203,6 +204,8 @@ ImGui::SetDragDropPayload("ASSET_BROWSER_ITEM", payload.c_str(), payload.size() 
 1. `449d428` - docs: Planificar Sprint v2.5.0
 2. `4064a15` - feat(renderer): H4.1 completada - Thumbnail SRV heap (100 slots)
 3. `1f8f81a` - feat(renderer): H4.2 completada - Llamar CreateThumbnails()
+4. `08090cc` - feat(assets): H4.3 (1/2) - Add GetThumbnailHandle()
+5. `e077606` - feat(editor): H4.3 completada - Connect TextureManager to AssetBrowser
 
 ---
 
