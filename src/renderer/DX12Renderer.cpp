@@ -162,6 +162,22 @@ void DX12Renderer::Initialize(HWND hwnd)
     
     CORE_LOG_INFO("DX12Renderer: Material SRV heap created (80 texture slots)");
     
+    // v2.5.0 H4.1: Create thumbnail SRV heap for Asset Browser
+    D3D12_DESCRIPTOR_HEAP_DESC thumbnailSrvHeapDesc = {};
+    thumbnailSrvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+    thumbnailSrvHeapDesc.NumDescriptors = 100; // Reserve 100 slots for thumbnails
+    thumbnailSrvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE; // For ImGui::Image()
+    
+    hr = d3dDevice->CreateDescriptorHeap(&thumbnailSrvHeapDesc, IID_PPV_ARGS(&m_thumbnailSrvHeap));
+    if (FAILED(hr))
+    {
+        CORE_LOG_ERROR("DX12Renderer: Failed to create Thumbnail SRV heap");
+        return;
+    }
+    
+    m_nextThumbnailSrvIndex = 0; // Start at slot 0
+    CORE_LOG_INFO("DX12Renderer: Thumbnail SRV heap created (100 slots for Asset Browser)");
+    
     // === STEP 3: Initialize AAA Subsystems ===
     
     // SwapChain
@@ -191,6 +207,10 @@ void DX12Renderer::Initialize(HWND hwnd)
     // v2.1.0 H1.3: NOW it's safe to get descriptor size (ResourceManager is initialized)
     m_materialSrvDescriptorSize = m_resourceManager->GetDescriptorSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     CORE_LOG_INFO("DX12Renderer: Material SRV descriptor size: " + std::to_string(m_materialSrvDescriptorSize));
+    
+    // v2.5.0 H4.1: Initialize thumbnail descriptor size (same type as material heap)
+    m_thumbnailSrvDescriptorSize = m_materialSrvDescriptorSize; // Same heap type
+    CORE_LOG_INFO("DX12Renderer: Thumbnail SRV descriptor size: " + std::to_string(m_thumbnailSrvDescriptorSize));
     
     // PipelineManager
     m_pipelineManager = new DX12PipelineManager();

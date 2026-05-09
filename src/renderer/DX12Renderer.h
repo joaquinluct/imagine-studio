@@ -91,6 +91,10 @@ public:
     // Get material SRV heap for binding during rendering
     ID3D12DescriptorHeap* GetMaterialSrvHeap() const { return m_materialSrvHeap; }
     
+    // v2.5.0 H4.1: Get thumbnail SRV heap for Asset Browser ImGui::Image()
+    ID3D12DescriptorHeap* GetThumbnailSrvHeap() const { return m_thumbnailSrvHeap; }
+    unsigned int GetThumbnailSrvDescriptorSize() const { return m_thumbnailSrvDescriptorSize; }
+    
     // Allocate next available SRV slot in material heap (returns GPU handle)
     // Returns: GPU descriptor handle for the allocated SRV slot
     // Returns: .ptr = 0 if heap is full (80 slots exhausted)
@@ -162,6 +166,11 @@ private:
     ID3D12DescriptorHeap* m_materialSrvHeap = nullptr; // 80 descriptors (material textures: albedo, normal, metallic, roughness, ao)
     unsigned int m_materialSrvDescriptorSize = 0;
     unsigned int m_nextMaterialSrvIndex = 0; // Track next available SRV slot (0-79)
+    
+    // v2.5.0 H4.1: Thumbnail descriptor heap for Asset Browser preview
+    ID3D12DescriptorHeap* m_thumbnailSrvHeap = nullptr; // 100 descriptors (thumbnail textures for ImGui::Image())
+    unsigned int m_thumbnailSrvDescriptorSize = 0;
+    unsigned int m_nextThumbnailSrvIndex = 0; // Track next available thumbnail SRV slot (0-99)
     
     // === PBR TEXTURES (v2.1.0 H1.6) ===
     
