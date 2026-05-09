@@ -241,6 +241,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <None Include="docs\sprint_v2.2.0.md" />
     <None Include="docs\sprint_v2.3.0.md" />
+    <None Include="docs\sprint_v2.4.0.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
