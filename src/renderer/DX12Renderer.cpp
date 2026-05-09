@@ -572,6 +572,27 @@ void DX12Renderer::Initialize(HWND hwnd)
     
     CORE_LOG_INFO("DX12Renderer: Brick material SRVs created (5 textures, slots 0-4)");
     
+    // v2.5.0 H4.2: Create thumbnails for Asset Browser
+    if (m_thumbnailSrvHeap && m_textureManager)
+    {
+        CORE_LOG_INFO("DX12Renderer: Creating thumbnails for Asset Browser...");
+        
+        // Call CreateThumbnails with DX12 resources
+        m_textureManager->CreateThumbnails(
+            d3dDevice,                       // ID3D12Device*
+            uploadCommandList,               // ID3D12GraphicsCommandList*
+            m_thumbnailSrvHeap,              // ID3D12DescriptorHeap*
+            m_thumbnailSrvDescriptorSize     // descriptor size
+        );
+        
+        // Execute thumbnail upload commands and wait for GPU
+        m_commandContext->EndFrame();
+        m_commandContext->Execute();
+        m_commandContext->WaitForGPU();
+        
+        CORE_LOG_INFO("DX12Renderer: Thumbnails created successfully");
+    }
+    
     // === STEP 9: Initialize Camera ===
     m_camera = new Camera();
     m_camera->SetPosition(0.0f, 2.0f, -5.0f);
